@@ -52,3 +52,4 @@ app.*.map.json
 /.metadata
 /analysis_options.yaml
 /hisab_khata.iml
+/test
