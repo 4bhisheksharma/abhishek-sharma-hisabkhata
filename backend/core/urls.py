@@ -19,6 +19,6 @@ from django.urls import path
 from hisabauth.views import RegisterView
 
 urlpatterns = [
-    path('register/', RegisterView.as_view()),
     path('admin/', admin.site.urls),
+    path('api/register/', RegisterView.as_view()),
 ]

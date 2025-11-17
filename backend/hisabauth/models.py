@@ -12,7 +12,7 @@ class User(AbstractUser):
     username = None
     email = models.EmailField( unique=True)
     is_verified = models.BooleanField(default=False)
-    otp = models.CharField(max_length=6 , null=True, blank=True)
+    otp = models.CharField(max_length=6, null=True, blank=True)
     
 
     USERNAME_FIELD = 'email'
