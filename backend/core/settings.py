@@ -25,19 +25,21 @@ SECRET_KEY = 'django-insecure-@unimw)jj!jpy1nn-q(=&y%d$28c(1yp7r^()mi0_srsw95@a&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
+AUTH_USER_MODEL = 'hisabauth.User'
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'hisabauth.apps.HisabauthConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hisabauth',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
