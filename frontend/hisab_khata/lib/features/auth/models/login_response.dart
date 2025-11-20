@@ -17,6 +17,20 @@ class LoginResponse {
 }
 
 class LoginData {
+  final User user;
+  final Tokens tokens;
+
+  LoginData({required this.user, required this.tokens});
+
+  factory LoginData.fromJson(Map<String, dynamic> json) {
+    return LoginData(
+      user: User.fromJson(json['user']),
+      tokens: Tokens.fromJson(json['tokens']),
+    );
+  }
+}
+
+class User {
   final int id;
   final String email;
   final String firstName;
@@ -24,7 +38,7 @@ class LoginData {
   final String? role;
   final bool isVerified;
 
-  LoginData({
+  User({
     required this.id,
     required this.email,
     required this.firstName,
@@ -33,8 +47,8 @@ class LoginData {
     required this.isVerified,
   });
 
-  factory LoginData.fromJson(Map<String, dynamic> json) {
-    return LoginData(
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
       id: json['id'] ?? 0,
       email: json['email'] ?? '',
       firstName: json['first_name'] ?? '',
@@ -45,4 +59,19 @@ class LoginData {
   }
 
   String get fullName => '$firstName $lastName'.trim();
+}
+
+class Tokens {
+  final String access;
+  final String refresh;
+
+  Tokens({required this.access, required this.refresh});
+
+  factory Tokens.fromJson(Map<String, dynamic> json) {
+    return Tokens(access: json['access'] ?? '', refresh: json['refresh'] ?? '');
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'access': access, 'refresh': refresh};
+  }
 }

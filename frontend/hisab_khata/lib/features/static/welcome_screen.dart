@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:hisab_khata/core/storage/storage_service.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -12,13 +13,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    // Navigate to choose user screen after 3 seconds
-    Timer(const Duration(seconds: 90), () {
-      //90 for debugging demo
-      if (mounted) {
-        Navigator.pushReplacementNamed(context, '/choose_user');
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    // Wait for 2 seconds to show welcome screen
+    await Future.delayed(const Duration(seconds: 2));
+
+    if (!mounted) return;
+
+    // Check if user is already logged in
+    final isLoggedIn = await StorageService.isLoggedIn();
+
+    if (isLoggedIn) {
+      final role = await StorageService.getUserRole();
+
+      // Navigate to appropriate home screen based on role
+      if (role == 'customer') {
+        Navigator.pushReplacementNamed(context, '/customer_home');
+      } else if (role == 'business') {
+        Navigator.pushReplacementNamed(context, '/business_home');
+      } else {
+        // If role is not set, go to login
+        Navigator.pushReplacementNamed(context, '/login');
       }
-    });
+    } else {
+      // User is not logged in, go to login screen
+      Navigator.pushReplacementNamed(context, '/login');
+    }
   }
 
   @override
