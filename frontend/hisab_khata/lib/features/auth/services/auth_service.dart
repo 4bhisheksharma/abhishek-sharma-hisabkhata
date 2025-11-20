@@ -1,0 +1,67 @@
+import 'package:hisab_khata/core/services/api_service.dart';
+
+class AuthService {
+  // Register new user
+  static Future<Map<String, dynamic>> register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+    required String role,
+  }) async {
+    try {
+      final response = await ApiService.post('/register/', {
+        'email': email,
+        'password': password,
+        'first_name': firstName,
+        'last_name': lastName,
+        'role': role,
+      });
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Verify OTP
+  static Future<Map<String, dynamic>> verifyOtp({
+    required String email,
+    required String otp,
+  }) async {
+    try {
+      final response = await ApiService.post('/verify-otp/', {
+        'email': email,
+        'otp': otp,
+      });
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Login
+  static Future<Map<String, dynamic>> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final response = await ApiService.post('/login/', {
+        'email': email,
+        'password': password,
+      });
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // Resend OTP TODO: paxi garumla
+  static Future<Map<String, dynamic>> resendOtp({required String email}) async {
+    try {
+      final response = await ApiService.post('/resend-otp/', {'email': email});
+      return response;
+    } catch (e) {
+      rethrow;
+    }
+  }
+}

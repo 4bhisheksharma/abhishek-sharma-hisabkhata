@@ -63,7 +63,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             const SizedBox(height: 10),
             // Tagline
             Text(
-              'Your Personal खाता',
+              'Your Personal Digital खाता',
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],

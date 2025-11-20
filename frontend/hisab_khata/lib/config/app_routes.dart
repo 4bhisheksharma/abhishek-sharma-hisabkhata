@@ -16,5 +16,5 @@ class AppRoutes {
     "/signup": (context) => const SignupScreen(),
     // "/profile": (context) => const ProfileScreen(),
   };
-  static var initialRoute = "/welcome";
+  static var initialRoute = "/login";
 }
