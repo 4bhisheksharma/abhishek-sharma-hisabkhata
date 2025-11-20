@@ -6,12 +6,24 @@ import uuid
 from .manager import UserManager
 
 
+class Role(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = 'Role'
+        verbose_name_plural = 'Roles'
+    
+    def __str__(self):
+        return self.name
 
 
 class User(AbstractUser):
     username = None
     email = models.EmailField(unique=True)
     is_verified = models.BooleanField(default=False)
+    role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, related_name='users')
     
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
