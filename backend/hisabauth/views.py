@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+from rest_framework import status
+from django.contrib.auth import authenticate
 from hisabauth.serializer import UserSerializer
 from hisabauth.models import User
 from otp_verification.services import send_otp_email, verify_otp
@@ -95,6 +97,59 @@ class VerifyOTPView(APIView):
                     'data': None
                 })
                 
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': 'Internal server error',
+                'data': str(e)
+            })
+
+
+class LoginView(APIView):
+    
+    def post(self, request):
+        try:
+            email = request.data.get('email')
+            password = request.data.get('password')
+            
+            if not email or not password:
+                return Response({
+                    'status': 400,
+                    'message': 'Email and password are required',
+                    'data': None
+                })
+            
+            # Authenticate user
+            user = authenticate(request, username=email, password=password)
+            
+            if user is None:
+                return Response({
+                    'status': 401,
+                    'message': 'Invalid credentials',
+                    'data': None
+                })
+            
+            if not user.is_verified:
+                return Response({
+                    'status': 403,
+                    'message': 'Please verify your email before logging in',
+                    'data': None
+                })
+            
+            # Return user data with role
+            return Response({
+                'status': 200,
+                'message': 'Login successful',
+                'data': {
+                    'id': user.id,
+                    'email': user.email,
+                    'first_name': user.first_name,
+                    'last_name': user.last_name,
+                    'role': user.role.name if user.role else None,
+                    'is_verified': user.is_verified,
+                }
+            })
+            
         except Exception as e:
             return Response({
                 'status': 500,
