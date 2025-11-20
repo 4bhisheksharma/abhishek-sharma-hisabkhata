@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from hisabauth.emails import send_verification_email
 from hisabauth.serializer import UserSerializer
+from hisabauth.models import User
+from otp_verification.services import send_otp_email
 from rest_framework.response import Response
 
 
@@ -12,14 +13,13 @@ class RegisterView(APIView):
             data = request.data
             serializer = UserSerializer(data=data)
             if serializer.is_valid():
-                serializer.save()
-                send_verification_email(serializer.data['email'])
+                user = serializer.save()
+                # Send OTP using new OTP verification service
+                send_otp_email(user, 'email_verification')
                 return Response({
                     'status': 200,
-                    'message': 'User registered successfully', 
-                    
+                    'message': 'User registered successfully. Please check your email for OTP.', 
                     'data': serializer.data    
-                                   
                 })
             return Response({
                 'status': 400,

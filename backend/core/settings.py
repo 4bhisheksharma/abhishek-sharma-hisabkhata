@@ -38,6 +38,7 @@ AUTH_USER_MODEL = 'hisabauth.User'
 
 INSTALLED_APPS = [
     'hisabauth.apps.HisabauthConfig',
+    'otp_verification.apps.OtpVerificationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
