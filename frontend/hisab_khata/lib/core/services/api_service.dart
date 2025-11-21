@@ -3,9 +3,9 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   // Base URL
-  static const String baseUrl = 'http://10.0.2.2:8000/api'; //yo emulator ko lagi ho
+  static const String baseUrl =
+      'http://10.0.2.2:8000/api'; //yo emulator ko lagi ho
   // static const String baseUrl = 'http://--/api'; //yo physical device ko lagi ho
-
 
   // Timeout duration
   static const Duration timeout = Duration(seconds: 30);

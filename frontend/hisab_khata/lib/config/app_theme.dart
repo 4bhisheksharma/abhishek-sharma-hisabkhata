@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  //TODO: this will be completely refactor later
+  //TODO: this will be completely refactor later probably...
 
-  // Primary Colors
-  static const Color primaryBlue = Color(0xFF1565C0);
-  static const Color primaryDark = Color(0xFF0D47A1);
-  static const Color primaryLight = Color(0xFF42A5F5);
+  // Primary Colors - Teal/Turquoise Theme
+  static const Color primaryBlue = Color(0xFF00D09E);
+  static const Color primaryDark = Color(0xFF00A87E);
+  static const Color primaryLight = Color(0xFF33DDB3);
 
   // Secondary Colors
-  static const Color secondaryBlue = Color(0xFF1976D2);
-  static const Color accentBlue = Color(0xFF2196F3);
-  static const Color lightBlue = Color(0xFFE3F2FD);
+  static const Color secondaryBlue = Color(0xFF00BF92);
+  static const Color accentBlue = Color(0xFF00E5AD);
+  static const Color lightBlue = Color(0xFFE0F7F1);
 
   // Financial Status Colors
   static const Color successGreen = Color(0xFF00C853);
