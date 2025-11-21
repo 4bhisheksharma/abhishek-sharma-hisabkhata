@@ -63,15 +63,18 @@ class _MyTextFieldState extends State<MyTextField> {
           enabled: widget.enabled,
           maxLines: widget.maxLines,
           onChanged: widget.onChanged,
+          style: const TextStyle(color: Colors.black54),
           decoration: InputDecoration(
             hintText: widget.hintText ?? widget.label,
-            hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+            hintStyle: const TextStyle(color: Colors.black38),
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.showPasswordToggle
                 ? IconButton(
                     icon: Icon(
-                      _obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.grey[600],
+                      _obscureText
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: Colors.black54,
                     ),
                     onPressed: () {
                       setState(() {
@@ -81,7 +84,7 @@ class _MyTextFieldState extends State<MyTextField> {
                   )
                 : null,
             filled: true,
-            fillColor: Colors.grey[100],
+            fillColor: const Color(0xFFD4EBE5),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -92,21 +95,18 @@ class _MyTextFieldState extends State<MyTextField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: Theme.of(context).primaryColor,
-                width: 2,
-              ),
+              borderSide: BorderSide.none,
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 1),
+              borderSide: const BorderSide(color: Colors.red),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(color: Colors.red, width: 2),
             ),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
+              horizontal: 20,
               vertical: 16,
             ),
           ),

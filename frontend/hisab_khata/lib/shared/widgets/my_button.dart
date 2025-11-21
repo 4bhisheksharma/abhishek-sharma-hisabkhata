@@ -37,7 +37,7 @@ class MyButton extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
-          elevation: 2,
+          elevation: 0,
           disabledBackgroundColor: Colors.grey[300],
         ),
         child: isLoading
@@ -46,7 +46,7 @@ class MyButton extends StatelessWidget {
                 width: 20,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  color: Colors.white,
                 ),
               )
             : Row(
@@ -62,7 +62,6 @@ class MyButton extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
