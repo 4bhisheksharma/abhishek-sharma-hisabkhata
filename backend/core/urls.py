@@ -16,11 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from hisabauth.views import RegisterView, VerifyOTPView, LoginView
+from hisabauth.views import RegisterView, LoginView
+from otp_verification.views import VerifyOTPView, ResendOTPView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/register/', RegisterView.as_view()),
-    path('api/verify-otp/', VerifyOTPView.as_view()),
-    path('api/login/', LoginView.as_view()),
+    path('api/register/', RegisterView.as_view(), name='register'),
+    path('api/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
+    path('api/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
+    path('api/login/', LoginView.as_view(), name='login'),
 ]

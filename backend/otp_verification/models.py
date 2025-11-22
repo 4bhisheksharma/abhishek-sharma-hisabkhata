@@ -15,6 +15,7 @@ class OTP(models.Model):
     is_used = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     expires_at = models.DateTimeField()
+    last_sent_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         ordering = ['-created_at']
@@ -27,6 +28,11 @@ class OTP(models.Model):
     def is_valid(self):
         """Check if OTP is valid (not used and not expired)"""
         return not self.is_used and timezone.now() <= self.expires_at
+    
+    def can_resend(self, cooldown_minutes=1):
+        """Check if enough time has passed to resend OTP"""
+        cooldown_period = timedelta(minutes=cooldown_minutes)
+        return timezone.now() >= (self.last_sent_at + cooldown_period)
     
     def save(self, *args, **kwargs):
         """Set expiry time to 10 minutes from creation if not set"""

@@ -52,60 +52,6 @@ class RegisterView(APIView):
             })
 
 
-class VerifyOTPView(APIView):
-    
-    def post(self, request):
-        try:
-            email = request.data.get('email')
-            otp_code = request.data.get('otp')
-            
-            if not email or not otp_code:
-                return Response({
-                    'status': 400,
-                    'message': 'Email and OTP are required',
-                    'data': None
-                })
-            
-            # Get user
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                return Response({
-                    'status': 404,
-                    'message': 'User not found',
-                    'data': None
-                })
-            
-            # Verify OTP
-            if verify_otp(user, otp_code, 'email_verification'):
-                # Activate user account
-                user.is_active = True
-                user.is_verified = True
-                user.save()
-                
-                return Response({
-                    'status': 200,
-                    'message': 'Email verified successfully. Your account is now active.',
-                    'data': {
-                        'email': user.email,
-                        'is_verified': user.is_verified
-                    }
-                })
-            else:
-                return Response({
-                    'status': 400,
-                    'message': 'Invalid or expired OTP',
-                    'data': None
-                })
-                
-        except Exception as e:
-            return Response({
-                'status': 500,
-                'message': 'Internal server error',
-                'data': str(e)
-            })
-
-
 class LoginView(APIView):
     
     def post(self, request):
