@@ -5,6 +5,9 @@ import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/features/auth/presentation/otp_verification_screen.dart';
+import 'package:hisab_khata/features/auth/controllers/auth_controller.dart';
+import 'package:hisab_khata/features/auth/widgets/auth_header.dart';
+import 'package:hisab_khata/features/auth/widgets/role_selection_buttons.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,49 +18,40 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _mobileController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _isLoading = false;
-  String _selectedRole = 'customer';
+  final _controller = SignupController();
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _mobileController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   void _handleSignup() async {
     if (_formKey.currentState!.validate()) {
-      if (_passwordController.text != _confirmPasswordController.text) {
+      if (_controller.passwordController.text !=
+          _controller.confirmPasswordController.text) {
         MySnackbar.showError(context, 'Passwords do not match');
         return;
       }
 
       setState(() {
-        _isLoading = true;
+        _controller.isLoading = true;
       });
 
       try {
         // Split name into first and last name
-        final nameParts = _nameController.text.trim().split(' ');
+        final nameParts = _controller.nameController.text.trim().split(' ');
         final firstName = nameParts.first;
         final lastName = nameParts.length > 1
             ? nameParts.sublist(1).join(' ')
             : '';
 
         final response = await AuthService.register(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
+          email: _controller.emailController.text.trim(),
+          password: _controller.passwordController.text,
           firstName: firstName,
           lastName: lastName,
-          role: _selectedRole,
+          role: _controller.selectedRole,
         );
 
         if (!mounted) return;
@@ -72,8 +66,9 @@ class _SignupScreenState extends State<SignupScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  OtpVerificationScreen(email: _emailController.text.trim()),
+              builder: (context) => OtpVerificationScreen(
+                email: _controller.emailController.text.trim(),
+              ),
             ),
           );
         } else {
@@ -93,7 +88,7 @@ class _SignupScreenState extends State<SignupScreen> {
       } finally {
         if (mounted) {
           setState(() {
-            _isLoading = false;
+            _controller.isLoading = false;
           });
         }
       }
@@ -108,17 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Column(
           children: [
             // Top Section with Create Account Text
-            Padding(
-              padding: const EdgeInsets.only(top: 40, bottom: 30),
-              child: Text(
-                'Create Account',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            const AuthHeader(title: 'Create Account'),
 
             // Bottom Card Section
             Expanded(
@@ -141,7 +126,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                         // Full Name Field
                         MyTextField(
-                          controller: _nameController,
+                          controller: _controller.nameController,
                           label: 'Full Name Or Business Name',
                           hintText: 'RamKumar',
                           validator: (value) {
@@ -154,82 +139,19 @@ class _SignupScreenState extends State<SignupScreen> {
                         const SizedBox(height: 16),
 
                         // Role Selection Buttons
-                        Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedRole = 'business';
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: _selectedRole == 'business'
-                                        ? Color(0xFFB8E0D5)
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: _selectedRole == 'business'
-                                          ? Colors.transparent
-                                          : Colors.black26,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'As Business',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _selectedRole = 'customer';
-                                  });
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: _selectedRole == 'customer'
-                                        ? Theme.of(context).primaryColor
-                                        : Colors.transparent,
-                                    borderRadius: BorderRadius.circular(20),
-                                    border: Border.all(
-                                      color: _selectedRole == 'customer'
-                                          ? Colors.transparent
-                                          : Colors.black26,
-                                    ),
-                                  ),
-                                  child: Text(
-                                    'As Customer',
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      color: _selectedRole == 'customer'
-                                          ? Colors.white
-                                          : Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
+                        RoleSelectionButtons(
+                          selectedRole: _controller.selectedRole,
+                          onRoleChanged: (role) {
+                            setState(() {
+                              _controller.selectedRole = role;
+                            });
+                          },
                         ),
                         const SizedBox(height: 20),
 
                         // Email Field
                         MyTextField(
-                          controller: _emailController,
+                          controller: _controller.emailController,
                           label: 'Email',
                           hintText: 'example@example.com',
                           keyboardType: TextInputType.emailAddress,
@@ -247,7 +169,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                         // Mobile Number Field
                         MyTextField(
-                          controller: _mobileController,
+                          controller: _controller.mobileController,
                           label: 'Mobile Number',
                           hintText: '+977 9800000000',
                           keyboardType: TextInputType.phone,
@@ -262,7 +184,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                         // Password Field
                         MyTextField(
-                          controller: _passwordController,
+                          controller: _controller.passwordController,
                           label: 'Password',
                           hintText: '••••••••',
                           obscureText: true,
@@ -281,7 +203,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
                         // Confirm Password Field
                         MyTextField(
-                          controller: _confirmPasswordController,
+                          controller: _controller.confirmPasswordController,
                           label: 'Confirm Password',
                           hintText: '••••••••',
                           obscureText: true,
@@ -331,7 +253,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         MyButton(
                           text: 'Sign Up',
                           onPressed: _handleSignup,
-                          isLoading: _isLoading,
+                          isLoading: _controller.isLoading,
                           height: 54,
                           borderRadius: 27,
                           width: double.infinity,

@@ -6,6 +6,8 @@ import 'package:hisab_khata/features/auth/models/login_response.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
+import 'package:hisab_khata/features/auth/controllers/auth_controller.dart';
+import 'package:hisab_khata/features/auth/widgets/auth_header.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,27 +18,24 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  bool _isLoading = false;
+  final _controller = AuthController();
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
   void _handleLogin() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
-        _isLoading = true;
+        _controller.isLoading = true;
       });
 
       try {
         final response = await AuthService.login(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
+          email: _controller.emailController.text.trim(),
+          password: _controller.passwordController.text,
         );
 
         final loginResponse = LoginResponse.fromJson(response);
@@ -86,7 +85,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } finally {
         if (mounted) {
           setState(() {
-            _isLoading = false;
+            _controller.isLoading = false;
           });
         }
       }
@@ -101,17 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           children: [
             // Top Section with Welcome Text
-            Padding(
-              padding: const EdgeInsets.only(top: 40, bottom: 30),
-              child: Text(
-                'Welcome',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            const AuthHeader(title: 'Welcome'),
 
             // Bottom Card Section
             Expanded(
@@ -134,7 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         // Email Field
                         MyTextField(
-                          controller: _emailController,
+                          controller: _controller.emailController,
                           label: 'Email',
                           hintText: 'ramdai@gmail.com',
                           keyboardType: TextInputType.emailAddress,
@@ -152,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                         // Password Field
                         MyTextField(
-                          controller: _passwordController,
+                          controller: _controller.passwordController,
                           label: 'Password',
                           hintText: '••••••••',
                           obscureText: true,
@@ -173,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         MyButton(
                           text: 'Log In',
                           onPressed: _handleLogin,
-                          isLoading: _isLoading,
+                          isLoading: _controller.isLoading,
                           height: 54,
                           borderRadius: 27,
                           width: double.infinity,

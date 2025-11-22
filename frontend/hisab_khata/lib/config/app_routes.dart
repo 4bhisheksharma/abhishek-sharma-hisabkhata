@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/features/auth/presentation/login_screen.dart';
+import 'package:hisab_khata/features/auth/presentation/otp_verification_screen.dart';
 import 'package:hisab_khata/features/auth/presentation/signup_screen.dart';
 import 'package:hisab_khata/features/static/choose_user_screen.dart';
 import 'package:hisab_khata/features/static/welcome_screen.dart';
@@ -14,7 +15,9 @@ class AppRoutes {
     "/choose_user": (context) => const ChooseUserScreen(),
     "/login": (context) => const LoginScreen(),
     "/signup": (context) => const SignupScreen(),
+    "/otp-verification": (context) => const OtpVerificationScreen(email: ''),
     // "/profile": (context) => const ProfileScreen(),
   };
-  static var initialRoute = "/welcome";
+  static var initialRoute = "/login"; //for testing
+  // static var initialRoute = "/welcome";
 }
