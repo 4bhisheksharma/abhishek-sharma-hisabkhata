@@ -4,6 +4,7 @@ import 'package:hisab_khata/core/services/api_service.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
+import 'package:hisab_khata/features/auth/presentation/otp_verification_screen.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -68,31 +69,27 @@ class _SignupScreenState extends State<SignupScreen> {
           );
 
           // Navigate to OTP verification screen
-          // TODO: Create OTP verification screen
-          Navigator.pop(context);
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(response['message'] ?? 'Registration failed'),
-              backgroundColor: Colors.red,
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  OtpVerificationScreen(email: _emailController.text.trim()),
             ),
+          );
+        } else {
+          MySnackbar.showError(
+            context,
+            response['message'] ?? 'Registration failed',
           );
         }
       } on ApiException catch (e) {
         if (!mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message), backgroundColor: Colors.red),
-        );
+        MySnackbar.showError(context, e.message);
       } catch (e) {
         if (!mounted) return;
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('An unexpected error occurred'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        MySnackbar.showError(context, 'An unexpected error occurred');
       } finally {
         if (mounted) {
           setState(() {

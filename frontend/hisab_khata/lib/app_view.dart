@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/app_routes.dart';
+import 'package:hisab_khata/config/app_theme.dart';
 
 class MyAppView extends StatelessWidget {
   const MyAppView({super.key});
@@ -10,6 +11,7 @@ class MyAppView extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "Hisab Khata",
       // theme: TODO:,
+      theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
       routes: AppRoutes.routes,
       initialRoute: AppRoutes.initialRoute,
