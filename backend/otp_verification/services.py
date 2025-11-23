@@ -10,13 +10,13 @@ def generate_otp():
     return str(random.randint(100000, 999999))
 
 
-def send_otp_email(user, purpose='email_verification'):
+def send_otp_email(email, full_name='User'):
     """
-    Generate and send OTP to user's email
+    Generate and send OTP to email
     
     Args:
-        user: User object
-        purpose: Purpose of OTP ('email_verification', 'password_reset', 'login')
+        email: Email address to send OTP to
+        full_name: User's full name for personalization
     
     Returns:
         OTP object if successful, raises exception otherwise
@@ -27,15 +27,13 @@ def send_otp_email(user, purpose='email_verification'):
         
         # Create OTP record
         otp = OTP.objects.create(
-            user=user,
-            otp_code=otp_code,
-            purpose=purpose
+            email=email,
+            code=otp_code
         )
         
-        # Prepare email content based on purpose
-        if purpose == 'email_verification':
-            subject = 'Verify Your Email - Hisab Khata'
-            message = f'''Hello {user.first_name or user.email},
+        # Prepare email content
+        subject = 'Verify Your Email - Hisab Khata'
+        message = f'''Hello {full_name},
 
 Thank you for registering with Hisab Khata!
 
@@ -47,34 +45,12 @@ If you did not request this, please ignore this email.
 
 Best regards,
 Hisab Khata Team'''
-        elif purpose == 'password_reset':
-            subject = 'Reset Your Password - Hisab Khata'
-            message = f'''Hello {user.first_name or user.email},
-
-Your OTP for password reset is: {otp_code}
-
-This OTP is valid for 10 minutes.
-
-If you did not request this, please ignore this email and your password will remain unchanged.
-
-Best regards,
-Hisab Khata Team'''
-        else:
-            subject = 'Your OTP - Hisab Khata'
-            message = f'''Hello {user.first_name or user.email},
-
-Your OTP is: {otp_code}
-
-This OTP is valid for 10 minutes.
-
-Best regards,
-Hisab Khata Team'''
         
         # Send email
         email_from = settings.EMAIL_HOST_USER
-        send_mail(subject, message, email_from, [user.email], fail_silently=False)
+        send_mail(subject, message, email_from, [email], fail_silently=False)
         
-        print(f"OTP sent successfully to {user.email}: {otp_code}")
+        print(f"OTP sent successfully to {email}: {otp_code}")
         return otp
         
     except Exception as e:
@@ -82,39 +58,37 @@ Hisab Khata Team'''
         raise e
 
 
-def verify_otp(user, otp_code, purpose='email_verification'):
+def verify_otp(email, otp_code):
     """
-    Verify OTP for a user
+    Verify OTP for an email
     
     Args:
-        user: User object
+        email: Email address
         otp_code: OTP code to verify
-        purpose: Purpose of OTP
     
     Returns:
-        True if valid, False otherwise
+        OTP object if valid, None otherwise
     """
     try:
-        # Get the latest unused OTP for this user and purpose
+        # Get the latest unused OTP for this email
         otp = OTP.objects.filter(
-            user=user,
-            otp_code=otp_code,
-            purpose=purpose,
+            email=email,
+            code=otp_code,
             is_used=False
         ).order_by('-created_at').first()
         
         if not otp:
-            return False
+            return None
         
         if not otp.is_valid():
-            return False
+            otp.increment_attempts()
+            return None
         
         # Mark OTP as used
-        otp.is_used = True
-        otp.save()
+        otp.mark_as_used()
         
-        return True
+        return otp
         
     except Exception as e:
         print(f"Error verifying OTP: {str(e)}")
-        return False
+        return None

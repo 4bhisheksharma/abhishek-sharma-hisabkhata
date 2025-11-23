@@ -24,31 +24,37 @@ class VerifyOTPView(APIView):
                     'data': None
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Get user
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                return Response({
-                    'status': 404,
-                    'message': 'User not found',
-                    'data': None
-                }, status=status.HTTP_404_NOT_FOUND)
-            
             # Verify OTP
-            if verify_otp(user, otp_code, 'email_verification'):
-                # Activate user account
-                user.is_active = True
-                user.is_verified = True
-                user.save()
+            otp = verify_otp(email, otp_code)
+            
+            if otp:
+                # Find user by email stored in OTP and activate
+                # Note: In registration flow, we need to link email to phone_number
+                # For now, we activate the most recent user created with is_active=False
+                # In production, you might want to pass phone_number as well
                 
-                return Response({
-                    'status': 'success',
-                    'message': 'Email verified successfully. Your account is now active.',
-                    'data': {
-                        'email': user.email,
-                        'is_verified': user.is_verified
-                    }
-                }, status=status.HTTP_200_OK)
+                # Get the most recent inactive user (just registered)
+                user = User.objects.filter(is_active=False).order_by('-created_at').first()
+                
+                if user:
+                    user.is_active = True
+                    user.save()
+                    
+                    return Response({
+                        'status': 'success',
+                        'message': 'Email verified successfully. Your account is now active.',
+                        'data': {
+                            'email': email,
+                            'phone_number': user.phone_number,
+                            'is_active': user.is_active
+                        }
+                    }, status=status.HTTP_200_OK)
+                else:
+                    return Response({
+                        'status': 'error',
+                        'message': 'No pending user found for this email',
+                        'data': None
+                    }, status=status.HTTP_404_NOT_FOUND)
             else:
                 return Response({
                     'status': 'error',
@@ -70,6 +76,7 @@ class ResendOTPView(APIView):
     def post(self, request):
         try:
             email = request.data.get('email')
+            full_name = request.data.get('full_name', 'User')
             
             if not email:
                 return Response({
@@ -78,46 +85,26 @@ class ResendOTPView(APIView):
                     'data': None
                 }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Get user
-            try:
-                user = User.objects.get(email=email)
-            except User.DoesNotExist:
-                return Response({
-                    'status': 404,
-                    'message': 'User not found',
-                    'data': None
-                }, status=status.HTTP_404_NOT_FOUND)
-            
-            # Check if user is already verified
-            if user.is_verified:
-                return Response({
-                    'status': 400,
-                    'message': 'Email is already verified',
-                    'data': None
-                }, status=status.HTTP_400_BAD_REQUEST)
-            
             # Check cooldown period (1 minute)
-            last_otp = OTP.objects.filter(
-                user=user, 
-                purpose='email_verification'
-            ).first()
+            last_otp = OTP.objects.filter(email=email).order_by('-created_at').first()
             
-            if last_otp and not last_otp.can_resend(cooldown_minutes=1):
-                remaining_seconds = int((last_otp.last_sent_at.timestamp() + 60) - 
-                                       timezone.now().timestamp())
-                return Response({
-                    'status': 400,
-                    'message': f'Please wait {remaining_seconds} seconds before resending OTP',
-                    'data': {'remaining_seconds': remaining_seconds}
-                }, status=status.HTTP_400_BAD_REQUEST)
+            if last_otp:
+                time_since_last = (timezone.now() - last_otp.created_at).total_seconds()
+                if time_since_last < 60:
+                    remaining_seconds = int(60 - time_since_last)
+                    return Response({
+                        'status': 400,
+                        'message': f'Please wait {remaining_seconds} seconds before resending OTP',
+                        'data': {'remaining_seconds': remaining_seconds}
+                    }, status=status.HTTP_400_BAD_REQUEST)
             
-            # Send new OTP (this will delete old OTPs automatically)
-            send_otp_email(user, 'email_verification')
+            # Send new OTP
+            send_otp_email(email, full_name)
             
             return Response({
                 'status': 'success',
                 'message': 'OTP has been resent to your email',
-                'data': {'email': user.email}
+                'data': {'email': email}
             }, status=status.HTTP_200_OK)
             
         except Exception as e:

@@ -3,20 +3,23 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from hisabauth.serializer import UserSerializer
+from rest_framework.permissions import AllowAny
+from hisabauth.serializer import UserSerializer, UserProfileSerializer
 from hisabauth.models import User
 from otp_verification.services import send_otp_email, verify_otp
 from rest_framework.response import Response
 
 
 class RegisterView(APIView):
+    permission_classes = [AllowAny]
     
     def post(self, request):
         try:
             data = request.data
+            email = data.get('email')
             
             # Check if user already exists
-            if User.objects.filter(email=data.get('email')).exists():
+            if User.objects.filter(email=email).exists():
                 return Response({
                     'status': 400,
                     'message': 'User with this email already exists',
@@ -25,19 +28,21 @@ class RegisterView(APIView):
             
             serializer = UserSerializer(data=data)
             if serializer.is_valid():
-                # Create user but keep is_active=False and is_verified=False
-                user = serializer.save(commit=False)
-                user.is_active = False
-                user.is_verified = False
-                user.save()
+                # Create user (is_active=False by default)
+                user = serializer.save()
                 
                 # Send OTP for email verification
-                send_otp_email(user, 'email_verification')
+                send_otp_email(user.email, user.full_name)
                 
                 return Response({
                     'status': 200,
                     'message': 'Registration initiated. Please check your email for OTP to complete registration.', 
-                    'data': {'email': user.email}
+                    'data': {
+                        'user_id': user.user_id,
+                        'email': user.email,
+                        'phone_number': user.phone_number,
+                        'full_name': user.full_name
+                    }
                 })
             return Response({
                 'status': 400,
@@ -53,6 +58,7 @@ class RegisterView(APIView):
 
 
 class LoginView(APIView):
+    permission_classes = [AllowAny]
     
     def post(self, request):
         try:
@@ -66,7 +72,7 @@ class LoginView(APIView):
                     'data': None
                 })
             
-            # Authenticate user
+            # Authenticate user (username field is email)
             user = authenticate(request, username=email, password=password)
             
             if user is None:
@@ -76,7 +82,7 @@ class LoginView(APIView):
                     'data': None
                 })
             
-            if not user.is_verified:
+            if not user.is_active:
                 return Response({
                     'status': 403,
                     'message': 'Please verify your email before logging in',
@@ -86,19 +92,15 @@ class LoginView(APIView):
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
             
+            # Get user profile data
+            profile_serializer = UserProfileSerializer(user)
+            
             # Return user data with tokens
             return Response({
                 'status': 200,
                 'message': 'Login successful',
                 'data': {
-                    'user': {
-                        'id': user.id,
-                        'email': user.email,
-                        'first_name': user.first_name,
-                        'last_name': user.last_name,
-                        'role': user.role.name if user.role else None,
-                        'is_verified': user.is_verified,
-                    },
+                    'user': profile_serializer.data,
                     'tokens': {
                         'access': str(refresh.access_token),
                         'refresh': str(refresh),
