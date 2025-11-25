@@ -3,6 +3,8 @@ class LoginResponse {
   final String message;
   final LoginData? data;
 
+  //TODO: this will change completly rn i am just focusing on clean architecture
+
   LoginResponse({required this.status, required this.message, this.data});
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {

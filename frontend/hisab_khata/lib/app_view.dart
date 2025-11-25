@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:hisab_khata/config/app_routes.dart';
-import 'package:hisab_khata/config/app_theme.dart';
+import 'package:hisab_khata/config/route/app_router.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/constants/string_constants.dart';
 
 class MyAppView extends StatelessWidget {
-  const MyAppView({super.key});
+  MyAppView({super.key});
+  final AppRouter _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: "Hisab Khata",
+      title: StringConstant.appName,
       // theme: TODO:,
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
-      routes: AppRoutes.routes,
-      initialRoute: AppRoutes.initialRoute,
+      onGenerateRoute: _appRouter.onGenerateRoute,
+      initialRoute: '/',
       // routes: TODO:
     );
   }

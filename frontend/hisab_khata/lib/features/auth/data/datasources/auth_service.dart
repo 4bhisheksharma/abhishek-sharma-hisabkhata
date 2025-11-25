@@ -1,4 +1,6 @@
-import 'package:hisab_khata/core/services/api_service.dart';
+import 'package:hisab_khata/core/data/api_service.dart';
+
+  //TODO: this will change completly rn i am just focusing on clean architecture
 
 class AuthService {
   // Register new user

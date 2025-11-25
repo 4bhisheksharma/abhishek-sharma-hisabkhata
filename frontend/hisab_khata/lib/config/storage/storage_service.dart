@@ -1,5 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hisab_khata/features/auth/models/login_response.dart';
+import 'package:hisab_khata/features/auth/data/models/login_response.dart';
 
 class StorageService {
   // Keys for storage
