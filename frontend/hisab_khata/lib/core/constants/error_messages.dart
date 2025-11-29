@@ -8,4 +8,5 @@ class ErrorMessage {
   static const pinEmptyErrorText = "Pin is required";
   static const confirmPasswordNotMatchErrorText =
       "Confirm password does not match";
+  static const invalidEmailErrorText = "Please enter a valid email";
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/route/app_router.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/core/constants/string_constants.dart';
 
 class MyAppView extends StatelessWidget {
@@ -16,7 +17,7 @@ class MyAppView extends StatelessWidget {
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
       onGenerateRoute: _appRouter.onGenerateRoute,
-      initialRoute: '/',
+      initialRoute: AppRoutes.welcome,
       // routes: TODO:
     );
   }

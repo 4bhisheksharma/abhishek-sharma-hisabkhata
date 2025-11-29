@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  //TODO: this will be completely refactor later probably...
+
 
   // Primary Colors - Teal/Turquoise Theme
   static const Color primaryBlue = Color(0xFF00D09E);

@@ -35,32 +35,47 @@ class LoginData {
 class User {
   final int id;
   final String email;
-  final String firstName;
-  final String lastName;
-  final String? role;
-  final bool isVerified;
+  final String fullName;
+  final String? phoneNumber;
+  final List<String> roles;
+  final String? profileType;
+  final bool isActive;
 
   User({
     required this.id,
     required this.email,
-    required this.firstName,
-    required this.lastName,
-    this.role,
-    required this.isVerified,
+    required this.fullName,
+    this.phoneNumber,
+    required this.roles,
+    this.profileType,
+    required this.isActive,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id'] ?? 0,
+      id: json['id'] ?? json['user_id'] ?? 0,
       email: json['email'] ?? '',
-      firstName: json['first_name'] ?? '',
-      lastName: json['last_name'] ?? '',
-      role: json['role'],
-      isVerified: json['is_verified'] ?? false,
+      fullName: json['full_name'] ?? '',
+      phoneNumber: json['phone_number'],
+      roles: json['roles'] != null ? List<String>.from(json['roles']) : [],
+      profileType: json['profile_type'],
+      isActive: json['is_active'] ?? false,
     );
   }
 
-  String get fullName => '$firstName $lastName'.trim();
+  String? get role => roles.isNotEmpty ? roles.first : profileType;
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'email': email,
+      'full_name': fullName,
+      'phone_number': phoneNumber,
+      'roles': roles,
+      'profile_type': profileType,
+      'is_active': isActive,
+    };
+  }
 }
 
 class Tokens {

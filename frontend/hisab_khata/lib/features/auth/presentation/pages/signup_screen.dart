@@ -39,18 +39,13 @@ class _SignupScreenState extends State<SignupScreen> {
       });
 
       try {
-        // Split name into first and last name
-        final nameParts = _controller.nameController.text.trim().split(' ');
-        final firstName = nameParts.first;
-        final lastName = nameParts.length > 1
-            ? nameParts.sublist(1).join(' ')
-            : '';
-
         final response = await AuthService.register(
           email: _controller.emailController.text.trim(),
           password: _controller.passwordController.text,
-          firstName: firstName,
-          lastName: lastName,
+          fullName: _controller.nameController.text.trim(),
+          phoneNumber: _controller.mobileController.text.trim().isEmpty
+              ? null
+              : _controller.mobileController.text.trim(),
           role: _controller.selectedRole,
         );
 

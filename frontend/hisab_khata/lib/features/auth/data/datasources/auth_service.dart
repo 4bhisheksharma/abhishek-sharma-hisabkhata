@@ -1,23 +1,27 @@
 import 'package:hisab_khata/core/data/api_service.dart';
 
-  //TODO: this will change completly rn i am just focusing on clean architecture
+//TODO: this will change completly rn i am just focusing on clean architecture
 
 class AuthService {
   // Register new user
   static Future<Map<String, dynamic>> register({
     required String email,
     required String password,
-    required String firstName,
-    required String lastName,
+    required String fullName,
+    String? phoneNumber,
     required String role,
+    String? businessName,
   }) async {
     try {
       final response = await ApiService.post('/register/', {
         'email': email,
         'password': password,
-        'first_name': firstName,
-        'last_name': lastName,
+        'full_name': fullName,
+        if (phoneNumber != null && phoneNumber.isNotEmpty)
+          'phone_number': phoneNumber,
         'role': role,
+        if (businessName != null && businessName.isNotEmpty)
+          'business_name': businessName,
       });
       return response;
     } catch (e) {

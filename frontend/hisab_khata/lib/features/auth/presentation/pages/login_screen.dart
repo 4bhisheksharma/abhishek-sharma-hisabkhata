@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/core/constants/error_messages.dart';
 import 'package:hisab_khata/features/auth/data/datasources/auth_service.dart';
 import 'package:hisab_khata/core/data/api_service.dart';
 import 'package:hisab_khata/config/storage/storage_service.dart';
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
         String errorMessage = e.message;
         if (e.statusCode == 401) {
-          errorMessage = 'Invalid email or password';
+          errorMessage = ErrorMessage.invalidEmailErrorText;
         } else if (e.statusCode == 403) {
           errorMessage = 'Please verify your email before logging in';
         } else if (e.statusCode == 0) {

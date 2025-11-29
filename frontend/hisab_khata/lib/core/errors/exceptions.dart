@@ -1,25 +1,16 @@
-enum ExceptionType {
-  internetFailure,
-  somethingWentWrong,
-}
+enum ExceptionType { internetFailure, somethingWentWrong }
 
 class ServerException implements Exception {
   String exceptionMessage;
-  ServerException(
-    this.exceptionMessage,
-  );
+  ServerException(this.exceptionMessage);
 }
 
 class CacheException implements Exception {
   String exceptionMessage;
-  CacheException(
-    this.exceptionMessage,
-  );
+  CacheException(this.exceptionMessage);
 }
 
 class UnauthenticatedException implements Exception {
   String exceptionMessage;
-  UnauthenticatedException(
-    this.exceptionMessage,
-  );
+  UnauthenticatedException(this.exceptionMessage);
 }

@@ -25,7 +25,7 @@ class ErrorHandler {
           ),
         );
       }
-    } on SocketException catch (e) {
+    } on SocketException {
       return const Left(
         Failure(
           ErrorMessage.internetFailureMessage,

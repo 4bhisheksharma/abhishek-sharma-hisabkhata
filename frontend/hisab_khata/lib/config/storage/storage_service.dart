@@ -1,6 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/features/auth/data/models/login_response.dart';
 
+//TODO: need to be refined
+
 class StorageService {
   // Keys for storage
   static const String _keyAccessToken = 'access_token';
@@ -8,9 +10,11 @@ class StorageService {
   static const String _keyUserId = 'user_id';
   static const String _keyEmail = 'email';
   static const String _keyRole = 'role';
-  static const String _keyFirstName = 'first_name';
-  static const String _keyLastName = 'last_name';
-  static const String _keyIsVerified = 'is_verified';
+  static const String _keyFullName = 'full_name';
+  static const String _keyPhoneNumber = 'phone_number';
+  static const String _keyProfileType = 'profile_type';
+  static const String _keyRoles = 'roles';
+  static const String _keyIsActive = 'is_active';
   static const String _keyLoginTime = 'login_time';
 
   /// Save complete user session after login
@@ -27,10 +31,14 @@ class StorageService {
     // Save user data
     await prefs.setInt(_keyUserId, user.id);
     await prefs.setString(_keyEmail, user.email);
+    await prefs.setString(_keyFullName, user.fullName);
+    if (user.phoneNumber != null) {
+      await prefs.setString(_keyPhoneNumber, user.phoneNumber!);
+    }
     await prefs.setString(_keyRole, user.role ?? '');
-    await prefs.setString(_keyFirstName, user.firstName);
-    await prefs.setString(_keyLastName, user.lastName);
-    await prefs.setBool(_keyIsVerified, user.isVerified);
+    await prefs.setString(_keyProfileType, user.profileType ?? '');
+    await prefs.setStringList(_keyRoles, user.roles);
+    await prefs.setBool(_keyIsActive, user.isActive);
     await prefs.setString(_keyLoginTime, DateTime.now().toIso8601String());
   }
 
@@ -67,10 +75,11 @@ class StorageService {
     return User(
       id: userId,
       email: prefs.getString(_keyEmail) ?? '',
-      role: prefs.getString(_keyRole),
-      firstName: prefs.getString(_keyFirstName) ?? '',
-      lastName: prefs.getString(_keyLastName) ?? '',
-      isVerified: prefs.getBool(_keyIsVerified) ?? false,
+      fullName: prefs.getString(_keyFullName) ?? '',
+      phoneNumber: prefs.getString(_keyPhoneNumber),
+      roles: prefs.getStringList(_keyRoles) ?? [],
+      profileType: prefs.getString(_keyProfileType),
+      isActive: prefs.getBool(_keyIsActive) ?? false,
     );
   }
 
@@ -100,16 +109,22 @@ class StorageService {
 
   /// Update user data
   static Future<void> updateUserData({
-    String? firstName,
-    String? lastName,
-    bool? isVerified,
+    String? fullName,
+    String? phoneNumber,
+    bool? isActive,
     String? role,
+    List<String>? roles,
+    String? profileType,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-    if (firstName != null) await prefs.setString(_keyFirstName, firstName);
-    if (lastName != null) await prefs.setString(_keyLastName, lastName);
-    if (isVerified != null) await prefs.setBool(_keyIsVerified, isVerified);
+    if (fullName != null) await prefs.setString(_keyFullName, fullName);
+    if (phoneNumber != null)
+      await prefs.setString(_keyPhoneNumber, phoneNumber);
+    if (isActive != null) await prefs.setBool(_keyIsActive, isActive);
     if (role != null) await prefs.setString(_keyRole, role);
+    if (roles != null) await prefs.setStringList(_keyRoles, roles);
+    if (profileType != null)
+      await prefs.setString(_keyProfileType, profileType);
   }
 
   /// Clear all session data (logout)
