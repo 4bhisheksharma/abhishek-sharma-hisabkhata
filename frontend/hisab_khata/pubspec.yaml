@@ -19,7 +19,8 @@ dependencies:
   internet_connection_checker: ^3.0.1
   injectable: ^2.6.0
   dartz: ^0.10.1
-  
+  bloc: ^9.1.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

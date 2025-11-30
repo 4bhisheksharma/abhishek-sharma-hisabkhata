@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-//auth screens ko lagi header 
+//auth screens ko lagi header
 class AuthHeader extends StatelessWidget {
   final String title;
 
@@ -15,7 +15,7 @@ class AuthHeader extends StatelessWidget {
         style: const TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w600,
-          color: Colors.black,
+          color: Color.fromARGB(255, 255, 255, 255),
         ),
       ),
     );

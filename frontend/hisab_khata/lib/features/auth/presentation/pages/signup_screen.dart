@@ -51,7 +51,10 @@ class _SignupScreenState extends State<SignupScreen> {
 
         if (!mounted) return;
 
-        if (response['status'] == 200) {
+        // Debug: Print the response
+        print('yeta yeta: $response');
+
+        if (response['status'] == 200 || response['status'] == 201) {
           MySnackbar.showSuccess(
             context,
             response['message'] ?? 'Registration successful',
@@ -67,19 +70,24 @@ class _SignupScreenState extends State<SignupScreen> {
             ),
           );
         } else {
-          MySnackbar.showError(
-            context,
-            response['message'] ?? 'Registration failed',
-          );
+          // Show detailed error message
+          String errorMsg = response['message'] ?? 'Registration failed';
+          if (response['data'] != null) {
+            errorMsg += '\n${response['data']}';
+          }
+          MySnackbar.showError(context, errorMsg);
+          print('aare bhai k vayo?: $errorMsg');
         }
       } on ApiException catch (e) {
         if (!mounted) return;
 
+        print('API Exception: ${e.message}');
         MySnackbar.showError(context, e.message);
       } catch (e) {
         if (!mounted) return;
 
-        MySnackbar.showError(context, 'An unexpected error occurred');
+        print('Unexpected error: $e');
+        MySnackbar.showError(context, 'An unexpected error occurred: $e');
       } finally {
         if (mounted) {
           setState(() {
