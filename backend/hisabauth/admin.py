@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .models import User, Role, UserRole, Business
-from customer_dashboard.models import Customer
 
 
 @admin.register(Role)
@@ -39,13 +38,6 @@ class UserRoleAdmin(admin.ModelAdmin):
     list_display = ['user_role_id', 'user', 'role', 'created_at']
     list_filter = ['role']
     search_fields = ['user__phone_number', 'user__full_name', 'role__name']
-
-
-@admin.register(Customer)
-class CustomerAdmin(admin.ModelAdmin):
-    list_display = ['customer_id', 'user', 'status', 'created_at', 'updated_at']
-    list_filter = ['status']
-    search_fields = ['user__phone_number', 'user__full_name']
 
 
 @admin.register(Business)

@@ -69,6 +69,11 @@ class User(AbstractBaseUser, PermissionsMixin):
         """Alias for user_id to support JWT and other packages"""
         return self.user_id
     
+    @property
+    def pk(self):
+        """Primary key property"""
+        return self.user_id
+    
     def __str__(self):
         return f"{self.full_name} ({self.email})"
 
