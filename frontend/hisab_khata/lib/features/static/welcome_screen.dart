@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:hisab_khata/config/storage/storage_service.dart';
+import 'package:hisab_khata/core/constants/string_constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -74,7 +75,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             const SizedBox(height: 30),
             // App Name
             Text(
-              'Hisab खाता',
+              StringConstant.appName,
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -85,7 +86,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             const SizedBox(height: 10),
             // Tagline
             Text(
-              'Your Personal Digital खाता',
+              StringConstant.welcomeMessage,
               style: TextStyle(
                 fontSize: 16,
                 color: Colors.grey[600],

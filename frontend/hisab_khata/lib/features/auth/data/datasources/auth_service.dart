@@ -13,7 +13,7 @@ class AuthService {
     String? businessName,
   }) async {
     try {
-      final response = await ApiService.post('/register/', {
+      final response = await ApiService.post('/auth/register/', {
         'email': email,
         'password': password,
         'full_name': fullName,
@@ -35,7 +35,7 @@ class AuthService {
     required String otp,
   }) async {
     try {
-      final response = await ApiService.post('/verify-otp/', {
+      final response = await ApiService.post('/auth/verify-otp/', {
         'email': email,
         'otp': otp,
       });
@@ -51,7 +51,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final response = await ApiService.post('/login/', {
+      final response = await ApiService.post('/auth/login/', {
         'email': email,
         'password': password,
       });
@@ -64,7 +64,7 @@ class AuthService {
   // Resend OTP TODO: paxi garumla
   static Future<Map<String, dynamic>> resendOtp({required String email}) async {
     try {
-      final response = await ApiService.post('/resend-otp/', {'email': email});
+      final response = await ApiService.post('/auth/resend-otp/', {'email': email});
       return response;
     } catch (e) {
       rethrow;

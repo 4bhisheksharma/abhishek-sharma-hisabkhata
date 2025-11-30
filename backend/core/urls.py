@@ -21,8 +21,8 @@ from otp_verification.views import VerifyOTPView, ResendOTPView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/register/', RegisterView.as_view(), name='register'),
-    path('api/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('api/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
-    path('api/login/', LoginView.as_view(), name='login'),
+    path('api/auth/register/', RegisterView.as_view(), name='register'),
+    path('api/auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
+    path('api/auth/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
+    path('api/auth/login/', LoginView.as_view(), name='login'),
 ]

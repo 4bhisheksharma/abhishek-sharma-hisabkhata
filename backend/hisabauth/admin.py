@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Role, UserRole, Customer, Business
+from .models import User, Role, UserRole, Business
+from customer_dashboard.models import Customer
 
 
 @admin.register(Role)

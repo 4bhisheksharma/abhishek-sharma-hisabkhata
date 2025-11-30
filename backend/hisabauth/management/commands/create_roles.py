@@ -6,16 +6,10 @@ class Command(BaseCommand):
     help = 'Create default roles (customer and business)'
 
     def handle(self, *args, **kwargs):
-        roles = [
-            {'name': 'customer', 'description': 'Regular customer who can manage personal finances'},
-            {'name': 'business', 'description': 'Business owner who can manage business finances'},
-        ]
+        roles = ['customer', 'business', 'admin']
         
-        for role_data in roles:
-            role, created = Role.objects.get_or_create(
-                name=role_data['name'],
-                defaults={'description': role_data['description']}
-            )
+        for role_name in roles:
+            role, created = Role.objects.get_or_create(name=role_name)
             if created:
                 self.stdout.write(self.style.SUCCESS(f'Successfully created role: {role.name}'))
             else:
