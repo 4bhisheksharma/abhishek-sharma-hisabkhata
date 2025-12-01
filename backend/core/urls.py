@@ -21,11 +21,18 @@ from otp_verification.views import VerifyOTPView, ResendOTPView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/register/', RegisterView.as_view(), name='register'),
-    path('api/auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
-    path('api/auth/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
-    path('api/auth/login/', LoginView.as_view(), name='login'),
-    
-    # Customer Dashboard
-    path('api/customer/', include('customer_dashboard.urls')),
+    # All API endpoints under 'api/'
+    path('api/', include([
+        # Auth endpoints
+        path('auth/register/', RegisterView.as_view(), name='register'),
+        path('auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
+        path('auth/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
+        path('auth/login/', LoginView.as_view(), name='login'),
+        
+        # Customer Dashboard
+        path('customer/', include('customer_dashboard.urls')),
+        
+        # Business Dashboard
+        path('business/', include('business_dashboard.urls')),
+    ])),
 ]

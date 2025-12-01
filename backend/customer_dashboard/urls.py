@@ -8,7 +8,7 @@ urlpatterns = [
     # Dashboard
     path('dashboard/', CustomerDashboardView.as_view(), name='customer-dashboard'),
     
-    # Profile - GET, PUT, PATCH
+    # Profile - GET, PATCH
     path('profile/', CustomerProfileView.as_view(), name='customer-profile'),
 
 ]
