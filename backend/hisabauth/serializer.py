@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import User, Role, UserRole, Business
+from .models import User, Role, UserRole
 from customer_dashboard.models import Customer
+from business_dashboard.models import Business
 
 
 class UserSerializer(serializers.ModelSerializer):

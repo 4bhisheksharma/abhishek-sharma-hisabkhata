@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User, Role, UserRole, Business
+from .models import User, Role, UserRole
 
 
 @admin.register(Role)
@@ -40,8 +40,3 @@ class UserRoleAdmin(admin.ModelAdmin):
     search_fields = ['user__phone_number', 'user__full_name', 'role__name']
 
 
-@admin.register(Business)
-class BusinessAdmin(admin.ModelAdmin):
-    list_display = ['business_id', 'business_name', 'user', 'is_verified', 'is_active', 'created_at']
-    list_filter = ['is_verified', 'is_active']
-    search_fields = ['business_name', 'user__phone_number', 'user__full_name']
