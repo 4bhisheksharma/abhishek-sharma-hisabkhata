@@ -11,7 +11,7 @@ class RoleAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ['user_id', 'phone_number', 'full_name', 'is_active', 'is_premium', 'is_staff']
+    list_display = ['user_id', 'phone_number', 'full_name', 'profile_picture', 'is_active', 'is_premium', 'is_staff']
     list_filter = ['is_active', 'is_premium', 'is_staff', 'preferred_language']
     search_fields = ['phone_number', 'full_name']
     ordering = ['-created_at']
