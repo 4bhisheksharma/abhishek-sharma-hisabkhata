@@ -26,12 +26,31 @@ class CustomerDashboardSerializer(serializers.ModelSerializer):
 class CustomerProfileSerializer(serializers.ModelSerializer):
     """Serializer for Customer Profile"""
     email = serializers.EmailField(source='user.email', read_only=True)
-    full_name = serializers.CharField(source='user.full_name', read_only=True)
-    phone_number = serializers.CharField(source='user.phone_number', read_only=True)
-    profile_picture = serializers.ImageField(source='user.profile_picture', read_only=True)
+    full_name = serializers.CharField(source='user.full_name', required=False)
+    phone_number = serializers.CharField(source='user.phone_number', required=False, allow_null=True, allow_blank=True)
+    profile_picture = serializers.ImageField(source='user.profile_picture', required=False, allow_null=True)
     
     class Meta:
         model = Customer
         fields = [
             'full_name', 'phone_number', 'profile_picture', 'email'
         ]
+    
+    def update(self, instance, validated_data):
+        """Update customer profile - updates User model fields"""
+        user_data = validated_data.pop('user', {})
+        
+        # Update User fields
+        if user_data:
+            user = instance.user
+            if 'full_name' in user_data:
+                user.full_name = user_data['full_name']
+            if 'phone_number' in user_data:
+                user.phone_number = user_data['phone_number']
+            if 'profile_picture' in user_data:
+                user.profile_picture = user_data['profile_picture']
+            user.save()
+        
+        # Update Customer fields if any
+        instance.save()
+        return instance

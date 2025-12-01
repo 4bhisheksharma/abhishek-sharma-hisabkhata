@@ -65,6 +65,61 @@ class CustomerProfileView(APIView):
         except Customer.DoesNotExist:
             return Response({
                 'status': 404,
-                'message': 'lungs is injurious to health!!, customer profile not found',
+                'message': 'Customer profile not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
+    
+    def put(self, request):
+        """Update customer profile (full update)"""
+        try:
+            customer = Customer.objects.get(user=request.user)
+            serializer = CustomerProfileSerializer(customer, data=request.data, partial=False)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    'status': 200,
+                    'message': 'Profile updated successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_200_OK)
+            
+            return Response({
+                'status': 400,
+                'message': 'Invalid data',
+                'data': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Customer.DoesNotExist:
+            return Response({
+                'status': 404,
+                'message': 'Customer profile not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+    
+    def patch(self, request):
+        """Update customer profile (partial update)"""
+        try:
+            customer = Customer.objects.get(user=request.user)
+            serializer = CustomerProfileSerializer(customer, data=request.data, partial=True)
+            
+            if serializer.is_valid():
+                serializer.save()
+                return Response({
+                    'status': 200,
+                    'message': 'Profile updated successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_200_OK)
+            
+            return Response({
+                'status': 400,
+                'message': 'Invalid data',
+                'data': serializer.errors
+            }, status=status.HTTP_400_BAD_REQUEST)
+            
+        except Customer.DoesNotExist:
+            return Response({
+                'status': 404,
+                'message': 'Customer profile not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+
