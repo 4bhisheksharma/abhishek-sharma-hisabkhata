@@ -38,6 +38,7 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
     
     def update(self, instance, validated_data):
         """Update customer profile - updates User model fields"""
+        import os
         user_data = validated_data.pop('user', {})
         
         # Update User fields
@@ -48,6 +49,13 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
             if 'phone_number' in user_data:
                 user.phone_number = user_data['phone_number']
             if 'profile_picture' in user_data:
+                # Delete old profile picture if it exists
+                if user.profile_picture:
+                    old_picture_path = user.profile_picture.path
+                    if os.path.exists(old_picture_path):
+                        os.remove(old_picture_path)
+                
+                # Set new profile picture
                 user.profile_picture = user_data['profile_picture']
             user.save()
         
