@@ -3,9 +3,9 @@ import '../entities/login_result_entity.dart';
 
 abstract class AuthRepository {
   /// Registers a new user
-  /// Returns LoginResultEntity with user data and tokens on success
+  /// Returns success message on success
   /// Throws exception on failure
-  Future<LoginResultEntity> register({
+  Future<String> register({
     required String email,
     required String password,
     required String fullName,

@@ -1,12 +1,12 @@
-import '../entities/login_result_entity.dart';
 import '../repositories/auth_repository.dart';
+import '../../../../core/utils/validators/validators.dart';
 
 class RegisterUseCase {
   final AuthRepository repository;
 
   RegisterUseCase(this.repository);
 
-  Future<LoginResultEntity> call({
+  Future<String> call({
     required String email,
     required String password,
     required String fullName,
@@ -27,7 +27,7 @@ class RegisterUseCase {
     if (role.trim().isEmpty) {
       throw Exception('Role is required');
     }
-    if (!_isValidEmail(email)) {
+    if (!Validators.isValidEmail(email)) {
       throw Exception('Invalid email format');
     }
     if (password.length < 8) {
@@ -43,10 +43,5 @@ class RegisterUseCase {
       role: role.trim(),
       businessName: businessName?.trim(),
     );
-  }
-
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
   }
 }

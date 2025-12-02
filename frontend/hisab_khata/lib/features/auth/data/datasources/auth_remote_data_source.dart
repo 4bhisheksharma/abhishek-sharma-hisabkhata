@@ -1,11 +1,12 @@
 import '../../../../core/data/base_remote_data_source.dart';
 import '../../../../core/constants/api_endpoints.dart';
 import '../models/login_response.dart';
+import '../models/register_response.dart';
 
 /// Abstract class defining auth remote data source contract
 abstract class AuthRemoteDataSource {
   /// Register new user
-  Future<LoginResponse> register({
+  Future<RegisterResponse> register({
     required String email,
     required String password,
     required String fullName,
@@ -36,7 +37,7 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   AuthRemoteDataSourceImpl({super.client});
 
   @override
-  Future<LoginResponse> register({
+  Future<RegisterResponse> register({
     required String email,
     required String password,
     required String fullName,
@@ -58,10 +59,10 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final response = await post(
       'auth/${ApiEndpoints.register}',
       body: body,
-      includeAuth: false, 
+      includeAuth: false,
     );
 
-    return LoginResponse.fromJson(response);
+    return RegisterResponse.fromJson(response);
   }
 
   @override
@@ -74,7 +75,7 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final response = await post(
       'auth/${ApiEndpoints.login}',
       body: body,
-      includeAuth: false, 
+      includeAuth: false,
     );
 
     return LoginResponse.fromJson(response);
@@ -90,7 +91,7 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final response = await post(
       'auth/${ApiEndpoints.otpVerification}',
       body: body,
-      includeAuth: false, 
+      includeAuth: false,
     );
 
     return response as Map<String, dynamic>;
@@ -103,7 +104,7 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     final response = await post(
       'auth/${ApiEndpoints.resendOtp}',
       body: body,
-      includeAuth: false, 
+      includeAuth: false,
     );
 
     return response as Map<String, dynamic>;

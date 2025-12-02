@@ -70,8 +70,7 @@ class UserSerializer(serializers.ModelSerializer):
             Business.objects.create(
                 user=user,
                 business_name=business_name or user.full_name,
-                is_verified=False,
-                is_active=False
+                is_verified=False
             )
         
         return user

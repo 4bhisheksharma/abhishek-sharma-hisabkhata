@@ -5,9 +5,11 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 from hisabauth.serializer import UserSerializer, UserProfileSerializer
-from hisabauth.models import User
+from hisabauth.models import User, Role
 from otp_verification.services import send_otp_email, verify_otp
+from otp_verification.models import PendingRegistration
 from rest_framework.response import Response
+from django.contrib.auth.hashers import make_password
 
 
 class RegisterView(APIView):
@@ -17,6 +19,12 @@ class RegisterView(APIView):
         try:
             data = request.data
             email = data.get('email')
+            password = data.get('password')
+            full_name = data.get('full_name')
+            phone_number = data.get('phone_number')
+            role = data.get('role')
+            business_name = data.get('business_name')
+            preferred_language = data.get('preferred_language', 'en')
             
             # Check if user already exists
             if User.objects.filter(email=email).exists():
@@ -26,28 +34,43 @@ class RegisterView(APIView):
                     'data': None
                 })
             
-            serializer = UserSerializer(data=data)
-            if serializer.is_valid():
-                # Create user (is_active=False by default)
-                user = serializer.save()
-                
-                # Send OTP for email verification
-                send_otp_email(user.email, user.full_name)
-                
+            # Check if pending registration exists
+            if PendingRegistration.objects.filter(email=email).exists():
+                # Delete old pending registration
+                PendingRegistration.objects.filter(email=email).delete()
+            
+            # Validate role exists
+            try:
+                Role.objects.get(name__iexact=role)
+            except Role.DoesNotExist:
                 return Response({
-                    'status': 200,
-                    'message': 'Registration initiated. Please check your email for OTP to complete registration.', 
-                    'data': {
-                        'user_id': user.user_id,
-                        'email': user.email,
-                        'phone_number': user.phone_number,
-                        'full_name': user.full_name
-                    }
+                    'status': 400,
+                    'message': f"Role '{role}' does not exist. Valid roles are: customer, business",
+                    'data': None
                 })
+            
+            # Create pending registration
+            pending = PendingRegistration.objects.create(
+                email=email,
+                password_hash=make_password(password),
+                phone_number=phone_number,
+                full_name=full_name,
+                role=role,
+                business_name=business_name,
+                preferred_language=preferred_language
+            )
+            
+            # Send OTP for email verification
+            send_otp_email(email, full_name)
+            
             return Response({
-                'status': 400,
-                'message': 'User registration failed',
-                'data': serializer.errors
+                'status': 200,
+                'message': 'Registration initiated. Please check your email for OTP to complete registration.', 
+                'data': {
+                    'email': email,
+                    'phone_number': phone_number,
+                    'full_name': full_name
+                }
             })
         except Exception as e:
             return Response({

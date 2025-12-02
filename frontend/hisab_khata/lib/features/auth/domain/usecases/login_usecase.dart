@@ -1,5 +1,6 @@
 import '../entities/login_result_entity.dart';
 import '../repositories/auth_repository.dart';
+import '../../../../core/utils/validators/validators.dart';
 
 class LoginUseCase {
   final AuthRepository repository;
@@ -17,16 +18,11 @@ class LoginUseCase {
     if (password.trim().isEmpty) {
       throw Exception('Password is required');
     }
-    if (!_isValidEmail(email)) {
+    if (!Validators.isValidEmail(email)) {
       throw Exception('Invalid email format');
     }
 
     // Call repository
     return await repository.login(email: email.trim(), password: password);
-  }
-
-  bool _isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    return emailRegex.hasMatch(email);
   }
 }

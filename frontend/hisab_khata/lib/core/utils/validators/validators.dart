@@ -6,6 +6,11 @@ typedef ValidatorFunctionTypeObj = String? Function(Object?)?;
 typedef TwoDotOnChanged = dynamic Function(String)?;
 
 class Validators {
+  static bool isValidEmail(String email) {
+    final emailRegex = RegExp(r'^[\w+\-\.]+@([\w-]+\.)+[\w-]{2,}$');
+    return emailRegex.hasMatch(email);
+  }
+
   static ValidatorFunctionType getPasswordValidator() {
     return (value) {
       if (value!.trim().isEmpty) {
@@ -17,7 +22,8 @@ class Validators {
   }
 
   static ValidatorFunctionType getConfirmPasswordValidator(
-      TextEditingController? controller) {
+    TextEditingController? controller,
+  ) {
     return (value) {
       if (value!.trim().isEmpty) {
         return ErrorMessage.passwordEmptyErrorText;
@@ -34,7 +40,9 @@ class Validators {
         return 'Field cannot be empty';
       }
 
-      final emailRegex = RegExp(r'^[a-zA-Z0-9._]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
+      final emailRegex = RegExp(
+        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+      );
 
       final ntcPrepaidRegex = RegExp(r'^984[0-9]{7}$|^986[0-9]{7}$');
       final ntcPostpaidRegex = RegExp(r'^985[0-9]{7}$');

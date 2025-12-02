@@ -3,7 +3,9 @@ import '../../domain/entities/tokens_entity.dart';
 import '../../domain/entities/login_result_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
+import '../models/login_response.dart';
 import '../../../../config/storage/storage_service.dart';
+import '../../../../core/errors/exceptions.dart';
 
 /// Implementation of AuthRepository
 /// Handles data operations and converts between models and entities
@@ -13,7 +15,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<LoginResultEntity> register({
+  Future<String> register({
     required String email,
     required String password,
     required String fullName,
@@ -30,21 +32,12 @@ class AuthRepositoryImpl implements AuthRepository {
       businessName: businessName,
     );
 
-    if (!response.isSuccess || response.data == null) {
+    if (!response.isSuccess) {
       throw Exception(response.message);
     }
 
-    // Convert model to entity
-    final user = _mapUserToEntity(response.data!.user);
-    final tokens = _mapTokensToEntity(response.data!.tokens);
-
-    // Save session
-    await StorageService.saveUserSession(
-      tokens: response.data!.tokens,
-      user: response.data!.user,
-    );
-
-    return LoginResultEntity(user: user, tokens: tokens);
+    // Return email for OTP verification
+    return response.data?.email ?? email;
   }
 
   @override
@@ -76,15 +69,30 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> verifyOtp({required String email, required String otp}) async {
-    final response = await remoteDataSource.verifyOtp(email: email, otp: otp);
-
-    return response['status'] == 200;
+    try {
+      final response = await remoteDataSource.verifyOtp(email: email, otp: otp);
+      return response['status'] == 200;
+    } catch (e) {
+      // Re-throw with a cleaner error message
+      if (e is ServerException) {
+        throw Exception(e.exceptionMessage);
+      }
+      rethrow;
+    }
   }
 
   @override
   Future<bool> resendOtp({required String email}) async {
-    final response = await remoteDataSource.resendOtp(email: email);
-    return response['status'] == 200;
+    try {
+      final response = await remoteDataSource.resendOtp(email: email);
+      return response['status'] == 200;
+    } catch (e) {
+      // Re-throw with a cleaner error message
+      if (e is ServerException) {
+        throw Exception(e.exceptionMessage);
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -116,7 +124,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   /// Helper method to convert User model to UserEntity
-  UserEntity _mapUserToEntity(dynamic user) {
+  UserEntity _mapUserToEntity(User user) {
     return UserEntity(
       id: user.id,
       email: user.email,
@@ -129,7 +137,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   /// Helper method to convert Tokens model to TokensEntity
-  TokensEntity _mapTokensToEntity(dynamic tokens) {
+  TokensEntity _mapTokensToEntity(Tokens tokens) {
     return TokensEntity(access: tokens.access, refresh: tokens.refresh);
   }
 }

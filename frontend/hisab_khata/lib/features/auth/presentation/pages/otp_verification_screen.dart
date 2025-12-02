@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:hisab_khata/features/auth/data/datasources/auth_service.dart';
-import 'package:hisab_khata/core/data/api_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/otp_input_fields.dart';
+import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
+import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
 
 class OtpVerificationScreen extends StatefulWidget {
   final String email;
@@ -56,8 +58,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     return '$minutes:${secs.toString().padLeft(2, '0')}';
   }
 
-  Future<void> _handleVerifyOtp() async {
-    // Get OTP from all controllers
+  void _handleVerifyOtp() {
     String otp = _controller.getOtp();
 
     if (otp.length != 6) {
@@ -65,193 +66,143 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
       return;
     }
 
-    setState(() {
-      _controller.isLoading = true;
-    });
+    context.read<AuthBloc>().add(VerifyOtpEvent(email: widget.email, otp: otp));
+  }
 
-    try {
-      final response = await AuthService.verifyOtp(
-        email: widget.email,
-        otp: otp,
+  void _handleResendOtp() {
+    if (_controller.resendTimer > 0) {
+      MySnackbar.showInfo(
+        context,
+        'Please wait ${_formatTime(_controller.resendTimer)} before resending',
       );
+      return;
+    }
 
-      if (response['status'] == 'success') {
-        if (mounted) {
-          MySnackbar.showSuccess(
-            context,
-            response['message'] ?? 'OTP verified successfully',
-          );
+    context.read<AuthBloc>().add(ResendOtpEvent(email: widget.email));
+  }
 
-          // Navigate to login screen after successful verification
-          //TODO: ya direct homepage ma route garne ho tara we dont have home yet ani tesko lagi feri user role ni verify garnu
-          //so aaile ko lagi mai redirect hunchha
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is OtpVerificationSuccess) {
+          MySnackbar.showSuccess(context, state.message);
           Navigator.pushNamedAndRemoveUntil(
             context,
             '/login',
             (route) => false,
           );
+        } else if (state is OtpResendSuccess) {
+          MySnackbar.showSuccess(context, state.message);
+          _startTimer();
+          _controller.clearOtp();
+          _controller.focusNodes[0].requestFocus();
+        } else if (state is AuthError) {
+          MySnackbar.showError(context, state.message);
         }
-      } else {
-        if (mounted) {
-          MySnackbar.showError(context, response['message'] ?? 'Invalid OTP');
-        }
-      }
-    } on ApiException catch (e) {
-      if (mounted) {
-        MySnackbar.showError(context, e.message);
-      }
-    } catch (e) {
-      if (mounted) {
-        MySnackbar.showError(context, 'An unexpected error occurred');
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _controller.isLoading = false;
-        });
-      }
-    }
-  }
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).primaryColor,
+        body: SafeArea(
+          child: Column(
+            children: [
+              // Top Section with Title
+              const AuthHeader(title: 'OTP Verification'),
 
-  Future<void> _handleResendOtp() async {
-    if (_controller.resendTimer > 0) {
-      if (mounted) {
-        MySnackbar.showInfo(
-          context,
-          'Please wait ${_formatTime(_controller.resendTimer)} before resending',
-        );
-      }
-      return;
-    }
-
-    setState(() {
-      _controller.isResending = true;
-    });
-
-    try {
-      await AuthService.resendOtp(email: widget.email);
-      if (mounted) {
-        MySnackbar.showSuccess(context, 'OTP resent successfully');
-        _startTimer();
-
-        // Clear OTP fields
-        _controller.clearOtp();
-        _controller.focusNodes[0].requestFocus();
-      }
-    } catch (e) {
-      if (mounted) {
-        MySnackbar.showError(context, 'Failed to resend OTP');
-      }
-    } finally {
-      if (mounted) {
-        setState(() {
-          _controller.isResending = false;
-        });
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Top Section with Title
-            const AuthHeader(title: 'OTP Verification'),
-
-            // Bottom Card Section
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFE8F5F1),
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40),
+              // Bottom Card Section
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFE8F5F1),
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(40),
+                      topRight: Radius.circular(40),
+                    ),
                   ),
-                ),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(32.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      const SizedBox(height: 40),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const SizedBox(height: 40),
 
-                      // Enter OTP Text
-                      Column(
-                        children: [
-                          Text(
-                            'Enter OTP',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                        // Enter OTP Text
+                        Column(
+                          children: [
+                            Text(
+                              'Enter OTP',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'Which Is Sent To Your Mail',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black54,
+                            const SizedBox(height: 8),
+                            Text(
+                              'Which Is Sent To Your Mail',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black54,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 40),
+                          ],
+                        ),
+                        const SizedBox(height: 40),
 
-                      // OTP Input Fields
-                      OtpInputFields(
-                        controllers: _controller.otpControllers,
-                        focusNodes: _controller.focusNodes,
-                      ),
-                      const SizedBox(height: 40),
+                        // OTP Input Fields
+                        OtpInputFields(
+                          controllers: _controller.otpControllers,
+                          focusNodes: _controller.focusNodes,
+                        ),
+                        const SizedBox(height: 40),
 
-                      // Continue Button
-                      MyButton(
-                        text: 'Continue',
-                        onPressed: _handleVerifyOtp,
-                        isLoading: _controller.isLoading,
-                        height: 54,
-                        borderRadius: 27,
-                        width: double.infinity,
-                      ),
-                      const SizedBox(height: 24),
+                        // Continue Button
+                        BlocBuilder<AuthBloc, AuthState>(
+                          builder: (context, state) {
+                            return MyButton(
+                              text: 'Continue',
+                              onPressed: _handleVerifyOtp,
+                              isLoading: state is AuthLoading,
+                              height: 54,
+                              borderRadius: 27,
+                              width: double.infinity,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 24),
 
-                      // Resend OTP Button
-                      GestureDetector(
-                        onTap: _controller.isResending
-                            ? null
-                            : _handleResendOtp,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 24,
-                            vertical: 12,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFD4EBE5),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Text(
-                            _controller.resendTimer > 0
-                                ? 'Resend OTP After: ${_formatTime(_controller.resendTimer)}'
-                                : 'Resend OTP',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.black87,
+                        // Resend OTP Button
+                        GestureDetector(
+                          onTap: _handleResendOtp,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFD4EBE5),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Text(
+                              _controller.resendTimer > 0
+                                  ? 'Resend OTP After: ${_formatTime(_controller.resendTimer)}'
+                                  : 'Resend OTP',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black87,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

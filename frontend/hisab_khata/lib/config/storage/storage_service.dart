@@ -118,13 +118,15 @@ class StorageService {
   }) async {
     final prefs = await SharedPreferences.getInstance();
     if (fullName != null) await prefs.setString(_keyFullName, fullName);
-    if (phoneNumber != null)
+    if (phoneNumber != null) {
       await prefs.setString(_keyPhoneNumber, phoneNumber);
+    }
     if (isActive != null) await prefs.setBool(_keyIsActive, isActive);
     if (role != null) await prefs.setString(_keyRole, role);
     if (roles != null) await prefs.setStringList(_keyRoles, roles);
-    if (profileType != null)
+    if (profileType != null) {
       await prefs.setString(_keyProfileType, profileType);
+    }
   }
 
   /// Clear all session data (logout)

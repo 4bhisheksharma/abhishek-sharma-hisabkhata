@@ -1,11 +1,32 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:hisab_khata/app_view.dart";
+import "package:hisab_khata/core/di/dependency_injection.dart";
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _di = DependencyInjection();
+
+  @override
+  void initState() {
+    super.initState();
+    _di.init();
+  }
+
+  @override
+  void dispose() {
+    _di.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return MyAppView();
+    return BlocProvider(create: (context) => _di.authBloc, child: MyAppView());
   }
 }
