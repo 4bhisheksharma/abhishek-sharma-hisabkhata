@@ -13,12 +13,10 @@ class MyAppView extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: StringConstant.appName,
-      // theme: TODO:,
       theme: AppTheme.lightTheme,
       themeMode: ThemeMode.light,
       onGenerateRoute: _appRouter.onGenerateRoute,
       initialRoute: AppRoutes.welcome,
-      // routes: TODO:
     );
   }
 }
