@@ -140,7 +140,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '${StringConstant.otpSent} ${widget.email}',
+                              StringConstant.otpSent,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,
