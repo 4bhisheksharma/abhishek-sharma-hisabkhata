@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -43,7 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
       listener: (context, state) {
         if (state is LoginSuccess) {
           final user = state.loginResult.user;
-          MySnackbar.showSuccess(context, 'Welcome back, ${user.fullName}!');
+          MySnackbar.showSuccess(
+            context,
+            '${StringConstant.welcomeBack}, ${user.fullName}!',
+          );
 
           // Navigate based on role
           if (user.role == 'customer') {
@@ -61,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               // Top Section with Welcome Text
-              const AuthHeader(title: 'Welcome'),
+              const AuthHeader(title: StringConstant.welcome),
 
               // Bottom Card Section
               Expanded(
@@ -85,15 +89,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Email Field
                           MyTextField(
                             controller: _controller.emailController,
-                            label: 'Email',
-                            hintText: 'ramdai@gmail.com',
+                            label: StringConstant.email,
+                            hintText: StringConstant.emailHintText,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
+                                return StringConstant.enterEmail;
                               }
                               if (!value.contains('@')) {
-                                return 'Please enter a valid email';
+                                return StringConstant.enterValidEmail;
                               }
                               return null;
                             },
@@ -103,16 +107,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Password Field
                           MyTextField(
                             controller: _controller.passwordController,
-                            label: 'Password',
-                            hintText: '••••••••',
+                            label: StringConstant.password,
+                            hintText: StringConstant.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                                return StringConstant.enterPassword;
                               }
                               if (value.length < 8) {
-                                return 'Password must be at least 8 characters';
+                                return StringConstant.passwordMinLength;
                               }
                               return null;
                             },
@@ -123,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
                               return MyButton(
-                                text: 'Log In',
+                                text: StringConstant.login,
                                 onPressed: _handleLogin,
                                 isLoading: state is AuthLoading,
                                 height: 54,
@@ -141,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 // TODO: Navigate to forgot password
                               },
                               child: Text(
-                                'Forgot Password?',
+                                StringConstant.forgotPassword,
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
@@ -158,7 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Don't have an account? ",
+                                  StringConstant.dontHaveAccount,
                                   style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
@@ -175,7 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   child: Text(
-                                    'Sign Up',
+                                    StringConstant.signUp,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 14,

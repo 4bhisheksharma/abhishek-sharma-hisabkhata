@@ -3,13 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
-import 'package:hisab_khata/features/auth/presentation/pages/otp_verification_screen.dart';
+import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/role_selection_buttons.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
+import 'package:hisab_khata/core/constants/string_constants.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -32,7 +33,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_formKey.currentState!.validate()) {
       if (_controller.passwordController.text !=
           _controller.confirmPasswordController.text) {
-        MySnackbar.showError(context, 'Passwords do not match');
+        MySnackbar.showError(context, StringConstant.passwordsDoNotMatch);
         return;
       }
 
@@ -72,7 +73,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             children: [
               // Top Section with Create Account Text
-              const AuthHeader(title: 'Create Account'),
+              const AuthHeader(title: StringConstant.createAccount),
 
               // Bottom Card Section
               Expanded(
@@ -96,11 +97,11 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Full Name Field
                           MyTextField(
                             controller: _controller.nameController,
-                            label: 'Full Name Or Business Name',
-                            hintText: 'RamKumar',
+                            label: StringConstant.fullNameOrBusinessName,
+                            hintText: StringConstant.fullNameHintText,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your name';
+                                return StringConstant.enterName;
                               }
                               return null;
                             },
@@ -121,15 +122,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Email Field
                           MyTextField(
                             controller: _controller.emailController,
-                            label: 'Email',
-                            hintText: 'example@example.com',
+                            label: StringConstant.email,
+                            hintText: StringConstant.emailHintText,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your email';
+                                return StringConstant.enterEmail;
                               }
                               if (!value.contains('@')) {
-                                return 'Please enter a valid email';
+                                return StringConstant.enterValidEmail;
                               }
                               return null;
                             },
@@ -139,12 +140,12 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Mobile Number Field
                           MyTextField(
                             controller: _controller.mobileController,
-                            label: 'Mobile Number',
-                            hintText: '+977 9800000000',
+                            label: StringConstant.mobileNumber,
+                            hintText: StringConstant.mobileNumberHintText,
                             keyboardType: TextInputType.phone,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your mobile number';
+                                return StringConstant.enterMobileNumber;
                               }
                               return null;
                             },
@@ -154,16 +155,16 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Password Field
                           MyTextField(
                             controller: _controller.passwordController,
-                            label: 'Password',
-                            hintText: '••••••••',
+                            label: StringConstant.password,
+                            hintText: StringConstant.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please enter your password';
+                                return StringConstant.enterPassword;
                               }
                               if (value.length < 8) {
-                                return 'Password must be at least 8 characters';
+                                return StringConstant.passwordMinLength;
                               }
                               return null;
                             },
@@ -173,13 +174,13 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Confirm Password Field
                           MyTextField(
                             controller: _controller.confirmPasswordController,
-                            label: 'Confirm Password',
-                            hintText: '••••••••',
+                            label: StringConstant.confirmPassword,
+                            hintText: StringConstant.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return 'Please confirm your password';
+                                return StringConstant.confirmPasswordText;
                               }
                               return null;
                             },
@@ -196,19 +197,17 @@ class _SignupScreenState extends State<SignupScreen> {
                                   color: Colors.black54,
                                 ),
                                 children: [
+                                  TextSpan(text: StringConstant.agreeToTerms),
                                   TextSpan(
-                                    text: 'By continuing, you agree to\n',
-                                  ),
-                                  TextSpan(
-                                    text: 'Terms of Use',
+                                    text: StringConstant.termsOfUse,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
                                     ),
                                   ),
-                                  TextSpan(text: ' and '),
+                                  TextSpan(text: " and "),
                                   TextSpan(
-                                    text: 'Privacy Policy.',
+                                    text: StringConstant.privacyPolicy,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
@@ -224,7 +223,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
                               return MyButton(
-                                text: 'Sign Up',
+                                text: StringConstant.signUp,
                                 onPressed: _handleSignup,
                                 isLoading: state is AuthLoading,
                                 height: 54,
@@ -241,7 +240,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Already have an account? ',
+                                  StringConstant.alreadyHaveAccount,
                                   style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
@@ -258,7 +257,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   child: Text(
-                                    'Log In',
+                                    StringConstant.login,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 14,

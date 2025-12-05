@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
-import 'package:hisab_khata/features/auth/presentation/pages/login_screen.dart';
-import 'package:hisab_khata/features/auth/presentation/pages/otp_verification_screen.dart';
-import 'package:hisab_khata/features/auth/presentation/pages/signup_screen.dart';
+import 'package:hisab_khata/features/auth/presentation/screens/login_screen.dart';
+import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_screen.dart';
+import 'package:hisab_khata/features/auth/presentation/screens/signup_screen.dart';
 import 'package:hisab_khata/features/static/welcome_screen.dart';
-import 'package:hisab_khata/features/users/business/presentation/business_home_screen.dart';
-import 'package:hisab_khata/features/users/customer/presentation/customer_home_screen.dart';
+import 'package:hisab_khata/features/users/business/presentation/screens/business_home_screen.dart';
+import 'package:hisab_khata/features/users/customer/presentation/screens/customer_home_screen.dart';
 
 class AppRouter {
   MaterialPageRoute onGenerateRoute(RouteSettings settings) {

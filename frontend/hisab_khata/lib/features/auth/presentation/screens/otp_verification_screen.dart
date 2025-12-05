@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
@@ -62,7 +63,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     String otp = _controller.getOtp();
 
     if (otp.length != 6) {
-      MySnackbar.showError(context, 'Please enter all 6 digits');
+      MySnackbar.showError(context, StringConstant.enterAllSixDigits);
       return;
     }
 
@@ -107,7 +108,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: Column(
             children: [
               // Top Section with Title
-              const AuthHeader(title: 'OTP Verification'),
+              const AuthHeader(title: StringConstant.otpVerification),
 
               // Bottom Card Section
               Expanded(
@@ -130,7 +131,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         Column(
                           children: [
                             Text(
-                              'Enter OTP',
+                              StringConstant.enterOtp,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -139,7 +140,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Which Is Sent To Your Mail',
+                              '${StringConstant.otpSent} ${widget.email}',
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,
@@ -160,7 +161,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             return MyButton(
-                              text: 'Continue',
+                              text: StringConstant.continueProcess,
                               onPressed: _handleVerifyOtp,
                               isLoading: state is AuthLoading,
                               height: 54,
@@ -185,8 +186,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                             child: Text(
                               _controller.resendTimer > 0
-                                  ? 'Resend OTP After: ${_formatTime(_controller.resendTimer)}'
-                                  : 'Resend OTP',
+                                  ? '${StringConstant.resendOtpAfter}: ${_formatTime(_controller.resendTimer)}'
+                                  : StringConstant.resendOtp,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,
