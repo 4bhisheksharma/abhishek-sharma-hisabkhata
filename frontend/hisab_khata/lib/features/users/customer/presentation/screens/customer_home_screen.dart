@@ -28,7 +28,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () async {
-              //ya baki chha profile ma route garna TODO:
+              Navigator.pushNamed(context, '/customer_profile');
             },
           ),
           IconButton(

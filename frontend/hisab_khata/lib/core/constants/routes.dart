@@ -1,4 +1,3 @@
-
 class AppRoutes {
   static const String welcome = '/welcome';
   static const String login = '/login';
@@ -7,4 +6,5 @@ class AppRoutes {
   static const String customerHome = '/customer_home';
   static const String businessHome = '/business_home';
   static var initialRoute = "/login";
+  static const String customerProfile = '/customer_profile';
 }

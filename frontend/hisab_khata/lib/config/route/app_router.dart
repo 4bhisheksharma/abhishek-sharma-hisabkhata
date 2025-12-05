@@ -6,6 +6,7 @@ import 'package:hisab_khata/features/auth/presentation/screens/signup_screen.dar
 import 'package:hisab_khata/features/static/welcome_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_home_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_home_screen.dart';
+import 'package:hisab_khata/features/users/customer/presentation/screens/customer_profile_screen.dart';
 
 class AppRouter {
   MaterialPageRoute onGenerateRoute(RouteSettings settings) {
@@ -29,6 +30,9 @@ class AppRouter {
 
       case AppRoutes.businessHome:
         return MaterialPageRoute(builder: (_) => BusinessHomeScreen());
+
+      case AppRoutes.customerProfile:
+        return MaterialPageRoute(builder: (_) => const CustomerProfileScreen());
 
       default:
         return MaterialPageRoute(
