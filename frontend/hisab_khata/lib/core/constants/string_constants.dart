@@ -46,4 +46,5 @@ class StringConstant {
   static const agreeToTerms = "By continuing, you agree to\n";
   static const termsOfUse = "Terms of Use";
   static const privacyPolicy = "Privacy Policy.";
+  static const enterValidMobileNumber = "Please enter a valid mobile number";
 }

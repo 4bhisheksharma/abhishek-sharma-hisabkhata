@@ -5,6 +5,7 @@ import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
+import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/role_selection_buttons.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
@@ -148,7 +149,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               if (value == null || value.isEmpty) {
                                 return StringConstant.enterEmail;
                               }
-                              if (!value.contains('@')) {
+                              if (!Validators.isValidEmail(value)) {
                                 return StringConstant.enterValidEmail;
                               }
                               return null;
@@ -160,11 +161,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           MyTextField(
                             controller: _controller.mobileController,
                             label: StringConstant.mobileNumber,
+                            maxLength: 10,
                             hintText: StringConstant.mobileNumberHintText,
                             keyboardType: TextInputType.phone,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return StringConstant.enterMobileNumber;
+                              }
+                              if (value.length != 10) {
+                                return StringConstant.enterValidMobileNumber;
                               }
                               return null;
                             },
@@ -178,15 +183,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: StringConstant.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterPassword;
-                              }
-                              if (value.length < 8) {
-                                return StringConstant.passwordMinLength;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getPasswordValidator(),
                           ),
                           const SizedBox(height: 20),
 
@@ -197,12 +194,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             hintText: StringConstant.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.confirmPasswordText;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getConfirmPasswordValidator(
+                              _controller.passwordController,
+                            ),
                           ),
                           const SizedBox(height: 24),
 

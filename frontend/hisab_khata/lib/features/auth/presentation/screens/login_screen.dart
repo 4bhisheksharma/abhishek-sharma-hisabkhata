@@ -5,6 +5,7 @@ import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
+import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
@@ -96,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               if (value == null || value.isEmpty) {
                                 return StringConstant.enterEmail;
                               }
-                              if (!value.contains('@')) {
+                              if (!Validators.isValidEmail(value)) {
                                 return StringConstant.enterValidEmail;
                               }
                               return null;
@@ -111,15 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             hintText: StringConstant.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterPassword;
-                              }
-                              if (value.length < 8) {
-                                return StringConstant.passwordMinLength;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getPasswordValidator(),
                           ),
                           const SizedBox(height: 40),
 

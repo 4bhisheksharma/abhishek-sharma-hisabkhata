@@ -11,6 +11,7 @@ class MyTextField extends StatefulWidget {
   final bool showPasswordToggle;
   final int maxLines;
   final bool enabled;
+  final int? maxLength;
   final void Function(String)? onChanged;
 
   const MyTextField({
@@ -24,6 +25,7 @@ class MyTextField extends StatefulWidget {
     this.prefixIcon,
     this.showPasswordToggle = false,
     this.maxLines = 1,
+    this.maxLength,
     this.enabled = true,
     this.onChanged,
   });
@@ -62,6 +64,7 @@ class _MyTextFieldState extends State<MyTextField> {
           validator: widget.validator,
           enabled: widget.enabled,
           maxLines: widget.maxLines,
+          maxLength: widget.maxLength,
           onChanged: widget.onChanged,
           style: const TextStyle(color: Colors.black54),
           decoration: InputDecoration(
