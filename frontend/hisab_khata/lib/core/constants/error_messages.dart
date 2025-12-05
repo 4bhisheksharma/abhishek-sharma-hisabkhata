@@ -9,4 +9,5 @@ class ErrorMessage {
   static const confirmPasswordNotMatchErrorText =
       "Confirm password does not match";
   static const invalidEmailErrorText = "Please enter a valid email";
+  static const cannotEmptyErrorText = "This field cannot be empty";
 }

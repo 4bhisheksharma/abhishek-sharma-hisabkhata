@@ -7,9 +7,7 @@ typedef ValidatorFunctionTypeObj = String? Function(Object?)?;
 typedef TwoDotOnChanged = dynamic Function(String)?;
 
 class Validators {
-  static final RegExp _emailRegex = RegExp(
-    r'^[\w+\-\.]+@([\w-]+\.)+[\w-]{2,}$',
-  );
+  static final RegExp _emailRegex = RegExp(StringConstant.emailRegx);
 
   static bool isValidEmail(String email) => _emailRegex.hasMatch(email);
 
@@ -63,10 +61,10 @@ class Validators {
   static ValidatorFunctionType getEmailValidator() {
     return (value) {
       if (value == null || value.trim().isEmpty) {
-        return 'Field cannot be empty';
+        return ErrorMessage.cannotEmptyErrorText;
       }
       if (!isValidEmail(value.trim())) {
-        return 'Enter a valid email';
+        return ErrorMessage.invalidEmailErrorText;
       }
       return null;
     };

@@ -47,4 +47,6 @@ class StringConstant {
   static const termsOfUse = "Terms of Use";
   static const privacyPolicy = "Privacy Policy.";
   static const enterValidMobileNumber = "Please enter a valid mobile number";
+  static const emailRegx = r"^[\w+\-\.]+@([\w-]+\.)+[\w-]{2,}$";
+
 }
