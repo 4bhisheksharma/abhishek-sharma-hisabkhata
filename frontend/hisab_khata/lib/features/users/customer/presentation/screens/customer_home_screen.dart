@@ -16,6 +16,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   @override
   void initState() {
     super.initState();
+    _loadDashboard();
+  }
+
+  void _loadDashboard() {
     context.read<CustomerBloc>().add(const LoadCustomerDashboard());
   }
 
@@ -28,7 +32,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           IconButton(
             icon: const Icon(Icons.person),
             onPressed: () async {
-              Navigator.pushNamed(context, '/customer_profile');
+              await Navigator.pushNamed(context, '/customer_profile');
+              _loadDashboard();
             },
           ),
           IconButton(
@@ -60,7 +65,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
             return RefreshIndicator(
               onRefresh: () async {
-                context.read<CustomerBloc>().add(const LoadCustomerDashboard());
+                _loadDashboard();
+                await Future.delayed(const Duration(milliseconds: 500));
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
