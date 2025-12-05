@@ -114,12 +114,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             controller: _controller.nameController,
                             label: StringConstant.fullName,
                             hintText: StringConstant.fullNameHintText,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterName;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getTextFieldValidator(
+                              StringConstant.enterName,
+                            ),
                           ),
                           const SizedBox(height: 20),
 
@@ -129,12 +126,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               controller: _controller.businessNameController,
                               label: StringConstant.businessName,
                               hintText: StringConstant.businessNameHintText,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return StringConstant.enterBusinessName;
-                                }
-                                return null;
-                              },
+                              validator: Validators.getTextFieldValidator(
+                                StringConstant.enterBusinessName,
+                              ),
                             ),
                             const SizedBox(height: 20),
                           ],
@@ -145,15 +139,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             label: StringConstant.email,
                             hintText: StringConstant.emailHintText,
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterEmail;
-                              }
-                              if (!Validators.isValidEmail(value)) {
-                                return StringConstant.enterValidEmail;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getEmailValidator(),
                           ),
                           const SizedBox(height: 20),
 
@@ -164,15 +150,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             maxLength: 10,
                             hintText: StringConstant.mobileNumberHintText,
                             keyboardType: TextInputType.phone,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterMobileNumber;
-                              }
-                              if (value.length != 10) {
-                                return StringConstant.enterValidMobileNumber;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getMobileNumberValidator(),
                           ),
                           const SizedBox(height: 20),
 

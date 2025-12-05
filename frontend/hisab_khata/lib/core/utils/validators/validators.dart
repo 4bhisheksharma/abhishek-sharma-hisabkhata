@@ -1,22 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/core/constants/error_messages.dart';
+import 'package:hisab_khata/core/constants/string_constants.dart';
 
 typedef ValidatorFunctionType = String? Function(String?)?;
 typedef ValidatorFunctionTypeObj = String? Function(Object?)?;
 typedef TwoDotOnChanged = dynamic Function(String)?;
 
 class Validators {
-  static bool isValidEmail(String email) {
-    final emailRegex = RegExp(r'^[\w+\-\.]+@([\w-]+\.)+[\w-]{2,}$');
-    return emailRegex.hasMatch(email);
-  }
+  static final RegExp _emailRegex = RegExp(
+    r'^[\w+\-\.]+@([\w-]+\.)+[\w-]{2,}$',
+  );
+
+  static bool isValidEmail(String email) => _emailRegex.hasMatch(email);
 
   static ValidatorFunctionType getPasswordValidator() {
     return (value) {
-      if (value!.trim().isEmpty) {
+      if (value == null || value.trim().isEmpty) {
         return ErrorMessage.passwordEmptyErrorText;
       }
-
+      if (value.trim().length < 8) {
+        return StringConstant.passwordMinLength;
+      }
       return null;
     };
   }
@@ -25,40 +29,46 @@ class Validators {
     TextEditingController? controller,
   ) {
     return (value) {
-      if (value!.trim().isEmpty) {
+      if (value == null || value.trim().isEmpty) {
         return ErrorMessage.passwordEmptyErrorText;
-      } else if (value != controller?.text) {
+      }
+      if (value != controller?.text.trim()) {
         return ErrorMessage.confirmPasswordNotMatchErrorText;
       }
       return null;
     };
   }
 
-  static ValidatorFunctionType validateEmailOrPhoneNumber() {
+  static ValidatorFunctionType getTextFieldValidator(String errorMessage) {
     return (value) {
-      if (value == null || value.isEmpty) {
+      if (value == null || value.trim().isEmpty) {
+        return errorMessage;
+      }
+      return null;
+    };
+  }
+
+  static ValidatorFunctionType getMobileNumberValidator() {
+    return (value) {
+      if (value == null || value.trim().isEmpty) {
+        return StringConstant.enterMobileNumber;
+      }
+      if (value.length != 10) {
+        return StringConstant.enterValidMobileNumber;
+      }
+      return null;
+    };
+  }
+
+  static ValidatorFunctionType getEmailValidator() {
+    return (value) {
+      if (value == null || value.trim().isEmpty) {
         return 'Field cannot be empty';
       }
-
-      final emailRegex = RegExp(
-        r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-      );
-
-      final ntcPrepaidRegex = RegExp(r'^984[0-9]{7}$|^986[0-9]{7}$');
-      final ntcPostpaidRegex = RegExp(r'^985[0-9]{7}$');
-      final ncellRegex = RegExp(r'^980[0-9]{7}$|^981[0-9]{7}$|^982[0-9]{7}$');
-
-      if (emailRegex.hasMatch(value)) {
-        return null;
+      if (!isValidEmail(value.trim())) {
+        return 'Enter a valid email';
       }
-
-      if (ntcPrepaidRegex.hasMatch(value) ||
-          ntcPostpaidRegex.hasMatch(value) ||
-          ncellRegex.hasMatch(value)) {
-        return null;
-      }
-
-      return 'Enter a valid email or phone number';
+      return null;
     };
   }
 }

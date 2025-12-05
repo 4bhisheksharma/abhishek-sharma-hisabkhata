@@ -93,15 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             label: StringConstant.email,
                             hintText: StringConstant.emailHintText,
                             keyboardType: TextInputType.emailAddress,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterEmail;
-                              }
-                              if (!Validators.isValidEmail(value)) {
-                                return StringConstant.enterValidEmail;
-                              }
-                              return null;
-                            },
+                            validator: Validators.getEmailValidator(),
                           ),
                           const SizedBox(height: 20),
 
