@@ -15,6 +15,7 @@ class AuthController {
 /// Controller for signup screen with additional fields
 class SignupController extends AuthController {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController businessNameController = TextEditingController();
   final TextEditingController mobileController = TextEditingController();
   final TextEditingController confirmPasswordController =
       TextEditingController();
@@ -23,6 +24,7 @@ class SignupController extends AuthController {
   @override
   void dispose() {
     nameController.dispose();
+    businessNameController.dispose();
     mobileController.dispose();
     confirmPasswordController.dispose();
     super.dispose();

@@ -46,6 +46,9 @@ class _SignupScreenState extends State<SignupScreen> {
               ? null
               : _controller.mobileController.text.trim(),
           role: _controller.selectedRole,
+          businessName: _controller.selectedRole == 'business'
+              ? _controller.businessNameController.text.trim()
+              : null,
         ),
       );
     }
@@ -94,20 +97,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         children: [
                           const SizedBox(height: 10),
 
-                          // Full Name Field
-                          MyTextField(
-                            controller: _controller.nameController,
-                            label: StringConstant.fullNameOrBusinessName,
-                            hintText: StringConstant.fullNameHintText,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return StringConstant.enterName;
-                              }
-                              return null;
-                            },
-                          ),
-                          const SizedBox(height: 16),
-
                           // Role Selection Buttons
                           RoleSelectionButtons(
                             selectedRole: _controller.selectedRole,
@@ -118,6 +107,36 @@ class _SignupScreenState extends State<SignupScreen> {
                             },
                           ),
                           const SizedBox(height: 20),
+
+                          // Full Name Field
+                          MyTextField(
+                            controller: _controller.nameController,
+                            label: StringConstant.fullName,
+                            hintText: StringConstant.fullNameHintText,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return StringConstant.enterName;
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Business Name Field (only for business role)
+                          if (_controller.selectedRole == 'business') ...[
+                            MyTextField(
+                              controller: _controller.businessNameController,
+                              label: StringConstant.businessName,
+                              hintText: StringConstant.businessNameHintText,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return StringConstant.enterBusinessName;
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 20),
+                          ],
 
                           // Email Field
                           MyTextField(

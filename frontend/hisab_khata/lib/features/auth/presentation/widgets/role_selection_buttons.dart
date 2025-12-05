@@ -22,7 +22,7 @@ class RoleSelectionButtons extends StatelessWidget {
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
                 color: selectedRole == 'business'
-                    ? const Color(0xFFB8E0D5)
+                    ? Theme.of(context).primaryColor
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(20),
                 border: Border.all(
@@ -31,13 +31,15 @@ class RoleSelectionButtons extends StatelessWidget {
                       : Colors.black26,
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'As Business',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black87,
+                  color: selectedRole == 'business'
+                      ? Colors.white
+                      : Colors.black87,
                 ),
               ),
             ),

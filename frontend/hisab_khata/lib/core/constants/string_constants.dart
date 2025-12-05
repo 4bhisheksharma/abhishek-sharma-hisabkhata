@@ -31,8 +31,11 @@ class StringConstant {
 
   // Signup page
   static const createAccount = "Create Account";
-  static const fullNameOrBusinessName = "Full Name Or Business Name";
-  static const fullNameHintText = "RamKumar or Ramdai Ko Dokan";
+  static const fullName = "Full Name";
+  static const businessName = "Business Name";
+  static const fullNameHintText = "RamKumar";
+  static const businessNameHintText = "Ramdai Ko Dokan";
+  static const enterBusinessName = "Please enter your business name";
   static const mobileNumber = "Mobile Number";
   static const mobileNumberHintText = "+977 9800000000";
   static const confirmPassword = "Confirm Password";
