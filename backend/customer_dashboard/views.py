@@ -17,7 +17,7 @@ class CustomerDashboardView(APIView):
             customer = Customer.objects.get(user=request.user)
             
             # Add computed fields to customer instance
-            customer.to_give = 0  # TODO: Calculate from transactions
+            customer.to_give = 100  # TODO: Calculate from transactions
             customer.to_take = 0  # TODO: Calculate from transactions
             customer.total_shops = 0  # TODO: Count connected shops
             customer.pending_requests = 0  # TODO: Count pending requests

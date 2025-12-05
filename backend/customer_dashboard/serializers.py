@@ -6,7 +6,7 @@ from hisabauth.models import User
 class CustomerDashboardSerializer(serializers.ModelSerializer):
     """Serializer for Customer Dashboard - returns flattened structure"""
     full_name = serializers.CharField(source='user.full_name', read_only=True)
-    profile_picture = serializers.ImageField(source='user.profile_picture', read_only=True)
+    profile_picture = serializers.SerializerMethodField()
     to_give = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     to_take = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     total_shops = serializers.IntegerField(read_only=True)
@@ -21,6 +21,12 @@ class CustomerDashboardSerializer(serializers.ModelSerializer):
             'to_give', 'to_take', 'total_shops', 'pending_requests',
             'recent_transactions', 'loyalty_points'
         ]
+    
+    def get_profile_picture(self, obj):
+        """Return profile picture URL with /media/ prefix"""
+        if obj.user.profile_picture:
+            return f"/media/{obj.user.profile_picture}"
+        return None
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
@@ -28,13 +34,28 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', read_only=True)
     full_name = serializers.CharField(source='user.full_name', required=False)
     phone_number = serializers.CharField(source='user.phone_number', required=False, allow_null=True, allow_blank=True)
-    profile_picture = serializers.ImageField(source='user.profile_picture', required=False, allow_null=True)
+    profile_picture = serializers.ImageField(source='user.profile_picture', required=False, allow_null=True, write_only=True)
+    profile_picture_url = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = Customer
         fields = [
-            'full_name', 'phone_number', 'profile_picture', 'email'
+            'full_name', 'phone_number', 'profile_picture', 'profile_picture_url', 'email'
         ]
+    
+    def get_profile_picture_url(self, obj):
+        """Return profile picture URL with /media/ prefix"""
+        if obj.user.profile_picture:
+            return f"/media/{obj.user.profile_picture}"
+        return None
+    
+    def to_representation(self, instance):
+        """Override to return profile_picture_url as profile_picture"""
+        data = super().to_representation(instance)
+        # Remove write-only field from response and rename url field
+        data.pop('profile_picture', None)
+        data['profile_picture'] = data.pop('profile_picture_url', None)
+        return data
     
     def update(self, instance, validated_data):
         """Update customer profile - updates User model fields"""

@@ -20,6 +20,7 @@ dependencies:
   injectable: ^2.6.0
   dartz: ^0.10.1
   flutter_bloc: ^8.1.6
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:

@@ -27,6 +27,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (context) => _di.authBloc, child: MyAppView());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => _di.authBloc),
+        // BlocProvider(create: (context) => _di.customerBloc),
+      ],
+      child: MyAppView(),
+    );
   }
 }
