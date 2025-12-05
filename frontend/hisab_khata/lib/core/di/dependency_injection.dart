@@ -52,7 +52,7 @@ class DependencyInjection {
 
   // BLoCs
   late final AuthBloc _authBloc;
-  // late final CustomerBloc _customerBloc;
+  late final CustomerBloc _customerBloc;
 
   /// Initialize all dependencies
   void init() {
@@ -97,23 +97,23 @@ class DependencyInjection {
       checkAuthStatusUseCase: _checkAuthStatusUseCase,
       getCurrentUserUseCase: _getCurrentUserUseCase,
     );
-    // _customerBloc = CustomerBloc(
-    //   getCustomerDashboard: _getCustomerDashboard,
-    //   getCustomerProfile: _getCustomerProfile,
-    //   updateCustomerProfile: _updateCustomerProfile,
-    // );
+    _customerBloc = CustomerBloc(
+      getCustomerDashboard: _getCustomerDashboard,
+      getCustomerProfile: _getCustomerProfile,
+      updateCustomerProfile: _updateCustomerProfile,
+    );
   }
 
   /// Dispose resources
   void dispose() {
     _httpClient.close();
     _authBloc.close();
-    // _customerBloc.close();
+    _customerBloc.close();
   }
 
   // Getters
   AuthBloc get authBloc => _authBloc;
-  // CustomerBloc get customerBloc => _customerBloc;
+  CustomerBloc get customerBloc => _customerBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
 }

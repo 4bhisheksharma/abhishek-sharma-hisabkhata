@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => _di.authBloc),
-        // BlocProvider(create: (context) => _di.customerBloc),
+        BlocProvider(create: (context) => _di.customerBloc),
       ],
       child: MyAppView(),
     );
