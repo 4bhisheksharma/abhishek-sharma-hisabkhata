@@ -4,6 +4,7 @@ import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
+import 'package:hisab_khata/shared/widgets/dashboard/my_appbar.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -26,21 +27,15 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Customer Dashboard"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () async {
-              await Navigator.pushNamed(context, '/customer_profile');
-              _loadDashboard();
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () => AuthUtils.handleLogout(context),
-          ),
-        ],
+      appBar: MyAppBar(
+        userName: "Rame Dai",
+        toGive: 0.0,
+        toTake: 0.0,
+        loyaltyPoints: 0.0,
+        showLoyaltyPoints: true,
+        onNotificationTap: () {
+          debugPrint("mahismati samrajya!!");
+        },
       ),
 
       body: BlocConsumer<CustomerBloc, CustomerState>(
@@ -74,6 +69,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    IconButton(
+                      icon: const Icon(Icons.logout),
+                      onPressed: () => AuthUtils.handleLogout(context),
+                    ),
                     // SECTION: CUSTOMER BASIC INFO
                     Text("CUSTOMER INFO", style: debugHeader()),
                     debugBox("""
