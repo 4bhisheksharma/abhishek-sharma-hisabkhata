@@ -11,13 +11,14 @@ import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 
-class CustomerProfileScreen extends StatefulWidget {
-  const CustomerProfileScreen({super.key});
+class CustomerProfileEditScreen extends StatefulWidget {
+  const CustomerProfileEditScreen({super.key});
   @override
-  State<CustomerProfileScreen> createState() => _CustomerProfileScreenState();
+  State<CustomerProfileEditScreen> createState() =>
+      _CustomerProfileEditScreenState();
 }
 
-class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
+class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _phoneNumberController = TextEditingController();

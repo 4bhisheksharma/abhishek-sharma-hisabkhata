@@ -33,7 +33,9 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => BusinessHomeScreen());
 
       case AppRoutes.customerProfile:
-        return MaterialPageRoute(builder: (_) => const CustomerProfileScreen());
+        return MaterialPageRoute(
+          builder: (_) => const CustomerProfileEditScreen(),
+        );
 
       case AppRoutes.customerProfileView:
         return MaterialPageRoute(

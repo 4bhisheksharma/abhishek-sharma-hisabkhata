@@ -5,6 +5,7 @@ import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_e
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/utils/auth_utils.dart';
+import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
 
 class CustomerProfileViewScreen extends StatefulWidget {
   const CustomerProfileViewScreen({super.key});
@@ -110,7 +111,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
                       children: [
-                        _buildMenuItem(
+                        ProfileMenuItem(
                           icon: Icons.person_outline,
                           iconColor: const Color(0xFF4A90E2),
                           iconBgColor: const Color(0xFFE3F2FD),
@@ -120,7 +121,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        _buildMenuItem(
+                        ProfileMenuItem(
                           icon: Icons.security_outlined,
                           iconColor: const Color(0xFF00D9B5),
                           iconBgColor: const Color(0xFFE0F7F4),
@@ -130,7 +131,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        _buildMenuItem(
+                        ProfileMenuItem(
                           icon: Icons.people_outline,
                           iconColor: const Color(0xFF9C27B0),
                           iconBgColor: const Color(0xFFF3E5F5),
@@ -140,7 +141,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        _buildMenuItem(
+                        ProfileMenuItem(
                           icon: Icons.support_agent_outlined,
                           iconColor: const Color(0xFFFF9800),
                           iconBgColor: const Color(0xFFFFF3E0),
@@ -150,7 +151,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           },
                         ),
                         const SizedBox(height: 12),
-                        _buildMenuItem(
+                        ProfileMenuItem(
                           icon: Icons.logout,
                           iconColor: const Color(0xFFF44336),
                           iconBgColor: const Color(0xFFFFEBEE),
@@ -170,56 +171,6 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
 
           return const Center(child: Text("Unable to load profile"));
         },
-      ),
-    );
-  }
-
-  Widget _buildMenuItem({
-    required IconData icon,
-    required Color iconColor,
-    required Color iconBgColor,
-    required String title,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: iconBgColor,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: iconColor, size: 24),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-          ],
-        ),
       ),
     );
   }
