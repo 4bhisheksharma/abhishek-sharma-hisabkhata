@@ -61,7 +61,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         break;
       case 4:
         // Profile
-        await Navigator.pushNamed(context, '/customer-profile');
+        await Navigator.pushNamed(context, '/customer-profile-view');
         // Reset to home when returning from profile
         setState(() {
           _currentNavIndex = 0;

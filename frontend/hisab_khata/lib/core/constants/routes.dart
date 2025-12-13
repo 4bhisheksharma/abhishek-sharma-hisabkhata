@@ -7,4 +7,5 @@ class AppRoutes {
   static const String businessHome = '/business_home';
   static var initialRoute = "/login";
   static const String customerProfile = '/customer-profile';
+  static const String customerProfileView = '/customer-profile-view';
 }
