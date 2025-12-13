@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:hisab_khata/config/storage/storage_service.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/core/constants/string_constants.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFE8F5E9), // Light green background
+      backgroundColor: AppTheme.lightBlue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

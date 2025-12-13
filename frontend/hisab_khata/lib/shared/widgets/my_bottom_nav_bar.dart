@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -14,7 +15,7 @@ class MyBottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F5F3),
+        color: AppTheme.lightBlue,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
@@ -75,7 +76,7 @@ class MyBottomNavBar extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFF00D9B5) : Colors.transparent,
+          color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
           shape: BoxShape.circle,
         ),
         child: Icon(

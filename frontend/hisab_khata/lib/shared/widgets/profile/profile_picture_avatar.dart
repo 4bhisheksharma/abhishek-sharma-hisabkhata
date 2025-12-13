@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 
 /// Reusable widget for displaying profile picture
@@ -14,7 +15,7 @@ class ProfilePictureAvatar extends StatelessWidget {
     required this.profilePicture,
     this.placeholderIcon = Icons.person,
     this.radius = 60,
-    this.backgroundColor = const Color(0xFF00D9B5),
+    this.backgroundColor = AppTheme.primaryBlue,
   });
 
   @override

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
@@ -167,7 +168,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                           // Navigate to full business list
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF00D9B5),
+                          backgroundColor: AppTheme.primaryBlue,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
                             horizontal: 48,

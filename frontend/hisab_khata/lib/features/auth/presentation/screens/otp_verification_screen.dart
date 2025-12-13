@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -114,7 +115,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFE8F5F1),
+                    color: AppTheme.lightBlue,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
@@ -181,7 +182,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               vertical: 12,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFD4EBE5),
+                              color: AppTheme.lightBlue,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(

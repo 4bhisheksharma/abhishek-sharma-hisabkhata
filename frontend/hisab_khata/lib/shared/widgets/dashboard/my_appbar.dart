@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
@@ -63,7 +64,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF00D9B5), Color(0xFF00C9A7)],
+            colors: [AppTheme.primaryBlue, AppTheme.secondaryBlue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -90,7 +91,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             ? const Icon(
                                 Icons.person,
                                 size: 30,
-                                color: Color(0xFF00D9B5),
+                                color: AppTheme.primaryBlue,
                               )
                             : null,
                       ),
@@ -140,7 +141,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           children: [
                             const Icon(
                               Icons.card_giftcard,
-                              color: Color(0xFF00D9B5),
+                              color: AppTheme.primaryBlue,
                               size: 18,
                             ),
                             const SizedBox(width: 5),
@@ -260,7 +261,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             'रु ${toTake.toStringAsFixed(2)}',
                             style: Theme.of(context).textTheme.displaySmall
                                 ?.copyWith(
-                                  color: const Color(0xFF0066FF),
+                                  color: AppTheme.infoBlue,
                                   fontWeight: FontWeight.bold,
                                   height: 1.2,
                                 ),

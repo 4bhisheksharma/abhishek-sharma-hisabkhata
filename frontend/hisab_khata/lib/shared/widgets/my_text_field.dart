@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 class MyTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -87,7 +88,7 @@ class _MyTextFieldState extends State<MyTextField> {
                   )
                 : null,
             filled: true,
-            fillColor: const Color(0xFFD4EBE5),
+            fillColor: AppTheme.lightBlue,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

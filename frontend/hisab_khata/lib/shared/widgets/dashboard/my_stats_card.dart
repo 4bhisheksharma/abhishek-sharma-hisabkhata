@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 class MyStatCard extends StatelessWidget {
   final String title;
@@ -28,14 +29,14 @@ class MyStatCard extends StatelessWidget {
         height: 90,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
-            colors: [Color(0xFF00D9B5), Color(0xFF00C9A7)],
+            colors: [AppTheme.primaryBlue, AppTheme.secondaryBlue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF00D9B5).withOpacity(0.3),
+              color: AppTheme.primaryBlue.withOpacity(0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),

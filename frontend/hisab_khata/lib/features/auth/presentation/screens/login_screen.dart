@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
@@ -72,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Expanded(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Color(0xFFE8F5F1),
+                    color: AppTheme.lightBlue,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),

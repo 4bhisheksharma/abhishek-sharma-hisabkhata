@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
@@ -69,7 +70,7 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
         title: const Text('Business Profile'),
         backgroundColor: Theme.of(context).primaryColor,

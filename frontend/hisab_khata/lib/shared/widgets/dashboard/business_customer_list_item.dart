@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 class BusinessCustomerListItem extends StatelessWidget {
   final String businessName;
@@ -24,7 +25,7 @@ class BusinessCustomerListItem extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: const Color(0xFFE8F5F3),
+          color: AppTheme.lightBlue,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -32,7 +33,7 @@ class BusinessCustomerListItem extends StatelessWidget {
             // Avatar
             CircleAvatar(
               radius: 24,
-              backgroundColor: const Color(0xFF00D9B5),
+              backgroundColor: AppTheme.primaryBlue,
               backgroundImage: profileImageUrl != null
                   ? NetworkImage(profileImageUrl!)
                   : null,
