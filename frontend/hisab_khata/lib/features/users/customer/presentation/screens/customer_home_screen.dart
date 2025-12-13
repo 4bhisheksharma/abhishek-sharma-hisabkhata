@@ -28,31 +28,45 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     context.read<CustomerBloc>().add(const LoadCustomerDashboard());
   }
 
-  void _onNavTap(int index) {
-    setState(() {
-      _currentNavIndex = index;
-    });
-
+  void _onNavTap(int index) async {
     // Handle navigation based on index
     switch (index) {
       case 0:
-        // Home - already here
+        // Home - already here, just update state
+        setState(() {
+          _currentNavIndex = 0;
+        });
         break;
       case 1:
         // Analytics/Reports
         debugPrint("Navigate to Analytics");
+        setState(() {
+          _currentNavIndex = index;
+        });
         break;
       case 2:
         // Transactions
         debugPrint("Navigate to Transactions");
+        setState(() {
+          _currentNavIndex = index;
+        });
         break;
       case 3:
         // Layers/Categories
         debugPrint("Navigate to Categories");
+        setState(() {
+          _currentNavIndex = index;
+        });
         break;
       case 4:
         // Profile
-        debugPrint("Navigate to Profile");
+        await Navigator.pushNamed(context, '/customer-profile');
+        // Reset to home when returning from profile
+        setState(() {
+          _currentNavIndex = 0;
+        });
+        // Reload dashboard
+        _loadDashboard();
         break;
     }
   }

@@ -13,15 +13,16 @@ class ImageUtils {
     }
 
     // Remove file:/// protocol if present.
-    String cleanPath = relativePath.replaceFirst(RegExp(r'^file:///'), '');
+    String cleanPath = relativePath
+        .replaceFirst(RegExp(r'^file:///'), '')
+        .replaceFirst(RegExp(r'^file://'), '')
+        .replaceFirst(RegExp(r'^file:/'), '');
 
     // Add /media/ prefix if not present.
     if (!cleanPath.startsWith('/media/')) {
-      // Ensure path starts with /
-      if (!cleanPath.startsWith('/')) {
-        cleanPath = '/$cleanPath';
-      }
-      cleanPath = '/media$cleanPath';
+      // Remove leading slash if present before adding /media
+      cleanPath = cleanPath.replaceFirst(RegExp(r'^/'), '');
+      cleanPath = '/media/$cleanPath';
     }
 
     return '$_mediaBaseUrl$cleanPath';
