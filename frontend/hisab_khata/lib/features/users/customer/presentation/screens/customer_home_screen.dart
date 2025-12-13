@@ -7,6 +7,7 @@ import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_s
 import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
+import 'package:hisab_khata/shared/utils/image_utils.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -93,7 +94,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
           return SharedDashboard(
             userName: d.fullName,
-            profileImageUrl: d.profilePicture,
+            profileImageUrl: ImageUtils.getFullImageUrl(d.profilePicture),
             toGive: d.toGive,
             toTake: d.toTake,
             loyaltyPoints: d.loyaltyPoints.toDouble(),
