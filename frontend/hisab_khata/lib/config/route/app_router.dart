@@ -5,6 +5,7 @@ import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_
 import 'package:hisab_khata/features/auth/presentation/screens/signup_screen.dart';
 import 'package:hisab_khata/features/static/welcome_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_home_screen.dart';
+import 'package:hisab_khata/features/users/business/presentation/screens/business_profile_edit_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_profile_view_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_home_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_profile_edit_screen.dart';
@@ -41,6 +42,11 @@ class AppRouter {
       case AppRoutes.customerProfileView:
         return MaterialPageRoute(
           builder: (_) => const CustomerProfileViewScreen(),
+        );
+
+      case AppRoutes.businessProfile:
+        return MaterialPageRoute(
+          builder: (_) => const BusinessProfileEditScreen(),
         );
 
       case AppRoutes.businessProfileView:

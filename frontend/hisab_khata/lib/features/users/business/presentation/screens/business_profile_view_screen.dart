@@ -140,8 +140,6 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           title: 'Edit Profile',
                           onTap: () {
                             Navigator.pushNamed(context, '/business-profile');
-                            // TODO: Navigate to business profile edit screen
-                            debugPrint("Edit profile tapped");
                           },
                         ),
                         const SizedBox(height: 12),
