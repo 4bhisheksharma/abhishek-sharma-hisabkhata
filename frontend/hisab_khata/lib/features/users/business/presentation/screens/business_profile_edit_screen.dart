@@ -8,8 +8,8 @@ import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/validators/validators.dart';
-import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
+import 'package:hisab_khata/shared/widgets/profile/editable_profile_picture.dart';
 
 class BusinessProfileEditScreen extends StatefulWidget {
   const BusinessProfileEditScreen({super.key});
@@ -120,70 +120,11 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
                 children: [
                   const SizedBox(height: 20),
                   // Profile Picture Section
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 70,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).primaryColor.withOpacity(0.1),
-                        backgroundImage: _selectedImage != null
-                            ? FileImage(_selectedImage!)
-                            : (ImageUtils.getFullImageUrl(
-                                            _currentProfilePicture,
-                                          ) !=
-                                          null
-                                      ? NetworkImage(
-                                          ImageUtils.getFullImageUrl(
-                                            _currentProfilePicture,
-                                          )!,
-                                        )
-                                      : null)
-                                  as ImageProvider?,
-                        child:
-                            _selectedImage == null &&
-                                _currentProfilePicture == null
-                            ? Icon(
-                                Icons.business,
-                                size: 70,
-                                color: Theme.of(context).primaryColor,
-                              )
-                            : null,
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: InkWell(
-                          onTap: _pickImage,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Theme.of(context).primaryColor,
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 3),
-                            ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 10),
-                  TextButton(
-                    onPressed: _pickImage,
-                    child: Text(
-                      'Change Profile Picture',
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                  EditableProfilePicture(
+                    selectedImage: _selectedImage,
+                    currentProfilePicture: _currentProfilePicture,
+                    onTap: _pickImage,
+                    placeholderIcon: Icons.business,
                   ),
 
                   const SizedBox(height: 30),

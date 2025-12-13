@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
-import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
+import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -64,31 +64,9 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                     child: Column(
                       children: [
                         // Profile Picture
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundColor: const Color(0xFF00D9B5),
-                          backgroundImage:
-                              ImageUtils.getFullImageUrl(
-                                    profile.profilePicture,
-                                  ) !=
-                                  null
-                              ? NetworkImage(
-                                  ImageUtils.getFullImageUrl(
-                                    profile.profilePicture,
-                                  )!,
-                                )
-                              : null,
-                          child:
-                              ImageUtils.getFullImageUrl(
-                                    profile.profilePicture,
-                                  ) ==
-                                  null
-                              ? const Icon(
-                                  Icons.business,
-                                  size: 60,
-                                  color: Colors.white,
-                                )
-                              : null,
+                        ProfilePictureAvatar(
+                          profilePicture: profile.profilePicture,
+                          placeholderIcon: Icons.business,
                         ),
                         const SizedBox(height: 16),
                         // Business Name

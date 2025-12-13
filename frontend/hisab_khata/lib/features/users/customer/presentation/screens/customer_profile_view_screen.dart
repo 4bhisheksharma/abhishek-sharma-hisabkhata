@@ -3,9 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
-import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
+import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
 
 class CustomerProfileViewScreen extends StatefulWidget {
   const CustomerProfileViewScreen({super.key});
@@ -64,31 +64,9 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                     child: Column(
                       children: [
                         // Profile Picture
-                        CircleAvatar(
-                          radius: 60,
-                          backgroundColor: const Color(0xFF00D9B5),
-                          backgroundImage:
-                              ImageUtils.getFullImageUrl(
-                                    profile.profilePicture,
-                                  ) !=
-                                  null
-                              ? NetworkImage(
-                                  ImageUtils.getFullImageUrl(
-                                    profile.profilePicture,
-                                  )!,
-                                )
-                              : null,
-                          child:
-                              ImageUtils.getFullImageUrl(
-                                    profile.profilePicture,
-                                  ) ==
-                                  null
-                              ? const Icon(
-                                  Icons.person,
-                                  size: 60,
-                                  color: Colors.white,
-                                )
-                              : null,
+                        ProfilePictureAvatar(
+                          profilePicture: profile.profilePicture,
+                          placeholderIcon: Icons.person,
                         ),
                         const SizedBox(height: 16),
                         // User Name
