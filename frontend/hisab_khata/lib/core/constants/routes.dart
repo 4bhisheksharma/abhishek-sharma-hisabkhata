@@ -8,4 +8,5 @@ class AppRoutes {
   static var initialRoute = "/login";
   static const String customerProfile = '/customer-profile';
   static const String customerProfileView = '/customer-profile-view';
+  static const String businessProfileView = '/business-profile-view';
 }

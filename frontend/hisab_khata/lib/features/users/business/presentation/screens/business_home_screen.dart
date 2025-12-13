@@ -60,11 +60,13 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
         break;
       case 4:
         // Profile
-        // TODO: Navigate to business profile when implemented
-        debugPrint("Navigate to Business Profile");
+        await Navigator.pushNamed(context, '/business-profile-view');
+        // Reset to home when returning from profile
         setState(() {
           _currentNavIndex = 0;
         });
+        // Reload dashboard
+        _loadDashboard();
         break;
     }
   }
