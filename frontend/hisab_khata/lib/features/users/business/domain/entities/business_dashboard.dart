@@ -7,7 +7,7 @@ class BusinessDashboard {
   final int totalCustomers;
   final int totalRequests;
 
-  BusinessDashboard({
+  const BusinessDashboard({
     required this.businessId,
     required this.businessName,
     this.profilePicture,

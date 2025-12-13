@@ -6,7 +6,7 @@ class BusinessProfile {
   final String email;
   final bool isVerified;
 
-  BusinessProfile({
+  const BusinessProfile({
     required this.businessName,
     required this.fullName,
     required this.phoneNumber,
