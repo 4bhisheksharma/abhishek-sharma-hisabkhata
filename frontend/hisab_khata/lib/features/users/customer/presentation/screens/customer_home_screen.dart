@@ -4,7 +4,9 @@ import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
-import 'package:hisab_khata/shared/widgets/dashboard/my_appbar.dart';
+import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
+import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
+import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -26,120 +28,131 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar(
-        userName: "Rame Dai",
-        toGive: 0.0,
-        toTake: 0.0,
-        loyaltyPoints: 0.0,
-        showLoyaltyPoints: true,
-        onNotificationTap: () {
-          debugPrint("mahismati samrajya!!");
-        },
-      ),
+    return BlocConsumer<CustomerBloc, CustomerState>(
+      listener: (context, state) {
+        if (state is CustomerError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+          );
+        }
+      },
+      builder: (context, state) {
+        if (state is CustomerLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
 
-      body: BlocConsumer<CustomerBloc, CustomerState>(
-        listener: (context, state) {
-          if (state is CustomerError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: Colors.red,
-              ),
-            );
-          }
-        },
+        if (state is CustomerDashboardLoaded) {
+          final d = state.dashboard;
 
-        builder: (context, state) {
-          if (state is CustomerLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (state is CustomerDashboardLoaded) {
-            final d = state.dashboard;
-
-            return RefreshIndicator(
+          return SharedDashboard(
+            userName: d.fullName,
+            profileImageUrl: d.profilePicture,
+            toGive: d.toGive,
+            toTake: d.toTake,
+            loyaltyPoints: d.loyaltyPoints.toDouble(),
+            showLoyaltyPoints: true,
+            onNotificationTap: () {
+              debugPrint("Notification tapped!");
+            },
+            body: RefreshIndicator(
               onRefresh: () async {
                 _loadDashboard();
                 await Future.delayed(const Duration(milliseconds: 500));
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.logout),
-                      onPressed: () => AuthUtils.handleLogout(context),
+                    // Stats Card
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: MyStatCard(
+                        title: "Add More Business",
+                        firstLabel: "Total Shops",
+                        firstValue: "${d.totalShops}",
+                        secondLabel: "Pending Requests",
+                        secondValue: "${d.pendingRequests}",
+                        icon: Icons.add_business_outlined,
+                      ),
                     ),
-                    // SECTION: CUSTOMER BASIC INFO
-                    Text("CUSTOMER INFO", style: debugHeader()),
-                    debugBox("""
-Name: ${d.fullName}
-Customer ID: ${d.customerId}
-Profile Pic: ${d.profilePicture ?? "No image"}
-"""),
 
-                    // SECTION: FINANCIAL SUMMARY
-                    Text("FINANCIAL SUMMARY", style: debugHeader()),
-                    debugBox("""
-To Give: Rs ${d.toGive}
-To Take: Rs ${d.toTake}
-"""),
+                    // Recently Added Business Section
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        "Recently Added Business",
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
-                    // SECTION: STATS
-                    Text("STATISTICS", style: debugHeader()),
-                    debugBox("""
-Total Shops: ${d.totalShops}
-Pending Requests: ${d.pendingRequests}
-"""),
+                    // Business List
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      itemCount: 3, // Placeholder count
+                      itemBuilder: (context, index) {
+                        return BusinessCustomerListItem(
+                          businessName: "Ram Dai Ko Pasal",
+                          phoneNumber: "9845474454",
+                          amount: "Rs. 15,220.5",
+                          onTap: () {
+                            // Navigate to business details
+                            debugPrint("Business tapped: $index");
+                          },
+                        );
+                      },
+                    ),
 
-                    // SECTION: LOYALTY
-                    Text("LOYALTY POINTS", style: debugHeader()),
-                    debugBox("${d.loyaltyPoints} points"),
+                    const SizedBox(height: 16),
 
-                    // SECTION: TRANSACTIONS
-                    Text("RECENT TRANSACTIONS", style: debugHeader()),
-                    d.recentTransactions.isEmpty
-                        ? debugBox("No recent transactions")
-                        : ListView.builder(
-                            shrinkWrap: true,
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: d.recentTransactions.length,
-                            itemBuilder: (context, index) {
-                              return debugBox(
-                                "Transaction ${index + 1}: ${d.recentTransactions[index]}",
-                              );
-                            },
+                    // See More Button
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          // Navigate to full business list
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF00D9B5),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 48,
+                            vertical: 12,
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          elevation: 0,
+                        ),
+                        child: const Text(
+                          "See More",
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
-            );
-          }
+            ),
+          );
+        }
 
-          return const Center(child: Text("Something went wrong"));
-        },
-      ),
-    );
-  }
-
-  TextStyle debugHeader() {
-    return const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.bold,
-      decoration: TextDecoration.underline,
-    );
-  }
-
-  Widget debugBox(String text) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(vertical: 6),
-      padding: const EdgeInsets.all(12),
-      color: Colors.grey.shade300,
-      child: Text(text.trim(), style: const TextStyle(fontSize: 14)),
+        return const Scaffold(
+          body: Center(child: Text("Something went wrong")),
+        );
+      },
     );
   }
 }
