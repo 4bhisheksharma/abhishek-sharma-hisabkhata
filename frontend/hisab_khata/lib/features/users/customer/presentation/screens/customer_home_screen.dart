@@ -16,6 +16,8 @@ class CustomerHomeScreen extends StatefulWidget {
 }
 
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
+  int _currentNavIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -24,6 +26,35 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
   void _loadDashboard() {
     context.read<CustomerBloc>().add(const LoadCustomerDashboard());
+  }
+
+  void _onNavTap(int index) {
+    setState(() {
+      _currentNavIndex = index;
+    });
+
+    // Handle navigation based on index
+    switch (index) {
+      case 0:
+        // Home - already here
+        break;
+      case 1:
+        // Analytics/Reports
+        debugPrint("Navigate to Analytics");
+        break;
+      case 2:
+        // Transactions
+        debugPrint("Navigate to Transactions");
+        break;
+      case 3:
+        // Layers/Categories
+        debugPrint("Navigate to Categories");
+        break;
+      case 4:
+        // Profile
+        debugPrint("Navigate to Profile");
+        break;
+    }
   }
 
   @override
@@ -53,6 +84,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             toTake: d.toTake,
             loyaltyPoints: d.loyaltyPoints.toDouble(),
             showLoyaltyPoints: true,
+            currentNavIndex: _currentNavIndex,
+            onNavTap: _onNavTap,
             onNotificationTap: () {
               debugPrint("Notification tapped!");
             },
@@ -101,7 +134,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                       itemBuilder: (context, index) {
                         return BusinessCustomerListItem(
                           businessName: "Ram Dai Ko Pasal",
-                          phoneNumber: "9845474454",
+                          phoneNumber: "9878748574",
                           amount: "Rs. 15,220.5",
                           onTap: () {
                             // Navigate to business details

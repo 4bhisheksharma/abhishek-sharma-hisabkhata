@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_appbar.dart';
+import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 
 class SharedDashboard extends StatelessWidget {
   final String userName;
@@ -11,6 +12,8 @@ class SharedDashboard extends StatelessWidget {
   final VoidCallback? onProfileTap;
   final VoidCallback? onNotificationTap;
   final Widget body;
+  final int currentNavIndex;
+  final Function(int)? onNavTap;
 
   const SharedDashboard({
     super.key,
@@ -23,6 +26,8 @@ class SharedDashboard extends StatelessWidget {
     this.onProfileTap,
     this.onNotificationTap,
     required this.body,
+    this.currentNavIndex = 0,
+    this.onNavTap,
   });
 
   @override
@@ -39,6 +44,9 @@ class SharedDashboard extends StatelessWidget {
         onNotificationTap: onNotificationTap,
       ),
       body: body,
+      bottomNavigationBar: onNavTap != null
+          ? MyBottomNavBar(currentIndex: currentNavIndex, onTap: onNavTap!)
+          : null,
     );
   }
 }
