@@ -17,6 +17,13 @@ import '../../features/users/customer/domain/usecases/get_customer_dashboard.dar
 import '../../features/users/customer/domain/usecases/get_customer_profile.dart';
 import '../../features/users/customer/domain/usecases/update_customer_profile.dart';
 import '../../features/users/customer/presentation/bloc/customer_bloc.dart';
+import '../../features/users/business/data/datasources/business_remote_data_source.dart';
+import '../../features/users/business/data/repositories_impl/business_repository_impl.dart';
+import '../../features/users/business/domain/repositories/business_repository.dart';
+import '../../features/users/business/domain/usecases/get_business_dashboard.dart';
+import '../../features/users/business/domain/usecases/get_business_profile.dart';
+import '../../features/users/business/domain/usecases/update_business_profile.dart';
+import '../../features/users/business/presentation/bloc/business_bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies
@@ -31,10 +38,12 @@ class DependencyInjection {
   // Data Sources
   late final AuthRemoteDataSource _authRemoteDataSource;
   late final CustomerRemoteDataSource _customerRemoteDataSource;
+  late final BusinessRemoteDataSource _businessRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
   late final CustomerRepository _customerRepository;
+  late final BusinessRepository _businessRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -50,9 +59,15 @@ class DependencyInjection {
   late final GetCustomerProfile _getCustomerProfile;
   late final UpdateCustomerProfile _updateCustomerProfile;
 
+  // Use Cases - Business
+  late final GetBusinessDashboard _getBusinessDashboard;
+  late final GetBusinessProfile _getBusinessProfile;
+  late final UpdateBusinessProfile _updateBusinessProfile;
+
   // BLoCs
   late final AuthBloc _authBloc;
   late final CustomerBloc _customerBloc;
+  late final BusinessBloc _businessBloc;
 
   /// Initialize all dependencies
   void init() {
@@ -64,6 +79,9 @@ class DependencyInjection {
     _customerRemoteDataSource = CustomerRemoteDataSourceImpl(
       client: _httpClient,
     );
+    _businessRemoteDataSource = BusinessRemoteDataSourceImpl(
+      client: _httpClient,
+    );
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -71,6 +89,9 @@ class DependencyInjection {
     );
     _customerRepository = CustomerRepositoryImpl(
       remoteDataSource: _customerRemoteDataSource,
+    );
+    _businessRepository = BusinessRepositoryImpl(
+      remoteDataSource: _businessRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -87,6 +108,11 @@ class DependencyInjection {
     _getCustomerProfile = GetCustomerProfile(_customerRepository);
     _updateCustomerProfile = UpdateCustomerProfile(_customerRepository);
 
+    // Use Cases - Business
+    _getBusinessDashboard = GetBusinessDashboard(_businessRepository);
+    _getBusinessProfile = GetBusinessProfile(_businessRepository);
+    _updateBusinessProfile = UpdateBusinessProfile(_businessRepository);
+
     // BLoCs
     _authBloc = AuthBloc(
       loginUseCase: _loginUseCase,
@@ -102,6 +128,11 @@ class DependencyInjection {
       getCustomerProfile: _getCustomerProfile,
       updateCustomerProfile: _updateCustomerProfile,
     );
+    _businessBloc = BusinessBloc(
+      getBusinessDashboard: _getBusinessDashboard,
+      getBusinessProfile: _getBusinessProfile,
+      updateBusinessProfile: _updateBusinessProfile,
+    );
   }
 
   /// Dispose resources
@@ -109,11 +140,14 @@ class DependencyInjection {
     _httpClient.close();
     _authBloc.close();
     _customerBloc.close();
+    _businessBloc.close();
   }
 
   // Getters
   AuthBloc get authBloc => _authBloc;
   CustomerBloc get customerBloc => _customerBloc;
+  BusinessBloc get businessBloc => _businessBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
+  BusinessRepository get businessRepository => _businessRepository;
 }
