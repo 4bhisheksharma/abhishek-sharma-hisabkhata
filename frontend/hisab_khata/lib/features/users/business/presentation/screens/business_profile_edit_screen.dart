@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
@@ -10,6 +9,7 @@ import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
+import 'package:hisab_khata/shared/utils/helper_functions.dart';
 
 class BusinessProfileEditScreen extends StatefulWidget {
   const BusinessProfileEditScreen({super.key});
@@ -45,17 +45,10 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
   }
 
   Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 1024,
-      maxHeight: 1024,
-      imageQuality: 85,
-    );
-
-    if (pickedFile != null) {
+    final image = await HelperFunctions.pickImageFromGallery();
+    if (image != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = image;
       });
     }
   }
