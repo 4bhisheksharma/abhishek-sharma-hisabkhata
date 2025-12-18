@@ -92,7 +92,7 @@ If you didn't request this, please ignore this email.
                     <!-- Footer -->
                     <tr>
                         <td style="background-color: #fafafa; padding: 24px 32px; text-align: center; border-top: 1px solid #e0e0e0;">
-                            <p style="margin: 0; color: #9e9e9e; font-size: 12px;">© 2024 Hisab Khata. All rights reserved.</p>
+                            <p style="margin: 0; color: #9e9e9e; font-size: 12px;">© 2025 Hisab Khata. All rights reserved.</p>
                         </td>
                     </tr>
                 </table>
