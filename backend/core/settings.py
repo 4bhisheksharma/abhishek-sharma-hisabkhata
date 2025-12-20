@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'hisabauth.apps.HisabauthConfig',
     'business_dashboard.apps.BusinessDashboardConfig',
     'otp_verification.apps.OtpVerificationConfig',
+    'request.apps.RequestConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -36,6 +36,9 @@ urlpatterns = [
         
         # Business Dashboard
         path('business/', include('business_dashboard.urls')),
+        
+        # Connection Requests
+        path('request/', include('request.urls')),
     ])),
 ]
 
