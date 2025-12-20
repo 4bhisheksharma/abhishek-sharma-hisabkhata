@@ -52,24 +52,45 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
 
 
 class SendRequestSerializer(serializers.Serializer):
-    """Serializer for sending connection request"""
-    receiver_id = serializers.IntegerField(required=True)
+    """Serializer for sending connection request - accepts email or user_id"""
+    receiver_email = serializers.EmailField(required=False)
+    receiver_id = serializers.IntegerField(required=False)
     
-    def validate_receiver_id(self, value):
-        """Validate that receiver exists and is not the sender"""
+    def validate(self, data):
+        """Validate that either receiver_email or receiver_id is provided"""
+        if not data.get('receiver_email') and not data.get('receiver_id'):
+            raise serializers.ValidationError(
+                "Either 'receiver_email' or 'receiver_id' must be provided"
+            )
+        
+        if data.get('receiver_email') and data.get('receiver_id'):
+            raise serializers.ValidationError(
+                "Provide only one: 'receiver_email' or 'receiver_id'"
+            )
+        
         request = self.context.get('request')
         if not request or not request.user:
             raise serializers.ValidationError("Authentication required")
         
-        if value == request.user.user_id:
-            raise serializers.ValidationError("You cannot send a request to yourself")
-        
+        # Find the receiver user
         try:
-            User.objects.get(user_id=value)
+            if data.get('receiver_email'):
+                receiver = User.objects.get(email=data['receiver_email'])
+            else:
+                receiver = User.objects.get(user_id=data['receiver_id'])
+            
+            # Check if trying to send to self
+            if receiver.user_id == request.user.user_id:
+                raise serializers.ValidationError("You cannot send a request to yourself")
+            
+            # Store the receiver in validated data for the view to use
+            data['receiver'] = receiver
+            
         except User.DoesNotExist:
-            raise serializers.ValidationError("User not found")
+            field = 'email' if data.get('receiver_email') else 'user_id'
+            raise serializers.ValidationError(f"User with this {field} not found")
         
-        return value
+        return data
 
 
 class UpdateRequestStatusSerializer(serializers.Serializer):

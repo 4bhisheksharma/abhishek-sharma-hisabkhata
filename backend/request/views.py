@@ -71,13 +71,13 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
     def send_request(self, request):
         """
         Send a connection request to another user
-        Body: { "receiver_id": <user_id> }
+        Body: { "receiver_email": "user@example.com" } OR { "receiver_id": 123 }
         """
         serializer = SendRequestSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         
-        receiver_id = serializer.validated_data['receiver_id']
-        receiver = User.objects.get(user_id=receiver_id)
+        # Receiver is already validated and fetched in the serializer
+        receiver = serializer.validated_data['receiver']
         
         # Check if request already exists
         existing_request = BusinessCustomerRequest.objects.filter(
@@ -132,6 +132,16 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             status='pending'
         )
         serializer = ConnectionRequestSerializer(requests, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['get'], url_path='connected')
+    def connected_users(self, request):
+        """Get all connected users (accepted connections)"""
+        connected = BusinessCustomerRequest.objects.filter(
+            Q(sender=request.user, status='accepted') |
+            Q(receiver=request.user, status='accepted')
+        )
+        serializer = ConnectionRequestSerializer(connected, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     @action(detail=True, methods=['patch'], url_path='update-status')
