@@ -22,7 +22,7 @@ class Role(models.Model):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """User table - main authentication model"""
-    user_id = models.AutoField(primary_key=True)
+    user_id = models.AutoField(primary_key=True) #TODO: refine garna chha thorai
     otp = models.ForeignKey(
         'otp_verification.OTP',
         on_delete=models.SET_NULL,
