@@ -39,6 +39,9 @@ urlpatterns = [
         
         # Connection Requests
         path('request/', include('request.urls')),
+        
+        # Notifications
+        path('notifications/', include('notification.urls')),
     ])),
 ]
 
