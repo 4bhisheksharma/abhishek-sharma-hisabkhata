@@ -24,6 +24,17 @@ import '../../features/users/business/domain/usecases/get_business_dashboard.dar
 import '../../features/users/business/domain/usecases/get_business_profile.dart';
 import '../../features/users/business/domain/usecases/update_business_profile.dart';
 import '../../features/users/business/presentation/bloc/business_bloc.dart';
+import '../../features/request/data/datasource/connection_request_remote_data_source.dart';
+import '../../features/request/data/repository_imp/connection_request_repository_impl.dart';
+import '../../features/request/domain/repositories/connection_request_repository.dart';
+import '../../features/request/domain/usecases/search_users_usecase.dart';
+import '../../features/request/domain/usecases/send_connection_request_usecase.dart';
+import '../../features/request/domain/usecases/get_sent_requests_usecase.dart';
+import '../../features/request/domain/usecases/get_received_requests_usecase.dart';
+import '../../features/request/domain/usecases/get_pending_received_requests_usecase.dart';
+import '../../features/request/domain/usecases/get_connected_users_usecase.dart';
+import '../../features/request/domain/usecases/update_request_status_usecase.dart';
+import '../../features/request/presentation/bloc/connection_request_bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies
@@ -39,11 +50,14 @@ class DependencyInjection {
   late final AuthRemoteDataSource _authRemoteDataSource;
   late final CustomerRemoteDataSource _customerRemoteDataSource;
   late final BusinessRemoteDataSource _businessRemoteDataSource;
+  late final ConnectionRequestRemoteDataSource
+  _connectionRequestRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
   late final CustomerRepository _customerRepository;
   late final BusinessRepository _businessRepository;
+  late final ConnectionRequestRepository _connectionRequestRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -64,10 +78,21 @@ class DependencyInjection {
   late final GetBusinessProfile _getBusinessProfile;
   late final UpdateBusinessProfile _updateBusinessProfile;
 
+  // Use Cases - Connection Request
+  late final SearchUsersUseCase _searchUsersUseCase;
+  late final SendConnectionRequestUseCase _sendConnectionRequestUseCase;
+  late final GetSentRequestsUseCase _getSentRequestsUseCase;
+  late final GetReceivedRequestsUseCase _getReceivedRequestsUseCase;
+  late final GetPendingReceivedRequestsUseCase
+  _getPendingReceivedRequestsUseCase;
+  late final GetConnectedUsersUseCase _getConnectedUsersUseCase;
+  late final UpdateRequestStatusUseCase _updateRequestStatusUseCase;
+
   // BLoCs
   late final AuthBloc _authBloc;
   late final CustomerBloc _customerBloc;
   late final BusinessBloc _businessBloc;
+  late final ConnectionRequestBloc _connectionRequestBloc;
 
   /// Initialize all dependencies
   void init() {
@@ -82,6 +107,9 @@ class DependencyInjection {
     _businessRemoteDataSource = BusinessRemoteDataSourceImpl(
       client: _httpClient,
     );
+    _connectionRequestRemoteDataSource = ConnectionRequestRemoteDataSourceImpl(
+      client: _httpClient,
+    );
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -92,6 +120,9 @@ class DependencyInjection {
     );
     _businessRepository = BusinessRepositoryImpl(
       remoteDataSource: _businessRemoteDataSource,
+    );
+    _connectionRequestRepository = ConnectionRequestRepositoryImpl(
+      remoteDataSource: _connectionRequestRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -113,6 +144,27 @@ class DependencyInjection {
     _getBusinessProfile = GetBusinessProfile(_businessRepository);
     _updateBusinessProfile = UpdateBusinessProfile(_businessRepository);
 
+    // Use Cases - Connection Request
+    _searchUsersUseCase = SearchUsersUseCase(_connectionRequestRepository);
+    _sendConnectionRequestUseCase = SendConnectionRequestUseCase(
+      _connectionRequestRepository,
+    );
+    _getSentRequestsUseCase = GetSentRequestsUseCase(
+      _connectionRequestRepository,
+    );
+    _getReceivedRequestsUseCase = GetReceivedRequestsUseCase(
+      _connectionRequestRepository,
+    );
+    _getPendingReceivedRequestsUseCase = GetPendingReceivedRequestsUseCase(
+      _connectionRequestRepository,
+    );
+    _getConnectedUsersUseCase = GetConnectedUsersUseCase(
+      _connectionRequestRepository,
+    );
+    _updateRequestStatusUseCase = UpdateRequestStatusUseCase(
+      _connectionRequestRepository,
+    );
+
     // BLoCs
     _authBloc = AuthBloc(
       loginUseCase: _loginUseCase,
@@ -133,6 +185,15 @@ class DependencyInjection {
       getBusinessProfile: _getBusinessProfile,
       updateBusinessProfile: _updateBusinessProfile,
     );
+    _connectionRequestBloc = ConnectionRequestBloc(
+      searchUsersUseCase: _searchUsersUseCase,
+      sendConnectionRequestUseCase: _sendConnectionRequestUseCase,
+      getSentRequestsUseCase: _getSentRequestsUseCase,
+      getReceivedRequestsUseCase: _getReceivedRequestsUseCase,
+      getPendingReceivedRequestsUseCase: _getPendingReceivedRequestsUseCase,
+      getConnectedUsersUseCase: _getConnectedUsersUseCase,
+      updateRequestStatusUseCase: _updateRequestStatusUseCase,
+    );
   }
 
   /// Dispose resources
@@ -141,13 +202,17 @@ class DependencyInjection {
     _authBloc.close();
     _customerBloc.close();
     _businessBloc.close();
+    _connectionRequestBloc.close();
   }
 
   // Getters
   AuthBloc get authBloc => _authBloc;
   CustomerBloc get customerBloc => _customerBloc;
   BusinessBloc get businessBloc => _businessBloc;
+  ConnectionRequestBloc get connectionRequestBloc => _connectionRequestBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
   BusinessRepository get businessRepository => _businessRepository;
+  ConnectionRequestRepository get connectionRequestRepository =>
+      _connectionRequestRepository;
 }

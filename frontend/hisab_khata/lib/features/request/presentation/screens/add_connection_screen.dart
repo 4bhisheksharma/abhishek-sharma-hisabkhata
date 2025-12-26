@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
+import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
+import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
 import '../../../../config/storage/storage_service.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_button.dart';
+import '../../../../shared/widgets/my_snackbar.dart';
 import '../../../../shared/widgets/my_text_field.dart';
 
 class AddConnectionScreen extends StatefulWidget {
@@ -15,7 +20,6 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _noteController = TextEditingController();
-  bool _isLoading = false;
   String _userRole = '';
 
   @override
@@ -58,108 +62,116 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
 
   void _handleAddConnection() {
     if (_formKey.currentState!.validate()) {
-      // TODD: ya add connection request logic baki chha add garna
-      setState(() {
-        _isLoading = true;
-      });
-
-      // Simulate API call
-      Future.delayed(const Duration(seconds: 2), () {
-        setState(() {
-          _isLoading = false;
-        });
-        // TODO: Show success message or navigate back
-      });
+      context.read<ConnectionRequestBloc>().add(
+        SendConnectionRequestEvent(receiverEmail: _emailController.text.trim()),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.primaryBlue,
-      appBar: AppBar(
+    return BlocListener<ConnectionRequestBloc, ConnectionRequestState>(
+      listener: (context, state) {
+        if (state is ConnectionRequestSentSuccess) {
+          MySnackbar.showSuccess(context, state.message);
+          Navigator.of(context).pop();
+        } else if (state is ConnectionRequestError) {
+          MySnackbar.showError(context, state.message);
+        }
+      },
+      child: Scaffold(
         backgroundColor: AppTheme.primaryBlue,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          _appBarTitle,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+        appBar: AppBar(
+          backgroundColor: AppTheme.primaryBlue,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-        ),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined, color: Colors.white),
-            onPressed: () {
-              // TODO: Navigate to notifications
-            },
+          title: Text(
+            _appBarTitle,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ],
-      ),
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-          color: AppTheme.lightBlue,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                // TODO: Navigate to notifications
+              },
+            ),
+          ],
         ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                // Email Field
-                MyTextField(
-                  controller: _emailController,
-                  label: 'Email',
-                  hintText: 'Demo@Gmail.Com',
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter an email';
-                    }
-                    if (!RegExp(
-                      r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                    ).hasMatch(value)) {
-                      return 'Please enter a valid email';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                // Note Field
-                MyTextField(
-                  controller: _noteController,
-                  label: 'Note',
-                  hintText: 'Enter Message',
-                  maxLines: 5,
-                  keyboardType: TextInputType.multiline,
-                ),
-                const SizedBox(height: 40),
-                // Add Connection Button
-                Center(
-                  child: MyButton(
-                    text: _buttonText,
-                    onPressed: _handleAddConnection,
-                    isLoading: _isLoading,
-                    width: 200,
-                    height: 50,
-                    borderRadius: 25,
+        body: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            color: AppTheme.lightBlue,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(30),
+              topRight: Radius.circular(30),
+            ),
+          ),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20),
+                  // Email Field
+                  MyTextField(
+                    controller: _emailController,
+                    label: 'Email',
+                    hintText: 'Demo@Gmail.Com',
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter an email';
+                      }
+                      if (!RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  // Note Field
+                  MyTextField(
+                    controller: _noteController,
+                    label: 'Note',
+                    hintText: 'Enter Message',
+                    maxLines: 5,
+                    keyboardType: TextInputType.multiline,
+                  ),
+                  const SizedBox(height: 40),
+                  // Add Connection Button
+                  BlocBuilder<ConnectionRequestBloc, ConnectionRequestState>(
+                    builder: (context, state) {
+                      return Center(
+                        child: MyButton(
+                          text: _buttonText,
+                          onPressed: _handleAddConnection,
+                          isLoading: state is ConnectionRequestLoading,
+                          width: 200,
+                          height: 50,
+                          borderRadius: 25,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

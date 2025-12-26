@@ -44,6 +44,13 @@ class SharedDashboard extends StatelessWidget {
         onNotificationTap: onNotificationTap,
       ),
       body: body,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/add-connection');
+        },
+        child: Icon(Icons.person_add),
+      ),
+
       bottomNavigationBar: onNavTap != null
           ? MyBottomNavBar(currentIndex: currentNavIndex, onTap: onNavTap!)
           : null,

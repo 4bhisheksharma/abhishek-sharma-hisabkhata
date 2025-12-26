@@ -3,6 +3,7 @@ import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/login_screen.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/signup_screen.dart';
+import 'package:hisab_khata/features/request/presentation/screens/add_connection_screen.dart';
 import 'package:hisab_khata/features/static/welcome_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_home_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_profile_edit_screen.dart';
@@ -52,6 +53,11 @@ class AppRouter {
       case AppRoutes.businessProfileView:
         return MaterialPageRoute(
           builder: (_) => const BusinessProfileViewScreen(),
+        );
+
+      case AppRoutes.addConnection:
+        return MaterialPageRoute(
+          builder: (_) => const AddConnectionScreen(),
         );
 
       default:

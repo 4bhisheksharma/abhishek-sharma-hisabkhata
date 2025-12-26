@@ -32,6 +32,7 @@ class _MyAppState extends State<MyApp> {
         BlocProvider(create: (context) => _di.authBloc),
         BlocProvider(create: (context) => _di.customerBloc),
         BlocProvider(create: (context) => _di.businessBloc),
+        BlocProvider(create: (context) => _di.connectionRequestBloc),
       ],
       child: MyAppView(),
     );
