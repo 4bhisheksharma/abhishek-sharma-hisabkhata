@@ -11,6 +11,7 @@ from .serializers import (
     UserSearchSerializer
 )
 from hisabauth.models import User
+from notification.models import Notification
 
 
 class ConnectionRequestViewSet(viewsets.ModelViewSet):
@@ -100,7 +101,14 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             receiver=receiver
         )
         
-        # TODO: Send in-app notification to receiver
+        # Send in-app notification to receiver
+        Notification.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            title="New Connection Request",
+            message=f"{request.user.full_name} sent you a connection request.",
+            type="connection_request"
+        )
         
         return Response(
             {
@@ -172,7 +180,15 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         connection_request.status = serializer.validated_data['status']
         connection_request.save()
         
-        # TODO: Send notification to sender about status update baki chha
+        # Send notification to sender about status update
+        status_text = serializer.validated_data['status']
+        Notification.objects.create(
+            sender=request.user,
+            receiver=connection_request.sender,
+            title=f"Connection Request {status_text.capitalize()}",
+            message=f"{request.user.full_name} {status_text} your connection request.",
+            type=f"connection_request_{status_text}"
+        )
         
         return Response(
             {

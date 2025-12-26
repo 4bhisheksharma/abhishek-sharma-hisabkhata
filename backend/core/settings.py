@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'business_dashboard.apps.BusinessDashboardConfig',
     'otp_verification.apps.OtpVerificationConfig',
     'request.apps.RequestConfig',
+    'notification.apps.NotificationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
