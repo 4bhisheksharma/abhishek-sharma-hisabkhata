@@ -35,6 +35,17 @@ import '../../features/request/domain/usecases/get_pending_received_requests_use
 import '../../features/request/domain/usecases/get_connected_users_usecase.dart';
 import '../../features/request/domain/usecases/update_request_status_usecase.dart';
 import '../../features/request/presentation/bloc/connection_request_bloc.dart';
+import '../../features/request/data/datasource/notification_remote_data_source.dart';
+import '../../features/request/data/repository_imp/notification_repository_impl.dart';
+import '../../features/request/domain/repositories/notification_repository.dart';
+import '../../features/request/domain/usecases/get_all_notifications_usecase.dart';
+import '../../features/request/domain/usecases/get_unread_notifications_usecase.dart';
+import '../../features/request/domain/usecases/get_unread_count_usecase.dart';
+import '../../features/request/domain/usecases/mark_notification_as_read_usecase.dart';
+import '../../features/request/domain/usecases/mark_all_notifications_as_read_usecase.dart';
+import '../../features/request/domain/usecases/delete_notification_usecase.dart';
+import '../../features/request/domain/usecases/delete_all_read_notifications_usecase.dart';
+import '../../features/request/presentation/bloc/notification/notification_bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies
@@ -52,12 +63,14 @@ class DependencyInjection {
   late final BusinessRemoteDataSource _businessRemoteDataSource;
   late final ConnectionRequestRemoteDataSource
   _connectionRequestRemoteDataSource;
+  late final NotificationRemoteDataSource _notificationRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
   late final CustomerRepository _customerRepository;
   late final BusinessRepository _businessRepository;
   late final ConnectionRequestRepository _connectionRequestRepository;
+  late final NotificationRepository _notificationRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -88,11 +101,23 @@ class DependencyInjection {
   late final GetConnectedUsersUseCase _getConnectedUsersUseCase;
   late final UpdateRequestStatusUseCase _updateRequestStatusUseCase;
 
+  // Use Cases - Notification
+  late final GetAllNotificationsUseCase _getAllNotificationsUseCase;
+  late final GetUnreadNotificationsUseCase _getUnreadNotificationsUseCase;
+  late final GetUnreadCountUseCase _getUnreadCountUseCase;
+  late final MarkNotificationAsReadUseCase _markNotificationAsReadUseCase;
+  late final MarkAllNotificationsAsReadUseCase
+  _markAllNotificationsAsReadUseCase;
+  late final DeleteNotificationUseCase _deleteNotificationUseCase;
+  late final DeleteAllReadNotificationsUseCase
+  _deleteAllReadNotificationsUseCase;
+
   // BLoCs
   late final AuthBloc _authBloc;
   late final CustomerBloc _customerBloc;
   late final BusinessBloc _businessBloc;
   late final ConnectionRequestBloc _connectionRequestBloc;
+  late final NotificationBloc _notificationBloc;
 
   /// Initialize all dependencies
   void init() {
@@ -110,6 +135,9 @@ class DependencyInjection {
     _connectionRequestRemoteDataSource = ConnectionRequestRemoteDataSourceImpl(
       client: _httpClient,
     );
+    _notificationRemoteDataSource = NotificationRemoteDataSourceImpl(
+      client: _httpClient,
+    );
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -123,6 +151,9 @@ class DependencyInjection {
     );
     _connectionRequestRepository = ConnectionRequestRepositoryImpl(
       remoteDataSource: _connectionRequestRemoteDataSource,
+    );
+    _notificationRepository = NotificationRepositoryImpl(
+      remoteDataSource: _notificationRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -165,6 +196,27 @@ class DependencyInjection {
       _connectionRequestRepository,
     );
 
+    // Use Cases - Notification
+    _getAllNotificationsUseCase = GetAllNotificationsUseCase(
+      _notificationRepository,
+    );
+    _getUnreadNotificationsUseCase = GetUnreadNotificationsUseCase(
+      _notificationRepository,
+    );
+    _getUnreadCountUseCase = GetUnreadCountUseCase(_notificationRepository);
+    _markNotificationAsReadUseCase = MarkNotificationAsReadUseCase(
+      _notificationRepository,
+    );
+    _markAllNotificationsAsReadUseCase = MarkAllNotificationsAsReadUseCase(
+      _notificationRepository,
+    );
+    _deleteNotificationUseCase = DeleteNotificationUseCase(
+      _notificationRepository,
+    );
+    _deleteAllReadNotificationsUseCase = DeleteAllReadNotificationsUseCase(
+      _notificationRepository,
+    );
+
     // BLoCs
     _authBloc = AuthBloc(
       loginUseCase: _loginUseCase,
@@ -194,6 +246,15 @@ class DependencyInjection {
       getConnectedUsersUseCase: _getConnectedUsersUseCase,
       updateRequestStatusUseCase: _updateRequestStatusUseCase,
     );
+    _notificationBloc = NotificationBloc(
+      getAllNotificationsUseCase: _getAllNotificationsUseCase,
+      getUnreadNotificationsUseCase: _getUnreadNotificationsUseCase,
+      getUnreadCountUseCase: _getUnreadCountUseCase,
+      markNotificationAsReadUseCase: _markNotificationAsReadUseCase,
+      markAllNotificationsAsReadUseCase: _markAllNotificationsAsReadUseCase,
+      deleteNotificationUseCase: _deleteNotificationUseCase,
+      deleteAllReadNotificationsUseCase: _deleteAllReadNotificationsUseCase,
+    );
   }
 
   /// Dispose resources
@@ -203,6 +264,7 @@ class DependencyInjection {
     _customerBloc.close();
     _businessBloc.close();
     _connectionRequestBloc.close();
+    _notificationBloc.close();
   }
 
   // Getters
@@ -210,9 +272,11 @@ class DependencyInjection {
   CustomerBloc get customerBloc => _customerBloc;
   BusinessBloc get businessBloc => _businessBloc;
   ConnectionRequestBloc get connectionRequestBloc => _connectionRequestBloc;
+  NotificationBloc get notificationBloc => _notificationBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
   BusinessRepository get businessRepository => _businessRepository;
   ConnectionRequestRepository get connectionRequestRepository =>
       _connectionRequestRepository;
+  NotificationRepository get notificationRepository => _notificationRepository;
 }
