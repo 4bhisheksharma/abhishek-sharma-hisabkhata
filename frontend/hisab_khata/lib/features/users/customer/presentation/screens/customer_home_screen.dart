@@ -8,6 +8,7 @@ import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
+import '../../../../request/presentation/screens/notification_screen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -102,7 +103,12 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             currentNavIndex: _currentNavIndex,
             onNavTap: _onNavTap,
             onNotificationTap: () {
-              debugPrint("Notification tapped!");
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NotificationScreen(),
+                ),
+              );
             },
             body: RefreshIndicator(
               onRefresh: () async {

@@ -5,6 +5,7 @@ import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../domain/entities/notification.dart' as entity;
 import '../bloc/notification/bloc.dart';
+import 'connection_requests_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -114,10 +115,22 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           return _NotificationTile(
                             notification: notification,
                             onTap: () {
+                              // Mark as read if unread
                               if (!notification.isRead) {
                                 context.read<NotificationBloc>().add(
                                   MarkNotificationAsReadEvent(
                                     notificationId: notification.notificationId,
+                                  ),
+                                );
+                              }
+
+                              // Navigate to connection requests screen if it's a connection request notification
+                              if (notification.isConnectionRequest) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ConnectionRequestsScreen(),
                                   ),
                                 );
                               }
