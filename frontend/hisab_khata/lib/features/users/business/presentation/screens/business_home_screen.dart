@@ -62,6 +62,8 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
       case 4:
         // Profile
         await Navigator.pushNamed(context, '/business-profile-view');
+        // Check if widget is still mounted (user might have logged out)
+        if (!mounted) return;
         // Reset to home when returning from profile
         setState(() {
           _currentNavIndex = 0;
