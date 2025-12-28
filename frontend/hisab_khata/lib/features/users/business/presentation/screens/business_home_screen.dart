@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
@@ -123,10 +122,10 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: MyStatCard(
-                        title: "Add Customer",
+                        title: "Add More Customers",
                         firstLabel: "Total Customers",
                         firstValue: "${d.totalCustomers}",
-                        secondLabel: "Pending Requests",
+                        secondLabel: "Total Requests",
                         secondValue: "${d.totalRequests}",
                         icon: Icons.person_add_outlined,
                       ),
@@ -145,7 +144,7 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
                     ),
                     const SizedBox(height: 12),
 
-                    // Customer List (Placeholder data - replace with actual data when available)
+                    // Customer List
                     ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -153,49 +152,15 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
                       itemCount: 3, // Placeholder count
                       itemBuilder: (context, index) {
                         return BusinessCustomerListItem(
-                          businessName: "Ram Dai",
-                          phoneNumber: "9845474454",
-                          amount: "Rs. 15,220.5",
+                          businessName: "Customer ${index + 1}",
+                          phoneNumber: "+1234567890",
+                          amount: "${1000.0 * (index + 1)}",
                           onTap: () {
-                            // Navigate to customer details
-                            debugPrint("Customer tapped: $index");
+                            debugPrint("Navigate to customer details");
                           },
                         );
                       },
                     ),
-
-                    const SizedBox(height: 16),
-
-                    // See More Button
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Navigate to full customer list
-                          debugPrint("See more customers");
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryBlue,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 48,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          "See More",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),

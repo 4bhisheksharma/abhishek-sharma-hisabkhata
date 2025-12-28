@@ -8,6 +8,7 @@ import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_button.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../../../shared/widgets/my_text_field.dart';
+import '../../../../core/utils/validators/validators.dart';
 
 class AddConnectionScreen extends StatefulWidget {
   const AddConnectionScreen({super.key});
@@ -131,15 +132,13 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
                   MyTextField(
                     controller: _emailController,
                     label: 'Email',
-                    hintText: 'Demo@Gmail.Com',
+                    hintText: 'demo@gmail.com',
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter an email';
                       }
-                      if (!RegExp(
-                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                      ).hasMatch(value)) {
+                      if (!Validators.isValidEmail(value.trim())) {
                         return 'Please enter a valid email';
                       }
                       return null;

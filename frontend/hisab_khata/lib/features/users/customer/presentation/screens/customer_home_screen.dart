@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
@@ -154,48 +153,15 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                       itemCount: 3, // Placeholder count
                       itemBuilder: (context, index) {
                         return BusinessCustomerListItem(
-                          businessName: "Ram Dai Ko Pasal",
-                          phoneNumber: "9878748574",
-                          amount: "Rs. 15,220.5",
+                          businessName: "Business ${index + 1}",
+                          phoneNumber: "+1234567890",
+                          amount: "${1000.0 * (index + 1)}",
                           onTap: () {
-                            // Navigate to business details
-                            debugPrint("Business tapped: $index");
+                            debugPrint("Navigate to business details");
                           },
                         );
                       },
                     ),
-
-                    const SizedBox(height: 16),
-
-                    // See More Button
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Navigate to full business list
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryBlue,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 48,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          elevation: 0,
-                        ),
-                        child: const Text(
-                          "See More",
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
                   ],
                 ),
               ),

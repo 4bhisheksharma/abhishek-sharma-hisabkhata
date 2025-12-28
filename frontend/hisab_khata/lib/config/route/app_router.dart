@@ -56,9 +56,7 @@ class AppRouter {
         );
 
       case AppRoutes.addConnection:
-        return MaterialPageRoute(
-          builder: (_) => const AddConnectionScreen(),
-        );
+        return MaterialPageRoute(builder: (_) => const AddConnectionScreen());
 
       default:
         return MaterialPageRoute(
