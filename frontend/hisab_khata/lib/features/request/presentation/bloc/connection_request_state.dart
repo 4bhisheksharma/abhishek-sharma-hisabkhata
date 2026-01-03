@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/connection_request.dart';
+import '../../domain/entities/connected_user.dart';
 import '../../domain/entities/user_search_result.dart';
 
 /// Base connection request state
@@ -76,12 +77,12 @@ class PendingReceivedRequestsLoaded extends ConnectionRequestState {
 
 /// Connected users loaded state
 class ConnectedUsersLoaded extends ConnectionRequestState {
-  final List<ConnectionRequest> connections;
+  final List<ConnectedUser> connectedUsers;
 
-  const ConnectedUsersLoaded({required this.connections});
+  const ConnectedUsersLoaded({required this.connectedUsers});
 
   @override
-  List<Object?> get props => [connections];
+  List<Object?> get props => [connectedUsers];
 }
 
 /// Request status updated state

@@ -1,6 +1,7 @@
 import '../../../../core/data/base_remote_data_source.dart';
 import '../../../../core/constants/api_endpoints.dart';
 import '../models/connection_request_model.dart';
+import '../models/connected_user_model.dart';
 import '../models/user_search_result_model.dart';
 
 /// Abstract class defining connection request remote data source contract
@@ -13,7 +14,7 @@ abstract class ConnectionRequestRemoteDataSource {
   Future<List<ConnectionRequestModel>> getSentRequests();
   Future<List<ConnectionRequestModel>> getReceivedRequests();
   Future<List<ConnectionRequestModel>> getPendingReceivedRequests();
-  Future<List<ConnectionRequestModel>> getConnectedUsers();
+  Future<List<ConnectedUserModel>> getConnectedUsers();
   Future<ConnectionRequestModel> updateRequestStatus({
     required int requestId,
     required String status,
@@ -76,11 +77,11 @@ class ConnectionRequestRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<List<ConnectionRequestModel>> getConnectedUsers() async {
+  Future<List<ConnectedUserModel>> getConnectedUsers() async {
     final response = await get(ApiEndpoints.connectedUsers);
 
     final List<dynamic> data = response;
-    return data.map((json) => ConnectionRequestModel.fromJson(json)).toList();
+    return data.map((json) => ConnectedUserModel.fromJson(json)).toList();
   }
 
   @override

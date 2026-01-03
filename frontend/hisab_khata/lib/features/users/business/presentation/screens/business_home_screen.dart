@@ -7,6 +7,7 @@ import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
+import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
@@ -171,11 +172,9 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
       children: [
         // 0 - Home
         _buildHomeContent(state),
-        // 1 - Connections
-        const PlaceholderPage(
-          title: 'Connected Customers',
-          icon: Icons.people_rounded,
-          description: 'View and manage all your connected customers here.',
+        // 1 - Connections (shows connected customers for businesses)
+        const ConnectedUsersList(
+          filterBusinesses: false, // Business sees customers
         ),
         // 2 - Analytics
         const PlaceholderPage(

@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:hisab_khata/core/errors/failures.dart';
-import '../entities/connection_request.dart';
+import '../entities/connected_user.dart';
 import '../repositories/connection_request_repository.dart';
 
 class GetConnectedUsersUseCase {
@@ -8,7 +8,7 @@ class GetConnectedUsersUseCase {
 
   GetConnectedUsersUseCase(this.repository);
 
-  Future<Either<Failure, List<ConnectionRequest>>> call() async {
+  Future<Either<Failure, List<ConnectedUser>>> call() async {
     return await repository.getConnectedUsers();
   }
 }

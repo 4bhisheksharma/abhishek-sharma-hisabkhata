@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:hisab_khata/core/errors/failures.dart';
 import '../entities/connection_request.dart';
+import '../entities/connected_user.dart';
 import '../entities/user_search_result.dart';
 
 abstract class ConnectionRequestRepository {
@@ -23,8 +24,8 @@ abstract class ConnectionRequestRepository {
   /// Get pending requests received by current user
   Future<Either<Failure, List<ConnectionRequest>>> getPendingReceivedRequests();
 
-  /// Get all connected users (accepted connections)
-  Future<Either<Failure, List<ConnectionRequest>>> getConnectedUsers();
+  /// Get all connected users (accepted connections) with detailed info
+  Future<Either<Failure, List<ConnectedUser>>> getConnectedUsers();
 
   /// Update request status (accept or reject)
   Future<Either<Failure, ConnectionRequest>> updateRequestStatus({

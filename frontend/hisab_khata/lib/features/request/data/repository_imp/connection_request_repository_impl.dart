@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:hisab_khata/core/errors/failures.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../domain/entities/connection_request.dart';
+import '../../domain/entities/connected_user.dart';
 import '../../domain/entities/user_search_result.dart';
 import '../../domain/repositories/connection_request_repository.dart';
 import '../datasource/connection_request_remote_data_source.dart';
@@ -91,7 +92,7 @@ class ConnectionRequestRepositoryImpl implements ConnectionRequestRepository {
   }
 
   @override
-  Future<Either<Failure, List<ConnectionRequest>>> getConnectedUsers() async {
+  Future<Either<Failure, List<ConnectedUser>>> getConnectedUsers() async {
     try {
       final result = await remoteDataSource.getConnectedUsers();
       return Right(result);

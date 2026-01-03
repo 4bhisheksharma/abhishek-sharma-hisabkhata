@@ -120,7 +120,8 @@ class ConnectionRequestBloc
     result.fold(
       (failure) =>
           emit(ConnectionRequestError(message: failure.failureMessage)),
-      (connections) => emit(ConnectedUsersLoaded(connections: connections)),
+      (connectedUsers) =>
+          emit(ConnectedUsersLoaded(connectedUsers: connectedUsers)),
     );
   }
 
