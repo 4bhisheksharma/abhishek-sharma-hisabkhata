@@ -65,3 +65,26 @@ class CustomerBusinessRelationship(models.Model):
     
     def __str__(self):
         return f"{self.customer.user.full_name} - {self.business.business_name}"
+    
+    def update_pending_due(self):
+        """Recalculate pending_due based on all transactions"""
+        from django.db.models import Sum
+        total = self.transactions.aggregate(total=Sum('amount'))['total'] or 0
+        self.pending_due = total
+        self.save(update_fields=['pending_due', 'updated_at'])
+    
+    def get_total_paid(self):
+        """Get total amount paid by customer (negative transactions)"""
+        from django.db.models import Sum
+        paid = self.transactions.filter(
+            transaction_type__in=['payment']
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        return abs(paid)
+    
+    def get_total_purchases(self):
+        """Get total purchases/credits (positive transactions)"""
+        from django.db.models import Sum
+        purchases = self.transactions.filter(
+            transaction_type__in=['purchase', 'credit']
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        return purchases

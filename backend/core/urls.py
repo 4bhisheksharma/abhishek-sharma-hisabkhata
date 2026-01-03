@@ -42,6 +42,9 @@ urlpatterns = [
         
         # Notifications
         path('notifications/', include('notification.urls')),
+        
+        # Transactions & Favorites
+        path('transaction/', include('transaction.urls')),
     ])),
 ]
 

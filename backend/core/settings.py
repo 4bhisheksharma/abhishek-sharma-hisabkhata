@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'otp_verification.apps.OtpVerificationConfig',
     'request.apps.RequestConfig',
     'notification.apps.NotificationConfig',
+    'transaction.apps.TransactionConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
