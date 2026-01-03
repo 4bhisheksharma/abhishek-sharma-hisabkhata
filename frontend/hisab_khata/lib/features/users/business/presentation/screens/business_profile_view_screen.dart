@@ -7,6 +7,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_s
 import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
 import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
+import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -173,6 +174,16 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
           return const Center(child: Text("Unable to load profile"));
         },
       ),
+      bottomNavigationBar: MyBottomNavBar(
+        currentIndex: 4,
+        onTap: (index) => _handleNavTap(context, index),
+      ),
     );
+  }
+
+  void _handleNavTap(BuildContext context, int index) {
+    if (index == 4) return; // Already on profile
+    // Pop back to home and let it handle the navigation
+    Navigator.pop(context);
   }
 }
