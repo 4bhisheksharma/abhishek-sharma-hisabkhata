@@ -86,7 +86,9 @@ class CustomerRemoteDataSourceImpl extends BaseRemoteDataSource
   }
 
   @override
-  Future<List<RecentConnectionModel>> getRecentBusinesses({int limit = 10}) async {
+  Future<List<RecentConnectionModel>> getRecentBusinesses({
+    int limit = 10,
+  }) async {
     final response = await get(
       '${ApiEndpoints.recentBusinesses}?limit=$limit',
       includeAuth: true,

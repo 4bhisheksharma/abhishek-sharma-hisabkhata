@@ -6,6 +6,7 @@ import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_s
 import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
+import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
@@ -33,30 +34,27 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     // Handle navigation based on index
     switch (index) {
       case 0:
-        // Home - already here, just update state
+        // Home
         setState(() {
           _currentNavIndex = 0;
         });
         break;
       case 1:
-        // Analytics/Reports
-        debugPrint("Navigate to Analytics");
+        // Connected Users/Businesses
         setState(() {
-          _currentNavIndex = index;
+          _currentNavIndex = 1;
         });
         break;
       case 2:
-        // Transactions
-        debugPrint("Navigate to Transactions");
+        // Analytics
         setState(() {
-          _currentNavIndex = index;
+          _currentNavIndex = 2;
         });
         break;
       case 3:
-        // Layers/Categories
-        debugPrint("Navigate to Categories");
+        // History
         setState(() {
-          _currentNavIndex = index;
+          _currentNavIndex = 3;
         });
         break;
       case 4:
@@ -72,6 +70,129 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
         _loadDashboard();
         break;
     }
+  }
+
+  Widget _buildHomeContent(CustomerDashboardLoaded state) {
+    final d = state.dashboard;
+    final recentBusinesses = state.recentBusinesses;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadDashboard();
+        await Future.delayed(const Duration(milliseconds: 500));
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Stats Card
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: MyStatCard(
+                title: "Add More Business",
+                firstLabel: "Total Shops",
+                firstValue: "${d.totalShops}",
+                secondLabel: "Pending Requests",
+                secondValue: "${d.pendingRequests}",
+                icon: Icons.add_business_outlined,
+              ),
+            ),
+
+            // Recently Added Business Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                "Recently Added Business",
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Business List
+            if (recentBusinesses.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Icon(
+                        Icons.store_outlined,
+                        size: 48,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "No businesses added yet",
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: recentBusinesses.length,
+                itemBuilder: (context, index) {
+                  final business = recentBusinesses[index];
+                  return BusinessCustomerListItem(
+                    businessName: business.name,
+                    phoneNumber: business.contactInfo,
+                    amount:
+                        "Rs. ${business.pendingDue.abs().toStringAsFixed(2)}",
+                    profileImageUrl: ImageUtils.getFullImageUrl(
+                      business.profilePicture,
+                    ),
+                    onTap: () {
+                      debugPrint(
+                        "Navigate to business details: ${business.id}",
+                      );
+                    },
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBodyContent(CustomerDashboardLoaded state) {
+    return IndexedStack(
+      index: _currentNavIndex,
+      children: [
+        // 0 - Home
+        _buildHomeContent(state),
+        // 1 - Connections
+        const PlaceholderPage(
+          title: 'Connected Businesses',
+          icon: Icons.people_rounded,
+          description: 'View and manage all your connected businesses here.',
+        ),
+        // 2 - Analytics
+        const PlaceholderPage(
+          title: 'Analytics',
+          icon: Icons.bar_chart_rounded,
+          description: 'Track your spending patterns and financial insights.',
+        ),
+        // 3 - History
+        const PlaceholderPage(
+          title: 'Transaction History',
+          icon: Icons.history_rounded,
+          description: 'View all your past transactions and payments.',
+        ),
+        // 4 - Profile (handled via navigation)
+        const SizedBox.shrink(),
+      ],
+    );
   }
 
   @override
@@ -93,7 +214,6 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
         if (state is CustomerDashboardLoaded) {
           final d = state.dashboard;
-          final recentBusinesses = state.recentBusinesses;
 
           return SharedDashboard(
             userName: d.fullName,
@@ -112,91 +232,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                 ),
               );
             },
-            body: RefreshIndicator(
-              onRefresh: () async {
-                _loadDashboard();
-                await Future.delayed(const Duration(milliseconds: 500));
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Stats Card
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: MyStatCard(
-                        title: "Add More Business",
-                        firstLabel: "Total Shops",
-                        firstValue: "${d.totalShops}",
-                        secondLabel: "Pending Requests",
-                        secondValue: "${d.pendingRequests}",
-                        icon: Icons.add_business_outlined,
-                      ),
-                    ),
-
-                    // Recently Added Business Section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "Recently Added Business",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Business List
-                    if (recentBusinesses.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              Icon(
-                                Icons.store_outlined,
-                                size: 48,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                "No businesses added yet",
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      )
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: recentBusinesses.length,
-                        itemBuilder: (context, index) {
-                          final business = recentBusinesses[index];
-                          return BusinessCustomerListItem(
-                            businessName: business.name,
-                            phoneNumber: business.contactInfo,
-                            amount: "Rs. ${business.pendingDue.abs().toStringAsFixed(2)}",
-                            profileImageUrl: ImageUtils.getFullImageUrl(business.profilePicture),
-                            onTap: () {
-                              debugPrint("Navigate to business details: ${business.id}");
-                            },
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              ),
-            ),
+            body: _buildBodyContent(state),
           );
         }
 

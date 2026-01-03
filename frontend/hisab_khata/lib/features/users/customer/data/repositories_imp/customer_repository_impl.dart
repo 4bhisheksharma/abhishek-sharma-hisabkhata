@@ -68,7 +68,9 @@ class CustomerRepositoryImpl implements CustomerRepository {
     int limit = 10,
   }) async {
     try {
-      final businesses = await remoteDataSource.getRecentBusinesses(limit: limit);
+      final businesses = await remoteDataSource.getRecentBusinesses(
+        limit: limit,
+      );
       return Right(businesses);
     } on ServerException catch (e) {
       return Left(e.exceptionMessage);

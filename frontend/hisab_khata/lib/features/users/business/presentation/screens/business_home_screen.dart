@@ -6,6 +6,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_s
 import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
+import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
@@ -33,30 +34,27 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
     // Handle navigation based on index
     switch (index) {
       case 0:
-        // Home - already here, just update state
+        // Home
         setState(() {
           _currentNavIndex = 0;
         });
         break;
       case 1:
-        // Analytics/Reports
-        debugPrint("Navigate to Analytics");
+        // Connected Customers
         setState(() {
-          _currentNavIndex = index;
+          _currentNavIndex = 1;
         });
         break;
       case 2:
-        // Transactions
-        debugPrint("Navigate to Transactions");
+        // Analytics
         setState(() {
-          _currentNavIndex = index;
+          _currentNavIndex = 2;
         });
         break;
       case 3:
-        // Layers/Categories
-        debugPrint("Navigate to Categories");
+        // History
         setState(() {
-          _currentNavIndex = index;
+          _currentNavIndex = 3;
         });
         break;
       case 4:
@@ -72,6 +70,129 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
         _loadDashboard();
         break;
     }
+  }
+
+  Widget _buildHomeContent(BusinessDashboardLoaded state) {
+    final d = state.dashboard;
+    final recentCustomers = state.recentCustomers;
+
+    return RefreshIndicator(
+      onRefresh: () async {
+        _loadDashboard();
+        await Future.delayed(const Duration(milliseconds: 500));
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Stats Card
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: MyStatCard(
+                title: "Add More Customers",
+                firstLabel: "Total Customers",
+                firstValue: "${d.totalCustomers}",
+                secondLabel: "Total Requests",
+                secondValue: "${d.totalRequests}",
+                icon: Icons.person_add_outlined,
+              ),
+            ),
+
+            // Recently Added Customers Section
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                "Recently Added Customers",
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Customer List
+            if (recentCustomers.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Center(
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Icon(
+                        Icons.people_outline,
+                        size: 48,
+                        color: Colors.grey[400],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        "No customers added yet",
+                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                      ),
+                      const SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: recentCustomers.length,
+                itemBuilder: (context, index) {
+                  final customer = recentCustomers[index];
+                  return BusinessCustomerListItem(
+                    businessName: customer.name,
+                    phoneNumber: customer.contactInfo,
+                    amount:
+                        "Rs. ${customer.pendingDue.abs().toStringAsFixed(2)}",
+                    profileImageUrl: ImageUtils.getFullImageUrl(
+                      customer.profilePicture,
+                    ),
+                    onTap: () {
+                      debugPrint(
+                        "Navigate to customer details: ${customer.id}",
+                      );
+                    },
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBodyContent(BusinessDashboardLoaded state) {
+    return IndexedStack(
+      index: _currentNavIndex,
+      children: [
+        // 0 - Home
+        _buildHomeContent(state),
+        // 1 - Connections
+        const PlaceholderPage(
+          title: 'Connected Customers',
+          icon: Icons.people_rounded,
+          description: 'View and manage all your connected customers here.',
+        ),
+        // 2 - Analytics
+        const PlaceholderPage(
+          title: 'Analytics',
+          icon: Icons.bar_chart_rounded,
+          description: 'Track your sales patterns and business insights.',
+        ),
+        // 3 - History
+        const PlaceholderPage(
+          title: 'Transaction History',
+          icon: Icons.history_rounded,
+          description: 'View all your past transactions and received payments.',
+        ),
+        // 4 - Profile (handled via navigation)
+        const SizedBox.shrink(),
+      ],
+    );
   }
 
   @override
@@ -93,7 +214,6 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
 
         if (state is BusinessDashboardLoaded) {
           final d = state.dashboard;
-          final recentCustomers = state.recentCustomers;
 
           return SharedDashboard(
             userName: d.businessName,
@@ -111,91 +231,7 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
                 ),
               );
             },
-            body: RefreshIndicator(
-              onRefresh: () async {
-                _loadDashboard();
-                await Future.delayed(const Duration(milliseconds: 500));
-              },
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Stats Card
-                    Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: MyStatCard(
-                        title: "Add More Customers",
-                        firstLabel: "Total Customers",
-                        firstValue: "${d.totalCustomers}",
-                        secondLabel: "Total Requests",
-                        secondValue: "${d.totalRequests}",
-                        icon: Icons.person_add_outlined,
-                      ),
-                    ),
-
-                    // Recently Added Customers Section
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Text(
-                        "Recently Added Customers",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-
-                    // Customer List
-                    if (recentCustomers.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              const SizedBox(height: 20),
-                              Icon(
-                                Icons.people_outline,
-                                size: 48,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                "No customers added yet",
-                                style: TextStyle(
-                                  color: Colors.grey[600],
-                                  fontSize: 14,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      )
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        itemCount: recentCustomers.length,
-                        itemBuilder: (context, index) {
-                          final customer = recentCustomers[index];
-                          return BusinessCustomerListItem(
-                            businessName: customer.name,
-                            phoneNumber: customer.contactInfo,
-                            amount: "Rs. ${customer.pendingDue.abs().toStringAsFixed(2)}",
-                            profileImageUrl: ImageUtils.getFullImageUrl(customer.profilePicture),
-                            onTap: () {
-                              debugPrint("Navigate to customer details: ${customer.id}");
-                            },
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              ),
-            ),
+            body: _buildBodyContent(state),
           );
         }
 

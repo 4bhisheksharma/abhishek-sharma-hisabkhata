@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 /// Entity representing a recent connection (business or customer)
-/// Used for both "Recently Added Businesses" (customer view) 
+/// Used for both "Recently Added Businesses" (customer view)
 /// and "Recently Added Customers" (business view)
 class RecentConnectionEntity extends Equatable {
   final int id; // customer_id or business_id
@@ -34,12 +34,12 @@ class RecentConnectionEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        profilePicture,
-        contact,
-        email,
-        pendingDue,
-        addedAt,
-      ];
+    id,
+    name,
+    profilePicture,
+    contact,
+    email,
+    pendingDue,
+    addedAt,
+  ];
 }

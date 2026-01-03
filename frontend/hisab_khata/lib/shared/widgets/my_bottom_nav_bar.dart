@@ -35,27 +35,32 @@ class MyBottomNavBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildNavItem(
-                icon: Icons.home,
+                icon: Icons.home_rounded,
+                label: 'Home',
                 index: 0,
                 isSelected: currentIndex == 0,
               ),
               _buildNavItem(
-                icon: Icons.bar_chart_rounded,
+                icon: Icons.people_rounded,
+                label: 'Connections',
                 index: 1,
                 isSelected: currentIndex == 1,
               ),
               _buildNavItem(
-                icon: Icons.compare_arrows,
+                icon: Icons.bar_chart_rounded,
+                label: 'Analytics',
                 index: 2,
                 isSelected: currentIndex == 2,
               ),
               _buildNavItem(
-                icon: Icons.layers,
+                icon: Icons.history_rounded,
+                label: 'History',
                 index: 3,
                 isSelected: currentIndex == 3,
               ),
               _buildNavItem(
-                icon: Icons.person,
+                icon: Icons.person_rounded,
+                label: 'Profile',
                 index: 4,
                 isSelected: currentIndex == 4,
               ),
@@ -68,24 +73,41 @@ class MyBottomNavBar extends StatelessWidget {
 
   Widget _buildNavItem({
     required IconData icon,
+    required String label,
     required int index,
     required bool isSelected,
   }) {
     return GestureDetector(
       onTap: () => onTap(index),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(
-          icon,
-          color: isSelected
-              ? Colors.white
-              : const Color.fromARGB(221, 27, 27, 27),
-          size: 28,
-        ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
+              color: isSelected
+                  ? Colors.white
+                  : const Color.fromARGB(221, 27, 27, 27),
+              size: 24,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 10,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              color: isSelected
+                  ? AppTheme.primaryBlue
+                  : const Color.fromARGB(221, 27, 27, 27),
+            ),
+          ),
+        ],
       ),
     );
   }

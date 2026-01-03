@@ -31,11 +31,11 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     Emitter<CustomerState> emit,
   ) async {
     emit(const CustomerLoading());
-    
+
     // Load dashboard and recent businesses in parallel
     final dashboardResult = await getCustomerDashboard();
     final recentBusinessesResult = await getRecentBusinesses();
-    
+
     List<RecentConnectionEntity> recentBusinesses = [];
     recentBusinessesResult.fold(
       (error) => {}, // Silently handle error, show empty list
@@ -44,10 +44,9 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
 
     dashboardResult.fold(
       (error) => emit(CustomerError(error)),
-      (dashboard) => emit(CustomerDashboardLoaded(
-        dashboard,
-        recentBusinesses: recentBusinesses,
-      )),
+      (dashboard) => emit(
+        CustomerDashboardLoaded(dashboard, recentBusinesses: recentBusinesses),
+      ),
     );
   }
 
@@ -93,13 +92,15 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
     final currentState = state;
     if (currentState is CustomerDashboardLoaded) {
       final result = await getRecentBusinesses(limit: event.limit);
-      
+
       result.fold(
         (error) => emit(CustomerError(error)),
-        (businesses) => emit(CustomerDashboardLoaded(
-          currentState.dashboard,
-          recentBusinesses: businesses,
-        )),
+        (businesses) => emit(
+          CustomerDashboardLoaded(
+            currentState.dashboard,
+            recentBusinesses: businesses,
+          ),
+        ),
       );
     }
   }

@@ -8,7 +8,9 @@ class GetRecentBusinesses {
 
   GetRecentBusinesses(this.repository);
 
-  Future<Either<String, List<RecentConnectionEntity>>> call({int limit = 10}) async {
+  Future<Either<String, List<RecentConnectionEntity>>> call({
+    int limit = 10,
+  }) async {
     return await repository.getRecentBusinesses(limit: limit);
   }
 }

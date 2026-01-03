@@ -24,9 +24,12 @@ class BusinessLoading extends BusinessState {
 class BusinessDashboardLoaded extends BusinessState {
   final BusinessDashboard dashboard;
   final List<RecentConnectionEntity> recentCustomers;
-  
-  const BusinessDashboardLoaded(this.dashboard, {this.recentCustomers = const []});
-  
+
+  const BusinessDashboardLoaded(
+    this.dashboard, {
+    this.recentCustomers = const [],
+  });
+
   @override
   List<Object?> get props => [dashboard, recentCustomers];
 }
