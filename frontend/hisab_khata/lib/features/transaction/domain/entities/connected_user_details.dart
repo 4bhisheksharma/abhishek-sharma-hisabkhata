@@ -7,26 +7,26 @@ class ConnectedUserDetails extends Equatable {
   final String? phoneNumber;
   final String fullName;
   final String? profilePicture;
-  
+
   // Business specific
   final bool isBusiness;
   final int? businessId;
   final String? businessName;
-  
+
   // Customer specific
   final int? customerId;
-  
+
   // Relationship info
   final int relationshipId;
   final DateTime connectedAt;
-  
+
   // Financial summary
   final double toPay;
   final double totalPaid;
-  
+
   // Favorite (only for customers viewing businesses)
   final bool isFavorite;
-  
+
   // Transaction history
   final List<Transaction> transactions;
 
@@ -49,9 +49,8 @@ class ConnectedUserDetails extends Equatable {
   });
 
   /// Display name - business name for businesses, full name for customers
-  String get displayName => isBusiness && businessName != null 
-      ? businessName! 
-      : fullName;
+  String get displayName =>
+      isBusiness && businessName != null ? businessName! : fullName;
 
   /// Contact info - phone number or email
   String get contactInfo => phoneNumber ?? email;
@@ -101,20 +100,20 @@ class ConnectedUserDetails extends Equatable {
 
   @override
   List<Object?> get props => [
-        userId,
-        email,
-        phoneNumber,
-        fullName,
-        profilePicture,
-        isBusiness,
-        businessId,
-        businessName,
-        customerId,
-        relationshipId,
-        connectedAt,
-        toPay,
-        totalPaid,
-        isFavorite,
-        transactions,
-      ];
+    userId,
+    email,
+    phoneNumber,
+    fullName,
+    profilePicture,
+    isBusiness,
+    businessId,
+    businessName,
+    customerId,
+    relationshipId,
+    connectedAt,
+    toPay,
+    totalPaid,
+    isFavorite,
+    transactions,
+  ];
 }

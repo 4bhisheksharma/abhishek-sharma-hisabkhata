@@ -13,6 +13,7 @@ class ConnectedUser extends Equatable {
   final int? customerId;
   final DateTime connectedAt;
   final int requestId;
+  final int relationshipId;
 
   const ConnectedUser({
     required this.userId,
@@ -26,6 +27,7 @@ class ConnectedUser extends Equatable {
     this.customerId,
     required this.connectedAt,
     required this.requestId,
+    required this.relationshipId,
   });
 
   /// Returns display name - business name if business, otherwise full name
@@ -48,5 +50,6 @@ class ConnectedUser extends Equatable {
     customerId,
     connectedAt,
     requestId,
+    relationshipId,
   ];
 }

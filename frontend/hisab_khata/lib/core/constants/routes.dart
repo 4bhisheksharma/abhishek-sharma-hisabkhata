@@ -11,4 +11,5 @@ class AppRoutes {
   static const String businessProfile = '/business-profile';
   static const String businessProfileView = '/business-profile-view';
   static const String addConnection = '/add-connection';
+  static const String connectedUserDetails = '/connected-user-details';
 }

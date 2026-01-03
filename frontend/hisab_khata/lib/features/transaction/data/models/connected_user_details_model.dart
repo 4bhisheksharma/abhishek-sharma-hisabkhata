@@ -23,7 +23,8 @@ class ConnectedUserDetailsModel extends ConnectedUserDetails {
 
   factory ConnectedUserDetailsModel.fromJson(Map<String, dynamic> json) {
     // Parse transactions list
-    final transactionsList = (json['transactions'] as List<dynamic>?)
+    final transactionsList =
+        (json['transactions'] as List<dynamic>?)
             ?.map((t) => TransactionModel.fromJson(t as Map<String, dynamic>))
             .toList() ??
         <Transaction>[];

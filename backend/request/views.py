@@ -168,6 +168,30 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             user_data = ConnectedUserSerializer(other_user).data
             user_data['connected_at'] = conn.updated_at
             user_data['request_id'] = conn.business_customer_request_id
+            
+            # Get relationship_id from CustomerBusinessRelationship
+            relationship_id = None
+            current_user = request.user
+            
+            # Determine customer and business from the connection
+            if hasattr(current_user, 'customer_profile') and hasattr(other_user, 'business_profile'):
+                # Current user is customer, other is business
+                relationship = CustomerBusinessRelationship.objects.filter(
+                    customer=current_user.customer_profile,
+                    business=other_user.business_profile
+                ).first()
+                if relationship:
+                    relationship_id = relationship.relationship_id
+            elif hasattr(current_user, 'business_profile') and hasattr(other_user, 'customer_profile'):
+                # Current user is business, other is customer
+                relationship = CustomerBusinessRelationship.objects.filter(
+                    customer=other_user.customer_profile,
+                    business=current_user.business_profile
+                ).first()
+                if relationship:
+                    relationship_id = relationship.relationship_id
+            
+            user_data['relationship_id'] = relationship_id
             connected_users.append(user_data)
         
         return Response(connected_users, status=status.HTTP_200_OK)

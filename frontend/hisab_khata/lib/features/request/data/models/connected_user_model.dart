@@ -13,6 +13,7 @@ class ConnectedUserModel extends ConnectedUser {
     super.customerId,
     required super.connectedAt,
     required super.requestId,
+    required super.relationshipId,
   });
 
   factory ConnectedUserModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +29,7 @@ class ConnectedUserModel extends ConnectedUser {
       customerId: json['customer_id'],
       connectedAt: DateTime.parse(json['connected_at']),
       requestId: json['request_id'],
+      relationshipId: json['relationship_id'] ?? 0,
     );
   }
 
@@ -44,6 +46,7 @@ class ConnectedUserModel extends ConnectedUser {
       'customer_id': customerId,
       'connected_at': connectedAt.toIso8601String(),
       'request_id': requestId,
+      'relationship_id': relationshipId,
     };
   }
 }

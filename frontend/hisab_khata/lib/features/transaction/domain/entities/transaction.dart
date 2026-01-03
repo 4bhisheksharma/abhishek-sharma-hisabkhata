@@ -33,13 +33,13 @@ class Transaction extends Equatable {
   });
 
   /// Returns true if this transaction increases what customer owes (purchase/credit)
-  bool get isDebit => 
-      transactionType == TransactionType.purchase || 
+  bool get isDebit =>
+      transactionType == TransactionType.purchase ||
       transactionType == TransactionType.credit;
 
   /// Returns true if this transaction decreases what customer owes (payment/refund)
-  bool get isCredit => 
-      transactionType == TransactionType.payment || 
+  bool get isCredit =>
+      transactionType == TransactionType.payment ||
       transactionType == TransactionType.refund;
 
   /// Formatted transaction type for display
@@ -60,11 +60,11 @@ class Transaction extends Equatable {
 
   @override
   List<Object?> get props => [
-        transactionId,
-        amount,
-        transactionType,
-        description,
-        transactionDate,
-        createdAt,
-      ];
+    transactionId,
+    amount,
+    transactionType,
+    description,
+    transactionDate,
+    createdAt,
+  ];
 }

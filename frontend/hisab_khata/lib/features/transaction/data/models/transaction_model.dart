@@ -14,7 +14,9 @@ class TransactionModel extends Transaction {
     return TransactionModel(
       transactionId: json['transaction_id'] as int,
       amount: double.parse(json['amount'].toString()),
-      transactionType: TransactionType.fromString(json['transaction_type'] as String),
+      transactionType: TransactionType.fromString(
+        json['transaction_type'] as String,
+      ),
       description: json['description'] as String? ?? '',
       transactionDate: DateTime.parse(json['transaction_date'] as String),
       createdAt: DateTime.parse(json['created_at'] as String),

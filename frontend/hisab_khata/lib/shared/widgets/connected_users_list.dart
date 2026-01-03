@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/config/route/app_router.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/features/request/domain/entities/connected_user.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
@@ -176,7 +178,16 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               if (widget.onUserTap != null) {
                 widget.onUserTap!(user);
               } else {
-                debugPrint('Navigate to user details: ${user.userId}');
+                // Navigate to connected user details page
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.connectedUserDetails,
+                  arguments: ConnectedUserDetailsArgs(
+                    relationshipId: user.relationshipId,
+                    isCustomerView: !widget
+                        .filterBusinesses, // If filtering businesses, user is customer
+                  ),
+                );
               }
             },
           );

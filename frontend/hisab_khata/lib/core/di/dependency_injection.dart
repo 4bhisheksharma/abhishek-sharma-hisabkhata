@@ -1,5 +1,9 @@
 import 'package:http/http.dart' as http;
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
+import '../../features/transaction/data/datasources/transaction_remote_data_source.dart';
+import '../../features/transaction/data/repositories_imp/transaction_repository_impl.dart';
+import '../../features/transaction/domain/repositories/transaction_repository.dart';
+import '../../features/transaction/presentation/bloc/connected_user_details_bloc.dart';
 import '../../features/auth/data/repositories_imp/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
@@ -66,6 +70,7 @@ class DependencyInjection {
   late final ConnectionRequestRemoteDataSource
   _connectionRequestRemoteDataSource;
   late final NotificationRemoteDataSource _notificationRemoteDataSource;
+  late final TransactionRemoteDataSource _transactionRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
@@ -73,6 +78,7 @@ class DependencyInjection {
   late final BusinessRepository _businessRepository;
   late final ConnectionRequestRepository _connectionRequestRepository;
   late final NotificationRepository _notificationRepository;
+  late final TransactionRepository _transactionRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -142,6 +148,9 @@ class DependencyInjection {
     _notificationRemoteDataSource = NotificationRemoteDataSourceImpl(
       client: _httpClient,
     );
+    _transactionRemoteDataSource = TransactionRemoteDataSource(
+      client: _httpClient,
+    );
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -158,6 +167,9 @@ class DependencyInjection {
     );
     _notificationRepository = NotificationRepositoryImpl(
       remoteDataSource: _notificationRemoteDataSource,
+    );
+    _transactionRepository = TransactionRepositoryImpl(
+      remoteDataSource: _transactionRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -287,4 +299,10 @@ class DependencyInjection {
   ConnectionRequestRepository get connectionRequestRepository =>
       _connectionRequestRepository;
   NotificationRepository get notificationRepository => _notificationRepository;
+  TransactionRepository get transactionRepository => _transactionRepository;
+
+  /// Create a new ConnectedUserDetailsBloc instance
+  ConnectedUserDetailsBloc createConnectedUserDetailsBloc() {
+    return ConnectedUserDetailsBloc(repository: _transactionRepository);
+  }
 }

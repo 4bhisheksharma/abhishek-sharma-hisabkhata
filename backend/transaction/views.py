@@ -169,7 +169,7 @@ class ConnectedUserDetailsViewSet(viewsets.ViewSet):
                 'business_name': other_business.business_name,
                 'customer_id': None,
                 'relationship_id': relationship.relationship_id,
-                'connected_at': relationship.connected_at,
+                'connected_at': relationship.created_at,
                 'to_pay': relationship.pending_due,  # What customer owes to business
                 'total_paid': relationship.get_total_paid(),
                 'is_favorite': is_favorite,
@@ -190,7 +190,7 @@ class ConnectedUserDetailsViewSet(viewsets.ViewSet):
                 'business_name': None,
                 'customer_id': other_customer.customer_id,
                 'relationship_id': relationship.relationship_id,
-                'connected_at': relationship.connected_at,
+                'connected_at': relationship.created_at,
                 'to_pay': relationship.pending_due,  # What customer owes
                 'total_paid': relationship.get_total_paid(),
                 'is_favorite': False,  # Businesses don't have favorites

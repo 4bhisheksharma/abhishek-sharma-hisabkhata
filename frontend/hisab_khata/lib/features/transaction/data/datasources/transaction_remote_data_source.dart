@@ -10,19 +10,25 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
 
   /// Get connected user details with transactions
   /// GET /transaction/connection-details/{relationship_id}/
-  Future<ConnectedUserDetailsModel> getConnectedUserDetails(int relationshipId) async {
-    final response = await get('transaction/connection-details/$relationshipId/');
+  Future<ConnectedUserDetailsModel> getConnectedUserDetails(
+    int relationshipId,
+  ) async {
+    final response = await get(
+      'transaction/connection-details/$relationshipId/',
+    );
     return ConnectedUserDetailsModel.fromJson(response as Map<String, dynamic>);
   }
 
   /// Get transactions for a specific relationship
   /// GET /transaction/transactions/by_relationship/?relationship_id=X
-  Future<List<TransactionModel>> getTransactionsByRelationship(int relationshipId) async {
+  Future<List<TransactionModel>> getTransactionsByRelationship(
+    int relationshipId,
+  ) async {
     final response = await get(
       'transaction/transactions/by_relationship/',
       queryParameters: {'relationship_id': relationshipId.toString()},
     );
-    
+
     final List<dynamic> data = response as List<dynamic>;
     return data
         .map((json) => TransactionModel.fromJson(json as Map<String, dynamic>))
@@ -43,11 +49,11 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
         'relationship_id': relationshipId,
         'amount': amount.toString(),
         'transaction_type': type.name,
-        if (description != null && description.isNotEmpty) 
+        if (description != null && description.isNotEmpty)
           'description': description,
       },
     );
-    
+
     return TransactionModel.fromJson(response as Map<String, dynamic>);
   }
 
@@ -58,7 +64,7 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
       'transaction/favorites/',
       body: {'business_id': businessId},
     );
-    
+
     return FavoriteBusinessModel.fromJson(response as Map<String, dynamic>);
   }
 
@@ -75,7 +81,7 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
       'transaction/favorites/check/',
       queryParameters: {'business_id': businessId.toString()},
     );
-    
+
     return (response as Map<String, dynamic>)['is_favorite'] as bool? ?? false;
   }
 
@@ -83,10 +89,13 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
   /// GET /transaction/favorites/
   Future<List<FavoriteBusinessModel>> getFavorites() async {
     final response = await get('transaction/favorites/');
-    
+
     final List<dynamic> data = response as List<dynamic>;
     return data
-        .map((json) => FavoriteBusinessModel.fromJson(json as Map<String, dynamic>))
+        .map(
+          (json) =>
+              FavoriteBusinessModel.fromJson(json as Map<String, dynamic>),
+        )
         .toList();
   }
 }
