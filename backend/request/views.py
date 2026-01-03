@@ -6,6 +6,7 @@ from django.db.models import Q
 from .models import BusinessCustomerRequest
 from .serializers import (
     ConnectionRequestSerializer,
+    ConnectedUserSerializer,
     SendRequestSerializer,
     UpdateRequestStatusSerializer,
     UserSearchSerializer
@@ -145,13 +146,31 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='connected')
     def connected_users(self, request):
-        """Get all connected users (accepted connections)"""
-        connected = BusinessCustomerRequest.objects.filter(
+        """Get all connected users (accepted connections) with detailed info"""
+        connected_requests = BusinessCustomerRequest.objects.filter(
             Q(sender=request.user, status='accepted') |
             Q(receiver=request.user, status='accepted')
+        ).select_related(
+            'sender__business_profile',
+            'sender__customer_profile',
+            'receiver__business_profile',
+            'receiver__customer_profile'
         )
-        serializer = ConnectionRequestSerializer(connected, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        # Get the other user from each connection
+        connected_users = []
+        for conn in connected_requests:
+            if conn.sender == request.user:
+                other_user = conn.receiver
+            else:
+                other_user = conn.sender
+            
+            user_data = ConnectedUserSerializer(other_user).data
+            user_data['connected_at'] = conn.updated_at
+            user_data['request_id'] = conn.business_customer_request_id
+            connected_users.append(user_data)
+        
+        return Response(connected_users, status=status.HTTP_200_OK)
     
     @action(detail=True, methods=['patch'], url_path='update-status')
     def update_status(self, request, pk=None):

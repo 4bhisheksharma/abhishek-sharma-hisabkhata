@@ -12,6 +12,47 @@ class UserSearchSerializer(serializers.ModelSerializer):
         read_only_fields = ['user_id', 'email', 'phone_number', 'full_name', 'profile_picture']
 
 
+class ConnectedUserSerializer(serializers.ModelSerializer):
+    """Serializer for connected users with business details"""
+    is_business = serializers.SerializerMethodField()
+    business_id = serializers.SerializerMethodField()
+    business_name = serializers.SerializerMethodField()
+    customer_id = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = [
+            'user_id', 
+            'email', 
+            'phone_number', 
+            'full_name', 
+            'profile_picture',
+            'is_business',
+            'business_id',
+            'business_name',
+            'customer_id',
+        ]
+        read_only_fields = fields
+    
+    def get_is_business(self, obj):
+        return hasattr(obj, 'business_profile')
+    
+    def get_business_id(self, obj):
+        if hasattr(obj, 'business_profile'):
+            return obj.business_profile.business_id
+        return None
+    
+    def get_business_name(self, obj):
+        if hasattr(obj, 'business_profile'):
+            return obj.business_profile.business_name
+        return None
+    
+    def get_customer_id(self, obj):
+        if hasattr(obj, 'customer_profile'):
+            return obj.customer_profile.customer_id
+        return None
+
+
 class ConnectionRequestSerializer(serializers.ModelSerializer):
     """Serializer for connection requests"""
     sender_email = serializers.EmailField(source='sender.email', read_only=True)
