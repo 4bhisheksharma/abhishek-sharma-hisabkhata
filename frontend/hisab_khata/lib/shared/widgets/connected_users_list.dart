@@ -184,8 +184,8 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                   AppRoutes.connectedUserDetails,
                   arguments: ConnectedUserDetailsArgs(
                     relationshipId: user.relationshipId,
-                    isCustomerView: !widget
-                        .filterBusinesses, // If filtering businesses, user is customer
+                    isCustomerView: widget
+                        .filterBusinesses, // If filtering businesses (true), current user is customer viewing business
                   ),
                 );
               }

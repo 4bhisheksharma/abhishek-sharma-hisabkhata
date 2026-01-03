@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
@@ -8,6 +9,8 @@ import '../widgets/financial_summary_card.dart';
 import '../widgets/payment_ratio_bar.dart';
 import '../widgets/transactions_list.dart';
 import '../../domain/entities/connected_user_details.dart';
+import '../../domain/entities/transaction.dart';
+import 'add_transaction_page.dart';
 
 /// Page showing connected user details with transactions
 class ConnectedUserDetailsPage extends StatelessWidget {
@@ -33,7 +36,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               ? _buildPayDueButton(context, state)
               : null,
           floatingActionButton: !isCustomerView
-              ? _buildMessageFab(context)
+              ? _buildAddTransactionFab(context, state)
               : null,
         );
       },
@@ -138,10 +141,14 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   PaymentRatioBar(
                     toPay: userDetails.toPay,
                     totalPaid: userDetails.totalPaid,
+                    isCustomerView: isCustomerView,
                   ),
                   const SizedBox(height: 24),
                   // Transactions list
-                  TransactionsList(transactions: userDetails.transactions),
+                  TransactionsList(
+                    transactions: userDetails.transactions,
+                    isCustomerView: isCustomerView,
+                  ),
                 ],
               ),
             ),
@@ -174,6 +181,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
             child: FinancialSummaryCard(
               toPay: userDetails.toPay,
               totalPaid: userDetails.totalPaid,
+              isCustomerView: isCustomerView,
             ),
           ),
           const SizedBox(width: 20),
@@ -211,7 +219,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -222,7 +230,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
           width: double.infinity,
           height: 50,
           child: ElevatedButton(
-            onPressed: isLoading ? null : () => _showPayDueDialog(context),
+            onPressed: isLoading
+                ? null
+                : () => _showPayDueDialog(context, state),
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
@@ -250,20 +260,280 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildMessageFab(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () {
-        // TODO: Open messaging/chat
-      },
+  Widget _buildAddTransactionFab(
+    BuildContext context,
+    ConnectedUserDetailsState state,
+  ) {
+    ConnectedUserDetails? userDetails;
+    if (state is ConnectedUserDetailsLoaded) {
+      userDetails = state.userDetails;
+    } else if (state is ConnectedUserDetailsFavoriteToggling) {
+      userDetails = state.userDetails;
+    } else if (state is ConnectedUserDetailsTransactionCreating) {
+      userDetails = state.userDetails;
+    }
+
+    return FloatingActionButton.extended(
+      onPressed: () => _navigateToAddTransaction(context, userDetails),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      child: const Icon(Icons.message, color: Colors.white),
+      icon: const Icon(Icons.add, color: Colors.white),
+      label: const Text(
+        'Add Transaction',
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+      ),
     );
   }
 
-  void _showPayDueDialog(BuildContext context) {
-    // TODO: Implement pay due dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Pay Due feature coming soon!')),
+  void _navigateToAddTransaction(
+    BuildContext context,
+    ConnectedUserDetails? userDetails,
+  ) async {
+    if (userDetails == null) return;
+
+    final bloc = context.read<ConnectedUserDetailsBloc>();
+
+    final result = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (_) => BlocProvider.value(
+          value: bloc,
+          child: AddTransactionPage(
+            relationshipId: relationshipId,
+            customerName: userDetails.displayName,
+          ),
+        ),
+      ),
+    );
+
+    // Refresh if transaction was added
+    if (result == true) {
+      bloc.add(RefreshConnectedUserDetails(relationshipId));
+    }
+  }
+
+  void _showPayDueDialog(
+    BuildContext context,
+    ConnectedUserDetailsState state,
+  ) {
+    ConnectedUserDetails? userDetails;
+
+    if (state is ConnectedUserDetailsLoaded) {
+      userDetails = state.userDetails;
+    } else if (state is ConnectedUserDetailsFavoriteToggling) {
+      userDetails = state.userDetails;
+    }
+
+    if (userDetails == null || userDetails.toPay <= 0) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('No pending dues to pay!')));
+      return;
+    }
+
+    // Show simple pay due dialog
+    showDialog(
+      context: context,
+      builder: (dialogContext) => _PayDueDialog(
+        currentDue: userDetails!.toPay,
+        onPay: (amount, description) {
+          Navigator.pop(dialogContext);
+          context.read<ConnectedUserDetailsBloc>().add(
+            CreateTransaction(
+              relationshipId: relationshipId,
+              amount: amount,
+              type: TransactionType.payment,
+              description: description,
+            ),
+          );
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                'Payment of Rs. ${amount.toStringAsFixed(2)} recorded',
+              ),
+              backgroundColor: Colors.green,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Simple dialog for customer to pay dues
+class _PayDueDialog extends StatefulWidget {
+  final double currentDue;
+  final Function(double amount, String? description) onPay;
+
+  const _PayDueDialog({required this.currentDue, required this.onPay});
+
+  @override
+  State<_PayDueDialog> createState() => _PayDueDialogState();
+}
+
+class _PayDueDialogState extends State<_PayDueDialog> {
+  final _formKey = GlobalKey<FormState>();
+  final _amountController = TextEditingController();
+  final _noteController = TextEditingController();
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    _noteController.dispose();
+    super.dispose();
+  }
+
+  void _payFullAmount() {
+    _amountController.text = widget.currentDue.toStringAsFixed(2);
+  }
+
+  void _submit() {
+    if (_formKey.currentState!.validate()) {
+      final amount = double.parse(_amountController.text);
+      final note = _noteController.text.trim();
+      widget.onPay(amount, note.isEmpty ? null : note);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header
+              Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      Icons.payment,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Pay Due',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Current due: Rs. ${widget.currentDue.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+
+              // Amount field
+              TextFormField(
+                controller: _amountController,
+                keyboardType: const TextInputType.numberWithOptions(
+                  decimal: true,
+                ),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                ],
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  prefixText: 'Rs. ',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  suffixIcon: TextButton(
+                    onPressed: _payFullAmount,
+                    child: const Text('Pay Full'),
+                  ),
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter amount';
+                  }
+                  final amount = double.tryParse(value);
+                  if (amount == null || amount <= 0) {
+                    return 'Please enter a valid amount';
+                  }
+                  if (amount > widget.currentDue) {
+                    return 'Amount cannot exceed due amount';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Note field (optional)
+              TextFormField(
+                controller: _noteController,
+                decoration: InputDecoration(
+                  labelText: 'Note (optional)',
+                  hintText: 'e.g., Payment for January',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                maxLines: 2,
+              ),
+              const SizedBox(height: 24),
+
+              // Actions
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text('Cancel'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _submit,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text('Pay Now'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

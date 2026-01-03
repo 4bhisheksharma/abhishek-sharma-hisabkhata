@@ -5,12 +5,14 @@ class PaymentRatioBar extends StatelessWidget {
   final double toPay;
   final double totalPaid;
   final String currency;
+  final bool isCustomerView;
 
   const PaymentRatioBar({
     super.key,
     required this.toPay,
     required this.totalPaid,
     this.currency = 'Rs.',
+    this.isCustomerView = true,
   });
 
   double get _paidPercentage {
@@ -20,12 +22,28 @@ class PaymentRatioBar extends StatelessWidget {
   }
 
   String get _ratioMessage {
-    if (_paidPercentage >= 80) {
-      return '✓ Your Pay Is To Paid Ratio Looks Good';
-    } else if (_paidPercentage >= 50) {
-      return '⚠ Consider paying some dues';
+    if (isCustomerView) {
+      // Customer view - focus on payment status
+      if (toPay <= 0) {
+        return '✓ All dues cleared!';
+      } else if (_paidPercentage >= 80) {
+        return '✓ Great! Almost all dues paid';
+      } else if (_paidPercentage >= 50) {
+        return '⚠ Consider clearing pending dues';
+      } else {
+        return '⚠ Outstanding balance pending';
+      }
     } else {
-      return '⚠ High outstanding balance';
+      // Business view - focus on collection status
+      if (toPay <= 0) {
+        return '✓ All payments collected';
+      } else if (_paidPercentage >= 80) {
+        return '✓ Good collection rate';
+      } else if (_paidPercentage >= 50) {
+        return '📊 Moderate collection';
+      } else {
+        return '📊 Pending collection';
+      }
     }
   }
 

@@ -6,12 +6,14 @@ import 'transaction_list_item.dart';
 class TransactionsList extends StatelessWidget {
   final List<Transaction> transactions;
   final String currency;
+  final bool isCustomerView;
   final VoidCallback? onFilterTap;
 
   const TransactionsList({
     super.key,
     required this.transactions,
     this.currency = 'Rs.',
+    this.isCustomerView = true,
     this.onFilterTap,
   });
 
@@ -50,6 +52,7 @@ class TransactionsList extends StatelessWidget {
               return TransactionListItem(
                 transaction: transactions[index],
                 currency: currency,
+                isCustomerView: isCustomerView,
               );
             },
           ),
@@ -72,6 +75,13 @@ class TransactionsList extends StatelessWidget {
           Text(
             'No transactions yet',
             style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            isCustomerView
+                ? 'Your transactions will appear here'
+                : 'Add transactions for this customer',
+            style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
           ),
         ],
       ),

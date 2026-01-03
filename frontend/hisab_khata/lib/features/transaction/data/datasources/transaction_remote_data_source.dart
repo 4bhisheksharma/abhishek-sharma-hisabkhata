@@ -43,16 +43,18 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
     required TransactionType type,
     String? description,
   }) async {
-    final response = await post(
-      'transaction/transactions/',
-      body: {
-        'relationship_id': relationshipId,
-        'amount': amount.toString(),
-        'transaction_type': type.name,
-        if (description != null && description.isNotEmpty)
-          'description': description,
-      },
-    );
+    final body = <String, dynamic>{
+      'relationship_id': relationshipId,
+      'amount': amount.toStringAsFixed(2),
+      'transaction_type': type.name, // Always send type explicitly
+    };
+
+    // Add description if provided
+    if (description != null && description.isNotEmpty) {
+      body['description'] = description;
+    }
+
+    final response = await post('transaction/transactions/', body: body);
 
     return TransactionModel.fromJson(response as Map<String, dynamic>);
   }

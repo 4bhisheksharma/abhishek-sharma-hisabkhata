@@ -61,7 +61,7 @@ class TransactionViewSet(viewsets.ModelViewSet):
             new_transaction = Transaction.objects.create(
                 relationship=relationship,
                 amount=data['amount'],
-                transaction_type=data['transaction_type'],
+                transaction_type=data.get('transaction_type', 'purchase'),
                 description=data.get('description', ''),
             )
             
