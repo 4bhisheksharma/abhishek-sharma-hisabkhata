@@ -44,7 +44,7 @@ class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
   }
 
   Future<void> _pickImage() async {
-    final image = await HelperFunctions.pickImageFromGallery();
+    final image = await HelperFunctions.showImageSourcePicker(context);
     if (image != null) {
       setState(() {
         _selectedImage = image;
