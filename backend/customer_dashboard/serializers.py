@@ -83,3 +83,24 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
         # Update Customer fields if any
         instance.save()
         return instance
+
+
+class RecentBusinessSerializer(serializers.Serializer):
+    """Serializer for recently added businesses for a customer"""
+    business_id = serializers.IntegerField(source='business.business_id')
+    name = serializers.CharField(source='business.business_name')
+    profile_picture = serializers.SerializerMethodField()
+    contact = serializers.SerializerMethodField()
+    email = serializers.EmailField(source='business.user.email')
+    pending_due = serializers.DecimalField(max_digits=12, decimal_places=2)
+    added_at = serializers.DateTimeField(source='created_at')
+    
+    def get_profile_picture(self, obj):
+        """Return profile picture URL with /media/ prefix"""
+        if obj.business.user.profile_picture:
+            return f"/media/{obj.business.user.profile_picture}"
+        return None
+    
+    def get_contact(self, obj):
+        """Return phone number if available"""
+        return obj.business.user.phone_number or None

@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.db.models import Sum
-from .models import Customer
-from .serializers import CustomerDashboardSerializer, CustomerProfileSerializer
+from .models import Customer, CustomerBusinessRelationship
+from .serializers import CustomerDashboardSerializer, CustomerProfileSerializer, RecentBusinessSerializer
 
 
 class CustomerDashboardView(APIView):
@@ -95,4 +95,47 @@ class CustomerProfileView(APIView):
                 'message': 'Customer profile not found',
                 'data': None
             }, status=status.HTTP_404_NOT_FOUND)
+
+
+class RecentBusinessesView(APIView):
+    """Get recently added businesses for a customer"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        try:
+            # Get customer profile
+            customer = Customer.objects.get(user=request.user)
+            
+            # Get limit from query params (default 10)
+            limit = int(request.query_params.get('limit', 10))
+            
+            # Get recent business relationships ordered by created_at descending
+            recent_relationships = CustomerBusinessRelationship.objects.filter(
+                customer=customer
+            ).select_related(
+                'business', 
+                'business__user'
+            ).order_by('-created_at')[:limit]
+            
+            # Serialize the data
+            serializer = RecentBusinessSerializer(recent_relationships, many=True)
+            
+            return Response({
+                'status': 200,
+                'message': 'Recent businesses retrieved successfully',
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+            
+        except Customer.DoesNotExist:
+            return Response({
+                'status': 404,
+                'message': 'Customer profile not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving recent businesses: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 

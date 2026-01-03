@@ -9,10 +9,12 @@ class ApiEndpoints {
   // Customer endpoints
   static const String customerDashboard = "customer/dashboard/";
   static const String customerProfile = "customer/profile/";
+  static const String recentBusinesses = "customer/recent-businesses/";
 
   // Business endpoints
   static const String businessDashboard = "business/dashboard/";
   static const String businessProfile = "business/profile/";
+  static const String recentCustomers = "business/recent-customers/";
 
   // Connection Request endpoints
   static const String searchUsers = "request/connections/search-users/";

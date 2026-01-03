@@ -12,6 +12,7 @@ from .serializers import (
 )
 from hisabauth.models import User
 from notification.models import Notification
+from customer_dashboard.models import CustomerBusinessRelationship
 
 
 class ConnectionRequestViewSet(viewsets.ModelViewSet):
@@ -180,6 +181,10 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         connection_request.status = serializer.validated_data['status']
         connection_request.save()
         
+        # If accepted, create CustomerBusinessRelationship
+        if serializer.validated_data['status'] == 'accepted':
+            self._create_customer_business_relationship(connection_request)
+        
         # Send notification to sender about status update
         status_text = serializer.validated_data['status']
         Notification.objects.create(
@@ -197,3 +202,37 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_200_OK
         )
+    
+    def _create_customer_business_relationship(self, connection_request):
+        """
+        Create a CustomerBusinessRelationship when a connection is accepted.
+        Determines who is customer and who is business based on their profiles.
+        """
+        sender = connection_request.sender
+        receiver = connection_request.receiver
+        
+        # Determine who is customer and who is business
+        customer = None
+        business = None
+        
+        # Check if sender has customer profile
+        if hasattr(sender, 'customer_profile'):
+            customer = sender.customer_profile
+        # Check if sender has business profile
+        if hasattr(sender, 'business_profile'):
+            business = sender.business_profile
+            
+        # Check if receiver has customer profile
+        if hasattr(receiver, 'customer_profile'):
+            customer = receiver.customer_profile
+        # Check if receiver has business profile
+        if hasattr(receiver, 'business_profile'):
+            business = receiver.business_profile
+        
+        # Only create relationship if we have both customer and business
+        if customer and business:
+            CustomerBusinessRelationship.objects.get_or_create(
+                customer=customer,
+                business=business,
+                defaults={'pending_due': 0.00}
+            )
