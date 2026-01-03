@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:hisab_khata/core/data/base_remote_data_source.dart';
 import 'package:hisab_khata/core/constants/api_endpoints.dart';
+import 'package:hisab_khata/features/users/shared/data/models/recent_connection_model.dart';
 import '../models/business_dashboard_model.dart';
 import '../models/business_profile_model.dart';
 
@@ -19,6 +20,9 @@ abstract class BusinessRemoteDataSource {
     String? phoneNumber,
     File? profilePicture,
   });
+
+  /// Get recently added customers for this business
+  Future<List<RecentConnectionModel>> getRecentCustomers({int limit = 10});
 }
 
 /// Implementation of BusinessRemoteDataSource using BaseRemoteDataSource
@@ -83,5 +87,18 @@ class BusinessRemoteDataSourceImpl extends BaseRemoteDataSource
 
       return BusinessProfileModel.fromJson(response['data']);
     }
+  }
+
+  @override
+  Future<List<RecentConnectionModel>> getRecentCustomers({int limit = 10}) async {
+    final response = await get(
+      '${ApiEndpoints.recentCustomers}?limit=$limit',
+      includeAuth: true,
+    );
+
+    final List<dynamic> data = response['data'] ?? [];
+    return data
+        .map((json) => RecentConnectionModel.fromCustomerJson(json))
+        .toList();
   }
 }

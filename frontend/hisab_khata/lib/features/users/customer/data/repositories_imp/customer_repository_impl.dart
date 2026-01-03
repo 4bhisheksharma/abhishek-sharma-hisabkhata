@@ -4,6 +4,7 @@ import 'package:hisab_khata/features/users/customer/domain/entities/customer_das
 import 'package:hisab_khata/features/users/customer/domain/entities/customer_profile_entity.dart';
 import 'package:hisab_khata/features/users/customer/domain/repositories/customer_repository.dart';
 import 'package:hisab_khata/features/users/customer/data/datasources/customer_remote_data_source.dart';
+import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
 import 'package:hisab_khata/core/errors/exceptions.dart';
 
 /// Implementation of CustomerRepository
@@ -59,6 +60,20 @@ class CustomerRepositoryImpl implements CustomerRepository {
       return Left(e.exceptionMessage);
     } catch (e) {
       return Left('Failed to update profile: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, List<RecentConnectionEntity>>> getRecentBusinesses({
+    int limit = 10,
+  }) async {
+    try {
+      final businesses = await remoteDataSource.getRecentBusinesses(limit: limit);
+      return Right(businesses);
+    } on ServerException catch (e) {
+      return Left(e.exceptionMessage);
+    } catch (e) {
+      return Left('Failed to fetch recent businesses: ${e.toString()}');
     }
   }
 }

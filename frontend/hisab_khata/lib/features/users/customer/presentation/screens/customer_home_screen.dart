@@ -93,6 +93,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
 
         if (state is CustomerDashboardLoaded) {
           final d = state.dashboard;
+          final recentBusinesses = state.recentBusinesses;
 
           return SharedDashboard(
             userName: d.fullName,
@@ -148,22 +149,50 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                     const SizedBox(height: 12),
 
                     // Business List
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: 3, // Placeholder count
-                      itemBuilder: (context, index) {
-                        return BusinessCustomerListItem(
-                          businessName: "Business ${index + 1}",
-                          phoneNumber: "+1234567890",
-                          amount: "${1000.0 * (index + 1)}",
-                          onTap: () {
-                            debugPrint("Navigate to business details");
-                          },
-                        );
-                      },
-                    ),
+                    if (recentBusinesses.isEmpty)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: Center(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 20),
+                              Icon(
+                                Icons.store_outlined,
+                                size: 48,
+                                color: Colors.grey[400],
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                "No businesses added yet",
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      )
+                    else
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        itemCount: recentBusinesses.length,
+                        itemBuilder: (context, index) {
+                          final business = recentBusinesses[index];
+                          return BusinessCustomerListItem(
+                            businessName: business.name,
+                            phoneNumber: business.contactInfo,
+                            amount: "Rs. ${business.pendingDue.abs().toStringAsFixed(2)}",
+                            profileImageUrl: ImageUtils.getFullImageUrl(business.profilePicture),
+                            onTap: () {
+                              debugPrint("Navigate to business details: ${business.id}");
+                            },
+                          );
+                        },
+                      ),
                   ],
                 ),
               ),

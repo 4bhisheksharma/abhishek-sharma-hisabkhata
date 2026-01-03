@@ -32,3 +32,12 @@ class UpdateCustomerProfileEvent extends CustomerEvent {
   @override
   List<Object?> get props => [fullName, phoneNumber, profilePicturePath];
 }
+
+/// Event to load recent businesses
+class LoadRecentBusinesses extends CustomerEvent {
+  final int limit;
+  const LoadRecentBusinesses({this.limit = 10});
+
+  @override
+  List<Object?> get props => [limit];
+}

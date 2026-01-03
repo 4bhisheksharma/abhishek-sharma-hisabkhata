@@ -16,6 +16,7 @@ import '../../features/users/customer/domain/repositories/customer_repository.da
 import '../../features/users/customer/domain/usecases/get_customer_dashboard.dart';
 import '../../features/users/customer/domain/usecases/get_customer_profile.dart';
 import '../../features/users/customer/domain/usecases/update_customer_profile.dart';
+import '../../features/users/customer/domain/usecases/get_recent_businesses.dart';
 import '../../features/users/customer/presentation/bloc/customer_bloc.dart';
 import '../../features/users/business/data/datasources/business_remote_data_source.dart';
 import '../../features/users/business/data/repositories_impl/business_repository_impl.dart';
@@ -23,6 +24,7 @@ import '../../features/users/business/domain/repositories/business_repository.da
 import '../../features/users/business/domain/usecases/get_business_dashboard.dart';
 import '../../features/users/business/domain/usecases/get_business_profile.dart';
 import '../../features/users/business/domain/usecases/update_business_profile.dart';
+import '../../features/users/business/domain/usecases/get_recent_customers.dart';
 import '../../features/users/business/presentation/bloc/business_bloc.dart';
 import '../../features/request/data/datasource/connection_request_remote_data_source.dart';
 import '../../features/request/data/repository_imp/connection_request_repository_impl.dart';
@@ -85,11 +87,13 @@ class DependencyInjection {
   late final GetCustomerDashboard _getCustomerDashboard;
   late final GetCustomerProfile _getCustomerProfile;
   late final UpdateCustomerProfile _updateCustomerProfile;
+  late final GetRecentBusinesses _getRecentBusinesses;
 
   // Use Cases - Business
   late final GetBusinessDashboard _getBusinessDashboard;
   late final GetBusinessProfile _getBusinessProfile;
   late final UpdateBusinessProfile _updateBusinessProfile;
+  late final GetRecentCustomers _getRecentCustomers;
 
   // Use Cases - Connection Request
   late final SearchUsersUseCase _searchUsersUseCase;
@@ -169,11 +173,13 @@ class DependencyInjection {
     _getCustomerDashboard = GetCustomerDashboard(_customerRepository);
     _getCustomerProfile = GetCustomerProfile(_customerRepository);
     _updateCustomerProfile = UpdateCustomerProfile(_customerRepository);
+    _getRecentBusinesses = GetRecentBusinesses(_customerRepository);
 
     // Use Cases - Business
     _getBusinessDashboard = GetBusinessDashboard(_businessRepository);
     _getBusinessProfile = GetBusinessProfile(_businessRepository);
     _updateBusinessProfile = UpdateBusinessProfile(_businessRepository);
+    _getRecentCustomers = GetRecentCustomers(_businessRepository);
 
     // Use Cases - Connection Request
     _searchUsersUseCase = SearchUsersUseCase(_connectionRequestRepository);
@@ -231,11 +237,13 @@ class DependencyInjection {
       getCustomerDashboard: _getCustomerDashboard,
       getCustomerProfile: _getCustomerProfile,
       updateCustomerProfile: _updateCustomerProfile,
+      getRecentBusinesses: _getRecentBusinesses,
     );
     _businessBloc = BusinessBloc(
       getBusinessDashboard: _getBusinessDashboard,
       getBusinessProfile: _getBusinessProfile,
       updateBusinessProfile: _updateBusinessProfile,
+      getRecentCustomers: _getRecentCustomers,
     );
     _connectionRequestBloc = ConnectionRequestBloc(
       searchUsersUseCase: _searchUsersUseCase,

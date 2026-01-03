@@ -39,3 +39,12 @@ class UpdateBusinessProfileEvent extends BusinessEvent {
     profilePicturePath,
   ];
 }
+
+/// Event to load recent customers
+class LoadRecentCustomers extends BusinessEvent {
+  final int limit;
+  const LoadRecentCustomers({this.limit = 10});
+
+  @override
+  List<Object?> get props => [limit];
+}
