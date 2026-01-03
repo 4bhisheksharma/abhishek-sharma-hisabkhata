@@ -1,6 +1,6 @@
 import '../../../../core/data/base_remote_data_source.dart';
 import '../../../../core/constants/api_endpoints.dart';
-import '../models/notification_model.dart';
+import '../../../notification/data/models/notification_model.dart';
 
 /// Abstract class defining notification remote data source contract
 abstract class NotificationRemoteDataSource {

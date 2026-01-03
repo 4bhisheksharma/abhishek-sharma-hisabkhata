@@ -7,7 +7,7 @@ import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
-import '../../../../request/presentation/screens/notification_screen.dart';
+import '../../../../notification/presentation/screens/notification_screen.dart';
 
 class BusinessHomeScreen extends StatefulWidget {
   const BusinessHomeScreen({super.key});

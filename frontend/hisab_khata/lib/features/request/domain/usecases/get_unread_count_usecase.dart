@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:hisab_khata/core/errors/failures.dart';
-import '../repositories/notification_repository.dart';
+import '../../../notification/domain/repositories/notification_repository.dart';
 
 class GetUnreadCountUseCase {
   final NotificationRepository repository;

@@ -4,8 +4,8 @@ import 'package:intl/intl.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../domain/entities/notification.dart' as entity;
-import '../bloc/notification/bloc.dart';
-import 'connection_requests_screen.dart';
+import '../bloc/bloc.dart';
+import '../../../request/presentation/screens/connection_requests_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

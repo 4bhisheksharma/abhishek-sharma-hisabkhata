@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import '../../../domain/entities/notification.dart';
+import '../../domain/entities/notification.dart';
 
 /// Base notification state
 abstract class NotificationState extends Equatable {

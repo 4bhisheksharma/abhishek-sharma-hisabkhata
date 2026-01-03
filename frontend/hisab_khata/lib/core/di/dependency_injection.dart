@@ -36,16 +36,16 @@ import '../../features/request/domain/usecases/get_connected_users_usecase.dart'
 import '../../features/request/domain/usecases/update_request_status_usecase.dart';
 import '../../features/request/presentation/bloc/connection_request_bloc.dart';
 import '../../features/request/data/datasource/notification_remote_data_source.dart';
-import '../../features/request/data/repository_imp/notification_repository_impl.dart';
-import '../../features/request/domain/repositories/notification_repository.dart';
-import '../../features/request/domain/usecases/get_all_notifications_usecase.dart';
-import '../../features/request/domain/usecases/get_unread_notifications_usecase.dart';
+import '../../features/notification/data/repository_imp/notification_repository_impl.dart';
+import '../../features/notification/domain/repositories/notification_repository.dart';
+import '../../features/notification/domain/usecases/get_all_notifications_usecase.dart';
+import '../../features/notification/domain/usecases/get_unread_notifications_usecase.dart';
 import '../../features/request/domain/usecases/get_unread_count_usecase.dart';
-import '../../features/request/domain/usecases/mark_notification_as_read_usecase.dart';
-import '../../features/request/domain/usecases/mark_all_notifications_as_read_usecase.dart';
-import '../../features/request/domain/usecases/delete_notification_usecase.dart';
-import '../../features/request/domain/usecases/delete_all_read_notifications_usecase.dart';
-import '../../features/request/presentation/bloc/notification/notification_bloc.dart';
+import '../../features/notification/domain/usecases/mark_notification_as_read_usecase.dart';
+import '../../features/notification/domain/usecases/mark_all_notifications_as_read_usecase.dart';
+import '../../features/notification/domain/usecases/delete_notification_usecase.dart';
+import '../../features/notification/domain/usecases/delete_all_read_notifications_usecase.dart';
+import '../../features/notification/presentation/bloc/notification_bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies

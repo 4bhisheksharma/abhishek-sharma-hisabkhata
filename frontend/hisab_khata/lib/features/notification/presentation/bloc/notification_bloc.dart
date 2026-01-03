@@ -1,11 +1,11 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../domain/usecases/get_all_notifications_usecase.dart';
-import '../../../domain/usecases/get_unread_notifications_usecase.dart';
-import '../../../domain/usecases/get_unread_count_usecase.dart';
-import '../../../domain/usecases/mark_notification_as_read_usecase.dart';
-import '../../../domain/usecases/mark_all_notifications_as_read_usecase.dart';
-import '../../../domain/usecases/delete_notification_usecase.dart';
-import '../../../domain/usecases/delete_all_read_notifications_usecase.dart';
+import '../../domain/usecases/get_all_notifications_usecase.dart';
+import '../../domain/usecases/get_unread_notifications_usecase.dart';
+import '../../../request/domain/usecases/get_unread_count_usecase.dart';
+import '../../domain/usecases/mark_notification_as_read_usecase.dart';
+import '../../domain/usecases/mark_all_notifications_as_read_usecase.dart';
+import '../../domain/usecases/delete_notification_usecase.dart';
+import '../../domain/usecases/delete_all_read_notifications_usecase.dart';
 import 'notification_event.dart';
 import 'notification_state.dart';
 
