@@ -84,7 +84,7 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
             // Populate form fields
             _businessNameController.text = state.profile.businessName;
             _fullNameController.text = state.profile.fullName;
-            _phoneNumberController.text = state.profile.phoneNumber ?? '';
+            _phoneNumberController.text = state.profile.phoneNumber;
             _emailController.text = state.profile.email;
             _currentProfilePicture = state.profile.profilePicture;
             setState(() {

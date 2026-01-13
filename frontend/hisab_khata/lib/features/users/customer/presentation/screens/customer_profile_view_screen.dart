@@ -8,6 +8,7 @@ import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
 import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
 import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
+import 'package:hisab_khata/shared/widgets/language_switcher.dart';
 
 class CustomerProfileViewScreen extends StatefulWidget {
   const CustomerProfileViewScreen({super.key});
@@ -108,6 +109,17 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           title: 'Security',
                           onTap: () {
                             debugPrint("Security tapped");
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        ProfileMenuItem(
+                          icon: Icons.language_outlined,
+                          iconColor: const Color(0xFF2196F3),
+                          iconBgColor: const Color(0xFFE3F2FD),
+                          title: 'Language',
+                          trailing: const LanguageSwitcher(),
+                          onTap: () {
+                            // Language switcher handles its own tap
                           },
                         ),
                         const SizedBox(height: 12),
