@@ -75,6 +75,7 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
       fullName: event.fullName,
       phoneNumber: event.phoneNumber,
       profilePicturePath: event.profilePicturePath,
+      preferredLanguage: event.preferredLanguage,
     );
 
     result.fold(

@@ -13,12 +13,14 @@ class UpdateBusinessProfile {
     String? fullName,
     String? phoneNumber,
     String? profilePicturePath,
+    String? preferredLanguage,
   }) async {
     return await repository.updateProfile(
       businessName: businessName,
       fullName: fullName,
       phoneNumber: phoneNumber,
       profilePicturePath: profilePicturePath,
+      preferredLanguage: preferredLanguage,
     );
   }
 }

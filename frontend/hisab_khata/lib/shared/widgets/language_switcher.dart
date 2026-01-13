@@ -1,14 +1,27 @@
 import 'package:flutter/material.dart';
 
 class LanguageSwitcher extends StatefulWidget {
-  const LanguageSwitcher({super.key});
+  final Function(String)? onLanguageChanged;
+  final String? initialLanguage;
+
+  const LanguageSwitcher({
+    super.key,
+    this.onLanguageChanged,
+    this.initialLanguage,
+  });
 
   @override
   State<LanguageSwitcher> createState() => _LanguageSwitcherState();
 }
 
 class _LanguageSwitcherState extends State<LanguageSwitcher> {
-  String _selectedLanguage = 'en'; 
+  late String _selectedLanguage;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedLanguage = widget.initialLanguage ?? 'en';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +36,7 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
           setState(() {
             _selectedLanguage = value;
           });
-          // TODO: Implement language change logic later
+          widget.onLanguageChanged?.call(value);
         }
       },
       underline: const SizedBox.shrink(),

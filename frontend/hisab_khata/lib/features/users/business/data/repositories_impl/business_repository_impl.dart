@@ -44,6 +44,7 @@ class BusinessRepositoryImpl implements BusinessRepository {
     String? fullName,
     String? phoneNumber,
     String? profilePicturePath,
+    String? preferredLanguage,
   }) async {
     try {
       File? profilePictureFile;
@@ -56,6 +57,7 @@ class BusinessRepositoryImpl implements BusinessRepository {
         fullName: fullName,
         phoneNumber: phoneNumber,
         profilePicture: profilePictureFile,
+        preferredLanguage: preferredLanguage,
       );
       return Right(profile);
     } on ServerException catch (e) {

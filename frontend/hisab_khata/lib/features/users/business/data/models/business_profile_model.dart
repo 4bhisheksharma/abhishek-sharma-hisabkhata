@@ -10,6 +10,7 @@ class BusinessProfileModel extends BusinessProfile {
     super.profilePicture,
     required super.email,
     required super.isVerified,
+    super.preferredLanguage,
   });
 
   factory BusinessProfileModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +21,7 @@ class BusinessProfileModel extends BusinessProfile {
       profilePicture: json['profile_picture'],
       email: json['email'] ?? '',
       isVerified: json['is_verified'] ?? false,
+      preferredLanguage: json['preferred_language'],
     );
   }
 
@@ -31,6 +33,7 @@ class BusinessProfileModel extends BusinessProfile {
       'profile_picture': profilePicture,
       'email': email,
       'is_verified': isVerified,
+      'preferred_language': preferredLanguage,
     };
   }
 }

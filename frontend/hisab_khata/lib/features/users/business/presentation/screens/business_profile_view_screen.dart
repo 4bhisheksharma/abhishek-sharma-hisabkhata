@@ -139,7 +139,16 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           iconColor: const Color(0xFF2196F3),
                           iconBgColor: const Color(0xFFE3F2FD),
                           title: 'Language',
-                          trailing: const LanguageSwitcher(),
+                          trailing: LanguageSwitcher(
+                            initialLanguage: profile.preferredLanguage ?? 'en',
+                            onLanguageChanged: (language) {
+                              context.read<BusinessBloc>().add(
+                                UpdateBusinessProfileEvent(
+                                  preferredLanguage: language,
+                                ),
+                              );
+                            },
+                          ),
                           onTap: () {
                             // Language switcher handles its own tap
                           },

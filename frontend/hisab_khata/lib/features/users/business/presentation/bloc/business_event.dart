@@ -23,12 +23,14 @@ class UpdateBusinessProfileEvent extends BusinessEvent {
   final String? fullName;
   final String? phoneNumber;
   final String? profilePicturePath;
+  final String? preferredLanguage;
 
   const UpdateBusinessProfileEvent({
     this.businessName,
     this.fullName,
     this.phoneNumber,
     this.profilePicturePath,
+    this.preferredLanguage,
   });
 
   @override
@@ -37,6 +39,7 @@ class UpdateBusinessProfileEvent extends BusinessEvent {
     fullName,
     phoneNumber,
     profilePicturePath,
+    preferredLanguage,
   ];
 }
 

@@ -12,11 +12,13 @@ class UpdateCustomerProfile {
     String? fullName,
     String? phoneNumber,
     String? profilePicturePath,
+    String? preferredLanguage,
   }) async {
     return await repository.updateProfile(
       fullName: fullName,
       phoneNumber: phoneNumber,
       profilePicturePath: profilePicturePath,
+      preferredLanguage: preferredLanguage,
     );
   }
 }

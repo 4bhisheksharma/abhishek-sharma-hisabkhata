@@ -8,6 +8,7 @@ class CustomerProfileModel extends CustomerProfileEntity {
     super.phoneNumber,
     super.profilePicture,
     required super.email,
+    super.preferredLanguage,
   });
 
   factory CustomerProfileModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +17,7 @@ class CustomerProfileModel extends CustomerProfileEntity {
       phoneNumber: json['phone_number'],
       profilePicture: json['profile_picture'],
       email: json['email'] ?? '',
+      preferredLanguage: json['preferred_language'],
     );
   }
 
@@ -25,6 +27,7 @@ class CustomerProfileModel extends CustomerProfileEntity {
       'phone_number': phoneNumber,
       'profile_picture': profilePicture,
       'email': email,
+      'preferred_language': preferredLanguage,
     };
   }
 }

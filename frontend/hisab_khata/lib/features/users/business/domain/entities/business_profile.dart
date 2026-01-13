@@ -5,6 +5,7 @@ class BusinessProfile {
   final String? profilePicture;
   final String email;
   final bool isVerified;
+  final String? preferredLanguage;
 
   const BusinessProfile({
     required this.businessName,
@@ -13,5 +14,6 @@ class BusinessProfile {
     this.profilePicture,
     required this.email,
     required this.isVerified,
+    this.preferredLanguage,
   });
 }

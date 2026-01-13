@@ -23,14 +23,21 @@ class UpdateCustomerProfileEvent extends CustomerEvent {
   final String? fullName;
   final String? phoneNumber;
   final String? profilePicturePath;
+  final String? preferredLanguage;
   const UpdateCustomerProfileEvent({
     this.fullName,
     this.phoneNumber,
     this.profilePicturePath,
+    this.preferredLanguage,
   });
 
   @override
-  List<Object?> get props => [fullName, phoneNumber, profilePicturePath];
+  List<Object?> get props => [
+    fullName,
+    phoneNumber,
+    profilePicturePath,
+    preferredLanguage,
+  ];
 }
 
 /// Event to load recent businesses

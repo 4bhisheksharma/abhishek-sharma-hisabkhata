@@ -43,6 +43,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
     String? fullName,
     String? phoneNumber,
     String? profilePicturePath,
+    String? preferredLanguage,
   }) async {
     try {
       File? profilePictureFile;
@@ -54,6 +55,7 @@ class CustomerRepositoryImpl implements CustomerRepository {
         fullName: fullName,
         phoneNumber: phoneNumber,
         profilePicture: profilePictureFile,
+        preferredLanguage: preferredLanguage,
       );
       return Right(profile);
     } on ServerException catch (e) {

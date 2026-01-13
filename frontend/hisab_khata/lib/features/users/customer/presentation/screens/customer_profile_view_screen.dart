@@ -117,7 +117,16 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           iconColor: const Color(0xFF2196F3),
                           iconBgColor: const Color(0xFFE3F2FD),
                           title: 'Language',
-                          trailing: const LanguageSwitcher(),
+                          trailing: LanguageSwitcher(
+                            initialLanguage: profile.preferredLanguage ?? 'en',
+                            onLanguageChanged: (language) {
+                              context.read<CustomerBloc>().add(
+                                UpdateCustomerProfileEvent(
+                                  preferredLanguage: language,
+                                ),
+                              );
+                            },
+                          ),
                           onTap: () {
                             // Language switcher handles its own tap
                           },

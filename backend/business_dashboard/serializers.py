@@ -28,12 +28,13 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(source='user.profile_picture', required=False, allow_null=True)
     business_name = serializers.CharField(required=False)
     is_verified = serializers.BooleanField(read_only=True)
+    preferred_language = serializers.CharField(source='user.preferred_language', required=False)
     
     class Meta:
         model = Business
         fields = [
             'business_name', 'full_name', 'phone_number', 
-            'profile_picture', 'email', 'is_verified'
+            'profile_picture', 'email', 'is_verified', 'preferred_language'
         ]
     
     def update(self, instance, validated_data):
@@ -54,6 +55,8 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
                 # Convert empty string to None to avoid UNIQUE constraint violation
                 phone = user_data['phone_number']
                 user.phone_number = phone if phone and phone.strip() else None
+            if 'preferred_language' in user_data:
+                user.preferred_language = user_data['preferred_language']
             
             # Handle profile picture update
             if 'profile_picture' in user_data:

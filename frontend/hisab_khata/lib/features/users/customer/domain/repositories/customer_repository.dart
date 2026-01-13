@@ -17,6 +17,7 @@ abstract class CustomerRepository {
     String? fullName,
     String? phoneNumber,
     String? profilePicturePath,
+    String? preferredLanguage,
   });
 
   /// Get recently added businesses

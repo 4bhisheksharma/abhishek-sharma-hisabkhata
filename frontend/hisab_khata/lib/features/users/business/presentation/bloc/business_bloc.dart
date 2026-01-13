@@ -74,6 +74,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       fullName: event.fullName,
       phoneNumber: event.phoneNumber,
       profilePicturePath: event.profilePicturePath,
+      preferredLanguage: event.preferredLanguage,
     );
 
     result.fold(

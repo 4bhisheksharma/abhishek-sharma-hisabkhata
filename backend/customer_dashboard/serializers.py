@@ -36,11 +36,12 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
     phone_number = serializers.CharField(source='user.phone_number', required=False, allow_null=True, allow_blank=True)
     profile_picture = serializers.ImageField(source='user.profile_picture', required=False, allow_null=True, write_only=True)
     profile_picture_url = serializers.SerializerMethodField(read_only=True)
+    preferred_language = serializers.CharField(source='user.preferred_language', required=False)
     
     class Meta:
         model = Customer
         fields = [
-            'full_name', 'phone_number', 'profile_picture', 'profile_picture_url', 'email'
+            'full_name', 'phone_number', 'profile_picture', 'profile_picture_url', 'email', 'preferred_language'
         ]
     
     def get_profile_picture_url(self, obj):
@@ -71,6 +72,8 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
                 # Convert empty string to None to avoid UNIQUE constraint violation
                 phone = user_data['phone_number']
                 user.phone_number = phone if phone and phone.strip() else None
+            if 'preferred_language' in user_data:
+                user.preferred_language = user_data['preferred_language']
             if 'profile_picture' in user_data:
                 # Delete old profile picture if it exists
                 if user.profile_picture:

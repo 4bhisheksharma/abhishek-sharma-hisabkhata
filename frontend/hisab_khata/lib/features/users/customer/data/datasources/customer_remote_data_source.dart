@@ -18,6 +18,7 @@ abstract class CustomerRemoteDataSource {
     String? fullName,
     String? phoneNumber,
     File? profilePicture,
+    String? preferredLanguage,
   });
 
   /// Get recently added businesses for this customer
@@ -51,12 +52,15 @@ class CustomerRemoteDataSourceImpl extends BaseRemoteDataSource
     String? fullName,
     String? phoneNumber,
     File? profilePicture,
+    String? preferredLanguage,
   }) async {
     if (profilePicture != null) {
       // Use multipart request for file upload
       final fields = <String, String>{};
       if (fullName != null) fields['full_name'] = fullName;
       if (phoneNumber != null) fields['phone_number'] = phoneNumber;
+      if (preferredLanguage != null)
+        fields['preferred_language'] = preferredLanguage;
 
       final files = <String, File>{'profile_picture': profilePicture};
 
@@ -74,6 +78,8 @@ class CustomerRemoteDataSourceImpl extends BaseRemoteDataSource
       final body = <String, dynamic>{};
       if (fullName != null) body['full_name'] = fullName;
       if (phoneNumber != null) body['phone_number'] = phoneNumber;
+      if (preferredLanguage != null)
+        body['preferred_language'] = preferredLanguage;
 
       final response = await patch(
         ApiEndpoints.customerProfile,

@@ -11,6 +11,7 @@ abstract class BusinessRepository {
     String? fullName,
     String? phoneNumber,
     String? profilePicturePath,
+    String? preferredLanguage,
   });
   Future<Either<String, List<RecentConnectionEntity>>> getRecentCustomers({
     int limit = 10,
