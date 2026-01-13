@@ -9,6 +9,7 @@ import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
 import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
 import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 import 'package:hisab_khata/shared/widgets/language_switcher.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -32,9 +33,9 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
       appBar: AppBar(
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
-        title: const Text(
-          'Profile',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        title: Text(
+          AppLocalizations.of(context)!.profile,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
         elevation: 0,

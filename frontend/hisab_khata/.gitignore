@@ -53,3 +53,4 @@ app.*.map.json
 /analysis_options.yaml
 /hisab_khata.iml
 /test
+l10n.yaml

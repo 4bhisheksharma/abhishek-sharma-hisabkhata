@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
-import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/otp_input_fields.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
@@ -64,7 +64,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     String otp = _controller.getOtp();
 
     if (otp.length != 6) {
-      MySnackbar.showError(context, StringConstant.enterAllSixDigits);
+      MySnackbar.showError(context, AppLocalizations.of(context)!.enterAllSixDigits);
       return;
     }
 
@@ -109,7 +109,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
           child: Column(
             children: [
               // Top Section with Title
-              const AuthHeader(title: StringConstant.otpVerification),
+              AuthHeader(title: AppLocalizations.of(context)!.otpVerification),
 
               // Bottom Card Section
               Expanded(
@@ -132,7 +132,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         Column(
                           children: [
                             Text(
-                              StringConstant.enterOtp,
+                              AppLocalizations.of(context)!.enterOtp,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -141,7 +141,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              StringConstant.otpSent,
+                              AppLocalizations.of(context)!.otpSent,
                               style: TextStyle(
                                 fontSize: 16,
                                 color: Colors.black54,
@@ -162,7 +162,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             return MyButton(
-                              text: StringConstant.continueProcess,
+                              text: AppLocalizations.of(context)!.continueProcess,
                               onPressed: _handleVerifyOtp,
                               isLoading: state is AuthLoading,
                               height: 54,
@@ -187,8 +187,8 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             ),
                             child: Text(
                               _controller.resendTimer > 0
-                                  ? '${StringConstant.resendOtpAfter}: ${_formatTime(_controller.resendTimer)}'
-                                  : StringConstant.resendOtp,
+                                  ? '${AppLocalizations.of(context)!.resendOtpAfter}: ${_formatTime(_controller.resendTimer)}'
+                                  : AppLocalizations.of(context)!.resendOtp,
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontSize: 14,

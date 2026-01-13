@@ -8,6 +8,7 @@ import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
 import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/role_selection_buttons.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
@@ -35,7 +36,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_formKey.currentState!.validate()) {
       if (_controller.passwordController.text !=
           _controller.confirmPasswordController.text) {
-        MySnackbar.showError(context, StringConstant.passwordsDoNotMatch);
+        MySnackbar.showError(context, AppLocalizations.of(context)!.passwordsDoNotMatch);
         return;
       }
 
@@ -78,7 +79,7 @@ class _SignupScreenState extends State<SignupScreen> {
           child: Column(
             children: [
               // Top Section with Create Account Text
-              const AuthHeader(title: StringConstant.createAccount),
+              AuthHeader(title: AppLocalizations.of(context)!.createAccount),
 
               // Bottom Card Section
               Expanded(
@@ -113,10 +114,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Full Name Field
                           MyTextField(
                             controller: _controller.nameController,
-                            label: StringConstant.fullName,
-                            hintText: StringConstant.fullNameHintText,
+                            label: AppLocalizations.of(context)!.fullName,
+                            hintText: AppLocalizations.of(context)!.fullNameHintText,
                             validator: Validators.getTextFieldValidator(
-                              StringConstant.enterName,
+                              AppLocalizations.of(context)!.enterName,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -125,10 +126,10 @@ class _SignupScreenState extends State<SignupScreen> {
                           if (_controller.selectedRole == 'business') ...[
                             MyTextField(
                               controller: _controller.businessNameController,
-                              label: StringConstant.businessName,
-                              hintText: StringConstant.businessNameHintText,
+                              label: AppLocalizations.of(context)!.businessName,
+                              hintText: AppLocalizations.of(context)!.businessNameHintText,
                               validator: Validators.getTextFieldValidator(
-                                StringConstant.enterBusinessName,
+                                AppLocalizations.of(context)!.enterBusinessName,
                               ),
                             ),
                             const SizedBox(height: 20),

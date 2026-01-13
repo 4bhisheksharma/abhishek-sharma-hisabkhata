@@ -1,0 +1,247 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Nepali (`ne`).
+class AppLocalizationsNe extends AppLocalizations {
+  AppLocalizationsNe([String locale = 'ne']) : super(locale);
+
+  @override
+  String get appName => 'हिसाब खाता';
+
+  @override
+  String get home => 'गृह';
+
+  @override
+  String get connections => 'जडानहरू';
+
+  @override
+  String get analytics => 'विश्लेषण';
+
+  @override
+  String get history => 'इतिहास';
+
+  @override
+  String get profile => 'प्रोफाइल';
+
+  @override
+  String get login => 'लगइन';
+
+  @override
+  String get register => 'दर्ता';
+
+  @override
+  String get email => 'इमेल';
+
+  @override
+  String get password => 'पासवर्ड';
+
+  @override
+  String get phoneNumber => 'फोन नम्बर';
+
+  @override
+  String get fullName => 'पूरा नाम';
+
+  @override
+  String get save => 'सुरक्षित गर्नुहोस्';
+
+  @override
+  String get cancel => 'रद्द गर्नुहोस्';
+
+  @override
+  String get edit => 'सम्पादन गर्नुहोस्';
+
+  @override
+  String get delete => 'मेटाउनुहोस्';
+
+  @override
+  String get add => 'थप्नुहोस्';
+
+  @override
+  String get payDue => 'देन रकम तिर्नुहोस्';
+
+  @override
+  String get addTransaction => 'लेनदेन थप्नुहोस्';
+
+  @override
+  String get recentBusinesses => 'हालका व्यापारहरू';
+
+  @override
+  String get recentCustomers => 'हालका ग्राहकहरू';
+
+  @override
+  String get toPay => 'तिर्नुपर्ने';
+
+  @override
+  String get paid => 'तिर्नुभएको';
+
+  @override
+  String get transactions => 'लेनदेनहरू';
+
+  @override
+  String get noData => 'कुनै डाटा उपलब्ध छैन';
+
+  @override
+  String get loading => 'लोड हुँदैछ...';
+
+  @override
+  String get error => 'एउटा त्रुटि भएको छ';
+
+  @override
+  String get retry => 'पुन: प्रयास गर्नुहोस्';
+
+  @override
+  String get chooseImageSource => 'छवि स्रोत चयन गर्नुहोस्';
+
+  @override
+  String get camera => 'क्यामेरा';
+
+  @override
+  String get gallery => 'ग्यालरी';
+
+  @override
+  String get tagline => 'तपाईको व्यक्तिगत डिजिटल खाता';
+
+  @override
+  String get welcome => 'स्वागत छ';
+
+  @override
+  String get welcomeBack => 'फेरि स्वागत छ';
+
+  @override
+  String get emailHintText => 'ramdai@gmail.com';
+
+  @override
+  String get passwordHintText => '••••••••';
+
+  @override
+  String get logout => 'लगआउट';
+
+  @override
+  String get forgotPassword => 'पासवर्ड बिर्सनुभयो?';
+
+  @override
+  String get enterEmail => 'कृपया आफ्नो इमेल प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get enterValidEmail => 'कृपया मान्य इमेल प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get enterPassword => 'कृपया आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get passwordMinLength => 'पासवर्ड कम्तिमा 8 वर्णको हुनुपर्छ';
+
+  @override
+  String get invalidOtp => 'तपाईले प्रविष्ट गरेको OTP अमान्य छ';
+
+  @override
+  String get dontHaveAccount => 'खाता छैन? ';
+
+  @override
+  String get signUp => 'साइन अप';
+
+  @override
+  String get alreadyHaveAccount => 'पहिले नै खाता छ? ';
+
+  @override
+  String get enterAllSixDigits => 'कृपया सबै 6 अंकहरू प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get otpVerification => 'OTP प्रमाणीकरण';
+
+  @override
+  String get resendOtp => 'OTP पुन: पठाउनुहोस्';
+
+  @override
+  String get resendOtpAfter => 'पछि OTP पुन: पठाउनुहोस्';
+
+  @override
+  String get verifyOtp => 'OTP प्रमाणित गर्नुहोस्';
+
+  @override
+  String get enterOtp => 'OTP प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get otpSent => 'जुन तपाईको मेलमा पठाइएको छ';
+
+  @override
+  String get continueProcess => 'जारी राख्नुहोस्';
+
+  @override
+  String get createAccount => 'खाता सिर्जना गर्नुहोस्';
+
+  @override
+  String get businessName => 'व्यापार नाम';
+
+  @override
+  String get fullNameHintText => 'रामकुमार';
+
+  @override
+  String get businessNameHintText => 'रामदाई को दोकान';
+
+  @override
+  String get enterBusinessName => 'कृपया आफ्नो व्यापार नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get mobileNumber => 'मोबाइल नम्बर';
+
+  @override
+  String get mobileNumberHintText => '+977 9800000000';
+
+  @override
+  String get confirmPassword => 'पासवर्ड पुष्टि गर्नुहोस्';
+
+  @override
+  String get enterName => 'कृपया आफ्नो नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get enterMobileNumber => 'कृपया आफ्नो मोबाइल नम्बर प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get confirmPasswordText => 'कृपया आफ्नो पासवर्ड पुष्टि गर्नुहोस्';
+
+  @override
+  String get passwordsDoNotMatch => 'पासवर्डहरू मेल खाँदैनन्';
+
+  @override
+  String get agreeToTerms => 'जारी राखेर, तपाई सहमत हुनुहुन्छ\n';
+
+  @override
+  String get termsOfUse => 'प्रयोगका सर्तहरू';
+
+  @override
+  String get privacyPolicy => 'गोपनीयता नीति।';
+
+  @override
+  String get enterValidMobileNumber => 'कृपया मान्य मोबाइल नम्बर प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get serverFailureMessage => 'सर्भर विफलता';
+
+  @override
+  String get cacheFailureMessage => 'क्यास विफलता';
+
+  @override
+  String get internetFailureMessage => 'इन्टरनेट कनेक्सन छैन';
+
+  @override
+  String get somethingWentWrongFailureMessage => 'केही गलत भयो!!';
+
+  @override
+  String get emailOrUserNameEmptyErrorText => 'इमेल वा मोबाइल नम्बर आवश्यक छ';
+
+  @override
+  String get passwordEmptyErrorText => 'पासवर्ड आवश्यक छ';
+
+  @override
+  String get pinEmptyErrorText => 'पिन आवश्यक छ';
+
+  @override
+  String get confirmPasswordNotMatchErrorText => 'पुष्टि पासवर्ड मेल खाँदैन';
+
+  @override
+  String get cannotEmptyErrorText => 'यो फिल्ड खाली हुन सक्दैन';
+}
