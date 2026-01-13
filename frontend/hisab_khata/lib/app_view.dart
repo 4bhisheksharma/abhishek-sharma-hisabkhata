@@ -31,7 +31,7 @@ class _MyAppViewState extends State<MyAppView> {
       changeLanguage: _changeLanguage,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: StringConstant.appName,
+        title: 'Hisab Khata',
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.light,
         onGenerateRoute: _appRouter.onGenerateRoute,

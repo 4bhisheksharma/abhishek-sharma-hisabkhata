@@ -77,5 +77,5 @@
   "passwordEmptyErrorText": "पासवर्ड आवश्यक छ",
   "pinEmptyErrorText": "पिन आवश्यक छ",
   "confirmPasswordNotMatchErrorText": "पुष्टि पासवर्ड मेल खाँदैन",
-  "cannotEmptyErrorText": "यो फिल्ड खाली हुन सक्दैन"
+  "invalidEmailErrorText": "कृपया मान्य इमेल प्रविष्ट गर्नुहोस्"
 }

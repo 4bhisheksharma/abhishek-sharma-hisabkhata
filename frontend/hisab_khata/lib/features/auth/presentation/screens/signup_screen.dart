@@ -138,44 +138,54 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Email Field
                           MyTextField(
                             controller: _controller.emailController,
-                            label: StringConstant.email,
-                            hintText: StringConstant.emailHintText,
+                            label: AppLocalizations.of(context)!.email,
+                            hintText: AppLocalizations.of(context)!.emailHintText,
                             keyboardType: TextInputType.emailAddress,
-                            validator: Validators.getEmailValidator(),
+                            validator: Validators.getEmailValidator(
+                              AppLocalizations.of(context)!.enterEmail,
+                              AppLocalizations.of(context)!.enterValidEmail,
+                            ),
                           ),
                           const SizedBox(height: 20),
 
                           // Mobile Number Field
                           MyTextField(
                             controller: _controller.mobileController,
-                            label: StringConstant.mobileNumber,
+                            label: AppLocalizations.of(context)!.mobileNumber,
                             maxLength: 10,
-                            hintText: StringConstant.mobileNumberHintText,
+                            hintText: AppLocalizations.of(context)!.mobileNumberHintText,
                             keyboardType: TextInputType.phone,
-                            validator: Validators.getMobileNumberValidator(),
+                            validator: Validators.getMobileNumberValidator(
+                              AppLocalizations.of(context)!.enterMobileNumber,
+                              AppLocalizations.of(context)!.enterValidMobileNumber,
+                            ),
                           ),
                           const SizedBox(height: 20),
 
                           // Password Field
                           MyTextField(
                             controller: _controller.passwordController,
-                            label: StringConstant.password,
-                            hintText: StringConstant.passwordHintText,
+                            label: AppLocalizations.of(context)!.password,
+                            hintText: AppLocalizations.of(context)!.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
-                            validator: Validators.getPasswordValidator(),
+                            validator: Validators.getPasswordValidator(
+                              AppLocalizations.of(context)!.passwordMinLength,
+                            ),
                           ),
                           const SizedBox(height: 20),
 
                           // Confirm Password Field
                           MyTextField(
                             controller: _controller.confirmPasswordController,
-                            label: StringConstant.confirmPassword,
-                            hintText: StringConstant.passwordHintText,
+                            label: AppLocalizations.of(context)!.confirmPassword,
+                            hintText: AppLocalizations.of(context)!.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: Validators.getConfirmPasswordValidator(
                               _controller.passwordController,
+                              AppLocalizations.of(context)!.passwordEmptyErrorText,
+                              AppLocalizations.of(context)!.confirmPasswordNotMatchErrorText,
                             ),
                           ),
                           const SizedBox(height: 24),
@@ -190,9 +200,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   color: Colors.black54,
                                 ),
                                 children: [
-                                  TextSpan(text: StringConstant.agreeToTerms),
+                                  TextSpan(text: AppLocalizations.of(context)!.agreeToTerms),
                                   TextSpan(
-                                    text: StringConstant.termsOfUse,
+                                    text: AppLocalizations.of(context)!.termsOfUse,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
@@ -200,7 +210,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                   TextSpan(text: " and "),
                                   TextSpan(
-                                    text: StringConstant.privacyPolicy,
+                                    text: AppLocalizations.of(context)!.privacyPolicy,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
@@ -216,7 +226,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
                               return MyButton(
-                                text: StringConstant.signUp,
+                                text: AppLocalizations.of(context)!.signUp,
                                 onPressed: _handleSignup,
                                 isLoading: state is AuthLoading,
                                 height: 54,
@@ -233,7 +243,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  StringConstant.alreadyHaveAccount,
+                                  AppLocalizations.of(context)!.alreadyHaveAccount,
                                   style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
@@ -250,7 +260,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   child: Text(
-                                    StringConstant.login,
+                                    AppLocalizations.of(context)!.login,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 14,

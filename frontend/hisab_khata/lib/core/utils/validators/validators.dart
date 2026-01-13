@@ -11,13 +11,13 @@ class Validators {
 
   static bool isValidEmail(String email) => _emailRegex.hasMatch(email);
 
-  static ValidatorFunctionType getPasswordValidator() {
+  static ValidatorFunctionType getPasswordValidator(String minLengthMessage) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
         return ErrorMessage.passwordEmptyErrorText;
       }
       if (value.trim().length < 8) {
-        return StringConstant.passwordMinLength;
+        return minLengthMessage;
       }
       return null;
     };
@@ -25,13 +25,15 @@ class Validators {
 
   static ValidatorFunctionType getConfirmPasswordValidator(
     TextEditingController? controller,
+    String emptyMessage,
+    String notMatchMessage,
   ) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
-        return ErrorMessage.passwordEmptyErrorText;
+        return emptyMessage;
       }
       if (value != controller?.text.trim()) {
-        return ErrorMessage.confirmPasswordNotMatchErrorText;
+        return notMatchMessage;
       }
       return null;
     };
@@ -46,25 +48,25 @@ class Validators {
     };
   }
 
-  static ValidatorFunctionType getMobileNumberValidator() {
+  static ValidatorFunctionType getMobileNumberValidator(String emptyMessage, String invalidMessage) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
-        return StringConstant.enterMobileNumber;
+        return emptyMessage;
       }
       if (value.length != 10) {
-        return StringConstant.enterValidMobileNumber;
+        return invalidMessage;
       }
       return null;
     };
   }
 
-  static ValidatorFunctionType getEmailValidator() {
+  static ValidatorFunctionType getEmailValidator(String emptyMessage, String invalidMessage) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
-        return ErrorMessage.cannotEmptyErrorText;
+        return emptyMessage;
       }
       if (!isValidEmail(value.trim())) {
-        return ErrorMessage.invalidEmailErrorText;
+        return invalidMessage;
       }
       return null;
     };

@@ -243,5 +243,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get confirmPasswordNotMatchErrorText => 'Confirm password does not match';
 
   @override
-  String get cannotEmptyErrorText => 'This field cannot be empty';
+  String get invalidEmailErrorText => 'Please enter a valid email';
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
-import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
 import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/features/auth/presentation/widgets/auth_header.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
@@ -48,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
           final user = state.loginResult.user;
           MySnackbar.showSuccess(
             context,
-            '${StringConstant.welcomeBack}, ${user.fullName}!',
+            '${AppLocalizations.of(context)!.welcomeBack}, ${user.fullName}!',
           );
 
           // Navigate based on role
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             children: [
               // Top Section with Welcome Text
-              const AuthHeader(title: StringConstant.welcome),
+              AuthHeader(title: AppLocalizations.of(context)!.welcome),
 
               // Bottom Card Section
               Expanded(
@@ -91,21 +91,26 @@ class _LoginScreenState extends State<LoginScreen> {
                           // Email Field
                           MyTextField(
                             controller: _controller.emailController,
-                            label: StringConstant.email,
-                            hintText: StringConstant.emailHintText,
+                            label: AppLocalizations.of(context)!.email,
+                            hintText: AppLocalizations.of(context)!.emailHintText,
                             keyboardType: TextInputType.emailAddress,
-                            validator: Validators.getEmailValidator(),
+                            validator: Validators.getEmailValidator(
+                              AppLocalizations.of(context)!.emailOrUserNameEmptyErrorText,
+                              AppLocalizations.of(context)!.invalidEmailErrorText,
+                            ),
                           ),
                           const SizedBox(height: 20),
 
                           // Password Field
                           MyTextField(
                             controller: _controller.passwordController,
-                            label: StringConstant.password,
-                            hintText: StringConstant.passwordHintText,
+                            label: AppLocalizations.of(context)!.password,
+                            hintText: AppLocalizations.of(context)!.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
-                            validator: Validators.getPasswordValidator(),
+                            validator: Validators.getPasswordValidator(
+                              AppLocalizations.of(context)!.passwordMinLength,
+                            ),
                           ),
                           const SizedBox(height: 40),
 
@@ -113,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
                               return MyButton(
-                                text: StringConstant.login,
+                                text: AppLocalizations.of(context)!.login,
                                 onPressed: _handleLogin,
                                 isLoading: state is AuthLoading,
                                 height: 54,
@@ -131,7 +136,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 // TODO: Navigate to forgot password
                               },
                               child: Text(
-                                StringConstant.forgotPassword,
+                                AppLocalizations.of(context)!.forgotPassword,
                                 style: TextStyle(
                                   color: Colors.black87,
                                   fontSize: 14,
@@ -148,7 +153,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  StringConstant.dontHaveAccount,
+                                  AppLocalizations.of(context)!.dontHaveAccount,
                                   style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
@@ -165,7 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
                                   child: Text(
-                                    StringConstant.signUp,
+                                    AppLocalizations.of(context)!.signUp,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
                                       fontSize: 14,

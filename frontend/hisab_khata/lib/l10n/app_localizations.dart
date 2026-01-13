@@ -563,11 +563,11 @@ abstract class AppLocalizations {
   /// **'Confirm password does not match'**
   String get confirmPasswordNotMatchErrorText;
 
-  /// No description provided for @cannotEmptyErrorText.
+  /// No description provided for @invalidEmailErrorText.
   ///
   /// In en, this message translates to:
-  /// **'This field cannot be empty'**
-  String get cannotEmptyErrorText;
+  /// **'Please enter a valid email'**
+  String get invalidEmailErrorText;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

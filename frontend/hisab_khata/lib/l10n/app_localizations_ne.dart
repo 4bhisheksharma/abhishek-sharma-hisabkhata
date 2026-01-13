@@ -243,5 +243,5 @@ class AppLocalizationsNe extends AppLocalizations {
   String get confirmPasswordNotMatchErrorText => 'पुष्टि पासवर्ड मेल खाँदैन';
 
   @override
-  String get cannotEmptyErrorText => 'यो फिल्ड खाली हुन सक्दैन';
+  String get invalidEmailErrorText => 'कृपया मान्य इमेल प्रविष्ट गर्नुहोस्';
 }

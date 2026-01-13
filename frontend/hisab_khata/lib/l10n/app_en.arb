@@ -77,5 +77,5 @@
   "passwordEmptyErrorText": "Password is required",
   "pinEmptyErrorText": "Pin is required",
   "confirmPasswordNotMatchErrorText": "Confirm password does not match",
-  "cannotEmptyErrorText": "This field cannot be empty"
+  "invalidEmailErrorText": "Please enter a valid email"
 }
