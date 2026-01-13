@@ -53,8 +53,11 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state is CustomerProfileLoaded) {
-            final profile = state.profile;
+          if (state is CustomerProfileLoaded ||
+              state is CustomerProfileUpdated) {
+            final profile = state is CustomerProfileLoaded
+                ? state.profile
+                : (state as CustomerProfileUpdated).profile;
 
             return SingleChildScrollView(
               child: Column(

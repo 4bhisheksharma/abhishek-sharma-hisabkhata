@@ -53,8 +53,11 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          if (state is BusinessProfileLoaded) {
-            final profile = state.profile;
+          if (state is BusinessProfileLoaded ||
+              state is BusinessProfileUpdated) {
+            final profile = state is BusinessProfileLoaded
+                ? state.profile
+                : (state as BusinessProfileUpdated).profile;
 
             return SingleChildScrollView(
               child: Column(
