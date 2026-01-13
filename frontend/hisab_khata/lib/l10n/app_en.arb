@@ -77,5 +77,19 @@
   "passwordEmptyErrorText": "Password is required",
   "pinEmptyErrorText": "Pin is required",
   "confirmPasswordNotMatchErrorText": "Confirm password does not match",
-  "invalidEmailErrorText": "Please enter a valid email"
+  "invalidEmailErrorText": "Please enter a valid email",
+  "unableToLoadProfile": "Unable to load profile",
+  "somethingWentWrong": "Something went wrong",
+  "editProfile": "Edit Profile",
+  "security": "Security",
+  "language": "Language",
+  "switchToHybrid": "Switch To Hybrid",
+  "raiseATicket": "Raise A Ticket",
+  "verifiedBusiness": "Verified Business",
+  "transactionHistory": "Transaction History",
+  "viewAllPastTransactions": "View all your past transactions and payments.",
+  "viewAllPastTransactionsBusiness": "View all your past transactions and received payments.",
+  "totalShops": "Total Shops",
+  "totalCustomers": "Total Customers",
+  "totalRequests": "Total Requests"
 }

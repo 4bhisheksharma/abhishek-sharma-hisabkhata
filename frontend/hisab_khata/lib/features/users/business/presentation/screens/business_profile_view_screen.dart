@@ -98,7 +98,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                               ),
                               const SizedBox(width: 4),
                               Text(
-                                'Verified Business',
+                                AppLocalizations.of(context)!.verifiedBusiness,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.blue[600],
@@ -122,7 +122,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           icon: Icons.business_outlined,
                           iconColor: const Color(0xFF4A90E2),
                           iconBgColor: const Color(0xFFE3F2FD),
-                          title: 'Edit Profile',
+                          title: AppLocalizations.of(context)!.editProfile,
                           onTap: () {
                             Navigator.pushNamed(context, '/business-profile');
                           },
@@ -132,7 +132,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           icon: Icons.security_outlined,
                           iconColor: const Color(0xFF00D9B5),
                           iconBgColor: const Color(0xFFE0F7F4),
-                          title: 'Security',
+                          title: AppLocalizations.of(context)!.security,
                           onTap: () {
                             debugPrint("Security tapped");
                           },
@@ -142,7 +142,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           icon: Icons.language_outlined,
                           iconColor: const Color(0xFF2196F3),
                           iconBgColor: const Color(0xFFE3F2FD),
-                          title: 'Language',
+                          title: AppLocalizations.of(context)!.language,
                           trailing: LanguageSwitcher(
                             initialLanguage: profile.preferredLanguage ?? 'en',
                             onLanguageChanged: (language) {
@@ -162,7 +162,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           icon: Icons.people_outline,
                           iconColor: const Color(0xFF9C27B0),
                           iconBgColor: const Color(0xFFF3E5F5),
-                          title: 'Switch To Hybrid',
+                          title: AppLocalizations.of(context)!.switchToHybrid,
                           onTap: () {
                             debugPrint("Switch to Hybrid tapped");
                           },
@@ -172,7 +172,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           icon: Icons.support_agent_outlined,
                           iconColor: const Color(0xFFFF9800),
                           iconBgColor: const Color(0xFFFFF3E0),
-                          title: 'Raise A Ticket',
+                          title: AppLocalizations.of(context)!.raiseATicket,
                           onTap: () {
                             debugPrint("Raise a ticket tapped");
                           },
@@ -182,7 +182,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           icon: Icons.logout,
                           iconColor: const Color(0xFFF44336),
                           iconBgColor: const Color(0xFFFFEBEE),
-                          title: 'Logout',
+                          title: AppLocalizations.of(context)!.logout,
                           onTap: () {
                             AuthUtils.handleLogout(context);
                           },
@@ -196,7 +196,9 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
             );
           }
 
-          return const Center(child: Text("Unable to load profile"));
+          return Center(
+            child: Text(AppLocalizations.of(context)!.unableToLoadProfile),
+          );
         },
       ),
       bottomNavigationBar: MyBottomNavBar(

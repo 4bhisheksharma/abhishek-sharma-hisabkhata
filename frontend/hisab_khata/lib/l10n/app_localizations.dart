@@ -568,6 +568,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a valid email'**
   String get invalidEmailErrorText;
+
+  /// No description provided for @unableToLoadProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load profile'**
+  String get unableToLoadProfile;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// No description provided for @security.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get security;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @switchToHybrid.
+  ///
+  /// In en, this message translates to:
+  /// **'Switch To Hybrid'**
+  String get switchToHybrid;
+
+  /// No description provided for @raiseATicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Raise A Ticket'**
+  String get raiseATicket;
+
+  /// No description provided for @verifiedBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Business'**
+  String get verifiedBusiness;
+
+  /// No description provided for @transactionHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction History'**
+  String get transactionHistory;
+
+  /// No description provided for @viewAllPastTransactions.
+  ///
+  /// In en, this message translates to:
+  /// **'View all your past transactions and payments.'**
+  String get viewAllPastTransactions;
+
+  /// No description provided for @viewAllPastTransactionsBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'View all your past transactions and received payments.'**
+  String get viewAllPastTransactionsBusiness;
+
+  /// No description provided for @totalShops.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Shops'**
+  String get totalShops;
+
+  /// No description provided for @totalCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Customers'**
+  String get totalCustomers;
+
+  /// No description provided for @totalRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Requests'**
+  String get totalRequests;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

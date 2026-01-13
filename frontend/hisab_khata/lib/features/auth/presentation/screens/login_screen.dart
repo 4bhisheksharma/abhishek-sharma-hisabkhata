@@ -92,11 +92,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           MyTextField(
                             controller: _controller.emailController,
                             label: AppLocalizations.of(context)!.email,
-                            hintText: AppLocalizations.of(context)!.emailHintText,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.emailHintText,
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.getEmailValidator(
-                              AppLocalizations.of(context)!.emailOrUserNameEmptyErrorText,
-                              AppLocalizations.of(context)!.invalidEmailErrorText,
+                              AppLocalizations.of(
+                                context,
+                              )!.emailOrUserNameEmptyErrorText,
+                              AppLocalizations.of(
+                                context,
+                              )!.invalidEmailErrorText,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -105,7 +111,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           MyTextField(
                             controller: _controller.passwordController,
                             label: AppLocalizations.of(context)!.password,
-                            hintText: AppLocalizations.of(context)!.passwordHintText,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: Validators.getPasswordValidator(

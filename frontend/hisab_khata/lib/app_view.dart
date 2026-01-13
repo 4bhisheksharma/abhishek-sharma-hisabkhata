@@ -3,7 +3,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hisab_khata/config/route/app_router.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
-import 'package:hisab_khata/core/constants/string_constants.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/providers/locale_provider.dart';
 

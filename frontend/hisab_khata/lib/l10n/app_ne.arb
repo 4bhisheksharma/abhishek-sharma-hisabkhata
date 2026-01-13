@@ -77,5 +77,19 @@
   "passwordEmptyErrorText": "पासवर्ड आवश्यक छ",
   "pinEmptyErrorText": "पिन आवश्यक छ",
   "confirmPasswordNotMatchErrorText": "पुष्टि पासवर्ड मेल खाँदैन",
-  "invalidEmailErrorText": "कृपया मान्य इमेल प्रविष्ट गर्नुहोस्"
+  "invalidEmailErrorText": "कृपया मान्य इमेल प्रविष्ट गर्नुहोस्",
+  "unableToLoadProfile": "प्रोफाइल लोड गर्न असमर्थ",
+  "somethingWentWrong": "केही गलत भयो",
+  "editProfile": "प्रोफाइल सम्पादन गर्नुहोस्",
+  "security": "सुरक्षा",
+  "language": "भाषा",
+  "switchToHybrid": "हाइब्रिडमा स्विच गर्नुहोस्",
+  "raiseATicket": "टिकट उठाउनुहोस्",
+  "verifiedBusiness": "प्रमाणित व्यापार",
+  "transactionHistory": "लेनदेन इतिहास",
+  "viewAllPastTransactions": "तपाईका सबै विगतका लेनदेन र भुक्तानीहरू हेर्नुहोस्।",
+  "viewAllPastTransactionsBusiness": "तपाईका सबै विगतका लेनदेन र प्राप्त भुक्तानीहरू हेर्नुहोस्।",
+  "totalShops": "कुल पसलहरू",
+  "totalCustomers": "कुल ग्राहकहरू",
+  "totalRequests": "कुल अनुरोधहरू"
 }

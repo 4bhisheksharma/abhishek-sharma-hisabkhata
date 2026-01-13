@@ -8,6 +8,7 @@ import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
 import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
@@ -92,9 +93,9 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
               padding: const EdgeInsets.all(16),
               child: MyStatCard(
                 title: "Add More Customers",
-                firstLabel: "Total Customers",
+                firstLabel: AppLocalizations.of(context)!.totalCustomers,
                 firstValue: "${d.totalCustomers}",
-                secondLabel: "Total Requests",
+                secondLabel: AppLocalizations.of(context)!.totalRequests,
                 secondValue: "${d.totalRequests}",
                 icon: Icons.person_add_outlined,
               ),
@@ -183,10 +184,12 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
           description: 'Track your sales patterns and business insights.',
         ),
         // 3 - History
-        const PlaceholderPage(
-          title: 'Transaction History',
+        PlaceholderPage(
+          title: AppLocalizations.of(context)!.transactionHistory,
           icon: Icons.history_rounded,
-          description: 'View all your past transactions and received payments.',
+          description: AppLocalizations.of(
+            context,
+          )!.viewAllPastTransactionsBusiness,
         ),
         // 4 - Profile (handled via navigation)
         const SizedBox.shrink(),
@@ -234,8 +237,10 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
           );
         }
 
-        return const Scaffold(
-          body: Center(child: Text("Something went wrong")),
+        return Scaffold(
+          body: Center(
+            child: Text(AppLocalizations.of(context)!.somethingWentWrong),
+          ),
         );
       },
     );

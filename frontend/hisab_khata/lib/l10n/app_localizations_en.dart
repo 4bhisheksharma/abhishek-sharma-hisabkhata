@@ -244,4 +244,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalidEmailErrorText => 'Please enter a valid email';
+
+  @override
+  String get unableToLoadProfile => 'Unable to load profile';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get editProfile => 'Edit Profile';
+
+  @override
+  String get security => 'Security';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get switchToHybrid => 'Switch To Hybrid';
+
+  @override
+  String get raiseATicket => 'Raise A Ticket';
+
+  @override
+  String get verifiedBusiness => 'Verified Business';
+
+  @override
+  String get transactionHistory => 'Transaction History';
+
+  @override
+  String get viewAllPastTransactions => 'View all your past transactions and payments.';
+
+  @override
+  String get viewAllPastTransactionsBusiness => 'View all your past transactions and received payments.';
+
+  @override
+  String get totalShops => 'Total Shops';
+
+  @override
+  String get totalCustomers => 'Total Customers';
+
+  @override
+  String get totalRequests => 'Total Requests';
 }

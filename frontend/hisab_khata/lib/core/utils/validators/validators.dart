@@ -48,7 +48,10 @@ class Validators {
     };
   }
 
-  static ValidatorFunctionType getMobileNumberValidator(String emptyMessage, String invalidMessage) {
+  static ValidatorFunctionType getMobileNumberValidator(
+    String emptyMessage,
+    String invalidMessage,
+  ) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
         return emptyMessage;
@@ -60,7 +63,10 @@ class Validators {
     };
   }
 
-  static ValidatorFunctionType getEmailValidator(String emptyMessage, String invalidMessage) {
+  static ValidatorFunctionType getEmailValidator(
+    String emptyMessage,
+    String invalidMessage,
+  ) {
     return (value) {
       if (value == null || value.trim().isEmpty) {
         return emptyMessage;

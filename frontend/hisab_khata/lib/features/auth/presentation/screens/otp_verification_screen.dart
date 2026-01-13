@@ -64,7 +64,10 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
     String otp = _controller.getOtp();
 
     if (otp.length != 6) {
-      MySnackbar.showError(context, AppLocalizations.of(context)!.enterAllSixDigits);
+      MySnackbar.showError(
+        context,
+        AppLocalizations.of(context)!.enterAllSixDigits,
+      );
       return;
     }
 
@@ -162,7 +165,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         BlocBuilder<AuthBloc, AuthState>(
                           builder: (context, state) {
                             return MyButton(
-                              text: AppLocalizations.of(context)!.continueProcess,
+                              text: AppLocalizations.of(
+                                context,
+                              )!.continueProcess,
                               onPressed: _handleVerifyOtp,
                               isLoading: state is AuthLoading,
                               height: 54,

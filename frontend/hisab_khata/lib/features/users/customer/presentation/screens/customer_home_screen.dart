@@ -8,6 +8,7 @@ import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
 import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
@@ -92,7 +93,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
               padding: const EdgeInsets.all(16),
               child: MyStatCard(
                 title: "Add More Business",
-                firstLabel: "Total Shops",
+                firstLabel: AppLocalizations.of(context)!.totalShops,
                 firstValue: "${d.totalShops}",
                 secondLabel: "Pending Requests",
                 secondValue: "${d.pendingRequests}",
@@ -183,10 +184,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           description: 'Track your spending patterns and financial insights.',
         ),
         // 3 - History
-        const PlaceholderPage(
-          title: 'Transaction History',
+        PlaceholderPage(
+          title: AppLocalizations.of(context)!.transactionHistory,
           icon: Icons.history_rounded,
-          description: 'View all your past transactions and payments.',
+          description: AppLocalizations.of(context)!.viewAllPastTransactions,
         ),
         // 4 - Profile (handled via navigation)
         const SizedBox.shrink(),
@@ -235,8 +236,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
           );
         }
 
-        return const Scaffold(
-          body: Center(child: Text("Something went wrong")),
+        return Scaffold(
+          body: Center(
+            child: Text(AppLocalizations.of(context)!.somethingWentWrong),
+          ),
         );
       },
     );

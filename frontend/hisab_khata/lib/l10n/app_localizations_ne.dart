@@ -244,4 +244,46 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get invalidEmailErrorText => 'कृपया मान्य इमेल प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get unableToLoadProfile => 'प्रोफाइल लोड गर्न असमर्थ';
+
+  @override
+  String get somethingWentWrong => 'केही गलत भयो';
+
+  @override
+  String get editProfile => 'प्रोफाइल सम्पादन गर्नुहोस्';
+
+  @override
+  String get security => 'सुरक्षा';
+
+  @override
+  String get language => 'भाषा';
+
+  @override
+  String get switchToHybrid => 'हाइब्रिडमा स्विच गर्नुहोस्';
+
+  @override
+  String get raiseATicket => 'टिकट उठाउनुहोस्';
+
+  @override
+  String get verifiedBusiness => 'प्रमाणित व्यापार';
+
+  @override
+  String get transactionHistory => 'लेनदेन इतिहास';
+
+  @override
+  String get viewAllPastTransactions => 'तपाईका सबै विगतका लेनदेन र भुक्तानीहरू हेर्नुहोस्।';
+
+  @override
+  String get viewAllPastTransactionsBusiness => 'तपाईका सबै विगतका लेनदेन र प्राप्त भुक्तानीहरू हेर्नुहोस्।';
+
+  @override
+  String get totalShops => 'कुल पसलहरू';
+
+  @override
+  String get totalCustomers => 'कुल ग्राहकहरू';
+
+  @override
+  String get totalRequests => 'कुल अनुरोधहरू';
 }

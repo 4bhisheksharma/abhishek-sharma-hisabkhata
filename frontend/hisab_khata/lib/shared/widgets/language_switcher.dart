@@ -5,7 +5,11 @@ class LanguageSwitcher extends StatefulWidget {
   final Function(String)? onLanguageChanged;
   final String? initialLanguage;
 
-  const LanguageSwitcher({super.key, this.onLanguageChanged, this.initialLanguage});
+  const LanguageSwitcher({
+    super.key,
+    this.onLanguageChanged,
+    this.initialLanguage,
+  });
 
   @override
   State<LanguageSwitcher> createState() => _LanguageSwitcherState();
@@ -18,7 +22,8 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final localeProvider = LocaleProvider.of(context);
       final currentLocale = localeProvider?.locale.languageCode ?? 'en';
-      if (widget.initialLanguage != null && widget.initialLanguage != currentLocale) {
+      if (widget.initialLanguage != null &&
+          widget.initialLanguage != currentLocale) {
         localeProvider?.changeLanguage(widget.initialLanguage!);
       }
     });

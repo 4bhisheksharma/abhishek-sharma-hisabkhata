@@ -13,7 +13,6 @@ import 'package:hisab_khata/features/auth/presentation/widgets/role_selection_bu
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
-import 'package:hisab_khata/core/constants/string_constants.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -36,7 +35,10 @@ class _SignupScreenState extends State<SignupScreen> {
     if (_formKey.currentState!.validate()) {
       if (_controller.passwordController.text !=
           _controller.confirmPasswordController.text) {
-        MySnackbar.showError(context, AppLocalizations.of(context)!.passwordsDoNotMatch);
+        MySnackbar.showError(
+          context,
+          AppLocalizations.of(context)!.passwordsDoNotMatch,
+        );
         return;
       }
 
@@ -115,7 +117,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           MyTextField(
                             controller: _controller.nameController,
                             label: AppLocalizations.of(context)!.fullName,
-                            hintText: AppLocalizations.of(context)!.fullNameHintText,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.fullNameHintText,
                             validator: Validators.getTextFieldValidator(
                               AppLocalizations.of(context)!.enterName,
                             ),
@@ -127,7 +131,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             MyTextField(
                               controller: _controller.businessNameController,
                               label: AppLocalizations.of(context)!.businessName,
-                              hintText: AppLocalizations.of(context)!.businessNameHintText,
+                              hintText: AppLocalizations.of(
+                                context,
+                              )!.businessNameHintText,
                               validator: Validators.getTextFieldValidator(
                                 AppLocalizations.of(context)!.enterBusinessName,
                               ),
@@ -139,7 +145,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           MyTextField(
                             controller: _controller.emailController,
                             label: AppLocalizations.of(context)!.email,
-                            hintText: AppLocalizations.of(context)!.emailHintText,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.emailHintText,
                             keyboardType: TextInputType.emailAddress,
                             validator: Validators.getEmailValidator(
                               AppLocalizations.of(context)!.enterEmail,
@@ -153,11 +161,15 @@ class _SignupScreenState extends State<SignupScreen> {
                             controller: _controller.mobileController,
                             label: AppLocalizations.of(context)!.mobileNumber,
                             maxLength: 10,
-                            hintText: AppLocalizations.of(context)!.mobileNumberHintText,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.mobileNumberHintText,
                             keyboardType: TextInputType.phone,
                             validator: Validators.getMobileNumberValidator(
                               AppLocalizations.of(context)!.enterMobileNumber,
-                              AppLocalizations.of(context)!.enterValidMobileNumber,
+                              AppLocalizations.of(
+                                context,
+                              )!.enterValidMobileNumber,
                             ),
                           ),
                           const SizedBox(height: 20),
@@ -166,7 +178,9 @@ class _SignupScreenState extends State<SignupScreen> {
                           MyTextField(
                             controller: _controller.passwordController,
                             label: AppLocalizations.of(context)!.password,
-                            hintText: AppLocalizations.of(context)!.passwordHintText,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: Validators.getPasswordValidator(
@@ -178,14 +192,22 @@ class _SignupScreenState extends State<SignupScreen> {
                           // Confirm Password Field
                           MyTextField(
                             controller: _controller.confirmPasswordController,
-                            label: AppLocalizations.of(context)!.confirmPassword,
-                            hintText: AppLocalizations.of(context)!.passwordHintText,
+                            label: AppLocalizations.of(
+                              context,
+                            )!.confirmPassword,
+                            hintText: AppLocalizations.of(
+                              context,
+                            )!.passwordHintText,
                             obscureText: true,
                             showPasswordToggle: true,
                             validator: Validators.getConfirmPasswordValidator(
                               _controller.passwordController,
-                              AppLocalizations.of(context)!.passwordEmptyErrorText,
-                              AppLocalizations.of(context)!.confirmPasswordNotMatchErrorText,
+                              AppLocalizations.of(
+                                context,
+                              )!.passwordEmptyErrorText,
+                              AppLocalizations.of(
+                                context,
+                              )!.confirmPasswordNotMatchErrorText,
                             ),
                           ),
                           const SizedBox(height: 24),
@@ -200,9 +222,15 @@ class _SignupScreenState extends State<SignupScreen> {
                                   color: Colors.black54,
                                 ),
                                 children: [
-                                  TextSpan(text: AppLocalizations.of(context)!.agreeToTerms),
                                   TextSpan(
-                                    text: AppLocalizations.of(context)!.termsOfUse,
+                                    text: AppLocalizations.of(
+                                      context,
+                                    )!.agreeToTerms,
+                                  ),
+                                  TextSpan(
+                                    text: AppLocalizations.of(
+                                      context,
+                                    )!.termsOfUse,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
@@ -210,7 +238,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   ),
                                   TextSpan(text: " and "),
                                   TextSpan(
-                                    text: AppLocalizations.of(context)!.privacyPolicy,
+                                    text: AppLocalizations.of(
+                                      context,
+                                    )!.privacyPolicy,
                                     style: TextStyle(
                                       fontWeight: FontWeight.w600,
                                       color: Colors.black87,
@@ -243,7 +273,9 @@ class _SignupScreenState extends State<SignupScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  AppLocalizations.of(context)!.alreadyHaveAccount,
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.alreadyHaveAccount,
                                   style: TextStyle(
                                     color: Colors.black54,
                                     fontSize: 14,
