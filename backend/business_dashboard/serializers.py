@@ -51,7 +51,9 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
             if 'full_name' in user_data:
                 user.full_name = user_data['full_name']
             if 'phone_number' in user_data:
-                user.phone_number = user_data['phone_number']
+                # Convert empty string to None to avoid UNIQUE constraint violation
+                phone = user_data['phone_number']
+                user.phone_number = phone if phone and phone.strip() else None
             
             # Handle profile picture update
             if 'profile_picture' in user_data:
