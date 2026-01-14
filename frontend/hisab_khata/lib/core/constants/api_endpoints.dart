@@ -19,6 +19,8 @@ class ApiEndpoints {
   // Connection Request endpoints
   static const String searchUsers = "request/connections/search-users/";
   static const String sendRequest = "request/connections/send-request/";
+  static const String bulkSendRequest = "request/connections/bulk-send-request/";
+  static const String bulkUpdateStatus = "request/connections/bulk-update-status/";
   static const String sentRequests = "request/connections/sent/";
   static const String receivedRequests = "request/connections/received/";
   static const String pendingReceivedRequests =

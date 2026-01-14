@@ -1,5 +1,6 @@
 import '../../../../core/data/base_remote_data_source.dart';
 import '../../../../core/constants/api_endpoints.dart';
+import '../models/bulk_send_request_response_model.dart';
 import '../models/connection_request_model.dart';
 import '../models/connected_user_model.dart';
 import '../models/user_search_result_model.dart';
@@ -10,6 +11,9 @@ abstract class ConnectionRequestRemoteDataSource {
   Future<ConnectionRequestModel> sendRequest({
     String? receiverEmail,
     int? receiverId,
+  });
+  Future<BulkSendRequestResponseModel> bulkSendRequest({
+    required List<int> receiverIds,
   });
   Future<List<ConnectionRequestModel>> getSentRequests();
   Future<List<ConnectionRequestModel>> getReceivedRequests();
@@ -50,6 +54,19 @@ class ConnectionRequestRemoteDataSourceImpl extends BaseRemoteDataSource
     final response = await post(ApiEndpoints.sendRequest, body: body);
 
     return ConnectionRequestModel.fromJson(response['request']);
+  }
+
+  @override
+  Future<BulkSendRequestResponseModel> bulkSendRequest({
+    required List<int> receiverIds,
+  }) async {
+    final body = {
+      'receiver_ids': receiverIds,
+    };
+
+    final response = await post(ApiEndpoints.bulkSendRequest, body: body);
+
+    return BulkSendRequestResponseModel.fromJson(response);
   }
 
   @override
