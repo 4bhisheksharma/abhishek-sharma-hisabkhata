@@ -652,6 +652,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Total Requests'**
   String get totalRequests;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @nepali.
+  ///
+  /// In en, this message translates to:
+  /// **'Nepali'**
+  String get nepali;
+
+  /// No description provided for @changeProfilePicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Profile Picture'**
+  String get changeProfilePicture;
+
+  /// No description provided for @recentlyAddedBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Added Business'**
+  String get recentlyAddedBusiness;
+
+  /// No description provided for @noBusinessesAddedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No businesses added yet'**
+  String get noBusinessesAddedYet;
+
+  /// No description provided for @recentlyAddedCustomers.
+  ///
+  /// In en, this message translates to:
+  /// **'Recently Added Customers'**
+  String get recentlyAddedCustomers;
+
+  /// No description provided for @noCustomersAddedYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No customers added yet'**
+  String get noCustomersAddedYet;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

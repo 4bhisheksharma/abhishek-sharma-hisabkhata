@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 
 /// Reusable widget for profile picture with edit capability
@@ -73,7 +74,7 @@ class EditableProfilePicture extends StatelessWidget {
         TextButton(
           onPressed: onTap,
           child: Text(
-            'Change Profile Picture',
+            AppLocalizations.of(context)!.changeProfilePicture,
             style: TextStyle(
               color: Theme.of(context).primaryColor,
               fontSize: 16,

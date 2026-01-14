@@ -286,4 +286,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get totalRequests => 'Total Requests';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get nepali => 'Nepali';
+
+  @override
+  String get changeProfilePicture => 'Change Profile Picture';
+
+  @override
+  String get recentlyAddedBusiness => 'Recently Added Business';
+
+  @override
+  String get noBusinessesAddedYet => 'No businesses added yet';
+
+  @override
+  String get recentlyAddedCustomers => 'Recently Added Customers';
+
+  @override
+  String get noCustomersAddedYet => 'No customers added yet';
 }

@@ -286,4 +286,25 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get totalRequests => 'कुल अनुरोधहरू';
+
+  @override
+  String get english => 'अंग्रेजी';
+
+  @override
+  String get nepali => 'नेपाली';
+
+  @override
+  String get changeProfilePicture => 'प्रोफाइल तस्विर परिवर्तन गर्नुहोस्';
+
+  @override
+  String get recentlyAddedBusiness => 'हालै थपिएको व्यवसाय';
+
+  @override
+  String get noBusinessesAddedYet => 'अहिलेसम्म कुनै व्यवसाय थपिएको छैन';
+
+  @override
+  String get recentlyAddedCustomers => 'हालै थपिएका ग्राहकहरू';
+
+  @override
+  String get noCustomersAddedYet => 'अहिलेसम्म कुनै ग्राहक थपिएको छैन';
 }

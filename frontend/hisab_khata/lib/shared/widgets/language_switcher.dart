@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/providers/locale_provider.dart';
 
 class LanguageSwitcher extends StatefulWidget {
@@ -36,9 +37,9 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
 
     return DropdownButton<String>(
       value: currentLocale,
-      items: const [
-        DropdownMenuItem(value: 'en', child: Text('English')),
-        DropdownMenuItem(value: 'ne', child: Text('नेपाली')),
+      items: [
+        DropdownMenuItem(value: 'en', child: Text(AppLocalizations.of(context)!.english)),
+        DropdownMenuItem(value: 'ne', child: Text(AppLocalizations.of(context)!.nepali)),
       ],
       onChanged: (value) {
         if (value != null) {

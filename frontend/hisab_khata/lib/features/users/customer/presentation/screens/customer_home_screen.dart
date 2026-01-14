@@ -105,7 +105,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                "Recently Added Business",
+                AppLocalizations.of(context)!.recentlyAddedBusiness,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
                   fontSize: 18,
@@ -129,7 +129,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        "No businesses added yet",
+                        AppLocalizations.of(context)!.noBusinessesAddedYet,
                         style: TextStyle(color: Colors.grey[600], fontSize: 14),
                       ),
                       const SizedBox(height: 20),

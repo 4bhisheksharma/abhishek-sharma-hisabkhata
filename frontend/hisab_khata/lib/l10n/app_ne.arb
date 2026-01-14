@@ -91,5 +91,12 @@
   "viewAllPastTransactionsBusiness": "तपाईका सबै विगतका लेनदेन र प्राप्त भुक्तानीहरू हेर्नुहोस्।",
   "totalShops": "कुल पसलहरू",
   "totalCustomers": "कुल ग्राहकहरू",
-  "totalRequests": "कुल अनुरोधहरू"
+  "totalRequests": "कुल अनुरोधहरू",
+  "english": "अंग्रेजी",
+  "nepali": "नेपाली",
+  "changeProfilePicture": "प्रोफाइल तस्विर परिवर्तन गर्नुहोस्",
+  "recentlyAddedBusiness": "हालै थपिएको व्यवसाय",
+  "noBusinessesAddedYet": "अहिलेसम्म कुनै व्यवसाय थपिएको छैन",
+  "recentlyAddedCustomers": "हालै थपिएका ग्राहकहरू",
+  "noCustomersAddedYet": "अहिलेसम्म कुनै ग्राहक थपिएको छैन"
 }

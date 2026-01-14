@@ -91,5 +91,12 @@
   "viewAllPastTransactionsBusiness": "View all your past transactions and received payments.",
   "totalShops": "Total Shops",
   "totalCustomers": "Total Customers",
-  "totalRequests": "Total Requests"
+  "totalRequests": "Total Requests",
+  "english": "English",
+  "nepali": "Nepali",
+  "changeProfilePicture": "Change Profile Picture",
+  "recentlyAddedBusiness": "Recently Added Business",
+  "noBusinessesAddedYet": "No businesses added yet",
+  "recentlyAddedCustomers": "Recently Added Customers",
+  "noCustomersAddedYet": "No customers added yet"
 }
