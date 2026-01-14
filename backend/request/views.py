@@ -9,7 +9,10 @@ from .serializers import (
     ConnectedUserSerializer,
     SendRequestSerializer,
     UpdateRequestStatusSerializer,
-    UserSearchSerializer
+    UserSearchSerializer,
+    BulkSendRequestSerializer,
+    BulkRequestResultSerializer,
+    BulkUpdateStatusSerializer
 )
 from hisabauth.models import User
 from notification.models import Notification
@@ -119,6 +122,121 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_201_CREATED
         )
+    
+    @action(detail=False, methods=['post'], url_path='bulk-send-request')
+    def bulk_send_request(self, request):
+        """
+        Send connection requests to multiple users in bulk
+        Body: {
+            "receivers": [
+                {"email": "user1@example.com"},
+                {"user_id": 123},
+                {"email": "user2@example.com"}
+            ]
+        }
+        """
+        serializer = BulkSendRequestSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+        
+        receivers = serializer.validated_data['receivers']
+        
+        # Track results
+        results = {
+            'successful': [],
+            'failed': [],
+            'skipped': []
+        }
+        
+        # Check existing connections and requests
+        from django.db import transaction
+        
+        for receiver in receivers:
+            try:
+                # Check if already connected (accepted request exists)
+                existing_connection = CustomerBusinessRelationship.objects.filter(
+                    Q(customer__user=request.user, business__user=receiver) |
+                    Q(customer__user=receiver, business__user=request.user)
+                ).exists()
+                
+                if existing_connection:
+                    results['skipped'].append({
+                        'user_id': receiver.user_id,
+                        'email': receiver.email,
+                        'full_name': receiver.full_name,
+                        'reason': 'Already connected'
+                    })
+                    continue
+                
+                # Check if request already exists (pending, accepted, or rejected)
+                existing_request = BusinessCustomerRequest.objects.filter(
+                    Q(sender=request.user, receiver=receiver) |
+                    Q(sender=receiver, receiver=request.user)
+                ).first()
+                
+                if existing_request:
+                    results['skipped'].append({
+                        'user_id': receiver.user_id,
+                        'email': receiver.email,
+                        'full_name': receiver.full_name,
+                        'reason': f'Request already exists with status: {existing_request.status}',
+                        'existing_request_id': existing_request.business_customer_request_id,
+                        'existing_status': existing_request.status
+                    })
+                    continue
+                
+                # Create new request within transaction
+                with transaction.atomic():
+                    connection_request = BusinessCustomerRequest.objects.create(
+                        sender=request.user,
+                        receiver=receiver
+                    )
+                    
+                    # Send in-app notification to receiver
+                    Notification.objects.create(
+                        sender=request.user,
+                        receiver=receiver,
+                        title="New Connection Request",
+                        message=f"{request.user.full_name} sent you a connection request.",
+                        type="connection_request"
+                    )
+                
+                results['successful'].append({
+                    'user_id': receiver.user_id,
+                    'email': receiver.email,
+                    'full_name': receiver.full_name,
+                    'request_id': connection_request.business_customer_request_id,
+                    'status': connection_request.status
+                })
+                
+            except Exception as e:
+                results['failed'].append({
+                    'user_id': receiver.user_id,
+                    'email': receiver.email,
+                    'full_name': receiver.full_name,
+                    'error': str(e)
+                })
+        
+        # Prepare summary
+        summary = {
+            'total_requested': len(receivers),
+            'successful': len(results['successful']),
+            'failed': len(results['failed']),
+            'skipped': len(results['skipped']),
+            'results': results,
+            'summary': {
+                'message': f"Sent {len(results['successful'])} request(s), skipped {len(results['skipped'])}, failed {len(results['failed'])}"
+            }
+        }
+        
+        # Determine HTTP status code
+        if results['successful']:
+            response_status = status.HTTP_201_CREATED
+        elif results['skipped'] and not results['failed']:
+            response_status = status.HTTP_200_OK
+        else:
+            response_status = status.HTTP_207_MULTI_STATUS
+        
+        return Response(summary, status=response_status)
     
     @action(detail=False, methods=['get'], url_path='sent')
     def sent_requests(self, request):
@@ -245,6 +363,111 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             },
             status=status.HTTP_200_OK
         )
+    
+    @action(detail=False, methods=['patch'], url_path='bulk-update-status')
+    def bulk_update_status(self, request):
+        """
+        Accept or reject multiple connection requests in bulk
+        Body: {
+            "request_ids": [1, 2, 3, 4],
+            "status": "accepted" | "rejected"
+        }
+        """
+        serializer = BulkUpdateStatusSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        request_ids = serializer.validated_data['request_ids']
+        new_status = serializer.validated_data['status']
+        
+        # Track results
+        results = {
+            'successful': [],
+            'failed': [],
+            'skipped': []
+        }
+        
+        from django.db import transaction
+        
+        for request_id in request_ids:
+            try:
+                connection_request = BusinessCustomerRequest.objects.get(
+                    business_customer_request_id=request_id
+                )
+                
+                # Only receiver can update the status
+                if connection_request.receiver != request.user:
+                    results['failed'].append({
+                        'request_id': request_id,
+                        'error': 'Only the receiver can accept or reject the request'
+                    })
+                    continue
+                
+                # Can only update pending requests
+                if connection_request.status != 'pending':
+                    results['skipped'].append({
+                        'request_id': request_id,
+                        'current_status': connection_request.status,
+                        'reason': f'Request is not pending (current status: {connection_request.status})'
+                    })
+                    continue
+                
+                # Update status within transaction
+                with transaction.atomic():
+                    connection_request.status = new_status
+                    connection_request.save()
+                    
+                    # If accepted, create CustomerBusinessRelationship
+                    if new_status == 'accepted':
+                        self._create_customer_business_relationship(connection_request)
+                    
+                    # Send notification to sender
+                    Notification.objects.create(
+                        sender=request.user,
+                        receiver=connection_request.sender,
+                        title=f"Connection Request {new_status.capitalize()}",
+                        message=f"{request.user.full_name} {new_status} your connection request.",
+                        type=f"connection_request_{new_status}"
+                    )
+                
+                results['successful'].append({
+                    'request_id': request_id,
+                    'sender_name': connection_request.sender.full_name,
+                    'sender_email': connection_request.sender.email,
+                    'new_status': new_status
+                })
+                
+            except BusinessCustomerRequest.DoesNotExist:
+                results['failed'].append({
+                    'request_id': request_id,
+                    'error': 'Request not found'
+                })
+            except Exception as e:
+                results['failed'].append({
+                    'request_id': request_id,
+                    'error': str(e)
+                })
+        
+        # Prepare summary
+        summary = {
+            'total_requested': len(request_ids),
+            'successful': len(results['successful']),
+            'failed': len(results['failed']),
+            'skipped': len(results['skipped']),
+            'results': results,
+            'summary': {
+                'message': f"{new_status.capitalize()} {len(results['successful'])} request(s), skipped {len(results['skipped'])}, failed {len(results['failed'])}"
+            }
+        }
+        
+        # Determine HTTP status code
+        if results['successful']:
+            response_status = status.HTTP_200_OK
+        elif results['skipped'] and not results['failed']:
+            response_status = status.HTTP_200_OK
+        else:
+            response_status = status.HTTP_207_MULTI_STATUS
+        
+        return Response(summary, status=response_status)
     
     def _create_customer_business_relationship(self, connection_request):
         """

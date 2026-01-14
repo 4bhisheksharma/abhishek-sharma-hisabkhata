@@ -137,3 +137,107 @@ class SendRequestSerializer(serializers.Serializer):
 class UpdateRequestStatusSerializer(serializers.Serializer):
     """Serializer for updating request status"""
     status = serializers.ChoiceField(choices=['accepted', 'rejected'])
+
+
+class BulkSendRequestSerializer(serializers.Serializer):
+    """Serializer for sending bulk connection requests"""
+    receivers = serializers.ListField(
+        child=serializers.DictField(),
+        min_length=1,
+        max_length=100,  # Limit bulk requests to 100 users
+        help_text="List of receivers with 'email' or 'user_id'"
+    )
+    
+    def validate_receivers(self, receivers):
+        """Validate each receiver in the list"""
+        if not receivers:
+            raise serializers.ValidationError("Receivers list cannot be empty")
+        
+        validated_receivers = []
+        errors = []
+        
+        for idx, receiver_data in enumerate(receivers):
+            # Check that each item has either email or user_id
+            if not receiver_data.get('email') and not receiver_data.get('user_id'):
+                errors.append({
+                    'index': idx,
+                    'error': "Each receiver must have either 'email' or 'user_id'"
+                })
+                continue
+            
+            if receiver_data.get('email') and receiver_data.get('user_id'):
+                errors.append({
+                    'index': idx,
+                    'error': "Provide only one: 'email' or 'user_id'"
+                })
+                continue
+            
+            # Find the receiver user
+            try:
+                if receiver_data.get('email'):
+                    user = User.objects.get(email=receiver_data['email'])
+                else:
+                    user = User.objects.get(user_id=receiver_data['user_id'])
+                
+                validated_receivers.append(user)
+            except User.DoesNotExist:
+                field = 'email' if receiver_data.get('email') else 'user_id'
+                value = receiver_data.get('email') or receiver_data.get('user_id')
+                errors.append({
+                    'index': idx,
+                    'error': f"User with {field} '{value}' not found"
+                })
+        
+        if errors:
+            raise serializers.ValidationError({
+                'receivers': errors,
+                'message': f'{len(errors)} receiver(s) had validation errors'
+            })
+        
+        return validated_receivers
+    
+    def validate(self, data):
+        """Additional validation after receivers are validated"""
+        request = self.context.get('request')
+        if not request or not request.user:
+            raise serializers.ValidationError("Authentication required")
+        
+        receivers = data.get('receivers', [])
+        
+        # Remove self from receivers if present
+        receivers = [r for r in receivers if r.user_id != request.user.user_id]
+        
+        # Remove duplicates (by user_id)
+        seen_ids = set()
+        unique_receivers = []
+        for receiver in receivers:
+            if receiver.user_id not in seen_ids:
+                seen_ids.add(receiver.user_id)
+                unique_receivers.append(receiver)
+        
+        data['receivers'] = unique_receivers
+        return data
+
+
+class BulkRequestResultSerializer(serializers.Serializer):
+    """Serializer for bulk request operation results"""
+    total_requested = serializers.IntegerField()
+    successful = serializers.IntegerField()
+    failed = serializers.IntegerField()
+    skipped = serializers.IntegerField()
+    results = serializers.ListField()
+    summary = serializers.DictField()
+
+
+class BulkUpdateStatusSerializer(serializers.Serializer):
+    """Serializer for bulk updating request status"""
+    request_ids = serializers.ListField(
+        child=serializers.IntegerField(),
+        min_length=1,
+        max_length=100,
+        help_text="List of request IDs to update"
+    )
+    status = serializers.ChoiceField(
+        choices=['accepted', 'rejected'],
+        help_text="Status to apply to all requests"
+    )
