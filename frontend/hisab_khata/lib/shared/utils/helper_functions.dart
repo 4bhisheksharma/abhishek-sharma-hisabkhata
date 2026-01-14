@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HelperFunctions {
@@ -81,13 +82,13 @@ class HelperFunctions {
                     _buildImageSourceOption(
                       context: context,
                       icon: Icons.camera_alt_rounded,
-                      label: 'Camera',
+                      label: AppLocalizations.of(context)!.camera,
                       source: ImageSource.camera,
                     ),
                     _buildImageSourceOption(
                       context: context,
                       icon: Icons.photo_library_rounded,
-                      label: 'Gallery',
+                      label: AppLocalizations.of(context)!.gallery,
                       source: ImageSource.gallery,
                     ),
                   ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
@@ -96,7 +97,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   LoadConnectedUserDetails(relationshipId),
                 );
               },
-              child: const Text('Retry'),
+              child: Text(AppLocalizations.of(context)!.retry),
             ),
           ],
         ),
@@ -277,8 +278,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       onPressed: () => _navigateToAddTransaction(context, userDetails),
       backgroundColor: Theme.of(context).colorScheme.primary,
       icon: const Icon(Icons.add, color: Colors.white),
-      label: const Text(
-        'Add Transaction',
+      label: Text(
+        AppLocalizations.of(context)!.addTransaction,
         style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
       ),
     );
@@ -324,9 +325,11 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     }
 
     if (userDetails == null || userDetails.toPay <= 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('No pending dues to pay!')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.noPendingDuesToPay),
+        ),
+      );
       return;
     }
 
@@ -465,19 +468,21 @@ class _PayDueDialogState extends State<_PayDueDialog> {
                   ),
                   suffixIcon: TextButton(
                     onPressed: _payFullAmount,
-                    child: const Text('Pay Full'),
+                    child: Text(AppLocalizations.of(context)!.payFull),
                   ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter amount';
+                    return AppLocalizations.of(context)!.pleaseEnterAmount;
                   }
                   final amount = double.tryParse(value);
                   if (amount == null || amount <= 0) {
-                    return 'Please enter a valid amount';
+                    return AppLocalizations.of(context)!.pleaseEnterValidAmount;
                   }
                   if (amount > widget.currentDue) {
-                    return 'Amount cannot exceed due amount';
+                    return AppLocalizations.of(
+                      context,
+                    )!.amountCannotExceedDueAmount;
                   }
                   return null;
                 },
@@ -489,7 +494,7 @@ class _PayDueDialogState extends State<_PayDueDialog> {
                 controller: _noteController,
                 decoration: InputDecoration(
                   labelText: 'Note (optional)',
-                  hintText: 'e.g., Payment for January',
+                  hintText: AppLocalizations.of(context)!.transactionNoteHint,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -510,7 +515,7 @@ class _PayDueDialogState extends State<_PayDueDialog> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Cancel'),
+                      child: Text(AppLocalizations.of(context)!.cancel),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -525,7 +530,7 @@ class _PayDueDialogState extends State<_PayDueDialog> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Pay Now'),
+                      child: Text(AppLocalizations.of(context)!.payNow),
                     ),
                   ),
                 ],

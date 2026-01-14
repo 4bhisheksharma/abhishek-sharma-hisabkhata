@@ -5,6 +5,7 @@ import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -69,7 +70,7 @@ class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('My Profile'),
+        title: Text(AppLocalizations.of(context)!.myProfile),
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -127,10 +128,10 @@ class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
                   // Full Name Field
                   MyTextField(
                     controller: _fullNameController,
-                    label: 'Full Name',
-                    hintText: 'Enter your full name',
+                    label: AppLocalizations.of(context)!.fullName,
+                    hintText: AppLocalizations.of(context)!.fullNameHint,
                     validator: Validators.getTextFieldValidator(
-                      'Please enter your name',
+                      AppLocalizations.of(context)!.enterYourName,
                     ),
                   ),
 
@@ -139,8 +140,8 @@ class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
                   // Email Field (Read-only)
                   MyTextField(
                     controller: _emailController,
-                    label: 'Email',
-                    hintText: 'Email',
+                    label: AppLocalizations.of(context)!.email,
+                    hintText: AppLocalizations.of(context)!.emailHint,
                     enabled: false,
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -150,8 +151,8 @@ class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
                   // Phone Number Field
                   MyTextField(
                     controller: _phoneNumberController,
-                    label: 'Phone Number',
-                    hintText: 'Enter your phone number',
+                    label: AppLocalizations.of(context)!.phoneNumber,
+                    hintText: AppLocalizations.of(context)!.phoneHint,
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
                     validator: (value) {

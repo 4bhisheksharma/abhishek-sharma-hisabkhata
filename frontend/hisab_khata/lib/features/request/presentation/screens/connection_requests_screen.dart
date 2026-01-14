@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../bloc/connection_request_bloc.dart';
@@ -35,8 +36,8 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Connection Requests',
+        title: Text(
+          AppLocalizations.of(context)!.connectionRequests,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -76,15 +77,15 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen> {
 
             if (state is PendingReceivedRequestsLoaded) {
               if (state.requests.isEmpty) {
-                return const Center(
+                return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.inbox, size: 80, color: Colors.black26),
-                      SizedBox(height: 16),
+                      const Icon(Icons.inbox, size: 80, color: Colors.black26),
+                      const SizedBox(height: 16),
                       Text(
-                        'No pending requests',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.noPendingRequests,
+                        style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black54,
                           fontWeight: FontWeight.w500,
@@ -232,7 +233,7 @@ class _ConnectionRequestCard extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: onAccept,
                   icon: const Icon(Icons.check, size: 20),
-                  label: const Text('Accept'),
+                  label: Text(AppLocalizations.of(context)!.accept),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.green,
                     foregroundColor: Colors.white,
@@ -249,7 +250,7 @@ class _ConnectionRequestCard extends StatelessWidget {
                 child: ElevatedButton.icon(
                   onPressed: onReject,
                   icon: const Icon(Icons.close, size: 20),
-                  label: const Text('Reject'),
+                  label: Text(AppLocalizations.of(context)!.reject),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     foregroundColor: Colors.white,

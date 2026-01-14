@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
@@ -33,8 +34,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: const Text(
-          'Notification',
+        title: Text(
+          AppLocalizations.of(context)!.notification,
           style: TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -78,9 +79,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
             if (state is AllNotificationsLoaded) {
               if (state.notifications.isEmpty) {
-                return const Center(
+                return Center(
                   child: Text(
-                    'No notifications yet',
+                    AppLocalizations.of(context)!.noNotificationsYet,
                     style: TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 );
@@ -146,7 +147,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                         }).toList(),
                       ],
                     );
-                  }).toList(),
+                  }),
                 ],
               );
             }

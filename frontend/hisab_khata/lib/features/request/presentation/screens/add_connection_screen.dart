@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/storage/storage_service.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_button.dart';
@@ -131,15 +132,15 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
                   // Email Field
                   MyTextField(
                     controller: _emailController,
-                    label: 'Email',
-                    hintText: 'demo@gmail.com',
+                    label: AppLocalizations.of(context)!.email,
+                    hintText: AppLocalizations.of(context)!.emailExample,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter an email';
+                        return AppLocalizations.of(context)!.enterAnEmail;
                       }
                       if (!Validators.isValidEmail(value.trim())) {
-                        return 'Please enter a valid email';
+                        return AppLocalizations.of(context)!.enterValidEmail;
                       }
                       return null;
                     },
@@ -148,8 +149,8 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
                   // Note Field
                   MyTextField(
                     controller: _noteController,
-                    label: 'Note',
-                    hintText: 'Enter Message',
+                    label: AppLocalizations.of(context)!.note,
+                    hintText: AppLocalizations.of(context)!.messageHint,
                     maxLines: 5,
                     keyboardType: TextInputType.multiline,
                   ),

@@ -694,6 +694,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No customers added yet'**
   String get noCustomersAddedYet;
+
+  /// No description provided for @transactionAddedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Transaction added successfully'**
+  String get transactionAddedSuccessfully;
+
+  /// No description provided for @auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get auto;
+
+  /// No description provided for @noPendingDuesToPay.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending dues to pay!'**
+  String get noPendingDuesToPay;
+
+  /// No description provided for @payFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Full'**
+  String get payFull;
+
+  /// No description provided for @pleaseEnterAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter amount'**
+  String get pleaseEnterAmount;
+
+  /// No description provided for @pleaseEnterValidAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid amount'**
+  String get pleaseEnterValidAmount;
+
+  /// No description provided for @amountCannotExceedDueAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount cannot exceed due amount'**
+  String get amountCannotExceedDueAmount;
+
+  /// No description provided for @payNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay Now'**
+  String get payNow;
+
+  /// No description provided for @connectionRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Requests'**
+  String get connectionRequests;
+
+  /// No description provided for @noPendingRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending requests'**
+  String get noPendingRequests;
+
+  /// No description provided for @accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
+
+  /// No description provided for @reject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
+
+  /// No description provided for @notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Notification'**
+  String get notification;
+
+  /// No description provided for @noNotificationsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotificationsYet;
+
+  /// No description provided for @confirmLogout.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get confirmLogout;
+
+  /// No description provided for @myProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get myProfile;
+
+  /// No description provided for @businessProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Profile'**
+  String get businessProfile;
+
+  /// No description provided for @ownerFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Owner Full Name'**
+  String get ownerFullName;
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
+  /// No description provided for @amountHint.
+  ///
+  /// In en, this message translates to:
+  /// **'0.00'**
+  String get amountHint;
+
+  /// No description provided for @descriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Rice, Dal, Groceries'**
+  String get descriptionHint;
+
+  /// No description provided for @messageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Message'**
+  String get messageHint;
+
+  /// No description provided for @transactionNoteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g., Payment for January'**
+  String get transactionNoteHint;
+
+  /// No description provided for @fullNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get fullNameHint;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get emailHint;
+
+  /// No description provided for @phoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number'**
+  String get phoneHint;
+
+  /// No description provided for @businessNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your business name'**
+  String get businessNameHint;
+
+  /// No description provided for @ownerNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter owner full name'**
+  String get ownerNameHint;
+
+  /// No description provided for @phoneNumberHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter phone number'**
+  String get phoneNumberHint;
+
+  /// No description provided for @emailExample.
+  ///
+  /// In en, this message translates to:
+  /// **'demo@gmail.com'**
+  String get emailExample;
+
+  /// No description provided for @noRouteDefined.
+  ///
+  /// In en, this message translates to:
+  /// **'No route defined for'**
+  String get noRouteDefined;
+
+  /// No description provided for @enterYourName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your name'**
+  String get enterYourName;
+
+  /// No description provided for @enterOwnerName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter owner name'**
+  String get enterOwnerName;
+
+  /// No description provided for @enterAnEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter an email'**
+  String get enterAnEmail;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

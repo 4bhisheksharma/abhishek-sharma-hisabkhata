@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/storage/storage_service.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class AuthUtils {
   /// Shows logout confirmation dialog and handles logout
@@ -7,16 +8,19 @@ class AuthUtils {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(AppLocalizations.of(context)!.logout),
+        content: Text(AppLocalizations.of(context)!.confirmLogout),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            child: Text(
+              AppLocalizations.of(context)!.logout,
+              style: const TextStyle(color: Colors.red),
+            ),
           ),
         ],
       ),

@@ -5,6 +5,7 @@ import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -72,7 +73,7 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
     return Scaffold(
       backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('Business Profile'),
+        title: Text(AppLocalizations.of(context)!.businessProfile),
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -132,10 +133,10 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
                   // Business Name Field
                   MyTextField(
                     controller: _businessNameController,
-                    label: 'Business Name',
-                    hintText: 'Enter your business name',
+                    label: AppLocalizations.of(context)!.businessName,
+                    hintText: AppLocalizations.of(context)!.businessNameHint,
                     validator: Validators.getTextFieldValidator(
-                      'Please enter your business name',
+                      AppLocalizations.of(context)!.enterBusinessName,
                     ),
                   ),
 
@@ -144,10 +145,10 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
                   // Full Name Field
                   MyTextField(
                     controller: _fullNameController,
-                    label: 'Owner Full Name',
-                    hintText: 'Enter owner full name',
+                    label: AppLocalizations.of(context)!.ownerFullName,
+                    hintText: AppLocalizations.of(context)!.ownerNameHint,
                     validator: Validators.getTextFieldValidator(
-                      'Please enter owner name',
+                      AppLocalizations.of(context)!.enterOwnerName,
                     ),
                   ),
 
@@ -156,8 +157,8 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
                   // Email Field (Read-only)
                   MyTextField(
                     controller: _emailController,
-                    label: 'Email',
-                    hintText: 'Email',
+                    label: AppLocalizations.of(context)!.email,
+                    hintText: AppLocalizations.of(context)!.emailHint,
                     enabled: false,
                     keyboardType: TextInputType.emailAddress,
                   ),
@@ -167,8 +168,8 @@ class _BusinessProfileEditScreenState extends State<BusinessProfileEditScreen> {
                   // Phone Number Field
                   MyTextField(
                     controller: _phoneNumberController,
-                    label: 'Phone Number',
-                    hintText: 'Enter phone number',
+                    label: AppLocalizations.of(context)!.phoneNumber,
+                    hintText: AppLocalizations.of(context)!.phoneNumberHint,
                     keyboardType: TextInputType.phone,
                     maxLength: 10,
                     validator: (value) {

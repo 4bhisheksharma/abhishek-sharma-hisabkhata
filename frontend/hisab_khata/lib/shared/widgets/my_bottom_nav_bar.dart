@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class MyBottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -36,31 +37,31 @@ class MyBottomNavBar extends StatelessWidget {
             children: [
               _buildNavItem(
                 icon: Icons.home_rounded,
-                label: 'Home',
+                label: AppLocalizations.of(context)!.home,
                 index: 0,
                 isSelected: currentIndex == 0,
               ),
               _buildNavItem(
                 icon: Icons.people_rounded,
-                label: 'Connections',
+                label: AppLocalizations.of(context)!.connections,
                 index: 1,
                 isSelected: currentIndex == 1,
               ),
               _buildNavItem(
                 icon: Icons.bar_chart_rounded,
-                label: 'Analytics',
+                label: AppLocalizations.of(context)!.analytics,
                 index: 2,
                 isSelected: currentIndex == 2,
               ),
               _buildNavItem(
                 icon: Icons.history_rounded,
-                label: 'History',
+                label: AppLocalizations.of(context)!.history,
                 index: 3,
                 isSelected: currentIndex == 3,
               ),
               _buildNavItem(
                 icon: Icons.person_rounded,
-                label: 'Profile',
+                label: AppLocalizations.of(context)!.profile,
                 index: 4,
                 isSelected: currentIndex == 4,
               ),

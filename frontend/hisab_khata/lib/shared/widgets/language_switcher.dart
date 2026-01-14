@@ -38,8 +38,14 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
     return DropdownButton<String>(
       value: currentLocale,
       items: [
-        DropdownMenuItem(value: 'en', child: Text(AppLocalizations.of(context)!.english)),
-        DropdownMenuItem(value: 'ne', child: Text(AppLocalizations.of(context)!.nepali)),
+        DropdownMenuItem(
+          value: 'en',
+          child: Text(AppLocalizations.of(context)!.english),
+        ),
+        DropdownMenuItem(
+          value: 'ne',
+          child: Text(AppLocalizations.of(context)!.nepali),
+        ),
       ],
       onChanged: (value) {
         if (value != null) {

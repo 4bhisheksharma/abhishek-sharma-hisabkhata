@@ -307,4 +307,106 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noCustomersAddedYet => 'No customers added yet';
+
+  @override
+  String get transactionAddedSuccessfully => 'Transaction added successfully';
+
+  @override
+  String get auto => 'Auto';
+
+  @override
+  String get noPendingDuesToPay => 'No pending dues to pay!';
+
+  @override
+  String get payFull => 'Pay Full';
+
+  @override
+  String get pleaseEnterAmount => 'Please enter amount';
+
+  @override
+  String get pleaseEnterValidAmount => 'Please enter a valid amount';
+
+  @override
+  String get amountCannotExceedDueAmount => 'Amount cannot exceed due amount';
+
+  @override
+  String get payNow => 'Pay Now';
+
+  @override
+  String get connectionRequests => 'Connection Requests';
+
+  @override
+  String get noPendingRequests => 'No pending requests';
+
+  @override
+  String get accept => 'Accept';
+
+  @override
+  String get reject => 'Reject';
+
+  @override
+  String get notification => 'Notification';
+
+  @override
+  String get noNotificationsYet => 'No notifications yet';
+
+  @override
+  String get confirmLogout => 'Are you sure you want to logout?';
+
+  @override
+  String get myProfile => 'My Profile';
+
+  @override
+  String get businessProfile => 'Business Profile';
+
+  @override
+  String get ownerFullName => 'Owner Full Name';
+
+  @override
+  String get note => 'Note';
+
+  @override
+  String get amountHint => '0.00';
+
+  @override
+  String get descriptionHint => 'e.g., Rice, Dal, Groceries';
+
+  @override
+  String get messageHint => 'Enter Message';
+
+  @override
+  String get transactionNoteHint => 'e.g., Payment for January';
+
+  @override
+  String get fullNameHint => 'Enter your full name';
+
+  @override
+  String get emailHint => 'Email';
+
+  @override
+  String get phoneHint => 'Enter your phone number';
+
+  @override
+  String get businessNameHint => 'Enter your business name';
+
+  @override
+  String get ownerNameHint => 'Enter owner full name';
+
+  @override
+  String get phoneNumberHint => 'Enter phone number';
+
+  @override
+  String get emailExample => 'demo@gmail.com';
+
+  @override
+  String get noRouteDefined => 'No route defined for';
+
+  @override
+  String get enterYourName => 'Please enter your name';
+
+  @override
+  String get enterOwnerName => 'Please enter owner name';
+
+  @override
+  String get enterAnEmail => 'Please enter an email';
 }

@@ -307,4 +307,106 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get noCustomersAddedYet => 'अहिलेसम्म कुनै ग्राहक थपिएको छैन';
+
+  @override
+  String get transactionAddedSuccessfully => 'लेनदेन सफलतापूर्वक थपियो';
+
+  @override
+  String get auto => 'स्वत:';
+
+  @override
+  String get noPendingDuesToPay => 'भुक्तानी गर्न कुनै बक्यौता छैन!';
+
+  @override
+  String get payFull => 'पूर्ण भुक्तानी गर्नुहोस्';
+
+  @override
+  String get pleaseEnterAmount => 'कृपया रकम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get pleaseEnterValidAmount => 'कृपया मान्य रकम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get amountCannotExceedDueAmount => 'रकम बक्यौता रकमभन्दा बढी हुन सक्दैन';
+
+  @override
+  String get payNow => 'अहिले भुक्तानी गर्नुहोस्';
+
+  @override
+  String get connectionRequests => 'जडान अनुरोधहरू';
+
+  @override
+  String get noPendingRequests => 'कुनै बक्यौता अनुरोधहरू छैनन्';
+
+  @override
+  String get accept => 'स्वीकार गर्नुहोस्';
+
+  @override
+  String get reject => 'अस्वीकार गर्नुहोस्';
+
+  @override
+  String get notification => 'सूचना';
+
+  @override
+  String get noNotificationsYet => 'अहिलेसम्म कुनै सूचना छैन';
+
+  @override
+  String get confirmLogout => 'के तपाई लगआउट गर्न निश्चित हुनुहुन्छ?';
+
+  @override
+  String get myProfile => 'मेरो प्रोफाइल';
+
+  @override
+  String get businessProfile => 'व्यापार प्रोफाइल';
+
+  @override
+  String get ownerFullName => 'मालिकको पूरा नाम';
+
+  @override
+  String get note => 'नोट';
+
+  @override
+  String get amountHint => '0.00';
+
+  @override
+  String get descriptionHint => 'उदाहरणका लागि, चामल, दाल, किराना सामान';
+
+  @override
+  String get messageHint => 'सन्देश प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get transactionNoteHint => 'उदाहरणका लागि, जनवरीको भुक्तानी';
+
+  @override
+  String get fullNameHint => 'आफ्नो पूरा नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get emailHint => 'इमेल';
+
+  @override
+  String get phoneHint => 'आफ्नो फोन नम्बर प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get businessNameHint => 'आफ्नो व्यापार नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get ownerNameHint => 'मालिकको पूरा नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get phoneNumberHint => 'फोन नम्बर प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get emailExample => 'demo@gmail.com';
+
+  @override
+  String get noRouteDefined => 'का लागि कुनै मार्ग परिभाषित गरिएको छैन';
+
+  @override
+  String get enterYourName => 'कृपया आफ्नो नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get enterOwnerName => 'कृपया मालिकको नाम प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get enterAnEmail => 'कृपया इमेल प्रविष्ट गर्नुहोस्';
 }

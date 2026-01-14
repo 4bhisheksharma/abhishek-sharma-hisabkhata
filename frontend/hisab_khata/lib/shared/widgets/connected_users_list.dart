@@ -7,6 +7,7 @@ import 'package:hisab_khata/features/request/domain/entities/connected_user.dart
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/widgets/user_list_item.dart';
 
@@ -143,7 +144,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
             ElevatedButton.icon(
               onPressed: _loadConnectedUsers,
               icon: const Icon(Icons.refresh),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context)!.retry),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
                 foregroundColor: Colors.white,

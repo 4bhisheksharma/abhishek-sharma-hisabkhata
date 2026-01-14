@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
@@ -101,8 +102,10 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         if (state is ConnectedUserDetailsLoaded) {
           // Transaction created successfully
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Transaction added successfully'),
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.transactionAddedSuccessfully,
+              ),
               backgroundColor: Colors.green,
             ),
           );
@@ -122,9 +125,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            'Add Transaction',
-            style: TextStyle(
+          title: Text(
+            AppLocalizations.of(context)!.addTransaction,
+            style: const TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.w600,
               fontSize: 20,
@@ -223,7 +226,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             Expanded(
               child: Text(
                 _isAutoDate
-                    ? 'Auto'
+                    ? AppLocalizations.of(context)!.auto
                     : DateFormat('MMM dd, yyyy').format(_selectedDate!),
                 style: const TextStyle(
                   fontSize: 16,
@@ -251,7 +254,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       decoration: InputDecoration(
         prefixText: 'Rs. ',
         prefixStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        hintText: '0.00',
+        hintText: AppLocalizations.of(context)!.amountHint,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(color: Colors.grey.shade300),
@@ -290,7 +293,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       controller: _itemTitleController,
       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       decoration: InputDecoration(
-        hintText: 'e.g., Rice, Dal, Groceries',
+        hintText: AppLocalizations.of(context)!.descriptionHint,
         hintStyle: TextStyle(color: Colors.grey.shade400),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -332,7 +335,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         maxLines: 4,
         style: const TextStyle(fontSize: 15),
         decoration: InputDecoration(
-          hintText: 'Enter Message',
+          hintText: AppLocalizations.of(context)!.messageHint,
           hintStyle: TextStyle(
             color: Theme.of(context).colorScheme.primary,
             fontWeight: FontWeight.w400,
@@ -419,9 +422,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                               color: Colors.white,
                             ),
                           )
-                        : const Text(
-                            'Add',
-                            style: TextStyle(
+                        : Text(
+                            AppLocalizations.of(context)!.add,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),

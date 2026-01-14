@@ -16,6 +16,7 @@ import 'package:hisab_khata/features/users/business/presentation/screens/busines
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_home_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_profile_edit_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_profile_view_screen.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Arguments for connected user details page navigation
 class ConnectedUserDetailsArgs {
@@ -90,8 +91,12 @@ class AppRouter {
 
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(child: Text('No route defined for ${settings.name}')),
+          builder: (context) => Scaffold(
+            body: Center(
+              child: Text(
+                '${AppLocalizations.of(context)!.noRouteDefined} ${settings.name}',
+              ),
+            ),
           ),
         );
     }
