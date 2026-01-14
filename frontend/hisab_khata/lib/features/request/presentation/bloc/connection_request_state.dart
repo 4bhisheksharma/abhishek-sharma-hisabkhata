@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../domain/entities/bulk_send_request_response.dart';
 import '../../domain/entities/connection_request.dart';
 import '../../domain/entities/connected_user.dart';
 import '../../domain/entities/user_search_result.dart';
@@ -43,6 +44,16 @@ class ConnectionRequestSentSuccess extends ConnectionRequestState {
 
   @override
   List<Object?> get props => [request, message];
+}
+
+/// Bulk connection request sent success state
+class BulkConnectionRequestSuccess extends ConnectionRequestState {
+  final BulkSendRequestResponse response;
+
+  const BulkConnectionRequestSuccess({required this.response});
+
+  @override
+  List<Object?> get props => [response];
 }
 
 /// Sent requests loaded state

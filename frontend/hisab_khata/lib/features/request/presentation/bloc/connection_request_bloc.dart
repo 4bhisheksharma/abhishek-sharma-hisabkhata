@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/usecases/search_users_usecase.dart';
+import '../../domain/usecases/send_bulk_connection_request_usecase.dart';
 import '../../domain/usecases/send_connection_request_usecase.dart';
 import '../../domain/usecases/get_sent_requests_usecase.dart';
 import '../../domain/usecases/get_received_requests_usecase.dart';
@@ -13,6 +14,7 @@ class ConnectionRequestBloc
     extends Bloc<ConnectionRequestEvent, ConnectionRequestState> {
   final SearchUsersUseCase searchUsersUseCase;
   final SendConnectionRequestUseCase sendConnectionRequestUseCase;
+  final SendBulkConnectionRequestUseCase sendBulkConnectionRequestUseCase;
   final GetSentRequestsUseCase getSentRequestsUseCase;
   final GetReceivedRequestsUseCase getReceivedRequestsUseCase;
   final GetPendingReceivedRequestsUseCase getPendingReceivedRequestsUseCase;
@@ -22,6 +24,7 @@ class ConnectionRequestBloc
   ConnectionRequestBloc({
     required this.searchUsersUseCase,
     required this.sendConnectionRequestUseCase,
+    required this.sendBulkConnectionRequestUseCase,
     required this.getSentRequestsUseCase,
     required this.getReceivedRequestsUseCase,
     required this.getPendingReceivedRequestsUseCase,
@@ -30,6 +33,7 @@ class ConnectionRequestBloc
   }) : super(const ConnectionRequestInitial()) {
     on<SearchUsersEvent>(_onSearchUsers);
     on<SendConnectionRequestEvent>(_onSendConnectionRequest);
+    on<SendBulkConnectionRequestEvent>(_onSendBulkConnectionRequest);
     on<GetSentRequestsEvent>(_onGetSentRequests);
     on<GetReceivedRequestsEvent>(_onGetReceivedRequests);
     on<GetPendingReceivedRequestsEvent>(_onGetPendingReceivedRequests);
@@ -65,6 +69,22 @@ class ConnectionRequestBloc
       (failure) =>
           emit(ConnectionRequestError(message: failure.failureMessage)),
       (request) => emit(ConnectionRequestSentSuccess(request: request)),
+    );
+  }
+
+  /// Handle send bulk connection request event
+  Future<void> _onSendBulkConnectionRequest(
+    SendBulkConnectionRequestEvent event,
+    Emitter<ConnectionRequestState> emit,
+  ) async {
+    emit(const ConnectionRequestLoading());
+    final result = await sendBulkConnectionRequestUseCase(
+      receiverIds: event.receiverIds,
+    );
+    result.fold(
+      (failure) =>
+          emit(ConnectionRequestError(message: failure.failureMessage)),
+      (response) => emit(BulkConnectionRequestSuccess(response: response)),
     );
   }
 

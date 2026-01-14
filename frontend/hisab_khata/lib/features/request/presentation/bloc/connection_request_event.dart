@@ -29,6 +29,16 @@ class SendConnectionRequestEvent extends ConnectionRequestEvent {
   List<Object?> get props => [receiverEmail, receiverId];
 }
 
+/// Send bulk connection request event
+class SendBulkConnectionRequestEvent extends ConnectionRequestEvent {
+  final List<int> receiverIds;
+
+  const SendBulkConnectionRequestEvent({required this.receiverIds});
+
+  @override
+  List<Object?> get props => [receiverIds];
+}
+
 /// Get sent requests event
 class GetSentRequestsEvent extends ConnectionRequestEvent {
   const GetSentRequestsEvent();

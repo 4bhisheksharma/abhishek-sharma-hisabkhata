@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:hisab_khata/core/errors/failures.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../domain/entities/bulk_send_request_response.dart';
 import '../../domain/entities/connection_request.dart';
 import '../../domain/entities/connected_user.dart';
 import '../../domain/entities/user_search_result.dart';
@@ -37,6 +38,24 @@ class ConnectionRequestRepositoryImpl implements ConnectionRequestRepository {
       final result = await remoteDataSource.sendRequest(
         receiverEmail: receiverEmail,
         receiverId: receiverId,
+      );
+      return Right(result);
+    } on UnauthenticatedException catch (e) {
+      return Left(Failure(e.exceptionMessage));
+    } on ServerException catch (e) {
+      return Left(Failure(e.exceptionMessage));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, BulkSendRequestResponse>> bulkSendRequest({
+    required List<int> receiverIds,
+  }) async {
+    try {
+      final result = await remoteDataSource.bulkSendRequest(
+        receiverIds: receiverIds,
       );
       return Right(result);
     } on UnauthenticatedException catch (e) {

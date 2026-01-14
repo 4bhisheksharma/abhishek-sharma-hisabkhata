@@ -1,6 +1,7 @@
 import 'package:dartz/dartz.dart';
 
 import 'package:hisab_khata/core/errors/failures.dart';
+import '../entities/bulk_send_request_response.dart';
 import '../entities/connection_request.dart';
 import '../entities/connected_user.dart';
 import '../entities/user_search_result.dart';
@@ -13,6 +14,11 @@ abstract class ConnectionRequestRepository {
   Future<Either<Failure, ConnectionRequest>> sendRequest({
     String? receiverEmail,
     int? receiverId,
+  });
+
+  /// Send connection requests to multiple users by user IDs
+  Future<Either<Failure, BulkSendRequestResponse>> bulkSendRequest({
+    required List<int> receiverIds,
   });
 
   /// Get all requests sent by current user
