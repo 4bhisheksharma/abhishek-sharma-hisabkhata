@@ -34,6 +34,7 @@ import '../../features/request/data/datasource/connection_request_remote_data_so
 import '../../features/request/data/repository_imp/connection_request_repository_impl.dart';
 import '../../features/request/domain/repositories/connection_request_repository.dart';
 import '../../features/request/domain/usecases/search_users_usecase.dart';
+import '../../features/request/domain/usecases/send_bulk_connection_request_usecase.dart';
 import '../../features/request/domain/usecases/send_connection_request_usecase.dart';
 import '../../features/request/domain/usecases/get_sent_requests_usecase.dart';
 import '../../features/request/domain/usecases/get_received_requests_usecase.dart';
@@ -104,6 +105,7 @@ class DependencyInjection {
   // Use Cases - Connection Request
   late final SearchUsersUseCase _searchUsersUseCase;
   late final SendConnectionRequestUseCase _sendConnectionRequestUseCase;
+  late final SendBulkConnectionRequestUseCase _sendBulkConnectionRequestUseCase;
   late final GetSentRequestsUseCase _getSentRequestsUseCase;
   late final GetReceivedRequestsUseCase _getReceivedRequestsUseCase;
   late final GetPendingReceivedRequestsUseCase
@@ -198,6 +200,9 @@ class DependencyInjection {
     _sendConnectionRequestUseCase = SendConnectionRequestUseCase(
       _connectionRequestRepository,
     );
+    _sendBulkConnectionRequestUseCase = SendBulkConnectionRequestUseCase(
+      _connectionRequestRepository,
+    );
     _getSentRequestsUseCase = GetSentRequestsUseCase(
       _connectionRequestRepository,
     );
@@ -260,6 +265,7 @@ class DependencyInjection {
     _connectionRequestBloc = ConnectionRequestBloc(
       searchUsersUseCase: _searchUsersUseCase,
       sendConnectionRequestUseCase: _sendConnectionRequestUseCase,
+      sendBulkConnectionRequestUseCase: _sendBulkConnectionRequestUseCase,
       getSentRequestsUseCase: _getSentRequestsUseCase,
       getReceivedRequestsUseCase: _getReceivedRequestsUseCase,
       getPendingReceivedRequestsUseCase: _getPendingReceivedRequestsUseCase,

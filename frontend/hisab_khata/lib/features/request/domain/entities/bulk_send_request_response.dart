@@ -20,8 +20,15 @@ class BulkSendRequestResponse extends Equatable {
   bool get hasSuccesses => successful.isNotEmpty;
   bool get hasSkipped => skipped.isNotEmpty;
   bool get isFullySuccessful => successful.length == totalProcessed;
-  bool get isPartiallySuccessful => successful.isNotEmpty && (failed.isNotEmpty || skipped.isNotEmpty);
+  bool get isPartiallySuccessful =>
+      successful.isNotEmpty && (failed.isNotEmpty || skipped.isNotEmpty);
 
   @override
-  List<Object?> get props => [successful, failed, skipped, totalProcessed, message];
+  List<Object?> get props => [
+    successful,
+    failed,
+    skipped,
+    totalProcessed,
+    message,
+  ];
 }

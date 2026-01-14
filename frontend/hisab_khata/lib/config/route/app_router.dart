@@ -6,6 +6,7 @@ import 'package:hisab_khata/features/auth/presentation/screens/login_screen.dart
 import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/signup_screen.dart';
 import 'package:hisab_khata/features/request/presentation/screens/add_connection_screen.dart';
+import 'package:hisab_khata/features/request/presentation/screens/bulk_add_connection_screen.dart';
 import 'package:hisab_khata/features/static/welcome_screen.dart';
 import 'package:hisab_khata/features/transaction/presentation/bloc/connected_user_details_bloc.dart';
 import 'package:hisab_khata/features/transaction/presentation/bloc/connected_user_details_event.dart';
@@ -74,6 +75,11 @@ class AppRouter {
 
       case AppRoutes.addConnection:
         return MaterialPageRoute(builder: (_) => const AddConnectionScreen());
+
+      case AppRoutes.bulkAddConnection:
+        return MaterialPageRoute(
+          builder: (_) => const BulkAddConnectionScreen(),
+        );
 
       case AppRoutes.connectedUserDetails:
         final args = settings.arguments as ConnectedUserDetailsArgs;

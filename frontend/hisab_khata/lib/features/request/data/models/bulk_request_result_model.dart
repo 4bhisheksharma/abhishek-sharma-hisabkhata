@@ -10,10 +10,10 @@ class BulkRequestResultModel extends BulkRequestResult {
 
   factory BulkRequestResultModel.fromJson(Map<String, dynamic> json) {
     return BulkRequestResultModel(
-      receiverId: json['receiver_id'],
-      receiverEmail: json['receiver_email'],
-      receiverName: json['receiver_name'],
-      error: json['error'],
+      receiverId: json['user_id'] as int,
+      receiverEmail: json['email'] as String,
+      receiverName: json['full_name'] as String?,
+      error: (json['error'] ?? json['reason']) as String?,
     );
   }
 

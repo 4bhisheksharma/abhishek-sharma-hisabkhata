@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
@@ -45,6 +46,15 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.group_add, color: Colors.white),
+            tooltip: 'Add Multiple Connections',
+            onPressed: () {
+              Navigator.pushNamed(context, AppRoutes.bulkAddConnection);
+            },
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,

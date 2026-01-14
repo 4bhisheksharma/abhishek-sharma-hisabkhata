@@ -36,20 +36,22 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='search-users')
     def search_users(self, request):
         """
-        Search for users by email or phone_number
-        Query params: search (email or phone_number)
+        Search for users by email, phone_number, or full_name
+        Query params: search (email, phone_number, or full_name)
         """
         search_query = request.query_params.get('search', '').strip()
         
         if not search_query:
             return Response(
-                {'error': 'Please provide a search query (email or phone_number)'},
+                {'error': 'Please provide a search query (email, phone_number, or full_name)'},
                 status=status.HTTP_400_BAD_REQUEST
             )
         
-        # Search by email or phone_number
+        # Search by email, phone_number, or full_name
         users = User.objects.filter(
-            Q(email__icontains=search_query) | Q(phone_number__icontains=search_query)
+            Q(email__icontains=search_query) | 
+            Q(phone_number__icontains=search_query) |
+            Q(full_name__icontains=search_query)
         ).exclude(user_id=request.user.user_id)[:10]  # Limit to 10 results
         
         # Check existing connections for each user

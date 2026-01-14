@@ -11,26 +11,42 @@ class BulkSendRequestResponseModel extends BulkSendRequestResponse {
   });
 
   factory BulkSendRequestResponseModel.fromJson(Map<String, dynamic> json) {
+    // Backend returns results nested in 'results' object
+    final results = json['results'] as Map<String, dynamic>;
+    final summary = json['summary'] as Map<String, dynamic>;
+
     return BulkSendRequestResponseModel(
-      successful: (json['successful'] as List<dynamic>)
-          .map((e) => BulkRequestResultModel.fromJson(e as Map<String, dynamic>))
+      successful: (results['successful'] as List<dynamic>)
+          .map(
+            (e) => BulkRequestResultModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
-      failed: (json['failed'] as List<dynamic>)
-          .map((e) => BulkRequestResultModel.fromJson(e as Map<String, dynamic>))
+      failed: (results['failed'] as List<dynamic>)
+          .map(
+            (e) => BulkRequestResultModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
-      skipped: (json['skipped'] as List<dynamic>)
-          .map((e) => BulkRequestResultModel.fromJson(e as Map<String, dynamic>))
+      skipped: (results['skipped'] as List<dynamic>)
+          .map(
+            (e) => BulkRequestResultModel.fromJson(e as Map<String, dynamic>),
+          )
           .toList(),
-      totalProcessed: json['total_processed'],
-      message: json['message'],
+      totalProcessed: json['total_requested'] as int,
+      message: summary['message'] as String,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'successful': successful.map((e) => (e as BulkRequestResultModel).toJson()).toList(),
-      'failed': failed.map((e) => (e as BulkRequestResultModel).toJson()).toList(),
-      'skipped': skipped.map((e) => (e as BulkRequestResultModel).toJson()).toList(),
+      'successful': successful
+          .map((e) => (e as BulkRequestResultModel).toJson())
+          .toList(),
+      'failed': failed
+          .map((e) => (e as BulkRequestResultModel).toJson())
+          .toList(),
+      'skipped': skipped
+          .map((e) => (e as BulkRequestResultModel).toJson())
+          .toList(),
       'total_processed': totalProcessed,
       'message': message,
     };

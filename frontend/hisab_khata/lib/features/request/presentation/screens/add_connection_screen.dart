@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
@@ -101,12 +102,10 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(
-                Icons.notifications_outlined,
-                color: Colors.white,
-              ),
+              icon: const Icon(Icons.group_add, color: Colors.white),
+              tooltip: 'Add Multiple Connections',
               onPressed: () {
-                // TODO: Navigate to notifications
+                Navigator.pushNamed(context, AppRoutes.bulkAddConnection);
               },
             ),
           ],

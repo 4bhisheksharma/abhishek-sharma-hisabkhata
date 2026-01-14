@@ -60,9 +60,10 @@ class ConnectionRequestRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<BulkSendRequestResponseModel> bulkSendRequest({
     required List<int> receiverIds,
   }) async {
-    final body = {
-      'receiver_ids': receiverIds,
-    };
+    // Convert receiver IDs to the format backend expects
+    final receivers = receiverIds.map((id) => {'user_id': id}).toList();
+
+    final body = {'receivers': receivers};
 
     final response = await post(ApiEndpoints.bulkSendRequest, body: body);
 
