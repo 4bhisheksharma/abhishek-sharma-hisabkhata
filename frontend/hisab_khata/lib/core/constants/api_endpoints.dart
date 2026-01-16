@@ -43,4 +43,9 @@ class ApiEndpoints {
   static String deleteNotification(int id) => "notifications/$id/delete/";
   static const String deleteAllReadNotifications =
       "notifications/delete-all-read/";
+
+  // Support Ticket endpoints
+  static const String createTicket = "support/tickets/";
+  static const String myTickets = "support/tickets/my_tickets/";
+  static String ticketDetail(int id) => "support/tickets/$id/";
 }

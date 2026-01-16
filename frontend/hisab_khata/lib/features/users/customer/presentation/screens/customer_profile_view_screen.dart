@@ -157,7 +157,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           iconBgColor: const Color(0xFFFFF3E0),
                           title: AppLocalizations.of(context)!.raiseATicket,
                           onTap: () {
-                            debugPrint("Raise a ticket tapped");
+                            Navigator.pushNamed(context, '/my-tickets');
                           },
                         ),
                         const SizedBox(height: 12),

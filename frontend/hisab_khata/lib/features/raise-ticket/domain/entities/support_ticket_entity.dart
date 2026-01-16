@@ -94,20 +94,20 @@ class SupportTicketEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        userName,
-        userEmail,
-        subject,
-        description,
-        category,
-        priority,
-        status,
-        adminResponse,
-        resolvedById,
-        resolvedByName,
-        resolvedAt,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    userName,
+    userEmail,
+    subject,
+    description,
+    category,
+    priority,
+    status,
+    adminResponse,
+    resolvedById,
+    resolvedByName,
+    resolvedAt,
+    createdAt,
+    updatedAt,
+  ];
 }

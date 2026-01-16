@@ -54,6 +54,13 @@ import '../../features/notification/domain/usecases/mark_all_notifications_as_re
 import '../../features/notification/domain/usecases/delete_notification_usecase.dart';
 import '../../features/notification/domain/usecases/delete_all_read_notifications_usecase.dart';
 import '../../features/notification/presentation/bloc/notification_bloc.dart';
+import '../../features/raise-ticket/data/datasources/ticket_remote_data_source.dart';
+import '../../features/raise-ticket/data/repositories_imp/ticket_repository_impl.dart';
+import '../../features/raise-ticket/domain/repositories/ticket_repository.dart';
+import '../../features/raise-ticket/domain/usecases/create_ticket_usecase.dart';
+import '../../features/raise-ticket/domain/usecases/get_my_tickets_usecase.dart';
+import '../../features/raise-ticket/domain/usecases/get_ticket_by_id_usecase.dart';
+import '../../features/raise-ticket/presentation/bloc/bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies
@@ -73,6 +80,7 @@ class DependencyInjection {
   _connectionRequestRemoteDataSource;
   late final NotificationRemoteDataSource _notificationRemoteDataSource;
   late final TransactionRemoteDataSource _transactionRemoteDataSource;
+  late final TicketRemoteDataSource _ticketRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
@@ -81,6 +89,7 @@ class DependencyInjection {
   late final ConnectionRequestRepository _connectionRequestRepository;
   late final NotificationRepository _notificationRepository;
   late final TransactionRepository _transactionRepository;
+  late final TicketRepository _ticketRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -126,12 +135,18 @@ class DependencyInjection {
   late final DeleteAllReadNotificationsUseCase
   _deleteAllReadNotificationsUseCase;
 
+  // Use Cases - Ticket
+  late final CreateTicketUseCase _createTicketUseCase;
+  late final GetMyTicketsUseCase _getMyTicketsUseCase;
+  late final GetTicketByIdUseCase _getTicketByIdUseCase;
+
   // BLoCs
   late final AuthBloc _authBloc;
   late final CustomerBloc _customerBloc;
   late final BusinessBloc _businessBloc;
   late final ConnectionRequestBloc _connectionRequestBloc;
   late final NotificationBloc _notificationBloc;
+  late final TicketBloc _ticketBloc;
 
   /// Initialize all dependencies
   void init() {
@@ -155,6 +170,7 @@ class DependencyInjection {
     _transactionRemoteDataSource = TransactionRemoteDataSource(
       client: _httpClient,
     );
+    _ticketRemoteDataSource = TicketRemoteDataSourceImpl(client: _httpClient);
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -174,6 +190,9 @@ class DependencyInjection {
     );
     _transactionRepository = TransactionRepositoryImpl(
       remoteDataSource: _transactionRemoteDataSource,
+    );
+    _ticketRepository = TicketRepositoryImpl(
+      remoteDataSource: _ticketRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -243,6 +262,11 @@ class DependencyInjection {
       _notificationRepository,
     );
 
+    // Use Cases - Ticket
+    _createTicketUseCase = CreateTicketUseCase(_ticketRepository);
+    _getMyTicketsUseCase = GetMyTicketsUseCase(_ticketRepository);
+    _getTicketByIdUseCase = GetTicketByIdUseCase(_ticketRepository);
+
     // BLoCs
     _authBloc = AuthBloc(
       loginUseCase: _loginUseCase,
@@ -285,6 +309,11 @@ class DependencyInjection {
       deleteNotificationUseCase: _deleteNotificationUseCase,
       deleteAllReadNotificationsUseCase: _deleteAllReadNotificationsUseCase,
     );
+    _ticketBloc = TicketBloc(
+      createTicketUseCase: _createTicketUseCase,
+      getMyTicketsUseCase: _getMyTicketsUseCase,
+      getTicketByIdUseCase: _getTicketByIdUseCase,
+    );
   }
 
   /// Dispose resources
@@ -295,6 +324,7 @@ class DependencyInjection {
     _businessBloc.close();
     _connectionRequestBloc.close();
     _notificationBloc.close();
+    _ticketBloc.close();
   }
 
   // Getters
@@ -303,6 +333,7 @@ class DependencyInjection {
   BusinessBloc get businessBloc => _businessBloc;
   ConnectionRequestBloc get connectionRequestBloc => _connectionRequestBloc;
   NotificationBloc get notificationBloc => _notificationBloc;
+  TicketBloc get ticketBloc => _ticketBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
   BusinessRepository get businessRepository => _businessRepository;

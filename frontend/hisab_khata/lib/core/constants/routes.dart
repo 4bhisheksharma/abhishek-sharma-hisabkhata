@@ -13,4 +13,7 @@ class AppRoutes {
   static const String addConnection = '/add-connection';
   static const String bulkAddConnection = '/bulk-add-connection';
   static const String connectedUserDetails = '/connected-user-details';
+  static const String myTickets = '/my-tickets';
+  static const String createTicket = '/create-ticket';
+  static const String ticketDetail = '/ticket-detail';
 }

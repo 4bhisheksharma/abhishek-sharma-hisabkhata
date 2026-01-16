@@ -17,6 +17,9 @@ import 'package:hisab_khata/features/users/business/presentation/screens/busines
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_home_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_profile_edit_screen.dart';
 import 'package:hisab_khata/features/users/customer/presentation/screens/customer_profile_view_screen.dart';
+import 'package:hisab_khata/features/raise-ticket/presentation/screens/my_tickets_screen.dart';
+import 'package:hisab_khata/features/raise-ticket/presentation/screens/create_ticket_screen.dart';
+import 'package:hisab_khata/features/raise-ticket/presentation/screens/ticket_detail_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Arguments for connected user details page navigation
@@ -93,6 +96,18 @@ class AppRouter {
               isCustomerView: args.isCustomerView,
             ),
           ),
+        );
+
+      case AppRoutes.myTickets:
+        return MaterialPageRoute(builder: (_) => const MyTicketsScreen());
+
+      case AppRoutes.createTicket:
+        return MaterialPageRoute(builder: (_) => const CreateTicketScreen());
+
+      case AppRoutes.ticketDetail:
+        final ticketId = settings.arguments as int;
+        return MaterialPageRoute(
+          builder: (_) => TicketDetailScreen(ticketId: ticketId),
         );
 
       default:
