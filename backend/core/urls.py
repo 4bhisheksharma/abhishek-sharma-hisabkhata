@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from hisabauth.views import RegisterView, LoginView
+from hisabauth.views import RegisterView, LoginView, ChangePasswordView
 from otp_verification.views import VerifyOTPView, ResendOTPView
 
 urlpatterns = [
@@ -30,6 +30,7 @@ urlpatterns = [
         path('auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
         path('auth/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
         path('auth/login/', LoginView.as_view(), name='login'),
+        path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
         
         # Customer Dashboard
         path('customer/', include('customer_dashboard.urls')),

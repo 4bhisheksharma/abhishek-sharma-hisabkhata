@@ -137,3 +137,70 @@ class LoginView(APIView):
                 'message': 'Internal server error',
                 'data': str(e)
             })
+
+
+class ChangePasswordView(APIView):
+    """API endpoint for changing user password"""
+    permission_classes = [AllowAny]  # Will check authentication manually
+    
+    def post(self, request):
+        from rest_framework.permissions import IsAuthenticated
+        from hisabauth.serializer import ChangePasswordSerializer
+        
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            return Response({
+                'status': 401,
+                'message': 'Authentication required',
+                'data': None
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        
+        try:
+            serializer = ChangePasswordSerializer(data=request.data)
+            
+            if not serializer.is_valid():
+                return Response({
+                    'status': 400,
+                    'message': 'Validation error',
+                    'data': serializer.errors
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            user = request.user
+            old_password = serializer.validated_data['old_password']
+            new_password = serializer.validated_data['new_password']
+            
+            # Verify old password
+            if not user.check_password(old_password):
+                return Response({
+                    'status': 400,
+                    'message': 'Current password is incorrect',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if new password is same as old password
+            if user.check_password(new_password):
+                return Response({
+                    'status': 400,
+                    'message': 'New password must be different from current password',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update password
+            user.set_password(new_password)
+            user.save()
+            
+            return Response({
+                'status': 200,
+                'message': 'Password updated successfully',
+                'data': {
+                    'email': user.email,
+                    'updated_at': user.updated_at
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': 'Internal server error',
+                'data': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
