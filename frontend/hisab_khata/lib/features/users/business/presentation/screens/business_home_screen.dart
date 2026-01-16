@@ -10,6 +10,7 @@ import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
 import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
+import 'package:hisab_khata/shared/providers/locale_provider.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
 class BusinessHomeScreen extends StatefulWidget {
@@ -21,15 +22,21 @@ class BusinessHomeScreen extends StatefulWidget {
 
 class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
   int _currentNavIndex = 0;
+  bool _hasLoadedLanguage = false;
 
   @override
   void initState() {
     super.initState();
     _loadDashboard();
+    _loadProfileAndSetLanguage();
   }
 
   void _loadDashboard() {
     context.read<BusinessBloc>().add(const LoadBusinessDashboard());
+  }
+
+  void _loadProfileAndSetLanguage() {
+    context.read<BusinessBloc>().add(const LoadBusinessProfile());
   }
 
   void _onNavTap(int index) async {
@@ -205,6 +212,15 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message), backgroundColor: Colors.red),
           );
+        }
+        // Set language when profile is loaded
+        if (state is BusinessProfileLoaded && !_hasLoadedLanguage) {
+          final preferredLanguage = state.profile.preferredLanguage;
+          if (preferredLanguage != null && preferredLanguage.isNotEmpty) {
+            final localeProvider = LocaleProvider.of(context);
+            localeProvider?.changeLanguage(preferredLanguage);
+            _hasLoadedLanguage = true;
+          }
         }
       },
       builder: (context, state) {
