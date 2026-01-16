@@ -88,7 +88,10 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
         break;
       case 4:
         // Profile
-        final result = await Navigator.pushNamed(context, '/customer-profile-view');
+        final result = await Navigator.pushNamed(
+          context,
+          '/customer-profile-view',
+        );
         // Check if widget is still mounted (user might have logged out)
         if (!mounted) return;
         // If a specific tab index was returned, navigate to it

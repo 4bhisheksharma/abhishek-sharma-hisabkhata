@@ -88,7 +88,10 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
         break;
       case 4:
         // Profile
-        final result = await Navigator.pushNamed(context, '/business-profile-view');
+        final result = await Navigator.pushNamed(
+          context,
+          '/business-profile-view',
+        );
         // Check if widget is still mounted (user might have logged out)
         if (!mounted) return;
         // If a specific tab index was returned, navigate to it
