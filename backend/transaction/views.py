@@ -57,11 +57,24 @@ class TransactionViewSet(viewsets.ModelViewSet):
         )
         
         with db_transaction.atomic():
+            # Determine the amount based on transaction type
+            # Payments and refunds should be negative (reduce debt)
+            # Purchases and credits should be positive (increase debt)
+            transaction_type = data.get('transaction_type', 'purchase')
+            amount = data['amount']
+            
+            if transaction_type in ['payment', 'refund']:
+                # Convert to negative to reduce the pending due
+                amount = -abs(amount)
+            else:
+                # Purchase, credit, adjustment - keep positive
+                amount = abs(amount)
+            
             # Create the transaction
             new_transaction = Transaction.objects.create(
                 relationship=relationship,
-                amount=data['amount'],
-                transaction_type=data.get('transaction_type', 'purchase'),
+                amount=amount,
+                transaction_type=transaction_type,
                 description=data.get('description', ''),
             )
             
