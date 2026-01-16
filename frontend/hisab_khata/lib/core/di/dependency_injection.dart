@@ -13,6 +13,7 @@ import '../../features/auth/domain/usecases/resend_otp_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/check_auth_status_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/change_password_usecase.dart';
 import '../../features/auth/presentation/bloc/auth_bloc.dart';
 import '../../features/users/customer/data/datasources/customer_remote_data_source.dart';
 import '../../features/users/customer/data/repositories_imp/customer_repository_impl.dart';
@@ -89,6 +90,7 @@ class DependencyInjection {
   late final LogoutUseCase _logoutUseCase;
   late final CheckAuthStatusUseCase _checkAuthStatusUseCase;
   late final GetCurrentUserUseCase _getCurrentUserUseCase;
+  late final ChangePasswordUseCase _changePasswordUseCase;
 
   // Use Cases - Customer
   late final GetCustomerDashboard _getCustomerDashboard;
@@ -182,6 +184,7 @@ class DependencyInjection {
     _logoutUseCase = LogoutUseCase(_authRepository);
     _checkAuthStatusUseCase = CheckAuthStatusUseCase(_authRepository);
     _getCurrentUserUseCase = GetCurrentUserUseCase(_authRepository);
+    _changePasswordUseCase = ChangePasswordUseCase(_authRepository);
 
     // Use Cases - Customer
     _getCustomerDashboard = GetCustomerDashboard(_customerRepository);
@@ -249,6 +252,7 @@ class DependencyInjection {
       logoutUseCase: _logoutUseCase,
       checkAuthStatusUseCase: _checkAuthStatusUseCase,
       getCurrentUserUseCase: _getCurrentUserUseCase,
+      changePasswordUseCase: _changePasswordUseCase,
     );
     _customerBloc = CustomerBloc(
       getCustomerDashboard: _getCustomerDashboard,

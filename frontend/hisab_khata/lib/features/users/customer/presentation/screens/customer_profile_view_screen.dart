@@ -115,14 +115,8 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => ChangePasswordDialog(
-                                onSubmit: (oldPassword, newPassword) {
-                                  // TODO: Call API to change password baki hain re
-                                  debugPrint(
-                                    'Old: $oldPassword, New: $newPassword',
-                                  );
-                                },
-                              ),
+                              builder: (context) =>
+                                  const ChangePasswordDialog(),
                             );
                           },
                         ),

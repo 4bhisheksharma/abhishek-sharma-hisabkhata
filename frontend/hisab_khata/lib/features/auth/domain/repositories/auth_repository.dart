@@ -53,4 +53,13 @@ abstract class AuthRepository {
   /// Gets current refresh token
   /// Returns token string if exists, null otherwise
   Future<String?> getRefreshToken();
+
+  /// Changes user password
+  /// Returns success message on success
+  /// Throws exception on failure
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  });
 }

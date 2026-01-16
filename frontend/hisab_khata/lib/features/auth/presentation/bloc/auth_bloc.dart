@@ -6,6 +6,7 @@ import '../../domain/usecases/resend_otp_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
+import '../../domain/usecases/change_password_usecase.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -17,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LogoutUseCase logoutUseCase;
   final CheckAuthStatusUseCase checkAuthStatusUseCase;
   final GetCurrentUserUseCase getCurrentUserUseCase;
+  final ChangePasswordUseCase changePasswordUseCase;
 
   AuthBloc({
     required this.loginUseCase,
@@ -26,6 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.logoutUseCase,
     required this.checkAuthStatusUseCase,
     required this.getCurrentUserUseCase,
+    required this.changePasswordUseCase,
   }) : super(const AuthInitial()) {
     on<LoginEvent>(_onLogin);
     on<RegisterEvent>(_onRegister);
@@ -33,6 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<ResendOtpEvent>(_onResendOtp);
     on<LogoutEvent>(_onLogout);
     on<CheckAuthStatusEvent>(_onCheckAuthStatus);
+    on<ChangePasswordEvent>(_onChangePassword);
   }
 
   /// Handle login event
@@ -151,6 +155,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(const Unauthenticated());
+    }
+  }
+
+  /// Handle change password event
+  Future<void> _onChangePassword(
+    ChangePasswordEvent event,
+    Emitter<AuthState> emit,
+  ) async {
+    emit(const AuthLoading());
+    try {
+      final message = await changePasswordUseCase(
+        oldPassword: event.oldPassword,
+        newPassword: event.newPassword,
+        confirmPassword: event.confirmPassword,
+      );
+      emit(PasswordChangeSuccess(message: message));
+    } catch (e) {
+      emit(AuthError(message: e.toString().replaceAll('Exception: ', '')));
     }
   }
 }

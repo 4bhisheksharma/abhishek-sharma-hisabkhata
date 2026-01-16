@@ -90,3 +90,13 @@ class AuthError extends AuthState {
 class LogoutSuccess extends AuthState {
   const LogoutSuccess();
 }
+
+/// Password change success
+class PasswordChangeSuccess extends AuthState {
+  final String message;
+
+  const PasswordChangeSuccess({required this.message});
+
+  @override
+  List<Object?> get props => [message];
+}

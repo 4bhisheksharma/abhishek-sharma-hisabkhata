@@ -29,6 +29,13 @@ abstract class AuthRemoteDataSource {
 
   /// Resend OTP
   Future<Map<String, dynamic>> resendOtp({required String email});
+
+  /// Change password
+  Future<Map<String, dynamic>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  });
 }
 
 /// Implementation of AuthRemoteDataSource using BaseRemoteDataSource
@@ -105,6 +112,27 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
       'auth/${ApiEndpoints.resendOtp}',
       body: body,
       includeAuth: false,
+    );
+
+    return response as Map<String, dynamic>;
+  }
+
+  @override
+  Future<Map<String, dynamic>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    final body = {
+      'old_password': oldPassword,
+      'new_password': newPassword,
+      'confirm_password': confirmPassword,
+    };
+
+    final response = await post(
+      'auth/${ApiEndpoints.changePassword}',
+      body: body,
+      includeAuth: true,
     );
 
     return response as Map<String, dynamic>;

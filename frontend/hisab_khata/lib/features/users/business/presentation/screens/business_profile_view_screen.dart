@@ -137,14 +137,8 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           onTap: () {
                             showDialog(
                               context: context,
-                              builder: (context) => ChangePasswordDialog(
-                                onSubmit: (oldPassword, newPassword) {
-                                  // TODO: Call API to change password baki chha boss!!!!!!
-                                  debugPrint(
-                                    'Old: $oldPassword, New: $newPassword',
-                                  );
-                                },
-                              ),
+                              builder: (context) =>
+                                  const ChangePasswordDialog(),
                             );
                           },
                         ),

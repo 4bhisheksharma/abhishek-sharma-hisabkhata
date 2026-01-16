@@ -123,6 +123,32 @@ class AuthRepositoryImpl implements AuthRepository {
     return await StorageService.getRefreshToken();
   }
 
+  @override
+  Future<String> changePassword({
+    required String oldPassword,
+    required String newPassword,
+    required String confirmPassword,
+  }) async {
+    try {
+      final response = await remoteDataSource.changePassword(
+        oldPassword: oldPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword,
+      );
+
+      if (response['status'] != 200) {
+        throw Exception(response['message'] ?? 'Failed to change password');
+      }
+
+      return response['message'] ?? 'Password updated successfully';
+    } catch (e) {
+      if (e is ServerException) {
+        throw Exception(e.exceptionMessage);
+      }
+      rethrow;
+    }
+  }
+
   /// Helper method to convert User model to UserEntity
   UserEntity _mapUserToEntity(User user) {
     return UserEntity(
