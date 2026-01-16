@@ -274,14 +274,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       userDetails = state.userDetails;
     }
 
-    return FloatingActionButton.extended(
+    return FloatingActionButton(
       onPressed: () => _navigateToAddTransaction(context, userDetails),
       backgroundColor: Theme.of(context).colorScheme.primary,
-      icon: const Icon(Icons.add, color: Colors.white),
-      label: Text(
-        AppLocalizations.of(context)!.addTransaction,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
-      ),
+      child: const Icon(Icons.add, color: Colors.white),
     );
   }
 
