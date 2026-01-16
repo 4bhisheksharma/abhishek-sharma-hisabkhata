@@ -46,6 +46,9 @@ urlpatterns = [
         
         # Transactions & Favorites
         path('transaction/', include('transaction.urls')),
+        
+        # Support Tickets
+        path('support/', include('support_ticket.urls')),
     ])),
 ]
 

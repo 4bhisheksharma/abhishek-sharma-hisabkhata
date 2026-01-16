@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'request.apps.RequestConfig',
     'notification.apps.NotificationConfig',
     'transaction.apps.TransactionConfig',
+    'support_ticket.apps.SupportTicketConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
