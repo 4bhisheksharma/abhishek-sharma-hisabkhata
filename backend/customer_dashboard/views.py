@@ -2,9 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum
+from django.db.models import Sum, Q, Count
 from .models import Customer, CustomerBusinessRelationship
 from .serializers import CustomerDashboardSerializer, CustomerProfileSerializer, RecentBusinessSerializer
+from request.models import BusinessCustomerRequest
 
 
 class CustomerDashboardView(APIView):
@@ -16,13 +17,36 @@ class CustomerDashboardView(APIView):
             # Get customer profile
             customer = Customer.objects.get(user=request.user)
             
+            # Get all relationships for this customer
+            relationships = CustomerBusinessRelationship.objects.filter(customer=customer)
+            
+            # Calculate to_give: sum of all positive pending_due (customer owes businesses)
+            to_give_total = relationships.filter(
+                pending_due__gt=0
+            ).aggregate(total=Sum('pending_due'))['total'] or 0
+            
+            # Calculate to_take: sum of all negative pending_due (businesses owe customer)
+            # Convert to positive for display
+            to_take_total = relationships.filter(
+                pending_due__lt=0
+            ).aggregate(total=Sum('pending_due'))['total'] or 0
+            to_take_total = abs(to_take_total)
+            
+            # Count total connected businesses
+            total_shops = relationships.count()
+            
+            # Count pending connection requests (both sent and received)
+            pending_requests = BusinessCustomerRequest.objects.filter(
+                Q(sender=request.user, status='pending') | 
+                Q(receiver=request.user, status='pending')
+            ).count()
+            
             # Add computed fields to customer instance
-            customer.to_give = 100  # TODO: Calculate from transactions
-            customer.to_take = 0  # TODO: Calculate from transactions
-            customer.total_shops = 100  # TODO: Count connected shops
-            customer.pending_requests = 41  # TODO: Count pending requests
-            customer.recent_transactions = []  # TODO: Get recent transactions
-            customer.loyalty_points = 0  # TODO: Get loyalty points
+            customer.to_give = to_give_total
+            customer.to_take = to_take_total
+            customer.total_shops = total_shops
+            customer.pending_requests = pending_requests
+            customer.loyalty_points = 10  # Placeholder for future implementation
             
             # Serialize with flattened structure
             serializer = CustomerDashboardSerializer(customer)

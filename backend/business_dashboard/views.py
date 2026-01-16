@@ -2,10 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum
+from django.db.models import Sum, Q, Count
 from .models import Business
 from .serializers import BusinessDashboardSerializer, BusinessProfileSerializer, RecentCustomerSerializer
 from customer_dashboard.models import CustomerBusinessRelationship
+from request.models import BusinessCustomerRequest
 
 
 class BusinessDashboardView(APIView):
@@ -17,11 +18,35 @@ class BusinessDashboardView(APIView):
             # Get business profile
             business = Business.objects.get(user=request.user)
             
+            # Get all relationships for this business
+            relationships = CustomerBusinessRelationship.objects.filter(business=business)
+            
+            # Calculate to_take: sum of all positive pending_due (customers owe business)
+            to_take_total = relationships.filter(
+                pending_due__gt=0
+            ).aggregate(total=Sum('pending_due'))['total'] or 0
+            
+            # Calculate to_give: sum of all negative pending_due (business owes customers)
+            # Convert to positive for display
+            to_give_total = relationships.filter(
+                pending_due__lt=0
+            ).aggregate(total=Sum('pending_due'))['total'] or 0
+            to_give_total = abs(to_give_total)
+            
+            # Count total connected customers
+            total_customers = relationships.count()
+            
+            # Count pending connection requests (both sent and received)
+            total_requests = BusinessCustomerRequest.objects.filter(
+                Q(sender=request.user, status='pending') | 
+                Q(receiver=request.user, status='pending')
+            ).count()
+            
             # Add computed fields to business instance
-            business.to_give = 0  # TODO: Calculate from transactions
-            business.to_take = 0  # TODO: Calculate from transactions
-            business.total_customers = 0  # TODO: Count connected customers
-            business.total_requests = 0  # TODO: Count pending requests
+            business.to_give = to_give_total
+            business.to_take = to_take_total
+            business.total_customers = total_customers
+            business.total_requests = total_requests
             
             # Serialize with flattened structure
             serializer = BusinessDashboardSerializer(business)
