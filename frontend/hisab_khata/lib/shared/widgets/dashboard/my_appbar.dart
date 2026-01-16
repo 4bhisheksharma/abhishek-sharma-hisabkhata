@@ -56,6 +56,51 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
   }
 
+  void _showLoyaltyPointsDialog(BuildContext context) {
+    final points = (loyaltyPoints ?? 0).toInt();
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Row(
+          children: [
+            const Icon(
+              Icons.card_giftcard,
+              color: AppTheme.primaryBlue,
+              size: 28,
+            ),
+            const SizedBox(width: 10),
+            const Text(
+              'Congratulations!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppTheme.primaryBlue,
+              ),
+            ),
+          ],
+        ),
+        content: Text(
+          'Your Gazab Customer Point is $points',
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text(
+              'OK',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.primaryBlue,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -127,33 +172,36 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                     // Loyalty Points
                     if (showLoyaltyPoints) ...[
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 4,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.card_giftcard,
-                              color: AppTheme.primaryBlue,
-                              size: 18,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              loyaltyPoints?.toStringAsFixed(1) ?? "0.0",
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
+                      GestureDetector(
+                        onTap: () => _showLoyaltyPointsDialog(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.card_giftcard,
+                                color: AppTheme.primaryBlue,
+                                size: 18,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 5),
+                              Text(
+                                loyaltyPoints?.toStringAsFixed(1) ?? "0.0",
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(width: 8),
