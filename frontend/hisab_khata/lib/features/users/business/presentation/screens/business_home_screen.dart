@@ -88,15 +88,24 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
         break;
       case 4:
         // Profile
-        await Navigator.pushNamed(context, '/business-profile-view');
+        final result = await Navigator.pushNamed(context, '/business-profile-view');
         // Check if widget is still mounted (user might have logged out)
         if (!mounted) return;
-        // Reset to home when returning from profile
-        setState(() {
-          _currentNavIndex = 0;
-        });
-        // Reload dashboard
-        _loadDashboard();
+        // If a specific tab index was returned, navigate to it
+        if (result != null && result is int) {
+          setState(() {
+            _currentNavIndex = result;
+          });
+          // Always reload dashboard to ensure we have the data
+          _loadDashboard();
+        } else {
+          // Reset to home when returning from profile
+          setState(() {
+            _currentNavIndex = 0;
+          });
+          // Reload dashboard
+          _loadDashboard();
+        }
         break;
     }
   }

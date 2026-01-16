@@ -193,7 +193,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
 
   void _handleNavTap(BuildContext context, int index) {
     if (index == 4) return; // Already on profile
-    // Pop back to home and let it handle the navigation
-    Navigator.pop(context);
+    // Pop back to home with the selected index
+    Navigator.pop(context, index);
   }
 }
