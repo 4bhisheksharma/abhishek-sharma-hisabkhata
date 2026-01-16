@@ -41,12 +41,29 @@ class CustomerDashboardView(APIView):
                 Q(receiver=request.user, status='pending')
             ).count()
             
+            # Calculate loyalty points (max 10)
+            # Connection Points (Max 5): +1 point per connected business
+            connection_points = min(5, total_shops)
+            
+            # Transaction Points (Max 5): +1 point per Rs. 500 paid
+            from transaction.models import Transaction
+            total_paid = Transaction.objects.filter(
+                relationship__customer=customer,
+                transaction_type='payment'
+            ).aggregate(total=Sum('amount'))['total'] or 0
+            # Convert to positive since payments are stored as negative
+            total_paid = abs(total_paid)
+            transaction_points = min(5, int(total_paid / 500))
+            
+            # Total loyalty points (max 10)
+            loyalty_points = min(10, connection_points + transaction_points)
+            
             # Add computed fields to customer instance
             customer.to_give = to_give_total
             customer.to_take = to_take_total
             customer.total_shops = total_shops
             customer.pending_requests = pending_requests
-            customer.loyalty_points = 10  # Placeholder for future implementation
+            customer.loyalty_points = loyalty_points
             
             # Serialize with flattened structure
             serializer = CustomerDashboardSerializer(customer)
