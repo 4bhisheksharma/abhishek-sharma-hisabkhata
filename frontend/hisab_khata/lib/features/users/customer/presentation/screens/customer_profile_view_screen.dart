@@ -9,6 +9,7 @@ import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
 import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
 import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 import 'package:hisab_khata/shared/widgets/language_switcher.dart';
+import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class CustomerProfileViewScreen extends StatefulWidget {
@@ -112,7 +113,17 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           iconBgColor: const Color(0xFFE0F7F4),
                           title: AppLocalizations.of(context)!.security,
                           onTap: () {
-                            debugPrint("Security tapped");
+                            showDialog(
+                              context: context,
+                              builder: (context) => ChangePasswordDialog(
+                                onSubmit: (oldPassword, newPassword) {
+                                  // TODO: Call API to change password baki hain re
+                                  debugPrint(
+                                    'Old: $oldPassword, New: $newPassword',
+                                  );
+                                },
+                              ),
+                            );
                           },
                         ),
                         const SizedBox(height: 12),
