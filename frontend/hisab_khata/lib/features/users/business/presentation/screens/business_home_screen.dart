@@ -22,15 +22,32 @@ class BusinessHomeScreen extends StatefulWidget {
   State<BusinessHomeScreen> createState() => _BusinessHomeScreenState();
 }
 
-class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
+class _BusinessHomeScreenState extends State<BusinessHomeScreen>
+    with WidgetsBindingObserver {
   int _currentNavIndex = 0;
   bool _hasLoadedLanguage = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _loadDashboard();
     _loadProfileAndSetLanguage();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Reload dashboard when app comes to foreground
+    if (state == AppLifecycleState.resumed) {
+      _loadDashboard();
+    }
   }
 
   void _loadDashboard() {
@@ -49,6 +66,7 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
         setState(() {
           _currentNavIndex = 0;
         });
+        _loadDashboard();
         break;
       case 1:
         // Connected Customers
