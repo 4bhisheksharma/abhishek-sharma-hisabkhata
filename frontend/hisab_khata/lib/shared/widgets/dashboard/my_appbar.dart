@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:confetti/confetti.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -60,44 +61,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     final points = (loyaltyPoints ?? 0).toInt();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Row(
-          children: [
-            const Icon(
-              Icons.card_giftcard,
-              color: AppTheme.primaryBlue,
-              size: 28,
-            ),
-            const SizedBox(width: 10),
-            const Text(
-              'Congratulations!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: AppTheme.primaryBlue,
-              ),
-            ),
-          ],
-        ),
-        content: Text(
-          'Your Gazab Customer Point is $points',
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text(
-              'OK',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.primaryBlue,
-              ),
-            ),
-          ),
-        ],
-      ),
+      builder: (context) => LoyaltyPointsDialog(points: points),
     );
   }
 
@@ -350,6 +314,129 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LoyaltyPointsDialog extends StatefulWidget {
+  final int points;
+
+  const LoyaltyPointsDialog({super.key, required this.points});
+
+  @override
+  State<LoyaltyPointsDialog> createState() => _LoyaltyPointsDialogState();
+}
+
+class _LoyaltyPointsDialogState extends State<LoyaltyPointsDialog> {
+  late ConfettiController _confettiController;
+
+  @override
+  void initState() {
+    super.initState();
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 3),
+    );
+    // Start confetti when dialog opens
+    _confettiController.play();
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+      title: Row(
+        children: [
+          const Icon(
+            Icons.card_giftcard,
+            color: AppTheme.primaryBlue,
+            size: 28,
+          ),
+          // const SizedBox(width: 10),
+          const Text(
+            'Congratulations!',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: AppTheme.primaryBlue,
+            ),
+          ),
+        ],
+      ),
+      content: ConstrainedBox(
+        constraints: const BoxConstraints(
+          minWidth: 200,
+          maxWidth: 350, // prevents too wide dialog
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Confetti
+            Positioned(
+              top: -30,
+              left: 0,
+              right: 0,
+              height: 160,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirection: 3.14 / 2,
+                blastDirectionality: BlastDirectionality.explosive,
+                emissionFrequency: 0.03,
+                numberOfParticles: 8,
+                gravity: 0.1,
+                shouldLoop: false,
+                colors: const [
+                  Colors.green,
+                  Colors.blue,
+                  Colors.pink,
+                  Colors.orange,
+                  Colors.purple,
+                  AppTheme.primaryBlue,
+                  Colors.yellow,
+                  Colors.red,
+                ],
+                maxBlastForce: 15,
+                minBlastForce: 5,
+                minimumSize: const Size(4, 4),
+                maximumSize: const Size(8, 8),
+              ),
+            ),
+
+            // Text Content
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 12),
+              child: Text(
+                'Your Gazab Customer Point is ${widget.points}',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+      actionsAlignment: MainAxisAlignment.center,
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text(
+            'OK',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.primaryBlue,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
