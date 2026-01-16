@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 /// and "Recently Added Customers" (business view)
 class RecentConnectionEntity extends Equatable {
   final int id; // customer_id or business_id
+  final int relationshipId; // relationship_id for navigation
   final String name;
   final String? profilePicture;
   final String? contact; // phone number if available
@@ -14,6 +15,7 @@ class RecentConnectionEntity extends Equatable {
 
   const RecentConnectionEntity({
     required this.id,
+    required this.relationshipId,
     required this.name,
     this.profilePicture,
     this.contact,
@@ -35,6 +37,7 @@ class RecentConnectionEntity extends Equatable {
   @override
   List<Object?> get props => [
     id,
+    relationshipId,
     name,
     profilePicture,
     contact,

@@ -11,6 +11,8 @@ import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/providers/locale_provider.dart';
+import 'package:hisab_khata/core/constants/routes.dart';
+import 'package:hisab_khata/config/route/app_router.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 
 class BusinessHomeScreen extends StatefulWidget {
@@ -161,8 +163,13 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen> {
                       customer.profilePicture,
                     ),
                     onTap: () {
-                      debugPrint(
-                        "Navigate to customer details: ${customer.id}",
+                      Navigator.pushNamed(
+                        context,
+                        AppRoutes.connectedUserDetails,
+                        arguments: ConnectedUserDetailsArgs(
+                          relationshipId: customer.relationshipId,
+                          isCustomerView: false,
+                        ),
                       );
                     },
                   );

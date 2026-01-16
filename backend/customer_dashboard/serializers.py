@@ -92,6 +92,7 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 
 class RecentBusinessSerializer(serializers.Serializer):
     """Serializer for recently added businesses for a customer"""
+    relationship_id = serializers.IntegerField()
     business_id = serializers.IntegerField(source='business.business_id')
     name = serializers.CharField(source='business.business_name')
     profile_picture = serializers.SerializerMethodField()

@@ -5,6 +5,7 @@ import '../../domain/entities/recent_connection_entity.dart';
 class RecentConnectionModel extends RecentConnectionEntity {
   const RecentConnectionModel({
     required super.id,
+    required super.relationshipId,
     required super.name,
     super.profilePicture,
     super.contact,
@@ -17,6 +18,7 @@ class RecentConnectionModel extends RecentConnectionEntity {
   factory RecentConnectionModel.fromBusinessJson(Map<String, dynamic> json) {
     return RecentConnectionModel(
       id: json['business_id'] ?? 0,
+      relationshipId: json['relationship_id'] ?? 0,
       name: json['name'] ?? '',
       profilePicture: json['profile_picture'],
       contact: json['contact'],
@@ -30,6 +32,7 @@ class RecentConnectionModel extends RecentConnectionEntity {
   factory RecentConnectionModel.fromCustomerJson(Map<String, dynamic> json) {
     return RecentConnectionModel(
       id: json['customer_id'] ?? 0,
+      relationshipId: json['relationship_id'] ?? 0,
       name: json['name'] ?? '',
       profilePicture: json['profile_picture'],
       contact: json['contact'],
@@ -57,6 +60,7 @@ class RecentConnectionModel extends RecentConnectionEntity {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'relationship_id': relationshipId,
       'name': name,
       'profile_picture': profilePicture,
       'contact': contact,
