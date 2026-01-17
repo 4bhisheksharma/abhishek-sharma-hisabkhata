@@ -48,14 +48,14 @@ class MyBottomNavBar extends StatelessWidget {
                 isSelected: currentIndex == 1,
               ),
               _buildNavItem(
-                icon: Icons.bar_chart_rounded,
-                label: AppLocalizations.of(context)!.analytics,
+                icon: Icons.connect_without_contact_rounded,
+                label: 'Connection Placeholder',
                 index: 2,
                 isSelected: currentIndex == 2,
               ),
               _buildNavItem(
-                icon: Icons.history_rounded,
-                label: AppLocalizations.of(context)!.history,
+                icon: Icons.bar_chart_rounded,
+                label: AppLocalizations.of(context)!.analytics,
                 index: 3,
                 isSelected: currentIndex == 3,
               ),

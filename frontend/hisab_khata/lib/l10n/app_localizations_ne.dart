@@ -48,9 +48,6 @@ class AppLocalizationsNe extends AppLocalizations {
   String get save => 'सुरक्षित गर्नुहोस्';
 
   @override
-  String get cancel => 'रद्द गर्नुहोस्';
-
-  @override
   String get edit => 'सम्पादन गर्नुहोस्';
 
   @override
@@ -61,9 +58,6 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get payDue => 'देन रकम तिर्नुहोस्';
-
-  @override
-  String get addTransaction => 'लेनदेन थप्नुहोस्';
 
   @override
   String get recentBusinesses => 'हालका व्यापारहरू';
@@ -90,9 +84,6 @@ class AppLocalizationsNe extends AppLocalizations {
   String get error => 'एउटा त्रुटि भएको छ';
 
   @override
-  String get retry => 'पुन: प्रयास गर्नुहोस्';
-
-  @override
   String get chooseImageSource => 'छवि स्रोत चयन गर्नुहोस्';
 
   @override
@@ -117,16 +108,10 @@ class AppLocalizationsNe extends AppLocalizations {
   String get passwordHintText => '••••••••';
 
   @override
-  String get logout => 'लगआउट';
-
-  @override
   String get forgotPassword => 'पासवर्ड बिर्सनुभयो?';
 
   @override
   String get enterEmail => 'कृपया आफ्नो इमेल प्रविष्ट गर्नुहोस्';
-
-  @override
-  String get enterValidEmail => 'कृपया मान्य इमेल प्रविष्ट गर्नुहोस्';
 
   @override
   String get enterPassword => 'कृपया आफ्नो पासवर्ड प्रविष्ट गर्नुहोस्';
@@ -174,16 +159,10 @@ class AppLocalizationsNe extends AppLocalizations {
   String get createAccount => 'खाता सिर्जना गर्नुहोस्';
 
   @override
-  String get businessName => 'व्यापार नाम';
-
-  @override
   String get fullNameHintText => 'रामकुमार';
 
   @override
   String get businessNameHintText => 'रामदाई को दोकान';
-
-  @override
-  String get enterBusinessName => 'कृपया आफ्नो व्यापार नाम प्रविष्ट गर्नुहोस्';
 
   @override
   String get mobileNumber => 'मोबाइल नम्बर';
@@ -312,7 +291,13 @@ class AppLocalizationsNe extends AppLocalizations {
   String get transactionAddedSuccessfully => 'लेनदेन सफलतापूर्वक थपियो';
 
   @override
+  String get addTransaction => 'लेनदेन थप्नुहोस्';
+
+  @override
   String get auto => 'स्वत:';
+
+  @override
+  String get retry => 'पुन: प्रयास गर्नुहोस्';
 
   @override
   String get noPendingDuesToPay => 'भुक्तानी गर्न कुनै बक्यौता छैन!';
@@ -330,6 +315,9 @@ class AppLocalizationsNe extends AppLocalizations {
   String get amountCannotExceedDueAmount => 'रकम बक्यौता रकमभन्दा बढी हुन सक्दैन';
 
   @override
+  String get cancel => 'रद्द गर्नुहोस्';
+
+  @override
   String get payNow => 'अहिले भुक्तानी गर्नुहोस्';
 
   @override
@@ -337,6 +325,45 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get noPendingRequests => 'कुनै बक्यौता अनुरोधहरू छैनन्';
+
+  @override
+  String get requests => 'अनुरोधहरू';
+
+  @override
+  String get received => 'प्राप्त';
+
+  @override
+  String get sent => 'पठाइएको';
+
+  @override
+  String get requestUpdated => 'अनुरोध सफलतापूर्वक अद्यावधिक गरियो';
+
+  @override
+  String get requestCancelled => 'अनुरोध सफलतापूर्वक रद्द गरियो';
+
+  @override
+  String get noSentRequests => 'कुनै पठाइएको अनुरोध छैन';
+
+  @override
+  String get cancelRequest => 'अनुरोध रद्द गर्नुहोस्';
+
+  @override
+  String get cancelRequestConfirmation => 'के तपाई यो जडान अनुरोध रद्द गर्न निश्चित हुनुहुन्छ?';
+
+  @override
+  String get yes => 'हो';
+
+  @override
+  String get no => 'होइन';
+
+  @override
+  String get pending => 'बाँकी';
+
+  @override
+  String get accepted => 'स्वीकृत';
+
+  @override
+  String get rejected => 'अस्वीकृत';
 
   @override
   String get accept => 'स्वीकार गर्नुहोस्';
@@ -351,6 +378,9 @@ class AppLocalizationsNe extends AppLocalizations {
   String get noNotificationsYet => 'अहिलेसम्म कुनै सूचना छैन';
 
   @override
+  String get logout => 'लगआउट';
+
+  @override
   String get confirmLogout => 'के तपाई लगआउट गर्न निश्चित हुनुहुन्छ?';
 
   @override
@@ -358,6 +388,9 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get businessProfile => 'व्यापार प्रोफाइल';
+
+  @override
+  String get businessName => 'व्यापार नाम';
 
   @override
   String get ownerFullName => 'मालिकको पूरा नाम';
@@ -405,8 +438,14 @@ class AppLocalizationsNe extends AppLocalizations {
   String get enterYourName => 'कृपया आफ्नो नाम प्रविष्ट गर्नुहोस्';
 
   @override
+  String get enterBusinessName => 'कृपया आफ्नो व्यापार नाम प्रविष्ट गर्नुहोस्';
+
+  @override
   String get enterOwnerName => 'कृपया मालिकको नाम प्रविष्ट गर्नुहोस्';
 
   @override
   String get enterAnEmail => 'कृपया इमेल प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get enterValidEmail => 'कृपया मान्य इमेल प्रविष्ट गर्नुहोस्';
 }

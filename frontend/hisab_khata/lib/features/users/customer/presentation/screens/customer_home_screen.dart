@@ -75,13 +75,13 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
         });
         break;
       case 2:
-        // Analytics
+        // Connection Placeholder
         setState(() {
           _currentNavIndex = 2;
         });
         break;
       case 3:
-        // History
+        // Analytics
         setState(() {
           _currentNavIndex = 3;
         });
@@ -221,17 +221,17 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
         const ConnectedUsersList(
           filterBusinesses: true, // Customer sees businesses
         ),
-        // 2 - Analytics
+        // 2 - Connection Placeholder
+        const PlaceholderPage(
+          title: 'Connection Placeholder',
+          icon: Icons.connect_without_contact_rounded,
+          description: 'Manage your pending and accepted connection requests.',
+        ),
+        // 3 - Analytics
         const PlaceholderPage(
           title: 'Analytics',
           icon: Icons.bar_chart_rounded,
           description: 'Track your spending patterns and financial insights.',
-        ),
-        // 3 - History
-        PlaceholderPage(
-          title: AppLocalizations.of(context)!.transactionHistory,
-          icon: Icons.history_rounded,
-          description: AppLocalizations.of(context)!.viewAllPastTransactions,
         ),
         // 4 - Profile (handled via navigation)
         const SizedBox.shrink(),

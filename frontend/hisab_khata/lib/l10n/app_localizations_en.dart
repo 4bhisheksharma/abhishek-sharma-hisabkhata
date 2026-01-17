@@ -48,9 +48,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get save => 'Save';
 
   @override
-  String get cancel => 'Cancel';
-
-  @override
   String get edit => 'Edit';
 
   @override
@@ -61,9 +58,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get payDue => 'Pay Due';
-
-  @override
-  String get addTransaction => 'Add Transaction';
 
   @override
   String get recentBusinesses => 'Recent Businesses';
@@ -90,9 +84,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'An error occurred';
 
   @override
-  String get retry => 'Retry';
-
-  @override
   String get chooseImageSource => 'Choose Image Source';
 
   @override
@@ -117,16 +108,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordHintText => '••••••••';
 
   @override
-  String get logout => 'Logout';
-
-  @override
   String get forgotPassword => 'Forgot Password?';
 
   @override
   String get enterEmail => 'Please enter your email';
-
-  @override
-  String get enterValidEmail => 'Please enter a valid email';
 
   @override
   String get enterPassword => 'Please enter your password';
@@ -174,16 +159,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createAccount => 'Create Account';
 
   @override
-  String get businessName => 'Business Name';
-
-  @override
   String get fullNameHintText => 'RamKumar';
 
   @override
   String get businessNameHintText => 'Ramdai Ko Dokan';
-
-  @override
-  String get enterBusinessName => 'Please enter your business name';
 
   @override
   String get mobileNumber => 'Mobile Number';
@@ -312,7 +291,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transactionAddedSuccessfully => 'Transaction added successfully';
 
   @override
+  String get addTransaction => 'Add Transaction';
+
+  @override
   String get auto => 'Auto';
+
+  @override
+  String get retry => 'Retry';
 
   @override
   String get noPendingDuesToPay => 'No pending dues to pay!';
@@ -330,6 +315,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get amountCannotExceedDueAmount => 'Amount cannot exceed due amount';
 
   @override
+  String get cancel => 'Cancel';
+
+  @override
   String get payNow => 'Pay Now';
 
   @override
@@ -337,6 +325,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noPendingRequests => 'No pending requests';
+
+  @override
+  String get requests => 'Requests';
+
+  @override
+  String get received => 'Received';
+
+  @override
+  String get sent => 'Sent';
+
+  @override
+  String get requestUpdated => 'Request updated successfully';
+
+  @override
+  String get requestCancelled => 'Request cancelled successfully';
+
+  @override
+  String get noSentRequests => 'No sent requests';
+
+  @override
+  String get cancelRequest => 'Cancel Request';
+
+  @override
+  String get cancelRequestConfirmation => 'Are you sure you want to cancel this connection request?';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get accepted => 'Accepted';
+
+  @override
+  String get rejected => 'Rejected';
 
   @override
   String get accept => 'Accept';
@@ -351,6 +378,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noNotificationsYet => 'No notifications yet';
 
   @override
+  String get logout => 'Logout';
+
+  @override
   String get confirmLogout => 'Are you sure you want to logout?';
 
   @override
@@ -358,6 +388,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get businessProfile => 'Business Profile';
+
+  @override
+  String get businessName => 'Business Name';
 
   @override
   String get ownerFullName => 'Owner Full Name';
@@ -405,8 +438,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterYourName => 'Please enter your name';
 
   @override
+  String get enterBusinessName => 'Please enter your business name';
+
+  @override
   String get enterOwnerName => 'Please enter owner name';
 
   @override
   String get enterAnEmail => 'Please enter an email';
+
+  @override
+  String get enterValidEmail => 'Please enter a valid email';
 }

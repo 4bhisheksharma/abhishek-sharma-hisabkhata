@@ -173,12 +173,6 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
-  /// No description provided for @cancel.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel'**
-  String get cancel;
-
   /// No description provided for @edit.
   ///
   /// In en, this message translates to:
@@ -202,12 +196,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pay Due'**
   String get payDue;
-
-  /// No description provided for @addTransaction.
-  ///
-  /// In en, this message translates to:
-  /// **'Add Transaction'**
-  String get addTransaction;
 
   /// No description provided for @recentBusinesses.
   ///
@@ -257,12 +245,6 @@ abstract class AppLocalizations {
   /// **'An error occurred'**
   String get error;
 
-  /// No description provided for @retry.
-  ///
-  /// In en, this message translates to:
-  /// **'Retry'**
-  String get retry;
-
   /// No description provided for @chooseImageSource.
   ///
   /// In en, this message translates to:
@@ -311,12 +293,6 @@ abstract class AppLocalizations {
   /// **'••••••••'**
   String get passwordHintText;
 
-  /// No description provided for @logout.
-  ///
-  /// In en, this message translates to:
-  /// **'Logout'**
-  String get logout;
-
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:
@@ -328,12 +304,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter your email'**
   String get enterEmail;
-
-  /// No description provided for @enterValidEmail.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter a valid email'**
-  String get enterValidEmail;
 
   /// No description provided for @enterPassword.
   ///
@@ -425,12 +395,6 @@ abstract class AppLocalizations {
   /// **'Create Account'**
   String get createAccount;
 
-  /// No description provided for @businessName.
-  ///
-  /// In en, this message translates to:
-  /// **'Business Name'**
-  String get businessName;
-
   /// No description provided for @fullNameHintText.
   ///
   /// In en, this message translates to:
@@ -442,12 +406,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ramdai Ko Dokan'**
   String get businessNameHintText;
-
-  /// No description provided for @enterBusinessName.
-  ///
-  /// In en, this message translates to:
-  /// **'Please enter your business name'**
-  String get enterBusinessName;
 
   /// No description provided for @mobileNumber.
   ///
@@ -701,11 +659,23 @@ abstract class AppLocalizations {
   /// **'Transaction added successfully'**
   String get transactionAddedSuccessfully;
 
+  /// No description provided for @addTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Transaction'**
+  String get addTransaction;
+
   /// No description provided for @auto.
   ///
   /// In en, this message translates to:
   /// **'Auto'**
   String get auto;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 
   /// No description provided for @noPendingDuesToPay.
   ///
@@ -737,6 +707,12 @@ abstract class AppLocalizations {
   /// **'Amount cannot exceed due amount'**
   String get amountCannotExceedDueAmount;
 
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
   /// No description provided for @payNow.
   ///
   /// In en, this message translates to:
@@ -754,6 +730,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No pending requests'**
   String get noPendingRequests;
+
+  /// No description provided for @requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get requests;
+
+  /// No description provided for @received.
+  ///
+  /// In en, this message translates to:
+  /// **'Received'**
+  String get received;
+
+  /// No description provided for @sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get sent;
+
+  /// No description provided for @requestUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Request updated successfully'**
+  String get requestUpdated;
+
+  /// No description provided for @requestCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled successfully'**
+  String get requestCancelled;
+
+  /// No description provided for @noSentRequests.
+  ///
+  /// In en, this message translates to:
+  /// **'No sent requests'**
+  String get noSentRequests;
+
+  /// No description provided for @cancelRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel Request'**
+  String get cancelRequest;
+
+  /// No description provided for @cancelRequestConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel this connection request?'**
+  String get cancelRequestConfirmation;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @pending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get pending;
+
+  /// No description provided for @accepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Accepted'**
+  String get accepted;
+
+  /// No description provided for @rejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Rejected'**
+  String get rejected;
 
   /// No description provided for @accept.
   ///
@@ -779,6 +833,12 @@ abstract class AppLocalizations {
   /// **'No notifications yet'**
   String get noNotificationsYet;
 
+  /// No description provided for @logout.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout'**
+  String get logout;
+
   /// No description provided for @confirmLogout.
   ///
   /// In en, this message translates to:
@@ -796,6 +856,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Business Profile'**
   String get businessProfile;
+
+  /// No description provided for @businessName.
+  ///
+  /// In en, this message translates to:
+  /// **'Business Name'**
+  String get businessName;
 
   /// No description provided for @ownerFullName.
   ///
@@ -887,6 +953,12 @@ abstract class AppLocalizations {
   /// **'Please enter your name'**
   String get enterYourName;
 
+  /// No description provided for @enterBusinessName.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter your business name'**
+  String get enterBusinessName;
+
   /// No description provided for @enterOwnerName.
   ///
   /// In en, this message translates to:
@@ -898,6 +970,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter an email'**
   String get enterAnEmail;
+
+  /// No description provided for @enterValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get enterValidEmail;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
