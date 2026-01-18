@@ -54,3 +54,4 @@ app.*.map.json
 /hisab_khata.iml
 /test
 l10n.yaml
+/.env

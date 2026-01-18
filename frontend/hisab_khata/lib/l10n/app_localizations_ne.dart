@@ -327,45 +327,6 @@ class AppLocalizationsNe extends AppLocalizations {
   String get noPendingRequests => 'कुनै बक्यौता अनुरोधहरू छैनन्';
 
   @override
-  String get requests => 'अनुरोधहरू';
-
-  @override
-  String get received => 'प्राप्त';
-
-  @override
-  String get sent => 'पठाइएको';
-
-  @override
-  String get requestUpdated => 'अनुरोध सफलतापूर्वक अद्यावधिक गरियो';
-
-  @override
-  String get requestCancelled => 'अनुरोध सफलतापूर्वक रद्द गरियो';
-
-  @override
-  String get noSentRequests => 'कुनै पठाइएको अनुरोध छैन';
-
-  @override
-  String get cancelRequest => 'अनुरोध रद्द गर्नुहोस्';
-
-  @override
-  String get cancelRequestConfirmation => 'के तपाई यो जडान अनुरोध रद्द गर्न निश्चित हुनुहुन्छ?';
-
-  @override
-  String get yes => 'हो';
-
-  @override
-  String get no => 'होइन';
-
-  @override
-  String get pending => 'बाँकी';
-
-  @override
-  String get accepted => 'स्वीकृत';
-
-  @override
-  String get rejected => 'अस्वीकृत';
-
-  @override
   String get accept => 'स्वीकार गर्नुहोस्';
 
   @override
@@ -448,4 +409,7 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get enterValidEmail => 'कृपया मान्य इमेल प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get requests => 'अनुरोध';
 }

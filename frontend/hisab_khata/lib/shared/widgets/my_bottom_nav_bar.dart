@@ -49,7 +49,7 @@ class MyBottomNavBar extends StatelessWidget {
               ),
               _buildNavItem(
                 icon: Icons.connect_without_contact_rounded,
-                label: 'Connection Placeholder',
+                label: AppLocalizations.of(context)!.requests,
                 index: 2,
                 isSelected: currentIndex == 2,
               ),

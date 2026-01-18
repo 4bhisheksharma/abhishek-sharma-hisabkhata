@@ -731,84 +731,6 @@ abstract class AppLocalizations {
   /// **'No pending requests'**
   String get noPendingRequests;
 
-  /// No description provided for @requests.
-  ///
-  /// In en, this message translates to:
-  /// **'Requests'**
-  String get requests;
-
-  /// No description provided for @received.
-  ///
-  /// In en, this message translates to:
-  /// **'Received'**
-  String get received;
-
-  /// No description provided for @sent.
-  ///
-  /// In en, this message translates to:
-  /// **'Sent'**
-  String get sent;
-
-  /// No description provided for @requestUpdated.
-  ///
-  /// In en, this message translates to:
-  /// **'Request updated successfully'**
-  String get requestUpdated;
-
-  /// No description provided for @requestCancelled.
-  ///
-  /// In en, this message translates to:
-  /// **'Request cancelled successfully'**
-  String get requestCancelled;
-
-  /// No description provided for @noSentRequests.
-  ///
-  /// In en, this message translates to:
-  /// **'No sent requests'**
-  String get noSentRequests;
-
-  /// No description provided for @cancelRequest.
-  ///
-  /// In en, this message translates to:
-  /// **'Cancel Request'**
-  String get cancelRequest;
-
-  /// No description provided for @cancelRequestConfirmation.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you sure you want to cancel this connection request?'**
-  String get cancelRequestConfirmation;
-
-  /// No description provided for @yes.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes'**
-  String get yes;
-
-  /// No description provided for @no.
-  ///
-  /// In en, this message translates to:
-  /// **'No'**
-  String get no;
-
-  /// No description provided for @pending.
-  ///
-  /// In en, this message translates to:
-  /// **'Pending'**
-  String get pending;
-
-  /// No description provided for @accepted.
-  ///
-  /// In en, this message translates to:
-  /// **'Accepted'**
-  String get accepted;
-
-  /// No description provided for @rejected.
-  ///
-  /// In en, this message translates to:
-  /// **'Rejected'**
-  String get rejected;
-
   /// No description provided for @accept.
   ///
   /// In en, this message translates to:
@@ -976,6 +898,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a valid email'**
   String get enterValidEmail;
+
+  /// No description provided for @requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get requests;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -327,45 +327,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noPendingRequests => 'No pending requests';
 
   @override
-  String get requests => 'Requests';
-
-  @override
-  String get received => 'Received';
-
-  @override
-  String get sent => 'Sent';
-
-  @override
-  String get requestUpdated => 'Request updated successfully';
-
-  @override
-  String get requestCancelled => 'Request cancelled successfully';
-
-  @override
-  String get noSentRequests => 'No sent requests';
-
-  @override
-  String get cancelRequest => 'Cancel Request';
-
-  @override
-  String get cancelRequestConfirmation => 'Are you sure you want to cancel this connection request?';
-
-  @override
-  String get yes => 'Yes';
-
-  @override
-  String get no => 'No';
-
-  @override
-  String get pending => 'Pending';
-
-  @override
-  String get accepted => 'Accepted';
-
-  @override
-  String get rejected => 'Rejected';
-
-  @override
   String get accept => 'Accept';
 
   @override
@@ -448,4 +409,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterValidEmail => 'Please enter a valid email';
+
+  @override
+  String get requests => 'Requests';
 }

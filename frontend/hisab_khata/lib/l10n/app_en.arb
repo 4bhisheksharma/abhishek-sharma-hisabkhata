@@ -132,5 +132,6 @@
   "enterBusinessName": "Please enter your business name",
   "enterOwnerName": "Please enter owner name",
   "enterAnEmail": "Please enter an email",
-  "enterValidEmail": "Please enter a valid email"
+  "enterValidEmail": "Please enter a valid email",
+  "requests": "Requests"
 }
