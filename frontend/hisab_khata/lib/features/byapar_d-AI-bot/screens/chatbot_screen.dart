@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../services/chatbot_service.dart';
 
 class Message {
@@ -18,6 +19,7 @@ class ChatbotScreen extends StatefulWidget {
 class _ChatbotScreenState extends State<ChatbotScreen> {
   final ChatbotService _chatbotService = ChatbotService();
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   final List<Message> _messages = [];
   bool _isLoading = false;
 
@@ -30,6 +32,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
       _isLoading = true;
     });
     _controller.clear();
+    _scrollToBottom();
 
     try {
       String botResponse = '';
@@ -42,11 +45,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             _messages.add(Message(text: botResponse, isUser: false));
           }
         });
+        _scrollToBottom();
       }
     } catch (e) {
       setState(() {
         _messages.add(Message(text: 'Error: $e', isUser: false));
       });
+      _scrollToBottom();
     } finally {
       setState(() {
         _isLoading = false;
@@ -54,66 +59,145 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
     }
   }
 
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Byapar-d AI Chatbot')),
+      appBar: AppBar(title: const Text('Byapar d-AI'), elevation: 1),
       body: Column(
         children: [
+          Center(
+            child: Image.asset(
+              'assets/images/byapar-dAI.png',
+              height: 110,
+              width: 110,
+            ),
+          ),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.all(8.0),
+              controller: _scrollController,
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return Align(
-                  alignment: message.isUser
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(vertical: 4.0),
-                    padding: const EdgeInsets.all(12.0),
-                    decoration: BoxDecoration(
-                      color: message.isUser ? Colors.blue : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Text(
-                      message.text,
-                      style: TextStyle(
-                        color: message.isUser ? Colors.white : Colors.black,
-                      ),
-                    ),
-                  ),
-                );
+                return _buildMessageBubble(context, message);
               },
             ),
           ),
-          if (_isLoading)
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: CircularProgressIndicator(),
+          if (_isLoading) _buildLoadingIndicator(context),
+          _buildInputArea(context),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMessageBubble(BuildContext context, Message message) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        mainAxisAlignment: message.isUser
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (!message.isUser)
+            CircleAvatar(
+              backgroundImage: const AssetImage('assets/images/byapar-dAI.png'),
+              radius: 20,
             ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: const InputDecoration(
-                      hintText: 'Type a message...',
-                      border: OutlineInputBorder(),
-                    ),
-                    onSubmitted: (_) => _sendMessage(),
-                  ),
+          if (!message.isUser) const SizedBox(width: 8),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                vertical: 12.0,
+                horizontal: 16.0,
+              ),
+              decoration: BoxDecoration(
+                color: message.isUser
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[200],
+                borderRadius: BorderRadius.only(
+                  topLeft: const Radius.circular(16),
+                  topRight: const Radius.circular(16),
+                  bottomLeft: message.isUser
+                      ? const Radius.circular(16)
+                      : const Radius.circular(4),
+                  bottomRight: message.isUser
+                      ? const Radius.circular(4)
+                      : const Radius.circular(16),
                 ),
-                const SizedBox(width: 8.0),
-                ElevatedButton(
-                  onPressed: _isLoading ? null : _sendMessage,
-                  child: const Text('Send'),
+              ),
+              child: Text(
+                message.text,
+                style: TextStyle(
+                  color: message.isUser ? Colors.white : Colors.black87,
+                  fontSize: 16,
                 ),
-              ],
+              ),
             ),
+          ),
+          if (message.isUser) const SizedBox(width: 8),
+          if (message.isUser)
+            const CircleAvatar(child: Icon(Icons.person), radius: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLoadingIndicator(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: LoadingAnimationWidget.staggeredDotsWave(
+        color: Theme.of(context).primaryColor,
+        size: 32,
+      ),
+    );
+  }
+
+  Widget _buildInputArea(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border(top: BorderSide(color: Colors.grey[300]!)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Type a message...',
+                filled: true,
+                fillColor: Colors.grey[100],
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 14,
+                ),
+              ),
+              onSubmitted: (_) => _sendMessage(),
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            onPressed: _isLoading ? null : _sendMessage,
+            icon: const Icon(Icons.send),
+            color: Theme.of(context).primaryColor,
           ),
         ],
       ),
