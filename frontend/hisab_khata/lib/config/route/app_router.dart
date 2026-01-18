@@ -5,6 +5,7 @@ import 'package:hisab_khata/core/di/dependency_injection.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/login_screen.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/otp_verification_screen.dart';
 import 'package:hisab_khata/features/auth/presentation/screens/signup_screen.dart';
+import 'package:hisab_khata/features/byapar_d-AI-bot/screens/chatbot_screen.dart';
 import 'package:hisab_khata/features/request/presentation/screens/add_connection_screen.dart';
 import 'package:hisab_khata/features/request/presentation/screens/bulk_add_connection_screen.dart';
 import 'package:hisab_khata/features/static/welcome_screen.dart';
@@ -20,7 +21,8 @@ import 'package:hisab_khata/features/users/customer/presentation/screens/custome
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/my_tickets_screen.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/create_ticket_screen.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/ticket_detail_screen.dart';
-import 'package:hisab_khata/features/byapar_d-AI-bot/screens/chatbot_screen.dart';
+import 'package:hisab_khata/features/request/presentation/screens/connection_requests_screen.dart';
+import 'package:hisab_khata/features/notification/presentation/screens/notification_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Arguments for connected user details page navigation
@@ -113,6 +115,14 @@ class AppRouter {
 
       case AppRoutes.chatbot:
         return MaterialPageRoute(builder: (_) => const ChatbotScreen());
+
+      case AppRoutes.connectionRequests:
+        return MaterialPageRoute(
+          builder: (_) => const ConnectionRequestsScreen(),
+        );
+
+      case AppRoutes.notifications:
+        return MaterialPageRoute(builder: (_) => const NotificationScreen());
 
       default:
         return MaterialPageRoute(

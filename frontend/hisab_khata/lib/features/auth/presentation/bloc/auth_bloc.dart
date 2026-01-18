@@ -7,6 +7,7 @@ import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/change_password_usecase.dart';
+import 'package:hisab_khata/services/fcm_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -48,6 +49,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         password: event.password,
       );
       emit(LoginSuccess(loginResult: result));
+
+      // Initialize FCM service after successful login with auth token
+      await FCMService.initialize(authToken: result.tokens.access);
     } catch (e) {
       emit(AuthError(message: e.toString().replaceAll('Exception: ', '')));
     }
@@ -128,6 +132,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     emit(const AuthLoading());
     try {
       await logoutUseCase();
+      // Clear FCM token on logout
+      await FCMService.clearTokenOnLogout();
       emit(const LogoutSuccess());
       emit(const Unauthenticated());
     } catch (e) {

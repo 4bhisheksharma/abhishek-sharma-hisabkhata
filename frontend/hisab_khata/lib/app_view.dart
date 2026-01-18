@@ -5,6 +5,7 @@ import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/providers/locale_provider.dart';
+import 'package:hisab_khata/services/fcm_service.dart';
 
 class MyAppView extends StatefulWidget {
   const MyAppView({super.key});
@@ -29,6 +30,7 @@ class _MyAppViewState extends State<MyAppView> {
       locale: _locale,
       changeLanguage: _changeLanguage,
       child: MaterialApp(
+        navigatorKey: NavigationService.navigatorKey,
         debugShowCheckedModeBanner: false,
         title: 'Hisab Khata',
         theme: AppTheme.lightTheme,

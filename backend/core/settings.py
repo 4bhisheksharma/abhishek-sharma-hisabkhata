@@ -171,3 +171,15 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'user_id',
     'USER_ID_CLAIM': 'user_id',
 }
+
+# Firebase Cloud Messaging Configuration
+# Path to your Firebase Admin SDK service account key JSON file
+FIREBASE_ADMIN_CREDENTIAL = os.getenv('FIREBASE_ADMIN_CREDENTIAL')
+
+# Firebase project configuration
+FCM_DJANGO_SETTINGS = {
+    "APP_VERBOSE_NAME": "Hisab Khata",
+    "FCM_SERVER_KEY": os.getenv('FCM_SERVER_KEY'),
+    "ONE_DEVICE_PER_USER": False,
+    "DELETE_INACTIVE_DEVICES": True,
+}

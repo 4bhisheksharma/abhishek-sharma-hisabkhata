@@ -204,3 +204,84 @@ class ChangePasswordView(APIView):
                 'message': 'Internal server error',
                 'data': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class FCMTokenView(APIView):
+    """
+    Handle FCM token operations for push notifications
+    """
+    
+    def post(self, request):
+        """Store/update FCM token for the authenticated user"""
+        try:
+            # Check if user is authenticated
+            if not request.user.is_authenticated:
+                return Response({
+                    'status': 401,
+                    'message': 'Authentication required',
+                    'data': None
+                }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            fcm_token = request.data.get('fcm_token')
+            
+            if not fcm_token:
+                return Response({
+                    'status': 400,
+                    'message': 'FCM token is required',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update user's FCM token
+            user = request.user
+            user.fcm_token = fcm_token
+            user.save()
+            
+            return Response({
+                'status': 200,
+                'message': 'FCM token updated successfully',
+                'data': {
+                    'user_id': user.user_id,
+                    'email': user.email,
+                    'fcm_token_updated': True
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': 'Internal server error',
+                'data': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def delete(self, request):
+        """Remove FCM token for the authenticated user (on logout)"""
+        try:
+            # Check if user is authenticated
+            if not request.user.is_authenticated:
+                return Response({
+                    'status': 401,
+                    'message': 'Authentication required',
+                    'data': None
+                }, status=status.HTTP_401_UNAUTHORIZED)
+            
+            # Remove user's FCM token
+            user = request.user
+            user.fcm_token = None
+            user.save()
+            
+            return Response({
+                'status': 200,
+                'message': 'FCM token removed successfully',
+                'data': {
+                    'user_id': user.user_id,
+                    'email': user.email,
+                    'fcm_token_removed': True
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': 'Internal server error',
+                'data': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

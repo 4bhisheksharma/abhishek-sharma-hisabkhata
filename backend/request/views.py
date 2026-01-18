@@ -17,6 +17,10 @@ from .serializers import (
 from hisabauth.models import User
 from notification.models import Notification
 from customer_dashboard.models import CustomerBusinessRelationship
+from core.firebase_service import FirebaseService
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ConnectionRequestViewSet(viewsets.ModelViewSet):
@@ -116,6 +120,23 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             message=f"{request.user.full_name} sent you a connection request.",
             type="connection_request"
         )
+        
+        # Send push notification to receiver if they have FCM token
+        if receiver.fcm_token:
+            try:
+                logger.info(f"Attempting to send push notification to {receiver.email}")
+                logger.info(f"Receiver FCM Token: {receiver.fcm_token[:20]}...")
+                success = FirebaseService.send_connection_request_notification(
+                    receiver.fcm_token,
+                    request.user.full_name,
+                    request.user.email
+                )
+                if success:
+                    logger.info(f"✅ Push notification sent successfully to {receiver.email}")
+                else:
+                    logger.error(f"❌ Failed to send push notification to {receiver.email}")
+            except Exception as e:
+                logger.error(f"❌ Exception while sending push notification to {receiver.email}: {str(e)}")
         
         return Response(
             {
@@ -357,6 +378,23 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             message=f"{request.user.full_name} {status_text} your connection request.",
             type=f"connection_request_{status_text}"
         )
+        
+        # Send push notification to sender if they have FCM token
+        if connection_request.sender.fcm_token:
+            try:
+                if status_text == 'accepted':
+                    FirebaseService.send_request_accepted_notification(
+                        connection_request.sender.fcm_token,
+                        request.user.full_name
+                    )
+                elif status_text == 'rejected':
+                    FirebaseService.send_request_rejected_notification(
+                        connection_request.sender.fcm_token,
+                        request.user.full_name
+                    )
+                logger.info(f"Push notification sent to {connection_request.sender.email} for request {status_text}")
+            except Exception as e:
+                logger.error(f"Failed to send push notification to {connection_request.sender.email}: {str(e)}")
         
         return Response(
             {

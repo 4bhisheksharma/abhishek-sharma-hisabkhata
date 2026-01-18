@@ -47,6 +47,7 @@ class User(AbstractBaseUser, PermissionsMixin):
             ('ne', 'Nepali'),
         ]
     )
+    fcm_token = models.TextField(null=True, blank=True, help_text="Firebase Cloud Messaging token for push notifications")
     is_active = models.BooleanField(default=False)
     is_premium = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
