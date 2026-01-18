@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hisab_khata/shared/utils/image_utils.dart';
 import '../services/chatbot_service.dart';
 
 class Message {
@@ -22,6 +24,23 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   final ScrollController _scrollController = ScrollController();
   final List<Message> _messages = [];
   bool _isLoading = false;
+  String? userImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserImage();
+  }
+
+  void _loadUserImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final imagePath = prefs.getString('profile_picture');
+    setState(() {
+      userImageUrl = imagePath != null
+          ? ImageUtils.getFullImageUrl(imagePath)
+          : null;
+    });
+  }
 
   void _sendMessage() async {
     final text = _controller.text.trim();
@@ -149,7 +168,13 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
           ),
           if (message.isUser) const SizedBox(width: 8),
           if (message.isUser)
-            const CircleAvatar(child: Icon(Icons.person), radius: 20),
+            CircleAvatar(
+              backgroundImage: userImageUrl != null
+                  ? NetworkImage(userImageUrl!)
+                  : null,
+              radius: 20,
+              child: userImageUrl == null ? const Icon(Icons.person) : null,
+            ),
         ],
       ),
     );

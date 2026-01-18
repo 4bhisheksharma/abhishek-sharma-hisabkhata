@@ -11,6 +11,7 @@ import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 import 'package:hisab_khata/shared/widgets/language_switcher.dart';
 import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -60,6 +61,13 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
             final profile = state is BusinessProfileLoaded
                 ? state.profile
                 : (state as BusinessProfileUpdated).profile;
+
+            // Save profile picture to shared preferences
+            SharedPreferences.getInstance().then((prefs) {
+              if (profile.profilePicture != null) {
+                prefs.setString('profile_picture', profile.profilePicture!);
+              }
+            });
 
             return SingleChildScrollView(
               child: Column(
