@@ -11,7 +11,7 @@ import 'package:hisab_khata/features/request/presentation/screens/bulk_add_conne
 import 'package:hisab_khata/features/static/welcome_screen.dart';
 import 'package:hisab_khata/features/transaction/presentation/bloc/connected_user_details_bloc.dart';
 import 'package:hisab_khata/features/transaction/presentation/bloc/connected_user_details_event.dart';
-import 'package:hisab_khata/features/transaction/presentation/pages/connected_user_details_page.dart';
+import 'package:hisab_khata/features/transaction/presentation/screens/connected_user_details_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_home_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_profile_edit_screen.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_profile_view_screen.dart';

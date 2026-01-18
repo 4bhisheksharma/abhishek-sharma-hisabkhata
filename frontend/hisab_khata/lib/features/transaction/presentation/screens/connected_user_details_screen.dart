@@ -11,7 +11,7 @@ import '../widgets/payment_ratio_bar.dart';
 import '../widgets/transactions_list.dart';
 import '../../domain/entities/connected_user_details.dart';
 import '../../domain/entities/transaction.dart';
-import 'add_transaction_page.dart';
+import 'add_transaction_screen.dart';
 
 /// Page showing connected user details with transactions
 class ConnectedUserDetailsPage extends StatelessWidget {
