@@ -98,13 +98,39 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         ).first()
         
         if existing_request:
-            return Response(
-                {
-                    'error': 'A connection request already exists between you and this user',
-                    'existing_request': ConnectionRequestSerializer(existing_request).data
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            # If the existing request was rejected or accepted (connection was deleted), delete it and allow resending
+            if existing_request.status in ['rejected', 'accepted']:
+                # Check if there's an active relationship for accepted connections
+                if existing_request.status == 'accepted':
+                    # Verify no active relationship exists (connection was properly deleted)
+                    sender_user = existing_request.sender
+                    receiver_user = existing_request.receiver
+                    
+                    relationship_exists = CustomerBusinessRelationship.objects.filter(
+                        Q(customer__user=sender_user, business__user=receiver_user) |
+                        Q(customer__user=receiver_user, business__user=sender_user)
+                    ).exists()
+                    
+                    if relationship_exists:
+                        return Response(
+                            {
+                                'error': 'You are already connected with this user',
+                                'existing_request': ConnectionRequestSerializer(existing_request).data
+                            },
+                            status=status.HTTP_400_BAD_REQUEST
+                        )
+                
+                # Delete the old request and allow new one
+                existing_request.delete()
+            else:
+                # Pending request
+                return Response(
+                    {
+                        'error': 'A connection request already exists between you and this user',
+                        'existing_request': ConnectionRequestSerializer(existing_request).data
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
         
         # Create new request
         connection_request = BusinessCustomerRequest.objects.create(
@@ -132,11 +158,11 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     request.user.email
                 )
                 if success:
-                    logger.info(f"✅ Push notification sent successfully to {receiver.email}")
+                    logger.info(f"Push notification sent successfully to {receiver.email}")
                 else:
-                    logger.error(f"❌ Failed to send push notification to {receiver.email}")
+                    logger.error(f"Failed to send push notification to {receiver.email}")
             except Exception as e:
-                logger.error(f"❌ Exception while sending push notification to {receiver.email}: {str(e)}")
+                logger.error(f"Exception while sending push notification to {receiver.email}: {str(e)}")
         
         return Response(
             {
@@ -312,6 +338,7 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             
             # Get relationship_id from CustomerBusinessRelationship
             relationship_id = None
+            pending_due = 0.00
             current_user = request.user
             
             # Determine customer and business from the connection
@@ -323,6 +350,7 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                 ).first()
                 if relationship:
                     relationship_id = relationship.relationship_id
+                    pending_due = float(relationship.pending_due)
             elif hasattr(current_user, 'business_profile') and hasattr(other_user, 'customer_profile'):
                 # Current user is business, other is customer
                 relationship = CustomerBusinessRelationship.objects.filter(
@@ -331,11 +359,127 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                 ).first()
                 if relationship:
                     relationship_id = relationship.relationship_id
+                    pending_due = float(relationship.pending_due)
             
             user_data['relationship_id'] = relationship_id
+            user_data['pending_due'] = pending_due
             connected_users.append(user_data)
         
         return Response(connected_users, status=status.HTTP_200_OK)
+    
+    @action(detail=False, methods=['delete'], url_path='delete-connection')
+    def delete_connection(self, request):
+        """
+        Delete a connection between users
+        Body: { "user_id": 123 } OR { "request_id": 456 }
+        """
+        user_id = request.data.get('user_id')
+        request_id = request.data.get('request_id')
+        
+        if not user_id and not request_id:
+            return Response(
+                {'error': 'Either user_id or request_id must be provided'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Find the connection request
+            if request_id:
+                connection_request = BusinessCustomerRequest.objects.get(
+                    business_customer_request_id=request_id,
+                    status='accepted'
+                )
+                # Verify that the current user is part of this connection
+                if connection_request.sender != request.user and connection_request.receiver != request.user:
+                    return Response(
+                        {'error': 'You are not part of this connection'},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+            else:
+                # Find by user_id
+                connection_request = BusinessCustomerRequest.objects.filter(
+                    Q(sender=request.user, receiver__user_id=user_id, status='accepted') |
+                    Q(receiver=request.user, sender__user_id=user_id, status='accepted')
+                ).first()
+                
+                if not connection_request:
+                    return Response(
+                        {'error': 'No accepted connection found with this user'},
+                        status=status.HTTP_404_NOT_FOUND
+                    )
+            
+            # Determine the other user
+            other_user = connection_request.receiver if connection_request.sender == request.user else connection_request.sender
+            
+            # Check for pending dues in CustomerBusinessRelationship
+            relationship = None
+            if hasattr(request.user, 'customer_profile') and hasattr(other_user, 'business_profile'):
+                relationship = CustomerBusinessRelationship.objects.filter(
+                    customer=request.user.customer_profile,
+                    business=other_user.business_profile
+                ).first()
+            elif hasattr(request.user, 'business_profile') and hasattr(other_user, 'customer_profile'):
+                relationship = CustomerBusinessRelationship.objects.filter(
+                    customer=other_user.customer_profile,
+                    business=request.user.business_profile
+                ).first()
+            
+            # Check if there are pending dues
+            if relationship and relationship.pending_due != 0:
+                return Response(
+                    {
+                        'error': 'Cannot delete connection with pending dues',
+                        'pending_due': float(relationship.pending_due),
+                        'message': f'Please settle the pending amount of {abs(relationship.pending_due)} before deleting this connection'
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Delete the relationship if it exists (this will cascade delete transactions)
+            if relationship:
+                relationship.delete()
+            
+            # Delete the connection request
+            connection_request.delete()
+            
+            # Send notification to the other user
+            Notification.objects.create(
+                sender=request.user,
+                receiver=other_user,
+                title="Connection Deleted",
+                message=f"{request.user.full_name} has removed the connection with you.",
+                type="connection_deleted"
+            )
+            
+            # Send push notification if the other user has FCM token
+            if other_user.fcm_token:
+                try:
+                    FirebaseService.send_notification(
+                        other_user.fcm_token,
+                        "Connection Deleted",
+                        f"{request.user.full_name} has removed the connection with you."
+                    )
+                    logger.info(f"Push notification sent to {other_user.email} for connection deletion")
+                except Exception as e:
+                    logger.error(f"Failed to send push notification to {other_user.email}: {str(e)}")
+            
+            return Response(
+                {
+                    'message': 'Connection deleted successfully',
+                    'deleted_user': {
+                        'user_id': other_user.user_id,
+                        'email': other_user.email,
+                        'full_name': other_user.full_name
+                    }
+                },
+                status=status.HTTP_200_OK
+            )
+            
+        except BusinessCustomerRequest.DoesNotExist:
+            return Response(
+                {'error': 'Connection request not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
     
     @action(detail=True, methods=['patch'], url_path='update-status')
     def update_status(self, request, pk=None):

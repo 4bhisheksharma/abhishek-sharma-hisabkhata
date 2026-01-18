@@ -110,6 +110,20 @@ class RequestStatusUpdated extends ConnectionRequestState {
   List<Object?> get props => [request, message];
 }
 
+/// Connection deleted success state
+class ConnectionDeletedSuccess extends ConnectionRequestState {
+  final String message;
+  final Map<String, dynamic> deletedUserInfo;
+
+  const ConnectionDeletedSuccess({
+    required this.message,
+    required this.deletedUserInfo,
+  });
+
+  @override
+  List<Object?> get props => [message, deletedUserInfo];
+}
+
 /// Error state
 class ConnectionRequestError extends ConnectionRequestState {
   final String message;

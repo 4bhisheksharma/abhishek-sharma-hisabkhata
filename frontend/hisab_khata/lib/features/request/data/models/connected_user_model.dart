@@ -14,6 +14,7 @@ class ConnectedUserModel extends ConnectedUser {
     required super.connectedAt,
     required super.requestId,
     required super.relationshipId,
+    super.pendingDue = 0.0,
   });
 
   factory ConnectedUserModel.fromJson(Map<String, dynamic> json) {
@@ -30,6 +31,7 @@ class ConnectedUserModel extends ConnectedUser {
       connectedAt: DateTime.parse(json['connected_at']),
       requestId: json['request_id'],
       relationshipId: json['relationship_id'] ?? 0,
+      pendingDue: (json['pending_due'] ?? 0.0).toDouble(),
     );
   }
 
@@ -47,6 +49,7 @@ class ConnectedUserModel extends ConnectedUser {
       'connected_at': connectedAt.toIso8601String(),
       'request_id': requestId,
       'relationship_id': relationshipId,
+      'pending_due': pendingDue,
     };
   }
 }

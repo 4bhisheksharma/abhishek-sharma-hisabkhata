@@ -7,6 +7,7 @@ import '../../domain/usecases/get_received_requests_usecase.dart';
 import '../../domain/usecases/get_pending_received_requests_usecase.dart';
 import '../../domain/usecases/get_connected_users_usecase.dart';
 import '../../domain/usecases/update_request_status_usecase.dart';
+import '../../domain/usecases/delete_connection_usecase.dart';
 import 'connection_request_event.dart';
 import 'connection_request_state.dart';
 
@@ -20,6 +21,7 @@ class ConnectionRequestBloc
   final GetPendingReceivedRequestsUseCase getPendingReceivedRequestsUseCase;
   final GetConnectedUsersUseCase getConnectedUsersUseCase;
   final UpdateRequestStatusUseCase updateRequestStatusUseCase;
+  final DeleteConnectionUseCase deleteConnectionUseCase;
 
   ConnectionRequestBloc({
     required this.searchUsersUseCase,
@@ -30,6 +32,7 @@ class ConnectionRequestBloc
     required this.getPendingReceivedRequestsUseCase,
     required this.getConnectedUsersUseCase,
     required this.updateRequestStatusUseCase,
+    required this.deleteConnectionUseCase,
   }) : super(const ConnectionRequestInitial()) {
     on<SearchUsersEvent>(_onSearchUsers);
     on<SendConnectionRequestEvent>(_onSendConnectionRequest);
@@ -39,6 +42,7 @@ class ConnectionRequestBloc
     on<GetPendingReceivedRequestsEvent>(_onGetPendingReceivedRequests);
     on<GetConnectedUsersEvent>(_onGetConnectedUsers);
     on<UpdateRequestStatusEvent>(_onUpdateRequestStatus);
+    on<DeleteConnectionEvent>(_onDeleteConnection);
   }
 
   /// Handle search users event
@@ -159,6 +163,28 @@ class ConnectionRequestBloc
       (failure) =>
           emit(ConnectionRequestError(message: failure.failureMessage)),
       (request) => emit(RequestStatusUpdated(request: request)),
+    );
+  }
+
+  /// Handle delete connection event
+  Future<void> _onDeleteConnection(
+    DeleteConnectionEvent event,
+    Emitter<ConnectionRequestState> emit,
+  ) async {
+    emit(const ConnectionRequestLoading());
+    final result = await deleteConnectionUseCase(
+      userId: event.userId,
+      requestId: event.requestId,
+    );
+    result.fold(
+      (failure) =>
+          emit(ConnectionRequestError(message: failure.failureMessage)),
+      (response) => emit(
+        ConnectionDeletedSuccess(
+          message: response['message'] ?? 'Connection deleted successfully',
+          deletedUserInfo: response['deleted_user'] ?? {},
+        ),
+      ),
     );
   }
 }

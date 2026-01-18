@@ -9,6 +9,7 @@ import 'package:hisab_khata/features/request/presentation/bloc/connection_reques
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
+import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 
 /// A reusable widget that displays the list of connected users
 /// Handles loading, empty, and error states automatically
@@ -40,7 +41,16 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ConnectionRequestBloc, ConnectionRequestState>(
+    return BlocConsumer<ConnectionRequestBloc, ConnectionRequestState>(
+      listener: (context, state) {
+        if (state is ConnectionDeletedSuccess) {
+          MySnackbar.showSuccess(context, state.message);
+          // Reload connected users after deletion
+          _loadConnectedUsers();
+        } else if (state is ConnectionRequestError) {
+          MySnackbar.showError(context, state.message);
+        }
+      },
       builder: (context, state) {
         if (state is ConnectionRequestLoading) {
           return const Center(
@@ -423,6 +433,17 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                 ),
               ),
               const SizedBox(width: 12),
+              // Delete Icon Button
+              IconButton(
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Colors.red[400],
+                  size: 22,
+                ),
+                onPressed: () => _showDeleteConfirmation(context, user),
+                tooltip: 'Delete Connection',
+              ),
+              const SizedBox(width: 4),
               // Arrow Icon
               Container(
                 padding: const EdgeInsets.all(8),
@@ -439,6 +460,134 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, ConnectedUser user) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Icon(
+              Icons.warning_amber_rounded,
+              color: Colors.orange[700],
+              size: 28,
+            ),
+            const SizedBox(width: 12),
+            const Text('Delete Connection?'),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Are you sure you want to delete your connection with ${user.displayName}?',
+              style: const TextStyle(fontSize: 15),
+            ),
+            const SizedBox(height: 12),
+            if (user.hasPendingDue) ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red[700], size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        'Pending due: Rs. ${user.pendingDue.abs().toStringAsFixed(2)}',
+                        style: TextStyle(
+                          color: Colors.red[900],
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Please settle all pending dues before deleting this connection.',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: Colors.red[700],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ] else ...[
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.green[50],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.green[200]!),
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.check_circle_outline,
+                      color: Colors.green[700],
+                      size: 20,
+                    ),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text(
+                        'No pending dues',
+                        style: TextStyle(
+                          color: Color(0xFF2C3E50),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: Text(
+              'Cancel',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          if (!user.hasPendingDue)
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(dialogContext);
+                // Delete the connection using BLoC
+                context.read<ConnectionRequestBloc>().add(
+                  DeleteConnectionEvent(userId: user.userId),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Delete',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+            ),
+        ],
       ),
     );
   }

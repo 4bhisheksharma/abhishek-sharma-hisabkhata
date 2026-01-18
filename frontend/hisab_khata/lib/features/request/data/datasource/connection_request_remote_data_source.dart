@@ -23,6 +23,7 @@ abstract class ConnectionRequestRemoteDataSource {
     required int requestId,
     required String status,
   });
+  Future<Map<String, dynamic>> deleteConnection({int? userId, int? requestId});
 }
 
 /// Implementation of ConnectionRequestRemoteDataSource using BaseRemoteDataSource
@@ -115,5 +116,20 @@ class ConnectionRequestRemoteDataSourceImpl extends BaseRemoteDataSource
     );
 
     return ConnectionRequestModel.fromJson(response['request']);
+  }
+
+  @override
+  Future<Map<String, dynamic>> deleteConnection({
+    int? userId,
+    int? requestId,
+  }) async {
+    final body = {
+      if (userId != null) 'user_id': userId,
+      if (requestId != null) 'request_id': requestId,
+    };
+
+    final response = await delete(ApiEndpoints.deleteConnection, body: body);
+
+    return response;
   }
 }

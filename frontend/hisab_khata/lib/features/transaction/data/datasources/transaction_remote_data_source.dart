@@ -73,7 +73,7 @@ class TransactionRemoteDataSource extends BaseRemoteDataSource {
   /// Remove a business from favorites by business ID
   /// DELETE /transaction/favorites/by-business/{business_id}/
   Future<void> removeFromFavorites(int businessId) async {
-    await delete('transaction/favorites/by-business/$businessId/');
+    await delete('transaction/favorites/by-business/$businessId/', body: {});
   }
 
   /// Check if a business is favorited

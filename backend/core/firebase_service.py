@@ -235,3 +235,18 @@ class FirebaseService:
         }
         
         return cls.send_push_notification(requester_fcm_token, title, body, data)
+    
+    @classmethod
+    def send_notification(cls, fcm_token, title, body):
+        """
+        Send a simple push notification
+        
+        Args:
+            fcm_token (str): FCM token of the target device
+            title (str): Notification title
+            body (str): Notification body
+        
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        return cls.send_push_notification(fcm_token, title, body)

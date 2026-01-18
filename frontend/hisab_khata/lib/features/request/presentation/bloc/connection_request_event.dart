@@ -72,3 +72,14 @@ class UpdateRequestStatusEvent extends ConnectionRequestEvent {
   @override
   List<Object?> get props => [requestId, status];
 }
+
+/// Delete connection event
+class DeleteConnectionEvent extends ConnectionRequestEvent {
+  final int? userId;
+  final int? requestId;
+
+  const DeleteConnectionEvent({this.userId, this.requestId});
+
+  @override
+  List<Object?> get props => [userId, requestId];
+}

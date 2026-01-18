@@ -29,6 +29,8 @@ class ApiEndpoints {
   static const String pendingReceivedRequests =
       "request/connections/pending-received/";
   static const String connectedUsers = "request/connections/connected/";
+  static const String deleteConnection =
+      "request/connections/delete-connection/";
   static String updateRequestStatus(int id) =>
       "request/connections/$id/update-status/";
 

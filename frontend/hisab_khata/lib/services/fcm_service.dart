@@ -20,8 +20,13 @@ class FCMService {
     _authToken = authToken;
     _baseUrl = ApiBaseUrl.baseUrl;
 
+    print('\n===== INITIALIZING FCM SERVICE =====');
+    print('Auth Token: ${authToken != null ? "Present" : "Missing"}');
+    print('Base URL: $_baseUrl');
+
     try {
-      // Request permission for notifications
+      // Request Firebase notification permissions (handles Android 13+ automatically)
+      print('Requesting notification permissions...');
       NotificationSettings settings = await _firebaseMessaging
           .requestPermission(
             alert: true,
@@ -32,6 +37,8 @@ class FCMService {
             provisional: false,
             sound: true,
           );
+
+      print('Permission status: ${settings.authorizationStatus}');
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
@@ -134,6 +141,7 @@ class FCMService {
 
       if (response.statusCode == 200) {
         print('FCM token sent to server successfully');
+        print('Response: ${response.body}');
       } else {
         print(
           'Failed to send FCM token: ${response.statusCode} - ${response.body}',
@@ -174,6 +182,12 @@ class FCMService {
 
   // Handle foreground messages
   static Future<void> _handleForegroundMessage(RemoteMessage message) async {
+    print('\n===== FOREGROUND MESSAGE RECEIVED =====');
+    print('Title: ${message.notification?.title}');
+    print('Body: ${message.notification?.body}');
+    print('Data: ${message.data}');
+    print('========================================\n');
+
     // Show local notification
     await _showLocalNotification(message);
   }
@@ -293,9 +307,42 @@ class NavigationService {
 // Background message handler (must be top-level function)
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('\n🔔 ===== BACKGROUND MESSAGE RECEIVED =====');
+  print('\n ===== BACKGROUND MESSAGE RECEIVED =====');
   print('Title: ${message.notification?.title}');
   print('Body: ${message.notification?.body}');
   print('Data: ${message.data}');
   print('==========================================\n');
+
+  // Show local notification for background messages
+  await _showLocalNotificationStatic(message);
+}
+
+Future<void> _showLocalNotificationStatic(RemoteMessage message) async {
+  final FlutterLocalNotificationsPlugin localNotifications =
+      FlutterLocalNotificationsPlugin();
+
+  // Initialize if not already
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+  await localNotifications.initialize(initializationSettings);
+
+  RemoteNotification? notification = message.notification;
+  if (notification != null) {
+    await localNotifications.show(
+      notification.hashCode,
+      notification.title,
+      notification.body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'hisab_khata_notifications',
+          'Hisab Khata Notifications',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+      ),
+    );
+  }
 }

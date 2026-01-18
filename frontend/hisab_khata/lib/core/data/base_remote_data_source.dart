@@ -195,6 +195,7 @@ abstract class BaseRemoteDataSource {
     String endpoint, {
     Map<String, String>? queryParameters,
     bool includeAuth = true,
+    required Map<String, dynamic> body,
   }) async {
     try {
       final uri = Uri.parse(
@@ -203,7 +204,18 @@ abstract class BaseRemoteDataSource {
 
       final headers = await _getHeaders(includeAuth: includeAuth);
 
-      final response = await client.delete(uri, headers: headers);
+      // Use Request instead of delete method to include body
+      final request = http.Request('DELETE', uri);
+      request.headers.addAll(headers);
+
+      // Add body if provided and not empty
+      if (body.isNotEmpty) {
+        request.body = json.encode(body);
+      }
+
+      final streamedResponse = await client.send(request);
+      final response = await http.Response.fromStream(streamedResponse);
+
       return _handleResponse(response);
     } on SocketException {
       throw ServerException('No internet connection');

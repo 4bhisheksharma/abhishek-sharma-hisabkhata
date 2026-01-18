@@ -38,4 +38,10 @@ abstract class ConnectionRequestRepository {
     required int requestId,
     required String status, // 'accepted' or 'rejected'
   });
+
+  /// Delete a connection
+  Future<Either<Failure, Map<String, dynamic>>> deleteConnection({
+    int? userId,
+    int? requestId,
+  });
 }

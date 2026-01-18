@@ -14,6 +14,7 @@ class ConnectedUser extends Equatable {
   final DateTime connectedAt;
   final int requestId;
   final int relationshipId;
+  final double pendingDue;
 
   const ConnectedUser({
     required this.userId,
@@ -28,6 +29,7 @@ class ConnectedUser extends Equatable {
     required this.connectedAt,
     required this.requestId,
     required this.relationshipId,
+    this.pendingDue = 0.0,
   });
 
   /// Returns display name - business name if business, otherwise full name
@@ -36,6 +38,9 @@ class ConnectedUser extends Equatable {
 
   /// Returns contact info - phone if available, otherwise email
   String get contactInfo => phoneNumber ?? email;
+
+  /// Returns true if user has pending dues
+  bool get hasPendingDue => pendingDue != 0.0;
 
   @override
   List<Object?> get props => [
@@ -51,5 +56,6 @@ class ConnectedUser extends Equatable {
     connectedAt,
     requestId,
     relationshipId,
+    pendingDue,
   ];
 }

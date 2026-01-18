@@ -59,12 +59,15 @@ class NotificationRemoteDataSourceImpl extends BaseRemoteDataSource
 
   @override
   Future<void> deleteNotification(int notificationId) async {
-    await delete(ApiEndpoints.deleteNotification(notificationId));
+    await delete(ApiEndpoints.deleteNotification(notificationId), body: {});
   }
 
   @override
   Future<int> deleteAllRead() async {
-    final response = await delete(ApiEndpoints.deleteAllReadNotifications);
+    final response = await delete(
+      ApiEndpoints.deleteAllReadNotifications,
+      body: {},
+    );
 
     return response['deleted_count'];
   }
