@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/shared/utils/image_utils.dart';
 
 /// A reusable list item widget for displaying user information
 /// Used for connected users, recent businesses/customers, etc.
@@ -44,10 +45,16 @@ class UserListItem extends StatelessWidget {
                 CircleAvatar(
                   radius: 24,
                   backgroundColor: AppTheme.primaryBlue,
-                  backgroundImage: profileImageUrl != null
-                      ? NetworkImage(profileImageUrl!)
+                  backgroundImage:
+                      profileImageUrl != null &&
+                          ImageUtils.getFullImageUrl(profileImageUrl) != null
+                      ? NetworkImage(
+                          ImageUtils.getFullImageUrl(profileImageUrl)!,
+                        )
                       : null,
-                  child: profileImageUrl == null
+                  child:
+                      profileImageUrl == null ||
+                          ImageUtils.getFullImageUrl(profileImageUrl) == null
                       ? const Icon(Icons.person, color: Colors.white, size: 28)
                       : null,
                 ),

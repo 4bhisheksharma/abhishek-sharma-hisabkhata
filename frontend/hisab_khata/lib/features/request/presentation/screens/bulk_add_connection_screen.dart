@@ -5,6 +5,7 @@ import 'package:hisab_khata/features/request/presentation/bloc/connection_reques
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
 import '../../../../config/storage/storage_service.dart';
 import '../../../../config/theme/app_theme.dart';
+import '../../../../shared/utils/image_utils.dart';
 import '../../../../shared/widgets/my_button.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../domain/entities/user_search_result.dart';
@@ -467,10 +468,24 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                             ),
                             secondary: CircleAvatar(
                               backgroundColor: AppTheme.primaryBlue,
-                              backgroundImage: user.profilePicture != null
-                                  ? NetworkImage(user.profilePicture!)
+                              backgroundImage:
+                                  user.profilePicture != null &&
+                                      ImageUtils.getFullImageUrl(
+                                            user.profilePicture,
+                                          ) !=
+                                          null
+                                  ? NetworkImage(
+                                      ImageUtils.getFullImageUrl(
+                                        user.profilePicture,
+                                      )!,
+                                    )
                                   : null,
-                              child: user.profilePicture == null
+                              child:
+                                  user.profilePicture == null ||
+                                      ImageUtils.getFullImageUrl(
+                                            user.profilePicture,
+                                          ) ==
+                                          null
                                   ? Text(
                                       user.fullName.isNotEmpty
                                           ? user.fullName[0].toUpperCase()
