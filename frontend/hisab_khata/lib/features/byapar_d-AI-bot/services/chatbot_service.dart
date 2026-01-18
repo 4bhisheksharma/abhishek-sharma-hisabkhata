@@ -3,14 +3,19 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ChatbotService {
-  final String _apiKey = dotenv.env['APIKEY'] ?? '';
+  Future<String> get _apiKey async {
+    await dotenv.load(fileName: ".env");
+    return dotenv.env['APIKEY'] ?? '';
+  }
+
   final String _baseUrl = 'https://openrouter.ai/api/v1';
 
   Future<String> sendMessage(String message) async {
+    final apiKey = await _apiKey;
     final response = await http.post(
       Uri.parse('$_baseUrl/chat/completions'),
       headers: {
-        'Authorization': 'Bearer $_apiKey',
+        'Authorization': 'Bearer $apiKey',
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
@@ -30,12 +35,13 @@ class ChatbotService {
   }
 
   Stream<String> sendMessageStream(String message) async* {
+    final apiKey = await _apiKey;
     final request = http.Request(
       'POST',
       Uri.parse('$_baseUrl/chat/completions'),
     );
     request.headers.addAll({
-      'Authorization': 'Bearer $_apiKey',
+      'Authorization': 'Bearer $apiKey',
       'Content-Type': 'application/json',
       'HTTP-Referer': '',
       'X-Title': '',
