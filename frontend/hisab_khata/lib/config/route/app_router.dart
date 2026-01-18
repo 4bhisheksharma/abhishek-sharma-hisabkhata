@@ -20,6 +20,7 @@ import 'package:hisab_khata/features/users/customer/presentation/screens/custome
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/my_tickets_screen.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/create_ticket_screen.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/ticket_detail_screen.dart';
+import 'package:hisab_khata/features/byapar_d-AI-bot/screens/chatbot_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Arguments for connected user details page navigation
@@ -109,6 +110,9 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (_) => TicketDetailScreen(ticketId: ticketId),
         );
+
+      case AppRoutes.chatbot:
+        return MaterialPageRoute(builder: (_) => const ChatbotScreen());
 
       default:
         return MaterialPageRoute(

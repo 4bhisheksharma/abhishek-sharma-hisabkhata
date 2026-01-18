@@ -16,4 +16,5 @@ class AppRoutes {
   static const String myTickets = '/my-tickets';
   static const String createTicket = '/create-ticket';
   static const String ticketDetail = '/ticket-detail';
+  static const String chatbot = '/chatbot';
 }

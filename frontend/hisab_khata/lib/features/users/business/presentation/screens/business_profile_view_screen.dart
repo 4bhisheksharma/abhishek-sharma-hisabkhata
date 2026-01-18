@@ -178,7 +178,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           iconBgColor: const Color(0xFFF3E5F5),
                           title: "Talk to Byapar d-AI",
                           onTap: () {
-                            debugPrint("Byapar d-AI tapped");
+                            Navigator.pushNamed(context, '/chatbot');
                           },
                         ),
                         const SizedBox(height: 12),
