@@ -9,18 +9,28 @@ class ChatbotService {
     return dotenv.env['APIKEY'] ?? '';
   }
 
-  final String _baseUrl = 'https://openrouter.ai/api/v1';
+  Future<String> get _baseUrl async {
+    await dotenv.load(fileName: ".env");
+    return dotenv.env['OPENROUTER_BASE_URL'] ?? 'https://openrouter.ai/api/v1';
+  }
+
+  Future<String> get _model async {
+    await dotenv.load(fileName: ".env");
+    return dotenv.env['OPENROUTER_MODEL'] ?? 'mistralai/devstral-2512:free';
+  }
 
   Future<String> sendMessage(String message) async {
     final apiKey = await _apiKey;
+    final baseUrl = await _baseUrl;
+    final model = await _model;
     final response = await http.post(
-      Uri.parse('$_baseUrl/chat/completions'),
+      Uri.parse('$baseUrl/chat/completions'),
       headers: {
         'Authorization': 'Bearer $apiKey',
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'model': 'mistralai/devstral-2512:free',
+        'model': model,
         'messages': [
           {'role': 'system', 'content': systemPrompt},
           {'role': 'user', 'content': message},
@@ -38,18 +48,18 @@ class ChatbotService {
 
   Stream<String> sendMessageStream(String message) async* {
     final apiKey = await _apiKey;
+    final baseUrl = await _baseUrl;
+    final model = await _model;
     final request = http.Request(
       'POST',
-      Uri.parse('$_baseUrl/chat/completions'),
+      Uri.parse('$baseUrl/chat/completions'),
     );
     request.headers.addAll({
       'Authorization': 'Bearer $apiKey',
       'Content-Type': 'application/json',
-      'HTTP-Referer': '',
-      'X-Title': '',
     });
     request.body = jsonEncode({
-      'model': 'mistralai/devstral-2512:free',
+      'model': model,
       'messages': [
         {'role': 'system', 'content': systemPrompt},
         {'role': 'user', 'content': message},
