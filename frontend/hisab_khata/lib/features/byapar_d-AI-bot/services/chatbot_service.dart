@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:hisab_khata/core/constants/system_prompt.dart';
 
 class ChatbotService {
   Future<String> get _apiKey async {
@@ -19,8 +20,9 @@ class ChatbotService {
         'Content-Type': 'application/json',
       },
       body: jsonEncode({
-        'model': 'mistralai/mistral-7b-instruct',
+        'model': 'mistralai/devstral-2512:free',
         'messages': [
+          {'role': 'system', 'content': systemPrompt},
           {'role': 'user', 'content': message},
         ],
       }),
@@ -47,8 +49,9 @@ class ChatbotService {
       'X-Title': '',
     });
     request.body = jsonEncode({
-      'model': 'mistralai/mistral-7b-instruct',
+      'model': 'mistralai/devstral-2512:free',
       'messages': [
+        {'role': 'system', 'content': systemPrompt},
         {'role': 'user', 'content': message},
       ],
       'stream': true,
