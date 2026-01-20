@@ -180,3 +180,121 @@ class RecentBusinessesView(APIView):
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class MonthlySpendingOverviewView(APIView):
+    """View for customers to get overall monthly spending overview across all businesses"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """Get overall monthly spending summary for the customer"""
+        try:
+            # Check if user is a customer
+            customer = request.user.customer_profile
+            
+            # Get spending overview
+            overview = Customer.objects.get_monthly_spending_overview(customer)
+            
+            return Response({
+                'status': 200,
+                'message': 'Monthly spending overview retrieved successfully',
+                'data': overview
+            }, status=status.HTTP_200_OK)
+            
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only customer users can access spending overview',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving spending overview: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class MonthlyLimitView(APIView):
+    """View for customers to set and get their monthly spending limit"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """Get customer's current monthly limit"""
+        try:
+            customer = request.user.customer_profile
+            
+            return Response({
+                'status': 200,
+                'message': 'Monthly limit retrieved successfully',
+                'data': {
+                    'monthly_limit': float(customer.monthly_limit) if customer.monthly_limit > 0 else None
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only customer users can access monthly limits',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving monthly limit: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def post(self, request):
+        """Set customer's monthly spending limit"""
+        try:
+            customer = request.user.customer_profile
+            
+            # Validate the monthly limit
+            monthly_limit = request.data.get('monthly_limit')
+            if monthly_limit is None:
+                return Response({
+                    'status': 400,
+                    'message': 'monthly_limit field is required',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            try:
+                monthly_limit = float(monthly_limit)
+                if monthly_limit < 0:
+                    return Response({
+                        'status': 400,
+                        'message': 'Monthly limit cannot be negative',
+                        'data': None
+                    }, status=status.HTTP_400_BAD_REQUEST)
+            except (ValueError, TypeError):
+                return Response({
+                    'status': 400,
+                    'message': 'Invalid monthly_limit value',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update the monthly limit
+            customer.monthly_limit = monthly_limit
+            customer.save(update_fields=['monthly_limit', 'updated_at'])
+            
+            return Response({
+                'status': 200,
+                'message': 'Monthly spending limit set successfully',
+                'data': {
+                    'monthly_limit': float(customer.monthly_limit)
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only customer users can set monthly limits',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error setting monthly limit: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

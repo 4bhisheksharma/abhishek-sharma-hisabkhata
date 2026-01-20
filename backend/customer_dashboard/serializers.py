@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Customer
+from .models import Customer, CustomerBusinessRelationship
 from hisabauth.models import User
 
 

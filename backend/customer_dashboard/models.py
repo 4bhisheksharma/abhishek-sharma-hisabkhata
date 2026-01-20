@@ -2,6 +2,54 @@ from django.db import models
 from hisabauth.models import User
 
 
+class CustomerManager(models.Manager):
+    """Custom manager for Customer model"""
+    
+    def get_monthly_spending_overview(self, customer):
+        """Get overall monthly spending across all businesses for a customer"""
+        from django.db.models import Sum
+        from django.utils import timezone
+        import calendar
+        
+        now = timezone.now()
+        # Get first and last day of current month
+        first_day = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        last_day = now.replace(
+            day=calendar.monthrange(now.year, now.month)[1],
+            hour=23, minute=59, second=59, microsecond=999999
+        )
+        
+        # Get all relationships for this customer
+        relationships = CustomerBusinessRelationship.objects.filter(customer=customer)
+        
+        total_spent = 0
+        business_count = relationships.count()
+        
+        for relationship in relationships:
+            monthly_spent = relationship.transactions.filter(
+                transaction_date__gte=first_day,
+                transaction_date__lte=last_day,
+                amount__gt=0  # Only count amounts customer owes (purchases/credits)
+            ).aggregate(total=Sum('amount'))['total'] or 0
+            
+            total_spent += monthly_spent
+        
+        # Check against customer's monthly limit
+        monthly_limit = customer.monthly_limit
+        is_over_budget = monthly_limit > 0 and total_spent > monthly_limit
+        remaining_budget = (monthly_limit - total_spent) if monthly_limit > 0 else None
+        
+        return {
+            'total_spent': total_spent,
+            'monthly_limit': monthly_limit if monthly_limit > 0 else None,
+            'remaining_budget': remaining_budget,
+            'is_over_budget': is_over_budget,
+            'business_count': business_count,
+            'month': now.strftime('%B %Y'),
+            'days_remaining': (last_day - now).days + 1
+        }
+
+
 class Customer(models.Model):
     """Customer Profile"""
     customer_id = models.AutoField(primary_key=True)
@@ -19,8 +67,16 @@ class Customer(models.Model):
             ('suspended', 'Suspended'),
         ]
     )
+    monthly_limit = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        default=0.00,
+        help_text="Overall monthly spending limit set by customer. 0 means no limit."
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    objects = CustomerManager()
     
     class Meta:
         db_table = 'customer'
