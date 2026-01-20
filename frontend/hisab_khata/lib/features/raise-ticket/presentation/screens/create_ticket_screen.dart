@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/bloc/bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class CreateTicketScreen extends StatefulWidget {
   const CreateTicketScreen({super.key});
@@ -18,20 +19,23 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   String _selectedCategory = 'account';
   String _selectedPriority = 'medium';
 
-  final List<Map<String, String>> _categories = [
-    {'value': 'account', 'label': 'Account Issue'},
-    {'value': 'app', 'label': 'App Issue'},
-    {'value': 'system', 'label': 'System Issue'},
-    {'value': 'feature_request', 'label': 'Feature Request'},
-    {'value': 'bug_report', 'label': 'Bug Report'},
-    {'value': 'other', 'label': 'Other'},
+  List<Map<String, String>> get _categories => [
+    {'value': 'account', 'label': AppLocalizations.of(context)!.accountIssue},
+    {'value': 'app', 'label': AppLocalizations.of(context)!.appIssue},
+    {'value': 'system', 'label': AppLocalizations.of(context)!.systemIssue},
+    {
+      'value': 'feature_request',
+      'label': AppLocalizations.of(context)!.featureRequest,
+    },
+    {'value': 'bug_report', 'label': AppLocalizations.of(context)!.bugReport},
+    {'value': 'other', 'label': AppLocalizations.of(context)!.other},
   ];
 
-  final List<Map<String, String>> _priorities = [
-    {'value': 'low', 'label': 'Low'},
-    {'value': 'medium', 'label': 'Medium'},
-    {'value': 'high', 'label': 'High'},
-    {'value': 'urgent', 'label': 'Urgent'},
+  List<Map<String, String>> get _priorities => [
+    {'value': 'low', 'label': AppLocalizations.of(context)!.low},
+    {'value': 'medium', 'label': AppLocalizations.of(context)!.medium},
+    {'value': 'high', 'label': AppLocalizations.of(context)!.high},
+    {'value': 'urgent', 'label': AppLocalizations.of(context)!.urgent},
   ];
 
   @override
@@ -58,7 +62,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Support Ticket'),
+        title: Text(
+          AppLocalizations.of(context)!.createSupportTicket,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
       ),
@@ -66,8 +77,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
         listener: (context, state) {
           if (state is TicketCreated) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Ticket created successfully!'),
+              SnackBar(
+                content: Text(
+                  AppLocalizations.of(context)!.ticketCreatedSuccessfully,
+                ),
                 backgroundColor: Colors.green,
               ),
             );
@@ -215,9 +228,9 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                               ),
                             ),
                           )
-                        : const Text(
-                            'Submit Ticket',
-                            style: TextStyle(
+                        : Text(
+                            AppLocalizations.of(context)!.submitTicket,
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),

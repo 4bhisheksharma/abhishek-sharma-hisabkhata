@@ -166,17 +166,17 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Date field
-                        _buildLabel('Date'),
+                        _buildLabel(AppLocalizations.of(context)!.date),
                         _buildDateField(),
                         const SizedBox(height: 24),
 
                         // Amount field
-                        _buildLabel('Amount'),
+                        _buildLabel(AppLocalizations.of(context)!.amount),
                         _buildAmountField(),
                         const SizedBox(height: 24),
 
                         // Item Title field
-                        _buildLabel('Item Title'),
+                        _buildLabel(AppLocalizations.of(context)!.itemTitle),
                         _buildItemTitleField(),
                         const SizedBox(height: 24),
 

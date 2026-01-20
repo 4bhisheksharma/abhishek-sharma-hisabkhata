@@ -412,4 +412,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get requests => 'Requests';
+
+  @override
+  String get comingSoon => 'This feature is coming soon!';
+
+  @override
+  String get connectionPlaceholder => 'Connection Placeholder';
+
+  @override
+  String get connectionPlaceholderDescription => 'Manage your pending and accepted connection requests.';
+
+  @override
+  String get analyticsPlaceholder => 'Analytics';
+
+  @override
+  String get analyticsPlaceholderDescriptionBusiness => 'Track your sales patterns and business insights.';
+
+  @override
+  String get analyticsPlaceholderDescriptionCustomer => 'Track your spending patterns and financial insights.';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get amount => 'Amount';
+
+  @override
+  String get itemTitle => 'Item Title';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get yesterday => 'Yesterday';
+
+  @override
+  String get thisWeek => 'This Week';
+
+  @override
+  String get earlier => 'Earlier';
+
+  @override
+  String get createSupportTicket => 'Create Support Ticket';
+
+  @override
+  String get ticketCreatedSuccessfully => 'Ticket created successfully!';
+
+  @override
+  String get submitTicket => 'Submit Ticket';
+
+  @override
+  String get accountIssue => 'Account Issue';
+
+  @override
+  String get appIssue => 'App Issue';
+
+  @override
+  String get systemIssue => 'System Issue';
+
+  @override
+  String get featureRequest => 'Feature Request';
+
+  @override
+  String get bugReport => 'Bug Report';
+
+  @override
+  String get other => 'Other';
+
+  @override
+  String get low => 'Low';
+
+  @override
+  String get medium => 'Medium';
+
+  @override
+  String get high => 'High';
+
+  @override
+  String get urgent => 'Urgent';
+
+  @override
+  String get byaparAI => 'Byapar d-AI';
 }

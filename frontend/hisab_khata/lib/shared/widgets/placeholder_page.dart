@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// A simple placeholder page widget used for navigation references
 class PlaceholderPage extends StatelessWidget {
   final String title;
   final IconData icon;
-  final String description;
+  final String? description;
 
   const PlaceholderPage({
     super.key,
     required this.title,
     required this.icon,
-    this.description = 'This feature is coming soon!',
+    this.description,
   });
 
   @override
   Widget build(BuildContext context) {
+    final localizedDescription =
+        description ?? AppLocalizations.of(context)!.comingSoon;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -41,7 +44,7 @@ class PlaceholderPage extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              description,
+              localizedDescription,
               style: Theme.of(
                 context,
               ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),

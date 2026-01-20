@@ -904,6 +904,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Requests'**
   String get requests;
+
+  /// No description provided for @comingSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'This feature is coming soon!'**
+  String get comingSoon;
+
+  /// No description provided for @connectionPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection Placeholder'**
+  String get connectionPlaceholder;
+
+  /// No description provided for @connectionPlaceholderDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Manage your pending and accepted connection requests.'**
+  String get connectionPlaceholderDescription;
+
+  /// No description provided for @analyticsPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Analytics'**
+  String get analyticsPlaceholder;
+
+  /// No description provided for @analyticsPlaceholderDescriptionBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your sales patterns and business insights.'**
+  String get analyticsPlaceholderDescriptionBusiness;
+
+  /// No description provided for @analyticsPlaceholderDescriptionCustomer.
+  ///
+  /// In en, this message translates to:
+  /// **'Track your spending patterns and financial insights.'**
+  String get analyticsPlaceholderDescriptionCustomer;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @amount.
+  ///
+  /// In en, this message translates to:
+  /// **'Amount'**
+  String get amount;
+
+  /// No description provided for @itemTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Item Title'**
+  String get itemTitle;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @yesterday.
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get yesterday;
+
+  /// No description provided for @thisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This Week'**
+  String get thisWeek;
+
+  /// No description provided for @earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get earlier;
+
+  /// No description provided for @createSupportTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Support Ticket'**
+  String get createSupportTicket;
+
+  /// No description provided for @ticketCreatedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket created successfully!'**
+  String get ticketCreatedSuccessfully;
+
+  /// No description provided for @submitTicket.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Ticket'**
+  String get submitTicket;
+
+  /// No description provided for @accountIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'Account Issue'**
+  String get accountIssue;
+
+  /// No description provided for @appIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'App Issue'**
+  String get appIssue;
+
+  /// No description provided for @systemIssue.
+  ///
+  /// In en, this message translates to:
+  /// **'System Issue'**
+  String get systemIssue;
+
+  /// No description provided for @featureRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Feature Request'**
+  String get featureRequest;
+
+  /// No description provided for @bugReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Bug Report'**
+  String get bugReport;
+
+  /// No description provided for @other.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get other;
+
+  /// No description provided for @low.
+  ///
+  /// In en, this message translates to:
+  /// **'Low'**
+  String get low;
+
+  /// No description provided for @medium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get medium;
+
+  /// No description provided for @high.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get high;
+
+  /// No description provided for @urgent.
+  ///
+  /// In en, this message translates to:
+  /// **'Urgent'**
+  String get urgent;
+
+  /// No description provided for @byaparAI.
+  ///
+  /// In en, this message translates to:
+  /// **'Byapar d-AI'**
+  String get byaparAI;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

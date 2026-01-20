@@ -167,11 +167,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
     final yesterday = today.subtract(const Duration(days: 1));
     final thisWeekStart = today.subtract(Duration(days: now.weekday - 1));
 
+    final todayKey = AppLocalizations.of(context)!.today;
+    final yesterdayKey = AppLocalizations.of(context)!.yesterday;
+    final thisWeekKey = AppLocalizations.of(context)!.thisWeek;
+    final earlierKey = AppLocalizations.of(context)!.earlier;
+
     final Map<String, List<entity.Notification>> grouped = {
-      'Today': [],
-      'Yesterday': [],
-      'This Week': [],
-      'Earlier': [],
+      todayKey: [],
+      yesterdayKey: [],
+      thisWeekKey: [],
+      earlierKey: [],
     };
 
     for (var notification in notifications) {
@@ -182,14 +187,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
       );
 
       if (notificationDate.isAtSameMomentAs(today)) {
-        grouped['Today']!.add(notification);
+        grouped[todayKey]!.add(notification);
       } else if (notificationDate.isAtSameMomentAs(yesterday)) {
-        grouped['Yesterday']!.add(notification);
+        grouped[yesterdayKey]!.add(notification);
       } else if (notificationDate.isAfter(thisWeekStart) &&
           notificationDate.isBefore(yesterday)) {
-        grouped['This Week']!.add(notification);
+        grouped[thisWeekKey]!.add(notification);
       } else {
-        grouped['Earlier']!.add(notification);
+        grouped[earlierKey]!.add(notification);
       }
     }
 

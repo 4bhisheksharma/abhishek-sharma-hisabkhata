@@ -412,4 +412,85 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get requests => 'अनुरोध';
+
+  @override
+  String get comingSoon => 'यो सुविधा चाँडै आउँदैछ!';
+
+  @override
+  String get connectionPlaceholder => 'जडान प्लेसहोल्डर';
+
+  @override
+  String get connectionPlaceholderDescription => 'तपाईका बक्यौता र स्वीकृत जडान अनुरोधहरू व्यवस्थापन गर्नुहोस्।';
+
+  @override
+  String get analyticsPlaceholder => 'विश्लेषण';
+
+  @override
+  String get analyticsPlaceholderDescriptionBusiness => 'तपाईका बिक्री ढाँचाहरू र व्यापार अन्तर्दृष्टिहरू ट्र्याक गर्नुहोस्।';
+
+  @override
+  String get analyticsPlaceholderDescriptionCustomer => 'तपाईका खर्च ढाँचाहरू र वित्तीय अन्तर्दृष्टिहरू ट्र्याक गर्नुहोस्।';
+
+  @override
+  String get date => 'मिति';
+
+  @override
+  String get amount => 'रकम';
+
+  @override
+  String get itemTitle => 'वस्तु शीर्षक';
+
+  @override
+  String get today => 'आज';
+
+  @override
+  String get yesterday => 'हिजो';
+
+  @override
+  String get thisWeek => 'यो हप्ता';
+
+  @override
+  String get earlier => 'अघि';
+
+  @override
+  String get createSupportTicket => 'सहायता टिकट सिर्जना गर्नुहोस्';
+
+  @override
+  String get ticketCreatedSuccessfully => 'टिकट सफलतापूर्वक सिर्जना गरियो!';
+
+  @override
+  String get submitTicket => 'टिकट पेश गर्नुहोस्';
+
+  @override
+  String get accountIssue => 'खाता समस्या';
+
+  @override
+  String get appIssue => 'एप समस्या';
+
+  @override
+  String get systemIssue => 'प्रणाली समस्या';
+
+  @override
+  String get featureRequest => 'सुविधा अनुरोध';
+
+  @override
+  String get bugReport => 'बग रिपोर्ट';
+
+  @override
+  String get other => 'अन्य';
+
+  @override
+  String get low => 'कम';
+
+  @override
+  String get medium => 'मध्यम';
+
+  @override
+  String get high => 'उच्च';
+
+  @override
+  String get urgent => 'तत्काल';
+
+  @override
+  String get byaparAI => 'व्यापार द-एआई';
 }

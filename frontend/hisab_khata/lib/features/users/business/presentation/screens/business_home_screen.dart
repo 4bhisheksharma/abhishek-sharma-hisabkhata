@@ -222,16 +222,20 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
           filterBusinesses: false, // Business sees customers
         ),
         // 2 - Connection Placeholder
-        const PlaceholderPage(
-          title: 'Connection Placeholder',
+        PlaceholderPage(
+          title: AppLocalizations.of(context)!.connectionPlaceholder,
           icon: Icons.connect_without_contact_rounded,
-          description: 'Manage your pending and accepted connection requests.',
+          description: AppLocalizations.of(
+            context,
+          )!.connectionPlaceholderDescription,
         ),
         // 3 - Analytics
-        const PlaceholderPage(
-          title: 'Analytics',
+        PlaceholderPage(
+          title: AppLocalizations.of(context)!.analyticsPlaceholder,
           icon: Icons.bar_chart_rounded,
-          description: 'Track your sales patterns and business insights.',
+          description: AppLocalizations.of(
+            context,
+          )!.analyticsPlaceholderDescriptionBusiness,
         ),
         // 4 - Profile (handled via navigation)
         const SizedBox.shrink(),

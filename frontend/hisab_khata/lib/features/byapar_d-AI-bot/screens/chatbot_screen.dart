@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
@@ -93,7 +94,10 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Byapar d-AI'), elevation: 1),
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.byaparAI),
+        elevation: 1,
+      ),
       body: Column(
         children: [
           Center(
