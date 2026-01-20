@@ -50,6 +50,9 @@ urlpatterns = [
         
         # Support Tickets
         path('support/', include('support_ticket.urls')),
+        
+        # Analytics
+        path('analytics/', include('analytics.urls')),
     ])),
 ]
 
