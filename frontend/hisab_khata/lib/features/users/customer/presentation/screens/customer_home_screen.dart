@@ -14,6 +14,7 @@ import 'package:hisab_khata/shared/providers/locale_provider.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/config/route/app_router.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
+import '../../../../analytics/presentation/screens/customer_analytics_screen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -230,13 +231,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
           )!.connectionPlaceholderDescription,
         ),
         // 3 - Analytics
-        PlaceholderPage(
-          title: AppLocalizations.of(context)!.analyticsPlaceholder,
-          icon: Icons.bar_chart_rounded,
-          description: AppLocalizations.of(
-            context,
-          )!.analyticsPlaceholderDescriptionCustomer,
-        ),
+        const CustomerAnalyticsScreen(),
         // 4 - Profile (handled via navigation)
         const SizedBox.shrink(),
       ],

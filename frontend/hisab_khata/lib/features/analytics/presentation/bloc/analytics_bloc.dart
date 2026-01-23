@@ -13,6 +13,8 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetTotalAmount getTotalAmount;
   final GetMonthlySpendingLimit getMonthlySpendingLimit;
 
+  AnalyticsDataLoaded _currentData = const AnalyticsDataLoaded();
+
   AnalyticsBloc({
     required this.getPaidVsToPay,
     required this.getMonthlyTransactionTrend,
@@ -35,12 +37,16 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetPaidVsToPayEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getPaidVsToPay.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) =>
-          emit(PaidVsToPayLoaded(paid: analytics.paid, toPay: analytics.toPay)),
+      (analytics) {
+        _currentData = _currentData.copyWith(
+          paid: analytics.paid,
+          toPay: analytics.toPay,
+        );
+        emit(_currentData);
+      },
     );
   }
 
@@ -48,12 +54,11 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetMonthlyTransactionTrendEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getMonthlyTransactionTrend.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) => emit(
-        MonthlyTransactionTrendLoaded(
+      (analytics) {
+        _currentData = _currentData.copyWith(
           trendData: analytics.trendData
               .map(
                 (data) => {
@@ -63,8 +68,9 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
                 },
               )
               .toList(),
-        ),
-      ),
+        );
+        emit(_currentData);
+      },
     );
   }
 
@@ -72,12 +78,11 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetFavoriteCustomersEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getFavoriteCustomers.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) => emit(
-        FavoriteCustomersLoaded(
+      (analytics) {
+        _currentData = _currentData.copyWith(
           favoriteCustomers: analytics.favoriteCustomers
               .map(
                 (customer) => {
@@ -93,8 +98,9 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
               )
               .toList(),
           totalFavorites: analytics.totalFavorites,
-        ),
-      ),
+        );
+        emit(_currentData);
+      },
     );
   }
 
@@ -102,12 +108,11 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetFavoriteBusinessesEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getFavoriteBusinesses.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) => emit(
-        FavoriteBusinessesLoaded(
+      (analytics) {
+        _currentData = _currentData.copyWith(
           favoriteBusinesses: analytics.favoriteBusinesses
               .map(
                 (business) => {
@@ -123,8 +128,9 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
               )
               .toList(),
           totalFavorites: analytics.totalFavorites,
-        ),
-      ),
+        );
+        emit(_currentData);
+      },
     );
   }
 
@@ -132,16 +138,15 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetTotalTransactionsEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getTotalTransactions.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) => emit(
-        TotalTransactionsLoaded(
+      (analytics) {
+        _currentData = _currentData.copyWith(
           totalTransactions: analytics.totalTransactions,
-          userType: analytics.userType,
-        ),
-      ),
+        );
+        emit(_currentData);
+      },
     );
   }
 
@@ -149,16 +154,15 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetTotalAmountEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getTotalAmount.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) => emit(
-        TotalAmountLoaded(
+      (analytics) {
+        _currentData = _currentData.copyWith(
           totalAmount: analytics.totalAmount,
-          userType: analytics.userType,
-        ),
-      ),
+        );
+        emit(_currentData);
+      },
     );
   }
 
@@ -166,21 +170,20 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     GetMonthlySpendingLimitEvent event,
     Emitter<AnalyticsState> emit,
   ) async {
-    emit(const AnalyticsLoading());
     final result = await getMonthlySpendingLimit.call(NoParams());
     result.fold(
       (failure) => emit(AnalyticsError(message: failure.failureMessage)),
-      (analytics) => emit(
-        MonthlySpendingLimitLoaded(
-          totalSpent: analytics.totalSpent,
+      (analytics) {
+        _currentData = _currentData.copyWith(
+          monthlySpent: analytics.totalSpent,
           monthlyLimit: analytics.monthlyLimit,
           remainingBudget: analytics.remainingBudget,
           isOverBudget: analytics.isOverBudget,
-          businessCount: analytics.businessCount,
-          month: analytics.month,
-          daysRemaining: analytics.daysRemaining,
-        ),
-      ),
+          spendingMonth: analytics.month,
+          spendingDaysRemaining: analytics.daysRemaining,
+        );
+        emit(_currentData);
+      },
     );
   }
 }

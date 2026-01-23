@@ -100,34 +100,90 @@ final class TotalAmountLoaded extends AnalyticsState {
   List<Object?> get props => [totalAmount, userType];
 }
 
-/// Success state for monthly spending limit analytics
-final class MonthlySpendingLimitLoaded extends AnalyticsState {
-  final double totalSpent;
+/// Composite state holding all analytics data
+final class AnalyticsDataLoaded extends AnalyticsState {
+  final double? paid;
+  final double? toPay;
+  final List<Map<String, dynamic>>? trendData;
+  final List<Map<String, dynamic>>? favoriteBusinesses;
+  final List<Map<String, dynamic>>? favoriteCustomers;
+  final int? totalTransactions;
+  final double? totalAmount;
+  final double? monthlySpent;
   final double? monthlyLimit;
   final double? remainingBudget;
-  final bool isOverBudget;
-  final int businessCount;
-  final String month;
-  final int daysRemaining;
+  final bool? isOverBudget;
+  final String? spendingMonth;
+  final int? spendingDaysRemaining;
+  final int? totalFavorites;
 
-  const MonthlySpendingLimitLoaded({
-    required this.totalSpent,
+  const AnalyticsDataLoaded({
+    this.paid,
+    this.toPay,
+    this.trendData,
+    this.favoriteBusinesses,
+    this.favoriteCustomers,
+    this.totalTransactions,
+    this.totalAmount,
+    this.monthlySpent,
     this.monthlyLimit,
     this.remainingBudget,
-    required this.isOverBudget,
-    required this.businessCount,
-    required this.month,
-    required this.daysRemaining,
+    this.isOverBudget,
+    this.spendingMonth,
+    this.spendingDaysRemaining,
+    this.totalFavorites,
   });
+
+  AnalyticsDataLoaded copyWith({
+    double? paid,
+    double? toPay,
+    List<Map<String, dynamic>>? trendData,
+    List<Map<String, dynamic>>? favoriteBusinesses,
+    List<Map<String, dynamic>>? favoriteCustomers,
+    int? totalTransactions,
+    double? totalAmount,
+    double? monthlySpent,
+    double? monthlyLimit,
+    double? remainingBudget,
+    bool? isOverBudget,
+    String? spendingMonth,
+    int? spendingDaysRemaining,
+    int? totalFavorites,
+  }) {
+    return AnalyticsDataLoaded(
+      paid: paid ?? this.paid,
+      toPay: toPay ?? this.toPay,
+      trendData: trendData ?? this.trendData,
+      favoriteBusinesses: favoriteBusinesses ?? this.favoriteBusinesses,
+      favoriteCustomers: favoriteCustomers ?? this.favoriteCustomers,
+      totalTransactions: totalTransactions ?? this.totalTransactions,
+      totalAmount: totalAmount ?? this.totalAmount,
+      monthlySpent: monthlySpent ?? this.monthlySpent,
+      monthlyLimit: monthlyLimit ?? this.monthlyLimit,
+      remainingBudget: remainingBudget ?? this.remainingBudget,
+      isOverBudget: isOverBudget ?? this.isOverBudget,
+      spendingMonth: spendingMonth ?? this.spendingMonth,
+      spendingDaysRemaining:
+          spendingDaysRemaining ?? this.spendingDaysRemaining,
+      totalFavorites: totalFavorites ?? this.totalFavorites,
+    );
+  }
 
   @override
   List<Object?> get props => [
-    totalSpent,
+    paid,
+    toPay,
+    trendData,
+    favoriteBusinesses,
+    favoriteCustomers,
+    totalTransactions,
+    totalAmount,
+    monthlySpent,
     monthlyLimit,
     remainingBudget,
     isOverBudget,
-    businessCount,
-    month,
-    daysRemaining,
+    spendingMonth,
+    spendingDaysRemaining,
+    totalFavorites,
   ];
 }
