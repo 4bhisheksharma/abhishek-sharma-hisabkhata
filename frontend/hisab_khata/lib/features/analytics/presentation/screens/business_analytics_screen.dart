@@ -263,29 +263,10 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text(
-                    '${customer['totalTransactions']} transactions',
+                    'Favorited on ${DateTime.parse(customer['favoritedAt']).toLocal().toString().split(' ')[0]}',
                     style: const TextStyle(fontSize: 12),
                   ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Rs. ${customer['pendingDue'].toStringAsFixed(2)}',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: customer['pendingDue'] > 0
-                              ? Colors.green
-                              : Colors.red,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.star_rounded,
-                        color: Colors.amber,
-                        size: 16,
-                      ),
-                    ],
-                  ),
+                  trailing: const Icon(Icons.star_rounded, color: Colors.amber),
                 );
               },
             ),

@@ -225,12 +225,22 @@ class FavoriteViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
     
     def get_queryset(self):
-        """Return favorites for the current customer"""
+        """Return favorites based on user type"""
         user = self.request.user
+        
+        # If user is a customer, return their favorite businesses
         if hasattr(user, 'customer_profile'):
             return Favorite.objects.filter(
                 customer=user.customer_profile
             ).order_by('-created_at')
+        
+        # If user is a business, return customers who have favorited them
+        elif hasattr(user, 'business_profile'):
+            return Favorite.objects.filter(
+                business=user.business_profile
+            ).select_related('customer__user').order_by('-created_at')
+        
+        # Otherwise return empty queryset
         return Favorite.objects.none()
     
     def create(self, request, *args, **kwargs):

@@ -234,18 +234,10 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text(
-                    '${business['totalTransactions']} transactions',
+                    'Favorited on ${DateTime.parse(business['favoritedAt']).toLocal().toString().split(' ')[0]}',
                     style: const TextStyle(fontSize: 12),
                   ),
-                  trailing: Text(
-                    'Rs. ${business['pendingDue'].toStringAsFixed(2)}',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: business['pendingDue'] > 0
-                          ? Colors.red
-                          : Colors.green,
-                    ),
-                  ),
+                  trailing: const Icon(Icons.favorite, color: Colors.red),
                 );
               },
             ),

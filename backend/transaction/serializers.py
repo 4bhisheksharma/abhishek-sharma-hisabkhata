@@ -119,10 +119,17 @@ class ConnectedUserDetailsSerializer(serializers.Serializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    """Serializer for favorite businesses"""
-    business_id = serializers.IntegerField(source='business.business_id', read_only=True)
-    business_name = serializers.CharField(source='business.business_name', read_only=True)
+    """Serializer for favorites - handles both customer favorites and business favorites"""
+    
+    # For customers viewing favorite businesses
+    business_id = serializers.SerializerMethodField()
+    business_name = serializers.SerializerMethodField()
     business_profile_picture = serializers.SerializerMethodField()
+    
+    # For businesses viewing customers who favorited them
+    customer_id = serializers.SerializerMethodField()
+    customer_name = serializers.SerializerMethodField()
+    customer_profile_picture = serializers.SerializerMethodField()
     
     class Meta:
         model = Favorite
@@ -131,13 +138,33 @@ class FavoriteSerializer(serializers.ModelSerializer):
             'business_id',
             'business_name',
             'business_profile_picture',
+            'customer_id',
+            'customer_name',
+            'customer_profile_picture',
             'created_at',
         ]
         read_only_fields = ['favorite_id', 'created_at']
     
+    def get_business_id(self, obj):
+        return obj.business.business_id if obj.business else None
+    
+    def get_business_name(self, obj):
+        return obj.business.business_name if obj.business else None
+    
     def get_business_profile_picture(self, obj):
-        if obj.business.user.profile_picture:
+        if obj.business and obj.business.user.profile_picture:
             return obj.business.user.profile_picture.url
+        return None
+    
+    def get_customer_id(self, obj):
+        return obj.customer.customer_id if obj.customer else None
+    
+    def get_customer_name(self, obj):
+        return obj.customer.user.full_name if obj.customer else None
+    
+    def get_customer_profile_picture(self, obj):
+        if obj.customer and obj.customer.user.profile_picture:
+            return obj.customer.user.profile_picture.url
         return None
 
 

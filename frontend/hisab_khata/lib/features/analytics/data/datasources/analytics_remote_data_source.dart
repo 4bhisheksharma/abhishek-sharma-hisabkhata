@@ -22,20 +22,58 @@ class AnalyticsRemoteDataSource extends BaseRemoteDataSource {
   }
 
   /// Get favorite customers analytics data (for businesses)
-  /// GET /api/analytics/favorite-customers/
+  /// GET /api/transaction/favorites/
   Future<FavoriteCustomersAnalyticsModel> getFavoriteCustomers() async {
-    final response = await get('analytics/favorite-customers/');
-    return FavoriteCustomersAnalyticsModel.fromJson(
-      response as Map<String, dynamic>,
+    final response = await get('transaction/favorites/');
+
+    // Convert list response to analytics model format
+    final favoriteCustomers = (response as List<dynamic>).map((item) {
+      final json = item as Map<String, dynamic>;
+      // Create analytics FavoriteCustomerModel from transaction API data
+      // For businesses, favorites are customers who favorited them
+      return FavoriteCustomerModel(
+        relationshipId: json['favorite_id'] as int,
+        customerId: json['customer_id'] as int,
+        customerName: json['customer_name'] as String,
+        customerEmail: '', // Not available in current API
+        customerPhone: '', // Not available in current API
+        pendingDue: 0.0, // Not available in current API
+        favoritedAt: DateTime.parse(json['created_at'] as String),
+        totalTransactions: 0, // Not available in current API
+      );
+    }).toList();
+
+    return FavoriteCustomersAnalyticsModel(
+      favoriteCustomers: favoriteCustomers,
+      totalFavorites: favoriteCustomers.length,
     );
   }
 
   /// Get favorite businesses analytics data (for customers)
-  /// GET /api/analytics/favorite-businesses/
+  /// GET /api/transaction/favorites/
   Future<FavoriteBusinessesAnalyticsModel> getFavoriteBusinesses() async {
-    final response = await get('analytics/favorite-businesses/');
-    return FavoriteBusinessesAnalyticsModel.fromJson(
-      response as Map<String, dynamic>,
+    final response = await get('transaction/favorites/');
+
+    // Convert list response to analytics model format
+    final favoriteBusinesses = (response as List<dynamic>).map((item) {
+      final json = item as Map<String, dynamic>;
+      // Create analytics FavoriteBusinessModel from transaction API data
+      return FavoriteBusinessModel(
+        relationshipId:
+            json['favorite_id'] as int, // Use favorite_id as relationship_id
+        businessId: json['business_id'] as int,
+        businessName: json['business_name'] as String,
+        businessEmail: '', // Not available
+        businessPhone: null, // Not available
+        pendingDue: 0.0, // Not available
+        favoritedAt: DateTime.parse(json['created_at'] as String),
+        totalTransactions: 0, // Not available
+      );
+    }).toList();
+
+    return FavoriteBusinessesAnalyticsModel(
+      favoriteBusinesses: favoriteBusinesses,
+      totalFavorites: favoriteBusinesses.length,
     );
   }
 
