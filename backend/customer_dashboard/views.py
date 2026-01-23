@@ -298,3 +298,69 @@ class MonthlyLimitView(APIView):
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+class FavoriteBusinessView(APIView):
+    """View for customers to add/remove businesses from favorites"""
+    permission_classes = [IsAuthenticated]
+    
+    def patch(self, request, business_id):
+        """Toggle favorite status for a business"""
+        try:
+            # Check if user is a customer
+            customer = request.user.customer_profile
+            
+            # Get the business relationship
+            relationship = CustomerBusinessRelationship.objects.get(
+                customer=customer,
+                business_id=business_id
+            )
+            
+            # Get the new favorite status from request data
+            is_favorite = request.data.get('is_favorite')
+            if is_favorite is None:
+                return Response({
+                    'status': 400,
+                    'message': 'is_favorite field is required',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Validate boolean value
+            if not isinstance(is_favorite, bool):
+                return Response({
+                    'status': 400,
+                    'message': 'is_favorite must be a boolean value',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Update the favorite status
+            relationship.is_favorite = is_favorite
+            relationship.save(update_fields=['is_favorite', 'updated_at'])
+            
+            return Response({
+                'status': 200,
+                'message': f'Business {"added to" if is_favorite else "removed from"} favorites successfully',
+                'data': {
+                    'business_id': business_id,
+                    'is_favorite': is_favorite
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except CustomerBusinessRelationship.DoesNotExist:
+            return Response({
+                'status': 404,
+                'message': 'Business relationship not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only customer users can manage favorites',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error updating favorite status: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

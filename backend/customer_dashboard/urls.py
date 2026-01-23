@@ -5,7 +5,10 @@ from .views import (
     RecentBusinessesView,
     MonthlySpendingOverviewView,
     MonthlyLimitView,
+    FavoriteBusinessView,
 )
+
+app_name = 'customer_dashboard'
 
 urlpatterns = [
     # Dashboard
@@ -22,4 +25,7 @@ urlpatterns = [
     
     # Monthly Limit - Customer only (GET to retrieve, POST to set)
     path('monthly-limit/', MonthlyLimitView.as_view(), name='monthly-limit'),
+    
+    # Favorite Business - Customer only (PATCH to toggle favorite status)
+    path('favorite-business/<int:business_id>/', FavoriteBusinessView.as_view(), name='favorite-business'),
 ]
