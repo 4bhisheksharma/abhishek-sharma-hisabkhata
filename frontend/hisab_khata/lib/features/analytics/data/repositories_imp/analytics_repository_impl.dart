@@ -38,4 +38,9 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   Future<TotalAmountAnalytics> getTotalAmount() async {
     return await _remoteDataSource.getTotalAmount();
   }
+
+  @override
+  Future<MonthlySpendingLimit> getMonthlySpendingLimit() async {
+    return await _remoteDataSource.getMonthlySpendingLimit();
+  }
 }

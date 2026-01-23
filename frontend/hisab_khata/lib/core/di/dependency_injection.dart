@@ -62,6 +62,11 @@ import '../../features/raise-ticket/domain/usecases/create_ticket_usecase.dart';
 import '../../features/raise-ticket/domain/usecases/get_my_tickets_usecase.dart';
 import '../../features/raise-ticket/domain/usecases/get_ticket_by_id_usecase.dart';
 import '../../features/raise-ticket/presentation/bloc/bloc.dart';
+import '../../features/analytics/data/datasources/analytics_remote_data_source.dart';
+import '../../features/analytics/data/repositories_imp/analytics_repository_impl.dart';
+import '../../features/analytics/domain/repositories/analytics_repository.dart';
+import '../../features/analytics/domain/usecases/analytics_usecases.dart';
+import '../../features/analytics/presentation/bloc/analytics_bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies
@@ -82,6 +87,7 @@ class DependencyInjection {
   late final NotificationRemoteDataSource _notificationRemoteDataSource;
   late final TransactionRemoteDataSource _transactionRemoteDataSource;
   late final TicketRemoteDataSource _ticketRemoteDataSource;
+  late final AnalyticsRemoteDataSource _analyticsRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
@@ -91,6 +97,7 @@ class DependencyInjection {
   late final NotificationRepository _notificationRepository;
   late final TransactionRepository _transactionRepository;
   late final TicketRepository _ticketRepository;
+  late final AnalyticsRepository _analyticsRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -142,6 +149,15 @@ class DependencyInjection {
   late final GetMyTicketsUseCase _getMyTicketsUseCase;
   late final GetTicketByIdUseCase _getTicketByIdUseCase;
 
+  // Use Cases - Analytics
+  late final GetPaidVsToPay _getPaidVsToPay;
+  late final GetMonthlyTransactionTrend _getMonthlyTransactionTrend;
+  late final GetFavoriteCustomers _getFavoriteCustomers;
+  late final GetFavoriteBusinesses _getFavoriteBusinesses;
+  late final GetTotalTransactions _getTotalTransactions;
+  late final GetTotalAmount _getTotalAmount;
+  late final GetMonthlySpendingLimit _getMonthlySpendingLimit;
+
   // BLoCs
   late final AuthBloc _authBloc;
   late final CustomerBloc _customerBloc;
@@ -149,6 +165,7 @@ class DependencyInjection {
   late final ConnectionRequestBloc _connectionRequestBloc;
   late final NotificationBloc _notificationBloc;
   late final TicketBloc _ticketBloc;
+  late final AnalyticsBloc _analyticsBloc;
 
   /// Initialize all dependencies
   void init() {
@@ -173,6 +190,7 @@ class DependencyInjection {
       client: _httpClient,
     );
     _ticketRemoteDataSource = TicketRemoteDataSourceImpl(client: _httpClient);
+    _analyticsRemoteDataSource = AnalyticsRemoteDataSource(client: _httpClient);
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -195,6 +213,9 @@ class DependencyInjection {
     );
     _ticketRepository = TicketRepositoryImpl(
       remoteDataSource: _ticketRemoteDataSource,
+    );
+    _analyticsRepository = AnalyticsRepositoryImpl(
+      remoteDataSource: _analyticsRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -272,6 +293,17 @@ class DependencyInjection {
     _getMyTicketsUseCase = GetMyTicketsUseCase(_ticketRepository);
     _getTicketByIdUseCase = GetTicketByIdUseCase(_ticketRepository);
 
+    // Use Cases - Analytics
+    _getPaidVsToPay = GetPaidVsToPay(_analyticsRepository);
+    _getMonthlyTransactionTrend = GetMonthlyTransactionTrend(
+      _analyticsRepository,
+    );
+    _getFavoriteCustomers = GetFavoriteCustomers(_analyticsRepository);
+    _getFavoriteBusinesses = GetFavoriteBusinesses(_analyticsRepository);
+    _getTotalTransactions = GetTotalTransactions(_analyticsRepository);
+    _getTotalAmount = GetTotalAmount(_analyticsRepository);
+    _getMonthlySpendingLimit = GetMonthlySpendingLimit(_analyticsRepository);
+
     // BLoCs
     _authBloc = AuthBloc(
       loginUseCase: _loginUseCase,
@@ -320,6 +352,15 @@ class DependencyInjection {
       getMyTicketsUseCase: _getMyTicketsUseCase,
       getTicketByIdUseCase: _getTicketByIdUseCase,
     );
+    _analyticsBloc = AnalyticsBloc(
+      getPaidVsToPay: _getPaidVsToPay,
+      getMonthlyTransactionTrend: _getMonthlyTransactionTrend,
+      getFavoriteCustomers: _getFavoriteCustomers,
+      getFavoriteBusinesses: _getFavoriteBusinesses,
+      getTotalTransactions: _getTotalTransactions,
+      getTotalAmount: _getTotalAmount,
+      getMonthlySpendingLimit: _getMonthlySpendingLimit,
+    );
   }
 
   /// Dispose resources
@@ -331,6 +372,7 @@ class DependencyInjection {
     _connectionRequestBloc.close();
     _notificationBloc.close();
     _ticketBloc.close();
+    _analyticsBloc.close();
   }
 
   // Getters
@@ -340,6 +382,7 @@ class DependencyInjection {
   ConnectionRequestBloc get connectionRequestBloc => _connectionRequestBloc;
   NotificationBloc get notificationBloc => _notificationBloc;
   TicketBloc get ticketBloc => _ticketBloc;
+  AnalyticsBloc get analyticsBloc => _analyticsBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
   BusinessRepository get businessRepository => _businessRepository;

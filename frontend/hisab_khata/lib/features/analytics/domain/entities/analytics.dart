@@ -162,3 +162,35 @@ class TotalAmountAnalytics extends Equatable {
   @override
   List<Object?> get props => [totalAmount, userType];
 }
+
+/// Entity representing monthly spending limit analytics for customers
+class MonthlySpendingLimit extends Equatable {
+  final double totalSpent;
+  final double? monthlyLimit;
+  final double? remainingBudget;
+  final bool isOverBudget;
+  final int businessCount;
+  final String month;
+  final int daysRemaining;
+
+  const MonthlySpendingLimit({
+    required this.totalSpent,
+    this.monthlyLimit,
+    this.remainingBudget,
+    required this.isOverBudget,
+    required this.businessCount,
+    required this.month,
+    required this.daysRemaining,
+  });
+
+  @override
+  List<Object?> get props => [
+    totalSpent,
+    monthlyLimit,
+    remainingBudget,
+    isOverBudget,
+    businessCount,
+    month,
+    daysRemaining,
+  ];
+}

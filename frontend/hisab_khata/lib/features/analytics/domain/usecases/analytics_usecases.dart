@@ -121,3 +121,22 @@ class GetTotalAmount extends Usecase<TotalAmountAnalytics, NoParams> {
     }
   }
 }
+
+/// Usecase for getting monthly spending limit analytics (customer only)
+class GetMonthlySpendingLimit extends Usecase<MonthlySpendingLimit, NoParams> {
+  final AnalyticsRepository repository;
+
+  GetMonthlySpendingLimit(this.repository);
+
+  @override
+  Future<Either<Failure, MonthlySpendingLimit>> call(NoParams params) async {
+    try {
+      final result = await repository.getMonthlySpendingLimit();
+      return Right(result);
+    } catch (e) {
+      return Left(
+        Failure('Failed to get monthly spending limit: ${e.toString()}'),
+      );
+    }
+  }
+}

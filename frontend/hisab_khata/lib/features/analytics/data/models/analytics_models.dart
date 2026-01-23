@@ -363,3 +363,60 @@ class TotalAmountAnalyticsModel extends TotalAmountAnalytics {
     );
   }
 }
+
+/// Model for monthly spending limit analytics response
+class MonthlySpendingLimitModel extends MonthlySpendingLimit {
+  const MonthlySpendingLimitModel({
+    required super.totalSpent,
+    super.monthlyLimit,
+    super.remainingBudget,
+    required super.isOverBudget,
+    required super.businessCount,
+    required super.month,
+    required super.daysRemaining,
+  });
+
+  factory MonthlySpendingLimitModel.fromJson(Map<String, dynamic> json) {
+    final data = json['data'] as Map<String, dynamic>;
+    return MonthlySpendingLimitModel(
+      totalSpent: double.parse(data['total_spent'].toString()),
+      monthlyLimit: data['monthly_limit'] != null
+          ? double.parse(data['monthly_limit'].toString())
+          : null,
+      remainingBudget: data['remaining_budget'] != null
+          ? double.parse(data['remaining_budget'].toString())
+          : null,
+      isOverBudget: data['is_over_budget'] as bool,
+      businessCount: data['business_count'] as int,
+      month: data['month'] as String,
+      daysRemaining: data['days_remaining'] as int,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'data': {
+        'total_spent': totalSpent,
+        'monthly_limit': monthlyLimit,
+        'remaining_budget': remainingBudget,
+        'is_over_budget': isOverBudget,
+        'business_count': businessCount,
+        'month': month,
+        'days_remaining': daysRemaining,
+      },
+    };
+  }
+
+  /// Convert entity to model
+  factory MonthlySpendingLimitModel.fromEntity(MonthlySpendingLimit entity) {
+    return MonthlySpendingLimitModel(
+      totalSpent: entity.totalSpent,
+      monthlyLimit: entity.monthlyLimit,
+      remainingBudget: entity.remainingBudget,
+      isOverBudget: entity.isOverBudget,
+      businessCount: entity.businessCount,
+      month: entity.month,
+      daysRemaining: entity.daysRemaining,
+    );
+  }
+}

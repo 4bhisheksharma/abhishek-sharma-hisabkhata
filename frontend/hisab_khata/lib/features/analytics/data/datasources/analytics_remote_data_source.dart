@@ -54,4 +54,11 @@ class AnalyticsRemoteDataSource extends BaseRemoteDataSource {
     final response = await get('analytics/total-amount/');
     return TotalAmountAnalyticsModel.fromJson(response as Map<String, dynamic>);
   }
+
+  /// Get monthly spending limit analytics data (for customers)
+  /// GET /api/analytics/monthly-spending-limit/
+  Future<MonthlySpendingLimitModel> getMonthlySpendingLimit() async {
+    final response = await get('analytics/monthly-spending-limit/');
+    return MonthlySpendingLimitModel.fromJson(response as Map<String, dynamic>);
+  }
 }

@@ -19,4 +19,7 @@ abstract class AnalyticsRepository {
 
   /// Get total amount analytics
   Future<TotalAmountAnalytics> getTotalAmount();
+
+  /// Get monthly spending limit analytics (for customers)
+  Future<MonthlySpendingLimit> getMonthlySpendingLimit();
 }
