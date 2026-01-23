@@ -278,3 +278,125 @@ class FavoriteBusinessesView(APIView):
                 'message': f'Error retrieving favorite businesses: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class TotalTransactionsView(APIView):
+    """API view for total transaction count analytics"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Returns the total count of all transactions for the authenticated user.
+        For businesses: count of all transactions with their customers
+        For customers: count of all transactions with their businesses
+        """
+        user = request.user
+
+        # Check if user is a business
+        try:
+            business = user.business_profile
+            # Get all relationships for this business
+            relationships = CustomerBusinessRelationship.objects.filter(business=business)
+
+            # Count all transactions for this business
+            total_transactions = Transaction.objects.filter(
+                relationship__in=relationships
+            ).count()
+
+            user_type = 'business'
+            message = f'You have {total_transactions} transactions total'
+
+        except AttributeError:
+            # User is not a business, check if customer
+            try:
+                customer = user.customer_profile
+                # Get all relationships for this customer
+                relationships = CustomerBusinessRelationship.objects.filter(customer=customer)
+
+                # Count all transactions for this customer
+                total_transactions = Transaction.objects.filter(
+                    relationship__in=relationships
+                ).count()
+
+                user_type = 'customer'
+                message = f'You have {total_transactions} transactions total'
+
+            except AttributeError:
+                return Response({
+                    'status': 403,
+                    'message': 'User must be either a business or customer',
+                    'data': None
+                }, status=status.HTTP_403_FORBIDDEN)
+
+        return Response({
+            'status': 200,
+            'message': message,
+            'data': {
+                'total_transactions': total_transactions,
+                'user_type': user_type
+            }
+        }, status=status.HTTP_200_OK)
+
+
+class TotalAmountView(APIView):
+    """API view for total transaction amount analytics"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Returns the total sum of transaction amounts for the authenticated user.
+        For businesses: Total revenue (sum of amounts received)
+        For customers: Total spent (absolute value of amounts paid)
+        """
+        user = request.user
+
+        # Check if user is a business
+        try:
+            business = user.business_profile
+            # Get all relationships for this business
+            relationships = CustomerBusinessRelationship.objects.filter(business=business)
+
+            # Calculate total revenue (sum of all positive amounts received)
+            total_revenue = Transaction.objects.filter(
+                relationship__in=relationships,
+                amount__gt=0
+            ).aggregate(total=Sum('amount'))['total'] or 0
+
+            user_type = 'business'
+            message = f'Total revenue: Rs. {total_revenue:.2f}'
+            total_amount = float(total_revenue)
+
+        except AttributeError:
+            # User is not a business, check if customer
+            try:
+                customer = user.customer_profile
+                # Get all relationships for this customer
+                relationships = CustomerBusinessRelationship.objects.filter(customer=customer)
+
+                # Calculate total spent (absolute value of negative amounts paid)
+                total_spent_negative = Transaction.objects.filter(
+                    relationship__in=relationships,
+                    amount__lt=0
+                ).aggregate(total=Sum('amount'))['total'] or 0
+
+                total_spent = abs(total_spent_negative)
+
+                user_type = 'customer'
+                message = f'Total spent: Rs. {total_spent:.2f}'
+                total_amount = float(total_spent)
+
+            except AttributeError:
+                return Response({
+                    'status': 403,
+                    'message': 'User must be either a business or customer',
+                    'data': None
+                }, status=status.HTTP_403_FORBIDDEN)
+
+        return Response({
+            'status': 200,
+            'message': message,
+            'data': {
+                'total_amount': total_amount,
+                'user_type': user_type
+            }
+        }, status=status.HTTP_200_OK)
