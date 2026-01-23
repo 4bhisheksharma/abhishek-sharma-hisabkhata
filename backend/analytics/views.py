@@ -392,6 +392,60 @@ class TotalAmountView(APIView):
                     'data': None
                 }, status=status.HTTP_403_FORBIDDEN)
 
+class TotalAmountView(APIView):
+    """API view for total transaction amount analytics"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Returns the total sum of transaction amounts for the authenticated user.
+        For businesses: Total revenue (sum of amounts received)
+        For customers: Total spent (absolute value of amounts paid)
+        """
+        user = request.user
+
+        # Check if user is a business
+        try:
+            business = user.business_profile
+            # Get all relationships for this business
+            relationships = CustomerBusinessRelationship.objects.filter(business=business)
+
+            # Calculate total revenue (sum of all positive amounts received)
+            total_revenue = Transaction.objects.filter(
+                relationship__in=relationships,
+                amount__gt=0
+            ).aggregate(total=Sum('amount'))['total'] or 0
+
+            user_type = 'business'
+            message = f'Total revenue: Rs. {total_revenue:.2f}'
+            total_amount = float(total_revenue)
+
+        except AttributeError:
+            # User is not a business, check if customer
+            try:
+                customer = user.customer_profile
+                # Get all relationships for this customer
+                relationships = CustomerBusinessRelationship.objects.filter(customer=customer)
+
+                # Calculate total spent (absolute value of negative amounts paid)
+                total_spent_negative = Transaction.objects.filter(
+                    relationship__in=relationships,
+                    amount__lt=0
+                ).aggregate(total=Sum('amount'))['total'] or 0
+
+                total_spent = abs(total_spent_negative)
+
+                user_type = 'customer'
+                message = f'Total spent: Rs. {total_spent:.2f}'
+                total_amount = float(total_spent)
+
+            except AttributeError:
+                return Response({
+                    'status': 403,
+                    'message': 'User must be either a business or customer',
+                    'data': None
+                }, status=status.HTTP_403_FORBIDDEN)
+
         return Response({
             'status': 200,
             'message': message,
@@ -400,3 +454,40 @@ class TotalAmountView(APIView):
                 'user_type': user_type
             }
         }, status=status.HTTP_200_OK)
+
+
+class MonthlySpendingLimitView(APIView):
+    """API view for customer's monthly spending vs limit analytics"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """
+        Returns customer's monthly spending data compared to their set limit.
+        Shows total spent this month, monthly limit, remaining budget, and budget status.
+        Only accessible by customer users.
+        """
+        try:
+            # Get customer profile
+            customer = request.user.customer_profile
+
+            # Use the manager method to get spending overview
+            spending_data = Customer.objects.get_monthly_spending_overview(customer)
+
+            return Response({
+                'status': 200,
+                'message': 'Monthly spending limit data retrieved successfully',
+                'data': spending_data
+            }, status=status.HTTP_200_OK)
+
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only customer users can access monthly spending limit data',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving monthly spending data: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

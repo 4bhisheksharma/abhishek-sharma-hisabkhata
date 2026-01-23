@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PaidVsToPayView, MonthlyTransactionTrendView, FavoriteCustomersView, FavoriteBusinessesView, TotalTransactionsView, TotalAmountView
+from .views import PaidVsToPayView, MonthlyTransactionTrendView, FavoriteCustomersView, FavoriteBusinessesView, TotalTransactionsView, TotalAmountView, MonthlySpendingLimitView
 
 app_name = 'analytics'
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('favorite-businesses/', FavoriteBusinessesView.as_view(), name='favorite_businesses'),
     path('total-transactions/', TotalTransactionsView.as_view(), name='total_transactions'),
     path('total-amount/', TotalAmountView.as_view(), name='total_amount'),
+    path('monthly-spending-limit/', MonthlySpendingLimitView.as_view(), name='monthly_spending_limit'),
 ]
