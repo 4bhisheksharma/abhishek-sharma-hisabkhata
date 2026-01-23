@@ -166,3 +166,115 @@ class MonthlyTransactionTrendView(APIView):
                 'message': f'Error retrieving transaction trend: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class FavoriteCustomersView(APIView):
+    """API view for businesses to see customers who have favorited them"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """
+        Returns list of customers who have added the business to their favorites.
+        Only accessible by business users.
+        """
+        try:
+            # Check if user is a business
+            business = request.user.business_profile
+            
+            # Get all relationships where is_favorite=True for this business
+            favorite_relationships = CustomerBusinessRelationship.objects.filter(
+                business=business,
+                is_favorite=True
+            ).select_related('customer__user')
+            
+            # Format the data
+            favorite_customers = []
+            for relationship in favorite_relationships:
+                favorite_customers.append({
+                    'relationship_id': relationship.relationship_id,
+                    'customer_id': relationship.customer.customer_id,
+                    'customer_name': relationship.customer.user.full_name,
+                    'customer_email': relationship.customer.user.email,
+                    'customer_phone': relationship.customer.user.phone_number,
+                    'pending_due': float(relationship.pending_due),
+                    'favorited_at': relationship.updated_at.isoformat(),
+                    'total_transactions': relationship.transactions.count()
+                })
+            
+            return Response({
+                'status': 200,
+                'message': 'Favorite customers retrieved successfully',
+                'data': {
+                    'favorite_customers': favorite_customers,
+                    'total_favorites': len(favorite_customers)
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only business users can access favorite customers',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving favorite customers: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class FavoriteBusinessesView(APIView):
+    """API view for customers to see businesses they have favorited"""
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        """
+        Returns list of businesses that the customer has added to favorites.
+        Only accessible by customer users.
+        """
+        try:
+            # Check if user is a customer
+            customer = request.user.customer_profile
+            
+            # Get all relationships where is_favorite=True for this customer
+            favorite_relationships = CustomerBusinessRelationship.objects.filter(
+                customer=customer,
+                is_favorite=True
+            ).select_related('business__user')
+            
+            # Format the data
+            favorite_businesses = []
+            for relationship in favorite_relationships:
+                favorite_businesses.append({
+                    'relationship_id': relationship.relationship_id,
+                    'business_id': relationship.business.business_id,
+                    'business_name': relationship.business.business_name,
+                    'business_email': relationship.business.user.email,
+                    'business_phone': relationship.business.user.phone_number,
+                    'pending_due': float(relationship.pending_due),
+                    'favorited_at': relationship.updated_at.isoformat(),
+                    'total_transactions': relationship.transactions.count()
+                })
+            
+            return Response({
+                'status': 200,
+                'message': 'Favorite businesses retrieved successfully',
+                'data': {
+                    'favorite_businesses': favorite_businesses,
+                    'total_favorites': len(favorite_businesses)
+                }
+            }, status=status.HTTP_200_OK)
+            
+        except AttributeError:
+            return Response({
+                'status': 403,
+                'message': 'Only customer users can access favorite businesses',
+                'data': None
+            }, status=status.HTTP_403_FORBIDDEN)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving favorite businesses: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

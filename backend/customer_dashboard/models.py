@@ -109,6 +109,10 @@ class CustomerBusinessRelationship(models.Model):
         default=0.00,
         help_text="Positive means customer owes business, negative means business owes customer"
     )
+    is_favorite = models.BooleanField(
+        default=False,
+        help_text="Whether the customer has marked this business as favorite"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
