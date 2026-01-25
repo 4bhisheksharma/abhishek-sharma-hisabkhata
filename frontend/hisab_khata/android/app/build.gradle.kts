@@ -43,6 +43,10 @@ android {
     }
 }
 
+configurations.all {
+    exclude(group = "com.google.firebase", module = "firebase-iid")
+}
+
 flutter {
     source = "../.."
 }

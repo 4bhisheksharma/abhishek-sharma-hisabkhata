@@ -29,6 +29,8 @@ dependencies:
   firebase_messaging: ^16.1.0
   flutter_local_notifications: ^18.0.1
   fl_chart: ^0.68.0
+  google_ml_kit: ^0.20.0
+  speech_to_text: ^7.3.0
 
   flutter_localizations:
     sdk: flutter
