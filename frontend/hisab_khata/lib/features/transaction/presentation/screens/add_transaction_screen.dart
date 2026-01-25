@@ -8,7 +8,9 @@ import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
 import '../../domain/entities/transaction.dart';
 import '../widgets/voice_transaction_dialog.dart';
+import '../widgets/image_transaction_dialog.dart';
 import '../../domain/services/voice_transaction_parser.dart';
+import '../../domain/services/image_transaction_parser.dart';
 
 /// Full-screen page for adding a transaction (for business users)
 class AddTransactionPage extends StatefulWidget {
@@ -117,6 +119,35 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
             ),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _openImageInput() async {
+    final result = await showDialog<ParsedImageTransaction>(
+      context: context,
+      builder: (context) => const ImageTransactionDialog(),
+    );
+
+    if (result != null) {
+      // Fill the form with image OCR data
+      setState(() {
+        _amountController.text = result.amount.toStringAsFixed(2);
+        _itemTitleController.text = result.description;
+      });
+
+      // Show confirmation with confidence
+      if (mounted) {
+        final confidencePercent = (result.confidence * 100).toStringAsFixed(0);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Image processed: Rs. ${result.amount.toStringAsFixed(2)} for ${result.description} ($confidencePercent% confidence)',
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 3),
           ),
         );
       }
@@ -408,9 +439,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                       Icons.camera_alt_outlined,
                       color: Colors.grey.shade600,
                     ),
-                    onPressed: () {
-                      // TODO: Camera functionality
-                    },
+                    onPressed: _openImageInput,
                   ),
                 ),
                 const SizedBox(width: 8),
