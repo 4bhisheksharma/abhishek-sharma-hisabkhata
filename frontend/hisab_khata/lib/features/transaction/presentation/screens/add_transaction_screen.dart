@@ -7,6 +7,8 @@ import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
 import '../../domain/entities/transaction.dart';
+import '../widgets/voice_transaction_dialog.dart';
+import '../../domain/services/voice_transaction_parser.dart';
 
 /// Full-screen page for adding a transaction (for business users)
 class AddTransactionPage extends StatefulWidget {
@@ -90,6 +92,34 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           description: description,
         ),
       );
+    }
+  }
+
+  Future<void> _openVoiceInput() async {
+    final result = await showDialog<ParsedTransaction>(
+      context: context,
+      builder: (context) => const VoiceTransactionDialog(),
+    );
+
+    if (result != null) {
+      // Fill the form with voice input data
+      setState(() {
+        _amountController.text = result.amount.toStringAsFixed(2);
+        _itemTitleController.text = result.description;
+      });
+
+      // Show confirmation
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Voice input added: Rs. ${result.amount.toStringAsFixed(2)} for ${result.description}',
+            ),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -393,9 +423,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                   ),
                   child: IconButton(
                     icon: Icon(Icons.mic_outlined, color: Colors.grey.shade600),
-                    onPressed: () {
-                      // TODO: Voice input
-                    },
+                    onPressed: _openVoiceInput,
                   ),
                 ),
                 const SizedBox(width: 16),

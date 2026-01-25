@@ -195,11 +195,11 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     Emitter<AnalyticsState> emit,
   ) async {
     emit(const AnalyticsLoading());
-    
+
     final result = await setMonthlyLimit.call(
       SetMonthlyLimitParams(monthlyLimit: event.monthlyLimit),
     );
-    
+
     await result.fold(
       (failure) async {
         emit(AnalyticsError(message: failure.failureMessage));
