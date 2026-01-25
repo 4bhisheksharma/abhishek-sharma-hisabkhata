@@ -99,4 +99,13 @@ class AnalyticsRemoteDataSource extends BaseRemoteDataSource {
     final response = await get('analytics/monthly-spending-limit/');
     return MonthlySpendingLimitModel.fromJson(response as Map<String, dynamic>);
   }
+
+  /// Set monthly spending limit (for customers)
+  /// POST /api/customer-dashboard/monthly-limit/
+  Future<void> setMonthlyLimit(double monthlyLimit) async {
+    await post(
+      'customer/monthly-limit/',
+      body: {'monthly_limit': monthlyLimit},
+    );
+  }
 }

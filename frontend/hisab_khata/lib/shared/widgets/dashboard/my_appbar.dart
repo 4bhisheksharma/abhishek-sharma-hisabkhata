@@ -273,7 +273,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             'रु ${toTake.toStringAsFixed(2)}',
                             style: Theme.of(context).textTheme.displaySmall
                                 ?.copyWith(
-                                  color: AppTheme.infoBlue,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimary,
                                   fontWeight: FontWeight.bold,
                                   height: 1.2,
                                 ),

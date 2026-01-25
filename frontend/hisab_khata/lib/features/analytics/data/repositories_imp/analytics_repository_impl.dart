@@ -43,4 +43,9 @@ class AnalyticsRepositoryImpl implements AnalyticsRepository {
   Future<MonthlySpendingLimit> getMonthlySpendingLimit() async {
     return await _remoteDataSource.getMonthlySpendingLimit();
   }
+
+  @override
+  Future<void> setMonthlyLimit(double monthlyLimit) async {
+    return await _remoteDataSource.setMonthlyLimit(monthlyLimit);
+  }
 }

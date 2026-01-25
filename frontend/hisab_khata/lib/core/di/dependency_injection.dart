@@ -157,6 +157,7 @@ class DependencyInjection {
   late final GetTotalTransactions _getTotalTransactions;
   late final GetTotalAmount _getTotalAmount;
   late final GetMonthlySpendingLimit _getMonthlySpendingLimit;
+  late final SetMonthlyLimit _setMonthlyLimit;
 
   // BLoCs
   late final AuthBloc _authBloc;
@@ -303,6 +304,7 @@ class DependencyInjection {
     _getTotalTransactions = GetTotalTransactions(_analyticsRepository);
     _getTotalAmount = GetTotalAmount(_analyticsRepository);
     _getMonthlySpendingLimit = GetMonthlySpendingLimit(_analyticsRepository);
+    _setMonthlyLimit = SetMonthlyLimit(_analyticsRepository);
 
     // BLoCs
     _authBloc = AuthBloc(
@@ -360,6 +362,7 @@ class DependencyInjection {
       getTotalTransactions: _getTotalTransactions,
       getTotalAmount: _getTotalAmount,
       getMonthlySpendingLimit: _getMonthlySpendingLimit,
+      setMonthlyLimit: _setMonthlyLimit,
     );
   }
 

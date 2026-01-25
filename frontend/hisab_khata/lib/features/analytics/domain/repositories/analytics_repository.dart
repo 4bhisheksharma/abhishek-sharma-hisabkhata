@@ -22,4 +22,7 @@ abstract class AnalyticsRepository {
 
   /// Get monthly spending limit analytics (for customers)
   Future<MonthlySpendingLimit> getMonthlySpendingLimit();
+
+  /// Set monthly spending limit (for customers)
+  Future<void> setMonthlyLimit(double monthlyLimit);
 }

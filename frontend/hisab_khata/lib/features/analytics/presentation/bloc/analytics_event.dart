@@ -41,3 +41,13 @@ final class GetTotalAmountEvent extends AnalyticsEvent {
 final class GetMonthlySpendingLimitEvent extends AnalyticsEvent {
   const GetMonthlySpendingLimitEvent();
 }
+
+/// Event to set monthly spending limit (customer only)
+final class SetMonthlyLimitEvent extends AnalyticsEvent {
+  final double monthlyLimit;
+
+  const SetMonthlyLimitEvent({required this.monthlyLimit});
+
+  @override
+  List<Object?> get props => [monthlyLimit];
+}

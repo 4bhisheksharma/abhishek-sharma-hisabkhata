@@ -12,6 +12,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
   final GetTotalTransactions getTotalTransactions;
   final GetTotalAmount getTotalAmount;
   final GetMonthlySpendingLimit getMonthlySpendingLimit;
+  final SetMonthlyLimit setMonthlyLimit;
 
   AnalyticsDataLoaded _currentData = const AnalyticsDataLoaded();
 
@@ -23,6 +24,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     required this.getTotalTransactions,
     required this.getTotalAmount,
     required this.getMonthlySpendingLimit,
+    required this.setMonthlyLimit,
   }) : super(const AnalyticsInitial()) {
     on<GetPaidVsToPayEvent>(_onGetPaidVsToPay);
     on<GetMonthlyTransactionTrendEvent>(_onGetMonthlyTransactionTrend);
@@ -31,6 +33,7 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
     on<GetTotalTransactionsEvent>(_onGetTotalTransactions);
     on<GetTotalAmountEvent>(_onGetTotalAmount);
     on<GetMonthlySpendingLimitEvent>(_onGetMonthlySpendingLimit);
+    on<SetMonthlyLimitEvent>(_onSetMonthlyLimit);
   }
 
   Future<void> _onGetPaidVsToPay(
@@ -183,6 +186,41 @@ class AnalyticsBloc extends Bloc<AnalyticsEvent, AnalyticsState> {
           spendingDaysRemaining: analytics.daysRemaining,
         );
         emit(_currentData);
+      },
+    );
+  }
+
+  Future<void> _onSetMonthlyLimit(
+    SetMonthlyLimitEvent event,
+    Emitter<AnalyticsState> emit,
+  ) async {
+    emit(const AnalyticsLoading());
+    
+    final result = await setMonthlyLimit.call(
+      SetMonthlyLimitParams(monthlyLimit: event.monthlyLimit),
+    );
+    
+    await result.fold(
+      (failure) async {
+        emit(AnalyticsError(message: failure.failureMessage));
+      },
+      (_) async {
+        // Reload monthly spending limit after setting
+        final limitResult = await getMonthlySpendingLimit.call(NoParams());
+        limitResult.fold(
+          (failure) => emit(AnalyticsError(message: failure.failureMessage)),
+          (analytics) {
+            _currentData = _currentData.copyWith(
+              monthlySpent: analytics.totalSpent,
+              monthlyLimit: analytics.monthlyLimit,
+              remainingBudget: analytics.remainingBudget,
+              isOverBudget: analytics.isOverBudget,
+              spendingMonth: analytics.month,
+              spendingDaysRemaining: analytics.daysRemaining,
+            );
+            emit(_currentData);
+          },
+        );
       },
     );
   }

@@ -140,3 +140,29 @@ class GetMonthlySpendingLimit extends Usecase<MonthlySpendingLimit, NoParams> {
     }
   }
 }
+
+/// Parameters for SetMonthlyLimit usecase
+class SetMonthlyLimitParams {
+  final double monthlyLimit;
+
+  SetMonthlyLimitParams({required this.monthlyLimit});
+}
+
+/// Usecase for setting monthly spending limit (customer only)
+class SetMonthlyLimit extends Usecase<void, SetMonthlyLimitParams> {
+  final AnalyticsRepository repository;
+
+  SetMonthlyLimit(this.repository);
+
+  @override
+  Future<Either<Failure, void>> call(SetMonthlyLimitParams params) async {
+    try {
+      await repository.setMonthlyLimit(params.monthlyLimit);
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        Failure('Failed to set monthly spending limit: ${e.toString()}'),
+      );
+    }
+  }
+}

@@ -44,32 +44,42 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
         },
         child: BlocBuilder<AnalyticsBloc, AnalyticsState>(
           builder: (context, state) {
-            return SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Overview Stats
-                  _buildOverviewStats(state),
-                  const SizedBox(height: 24),
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final screenWidth = constraints.maxWidth;
+                final horizontalPadding = screenWidth < 600 ? 12.0 : 16.0;
 
-                  // Paid vs To Pay Bar Chart
-                  _buildPaidVsToPayChart(state),
-                  const SizedBox(height: 24),
+                return SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: 16,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Overview Stats
+                      _buildOverviewStats(state),
+                      const SizedBox(height: 24),
 
-                  // Monthly Spending Progress
-                  _buildMonthlySpendingProgress(state),
-                  const SizedBox(height: 24),
+                      // Paid vs To Pay Bar Chart
+                      _buildPaidVsToPayChart(state),
+                      const SizedBox(height: 24),
 
-                  // Monthly Transaction Trend
-                  _buildMonthlyTrendChart(state),
-                  const SizedBox(height: 24),
+                      // Monthly Spending Progress
+                      _buildMonthlySpendingProgress(state),
+                      const SizedBox(height: 24),
 
-                  // Favorite Businesses
-                  _buildFavoriteBusinesses(state),
-                ],
-              ),
+                      // Monthly Transaction Trend
+                      _buildMonthlyTrendChart(state),
+                      const SizedBox(height: 24),
+
+                      // Favorite Businesses
+                      _buildFavoriteBusinesses(state),
+                    ],
+                  ),
+                );
+              },
             );
           },
         ),
@@ -82,38 +92,62 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
       final totalTransactions = state.totalTransactions ?? 0;
       final totalAmount = state.totalAmount ?? 0.0;
 
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Overview',
-            style: Theme.of(
-              context,
-            ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
-          Row(
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          final isSmallScreen = constraints.maxWidth < 400;
+
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: AnalyticsStatCard(
-                  title: 'Total Transactions',
-                  value: '$totalTransactions',
-                  icon: Icons.receipt_long_rounded,
-                  iconColor: AppTheme.primaryBlue,
-                ),
+              Text(
+                'Overview',
+                style: Theme.of(
+                  context,
+                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: AnalyticsStatCard(
-                  title: 'Total Spent',
-                  value: 'Rs. ${totalAmount.toStringAsFixed(0)}',
-                  icon: Icons.account_balance_wallet_rounded,
-                  iconColor: Colors.orange,
-                ),
-              ),
+              const SizedBox(height: 12),
+              isSmallScreen
+                  ? Column(
+                      children: [
+                        AnalyticsStatCard(
+                          title: 'Total Transactions',
+                          value: '$totalTransactions',
+                          icon: Icons.receipt_long_rounded,
+                          iconColor: AppTheme.primaryBlue,
+                        ),
+                        const SizedBox(height: 12),
+                        AnalyticsStatCard(
+                          title: 'Total Spent',
+                          value: 'Rs. ${totalAmount.toStringAsFixed(0)}',
+                          icon: Icons.account_balance_wallet_rounded,
+                          iconColor: Colors.orange,
+                        ),
+                      ],
+                    )
+                  : Row(
+                      children: [
+                        Expanded(
+                          child: AnalyticsStatCard(
+                            title: 'Total Transactions',
+                            value: '$totalTransactions',
+                            icon: Icons.receipt_long_rounded,
+                            iconColor: AppTheme.primaryBlue,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: AnalyticsStatCard(
+                            title: 'Total Spent',
+                            value: 'Rs. ${totalAmount.toStringAsFixed(0)}',
+                            icon: Icons.account_balance_wallet_rounded,
+                            iconColor: Colors.orange,
+                          ),
+                        ),
+                      ],
+                    ),
             ],
-          ),
-        ],
+          );
+        },
       );
     }
 
