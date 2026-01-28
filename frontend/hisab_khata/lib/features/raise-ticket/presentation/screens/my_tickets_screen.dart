@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/bloc/bloc.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/create_ticket_screen.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/ticket_detail_screen.dart';
@@ -69,7 +70,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Support Tickets'),
+        title: Text(AppLocalizations.of(context)!.mySupportTickets),
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
       ),

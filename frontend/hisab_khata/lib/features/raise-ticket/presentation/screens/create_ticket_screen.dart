@@ -108,8 +108,8 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   TextFormField(
                     controller: _subjectController,
                     decoration: InputDecoration(
-                      labelText: 'Subject',
-                      hintText: 'Brief description of your issue',
+                      labelText: AppLocalizations.of(context)!.subject,
+                      hintText: AppLocalizations.of(context)!.subjectHint,
                       prefixIcon: const Icon(Icons.subject),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -117,10 +117,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a subject';
+                        return AppLocalizations.of(context)!.pleaseEnterSubject;
                       }
                       if (value.trim().length < 5) {
-                        return 'Subject must be at least 5 characters';
+                        return AppLocalizations.of(context)!.subjectMinLength;
                       }
                       return null;
                     },
@@ -132,7 +132,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   DropdownButtonFormField<String>(
                     value: _selectedCategory,
                     decoration: InputDecoration(
-                      labelText: 'Category',
+                      labelText: AppLocalizations.of(context)!.category,
                       prefixIcon: const Icon(Icons.category),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -158,7 +158,7 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   DropdownButtonFormField<String>(
                     value: _selectedPriority,
                     decoration: InputDecoration(
-                      labelText: 'Priority',
+                      labelText: AppLocalizations.of(context)!.priority,
                       prefixIcon: const Icon(Icons.priority_high),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -184,8 +184,10 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                   TextFormField(
                     controller: _descriptionController,
                     decoration: InputDecoration(
-                      labelText: 'Description',
-                      hintText: 'Provide detailed information about your issue',
+                      labelText: AppLocalizations.of(context)!.description,
+                      hintText: AppLocalizations.of(
+                        context,
+                      )!.ticketDescriptionHint,
                       prefixIcon: const Icon(Icons.description),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -195,10 +197,14 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
                     maxLines: 8,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter a description';
+                        return AppLocalizations.of(
+                          context,
+                        )!.pleaseEnterDescription;
                       }
                       if (value.trim().length < 20) {
-                        return 'Description must be at least 20 characters';
+                        return AppLocalizations.of(
+                          context,
+                        )!.descriptionMinLength;
                       }
                       return null;
                     },

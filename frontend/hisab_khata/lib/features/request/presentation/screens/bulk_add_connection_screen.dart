@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/storage/storage_service.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/utils/image_utils.dart';
@@ -102,7 +103,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Bulk Request Results'),
+        title: Text(AppLocalizations.of(context)!.bulkRequestResults),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -115,7 +116,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
               const SizedBox(height: 16),
               if (response.successful.isNotEmpty) ...[
                 Text(
-                  '✓ Successful (${response.successful.length}):',
+                  '✓ ${AppLocalizations.of(context)!.successful} (${response.successful.length}):',
                   style: const TextStyle(
                     color: Colors.green,
                     fontWeight: FontWeight.bold,
@@ -135,7 +136,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
               ],
               if (response.skipped.isNotEmpty) ...[
                 Text(
-                  '⊘ Skipped (${response.skipped.length}):',
+                  '⊘ ${AppLocalizations.of(context)!.skipped} (${response.skipped.length}):',
                   style: const TextStyle(
                     color: Colors.orange,
                     fontWeight: FontWeight.bold,
@@ -172,7 +173,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
               ],
               if (response.failed.isNotEmpty) ...[
                 Text(
-                  '✗ Failed (${response.failed.length}):',
+                  '✗ ${AppLocalizations.of(context)!.failed} (${response.failed.length}):',
                   style: const TextStyle(
                     color: Colors.red,
                     fontWeight: FontWeight.bold,
@@ -232,7 +233,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                 });
               }
             },
-            child: const Text('OK'),
+            child: Text(AppLocalizations.of(context)!.ok),
           ),
         ],
       ),

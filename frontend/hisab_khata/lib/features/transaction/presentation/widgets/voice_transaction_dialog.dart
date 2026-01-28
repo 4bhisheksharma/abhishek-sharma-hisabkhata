@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../domain/services/voice_transaction_parser.dart';
 
@@ -400,7 +401,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                     child: OutlinedButton.icon(
                       onPressed: _stopListening,
                       icon: const Icon(Icons.stop),
-                      label: const Text('Stop'),
+                      label: Text(AppLocalizations.of(context)!.stop),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.red,
                         side: const BorderSide(color: Colors.red),
@@ -421,7 +422,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Try Again'),
+                      child: Text(AppLocalizations.of(context)!.tryAgain),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -436,7 +437,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Confirm'),
+                      child: Text(AppLocalizations.of(context)!.confirm),
                     ),
                   ),
                 ] else if (_transcribedText.isNotEmpty)
@@ -451,7 +452,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text('Try Again'),
+                      child: Text(AppLocalizations.of(context)!.tryAgain),
                     ),
                   ),
               ],

@@ -140,7 +140,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                 Navigator.pushNamed(context, AppRoutes.addConnection);
               },
               icon: const Icon(Icons.person_add_outlined),
-              label: const Text('Add Connection'),
+              label: Text(AppLocalizations.of(context)!.addConnection),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
                 foregroundColor: Colors.white,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/set_monthly_limit_dialog.dart';
 
 class MonthlySpendingProgressWidget extends StatelessWidget {
@@ -368,10 +369,12 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                               size: 20,
                             ),
                             const SizedBox(width: 8),
-                            const Expanded(
+                            Expanded(
                               child: Text(
-                                'Set a monthly limit to track your budget',
-                                style: TextStyle(
+                                AppLocalizations.of(
+                                  context,
+                                )!.setMonthlyLimitMessage,
+                                style: const TextStyle(
                                   fontSize: 14,
                                   color: AppTheme.primaryBlue,
                                 ),
@@ -396,7 +399,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                                   vertical: 6,
                                 ),
                               ),
-                              child: const Text('Set Limit'),
+                              child: Text(
+                                AppLocalizations.of(context)!.setLimit,
+                              ),
                             ),
                           ],
                         ),

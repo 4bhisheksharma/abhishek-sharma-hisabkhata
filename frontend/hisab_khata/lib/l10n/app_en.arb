@@ -117,7 +117,7 @@
   "ownerFullName": "Owner Full Name",
   "note": "Note",
   "amountHint": "0.00",
-  "descriptionHint": "e.g., Rice, Dal, Groceries",
+  "itemDescriptionHint": "e.g., Rice, Dal, Groceries",
   "messageHint": "Enter Message",
   "transactionNoteHint": "e.g., Payment for January",
   "fullNameHint": "Enter your full name",
@@ -160,5 +160,52 @@
   "medium": "Medium",
   "high": "High",
   "urgent": "Urgent",
-  "byaparAI": "Byapar d-AI"
+  "byaparAI": "Byapar d-AI",
+  "addConnection": "Add Connection",
+  "stop": "Stop",
+  "tryAgain": "Try Again",
+  "confirm": "Confirm",
+  "newImage": "New Image",
+  "deleteConnection": "Delete Connection?",
+  "deleteConnectionMessage": "Are you sure you want to delete your connection with {name}?",
+  "pendingDue": "Pending due: Rs. {amount}",
+  "settleBeforeDelete": "Please settle all pending dues before deleting this connection.",
+  "noPendingDues": "No pending dues",
+  "bulkRequestResults": "Bulk Request Results",
+  "successful": "Successful",
+  "skipped": "Skipped",
+  "failed": "Failed",
+  "ok": "OK",
+  "clearAll": "Clear All",
+  "ticketDetails": "Ticket Details",
+  "mySupportTickets": "My Support Tickets",
+  "setLimit": "Set Limit",
+  "removeLimit": "Remove Limit",
+  "noTransactionData": "No transaction data available",
+  "setMonthlyLimitMessage": "Set a monthly limit to track your budget",
+  "subject": "Subject",
+  "subjectHint": "Brief description of your issue",
+  "category": "Category",
+  "priority": "Priority",
+  "description": "Description",
+  "ticketDescriptionHint": "Provide detailed information about your issue",
+  "pleaseEnterSubject": "Please enter a subject",
+  "subjectMinLength": "Subject must be at least 5 characters",
+  "pleaseEnterDescription": "Please enter a description",
+  "descriptionMinLength": "Description must be at least 20 characters",
+  "typeMessage": "Type a message...",
+  "@deleteConnectionMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@pendingDue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

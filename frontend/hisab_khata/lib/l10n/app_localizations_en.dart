@@ -363,7 +363,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get amountHint => '0.00';
 
   @override
-  String get descriptionHint => 'e.g., Rice, Dal, Groceries';
+  String get itemDescriptionHint => 'e.g., Rice, Dal, Groceries';
 
   @override
   String get messageHint => 'Enter Message';
@@ -493,4 +493,107 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get byaparAI => 'Byapar d-AI';
+
+  @override
+  String get addConnection => 'Add Connection';
+
+  @override
+  String get stop => 'Stop';
+
+  @override
+  String get tryAgain => 'Try Again';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get newImage => 'New Image';
+
+  @override
+  String get deleteConnection => 'Delete Connection?';
+
+  @override
+  String deleteConnectionMessage(String name) {
+    return 'Are you sure you want to delete your connection with $name?';
+  }
+
+  @override
+  String pendingDue(String amount) {
+    return 'Pending due: Rs. $amount';
+  }
+
+  @override
+  String get settleBeforeDelete => 'Please settle all pending dues before deleting this connection.';
+
+  @override
+  String get noPendingDues => 'No pending dues';
+
+  @override
+  String get bulkRequestResults => 'Bulk Request Results';
+
+  @override
+  String get successful => 'Successful';
+
+  @override
+  String get skipped => 'Skipped';
+
+  @override
+  String get failed => 'Failed';
+
+  @override
+  String get ok => 'OK';
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get ticketDetails => 'Ticket Details';
+
+  @override
+  String get mySupportTickets => 'My Support Tickets';
+
+  @override
+  String get setLimit => 'Set Limit';
+
+  @override
+  String get removeLimit => 'Remove Limit';
+
+  @override
+  String get noTransactionData => 'No transaction data available';
+
+  @override
+  String get setMonthlyLimitMessage => 'Set a monthly limit to track your budget';
+
+  @override
+  String get subject => 'Subject';
+
+  @override
+  String get subjectHint => 'Brief description of your issue';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get priority => 'Priority';
+
+  @override
+  String get description => 'Description';
+
+  @override
+  String get ticketDescriptionHint => 'Provide detailed information about your issue';
+
+  @override
+  String get pleaseEnterSubject => 'Please enter a subject';
+
+  @override
+  String get subjectMinLength => 'Subject must be at least 5 characters';
+
+  @override
+  String get pleaseEnterDescription => 'Please enter a description';
+
+  @override
+  String get descriptionMinLength => 'Description must be at least 20 characters';
+
+  @override
+  String get typeMessage => 'Type a message...';
 }

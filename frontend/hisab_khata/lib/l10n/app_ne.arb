@@ -117,7 +117,7 @@
   "ownerFullName": "मालिकको पूरा नाम",
   "note": "नोट",
   "amountHint": "0.00",
-  "descriptionHint": "उदाहरणका लागि, चामल, दाल, किराना सामान",
+  "itemDescriptionHint": "उदाहरणका लागि, चामल, दाल, किराना सामान",
   "messageHint": "सन्देश प्रविष्ट गर्नुहोस्",
   "transactionNoteHint": "उदाहरणका लागि, जनवरीको भुक्तानी",
   "fullNameHint": "आफ्नो पूरा नाम प्रविष्ट गर्नुहोस्",
@@ -160,5 +160,52 @@
   "medium": "मध्यम",
   "high": "उच्च",
   "urgent": "तत्काल",
-  "byaparAI": "व्यापार द-एआई"
+  "byaparAI": "व्यापार द-एआई",
+  "addConnection": "जडान थप्नुहोस्",
+  "stop": "रोक्नुहोस्",
+  "tryAgain": "पुन: प्रयास गर्नुहोस्",
+  "confirm": "पुष्टि गर्नुहोस्",
+  "newImage": "नयाँ तस्विर",
+  "deleteConnection": "जडान मेटाउने?",
+  "deleteConnectionMessage": "के तपाई {name} सँगको आफ्नो जडान मेटाउन निश्चित हुनुहुन्छ?",
+  "pendingDue": "बाँकी रकम: रु. {amount}",
+  "settleBeforeDelete": "कृपया यो जडान मेटाउनु अघि सबै बाँकी रकम तिर्नुहोस्।",
+  "noPendingDues": "कुनै बाँकी रकम छैन",
+  "bulkRequestResults": "बल्क अनुरोध परिणामहरू",
+  "successful": "सफल",
+  "skipped": "छोडिएको",
+  "failed": "असफल",
+  "ok": "ठीक छ",
+  "clearAll": "सबै खाली गर्नुहोस्",
+  "ticketDetails": "टिकट विवरण",
+  "mySupportTickets": "मेरो सहायता टिकटहरू",
+  "setLimit": "सीमा सेट गर्नुहोस्",
+  "removeLimit": "सीमा हटाउनुहोस्",
+  "noTransactionData": "कुनै लेनदेन डाटा उपलब्ध छैन",
+  "setMonthlyLimitMessage": "आफ्नो बजेट ट्र्याक गर्न मासिक सीमा सेट गर्नुहोस्",
+  "subject": "विषय",
+  "subjectHint": "तपाईको समस्याको छोटो विवरण",
+  "category": "श्रेणी",
+  "priority": "प्राथमिकता",
+  "description": "विवरण",
+  "ticketDescriptionHint": "आफ्नो समस्याको बारेमा विस्तृत जानकारी प्रदान गर्नुहोस्",
+  "pleaseEnterSubject": "कृपया विषय प्रविष्ट गर्नुहोस्",
+  "subjectMinLength": "विषय कम्तीमा ५ वर्णको हुनुपर्छ",
+  "pleaseEnterDescription": "कृपया विवरण प्रविष्ट गर्नुहोस्",
+  "descriptionMinLength": "विवरण कम्तीमा २० वर्णको हुनुपर्छ",
+  "typeMessage": "सन्देश टाइप गर्नुहोस्...",
+  "@deleteConnectionMessage": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@pendingDue": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  }
 }

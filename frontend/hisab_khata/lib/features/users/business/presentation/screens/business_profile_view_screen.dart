@@ -180,6 +180,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             debugPrint("Switch to Hybrid tapped");
                           },
                         ),
+                        const SizedBox(height: 12),
                         ProfileMenuItem(
                           icon: Icons.smart_toy,
                           iconColor: const Color(0xFF6200EA),

@@ -195,7 +195,6 @@ class FCMService {
   // Show local notification
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
 
     print('📱 Showing local notification...');
     print('Notification exists: ${notification != null}');

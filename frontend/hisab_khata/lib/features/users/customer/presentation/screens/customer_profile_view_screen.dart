@@ -158,6 +158,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             debugPrint("Switch to Hybrid tapped");
                           },
                         ),
+                        const SizedBox(height: 12),
                         ProfileMenuItem(
                           icon: Icons.smart_toy,
                           iconColor: const Color(0xFF6200EA),

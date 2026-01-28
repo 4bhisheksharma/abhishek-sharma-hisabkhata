@@ -207,7 +207,7 @@ class _ChatbotScreenState extends State<ChatbotScreen> {
             child: TextField(
               controller: _controller,
               decoration: InputDecoration(
-                hintText: 'Type a message...',
+                hintText: AppLocalizations.of(context)!.typeMessage,
                 filled: true,
                 fillColor: Colors.grey[100],
                 border: OutlineInputBorder(

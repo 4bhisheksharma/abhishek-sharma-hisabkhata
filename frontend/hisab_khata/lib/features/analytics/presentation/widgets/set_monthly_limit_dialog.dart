@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_event.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_state.dart';
@@ -194,14 +195,16 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                                             ),
                                       ),
                                     )
-                                  : const Text('Set Limit'),
+                                  : Text(
+                                      AppLocalizations.of(context)!.setLimit,
+                                    ),
                             ),
                             const SizedBox(height: 8),
                             TextButton(
                               onPressed: _isLoading
                                   ? null
                                   : () => Navigator.of(context).pop(),
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context)!.cancel),
                             ),
                             if (hasCurrentLimit)
                               TextButton(
@@ -221,14 +224,16 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.red,
                                 ),
-                                child: const Text('Remove Limit'),
+                                child: Text(
+                                  AppLocalizations.of(context)!.removeLimit,
+                                ),
                               ),
                             const Spacer(),
                             TextButton(
                               onPressed: _isLoading
                                   ? null
                                   : () => Navigator.of(context).pop(),
-                              child: const Text('Cancel'),
+                              child: Text(AppLocalizations.of(context)!.cancel),
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
@@ -256,7 +261,9 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                                             ),
                                       ),
                                     )
-                                  : const Text('Set Limit'),
+                                  : Text(
+                                      AppLocalizations.of(context)!.setLimit,
+                                    ),
                             ),
                           ],
                         ),

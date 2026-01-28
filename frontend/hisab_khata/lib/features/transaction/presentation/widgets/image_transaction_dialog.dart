@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
 import '../../domain/services/ocr_service.dart';
 import '../../domain/services/image_transaction_parser.dart';
@@ -454,7 +455,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                       child: OutlinedButton.icon(
                         onPressed: _retryWithNewImage,
                         icon: const Icon(Icons.refresh, size: 18),
-                        label: const Text('New Image'),
+                        label: Text(AppLocalizations.of(context)!.newImage),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(
@@ -469,7 +470,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                         child: ElevatedButton.icon(
                           onPressed: _confirm,
                           icon: const Icon(Icons.check, size: 18),
-                          label: const Text('Confirm'),
+                          label: Text(AppLocalizations.of(context)!.confirm),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryBlue,
                             foregroundColor: Colors.white,

@@ -803,11 +803,11 @@ abstract class AppLocalizations {
   /// **'0.00'**
   String get amountHint;
 
-  /// No description provided for @descriptionHint.
+  /// No description provided for @itemDescriptionHint.
   ///
   /// In en, this message translates to:
   /// **'e.g., Rice, Dal, Groceries'**
-  String get descriptionHint;
+  String get itemDescriptionHint;
 
   /// No description provided for @messageHint.
   ///
@@ -1066,6 +1066,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Byapar d-AI'**
   String get byaparAI;
+
+  /// No description provided for @addConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Connection'**
+  String get addConnection;
+
+  /// No description provided for @stop.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stop;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @newImage.
+  ///
+  /// In en, this message translates to:
+  /// **'New Image'**
+  String get newImage;
+
+  /// No description provided for @deleteConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Connection?'**
+  String get deleteConnection;
+
+  /// No description provided for @deleteConnectionMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete your connection with {name}?'**
+  String deleteConnectionMessage(String name);
+
+  /// No description provided for @pendingDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending due: Rs. {amount}'**
+  String pendingDue(String amount);
+
+  /// No description provided for @settleBeforeDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Please settle all pending dues before deleting this connection.'**
+  String get settleBeforeDelete;
+
+  /// No description provided for @noPendingDues.
+  ///
+  /// In en, this message translates to:
+  /// **'No pending dues'**
+  String get noPendingDues;
+
+  /// No description provided for @bulkRequestResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Bulk Request Results'**
+  String get bulkRequestResults;
+
+  /// No description provided for @successful.
+  ///
+  /// In en, this message translates to:
+  /// **'Successful'**
+  String get successful;
+
+  /// No description provided for @skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'Skipped'**
+  String get skipped;
+
+  /// No description provided for @failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed'**
+  String get failed;
+
+  /// No description provided for @ok.
+  ///
+  /// In en, this message translates to:
+  /// **'OK'**
+  String get ok;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @ticketDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Ticket Details'**
+  String get ticketDetails;
+
+  /// No description provided for @mySupportTickets.
+  ///
+  /// In en, this message translates to:
+  /// **'My Support Tickets'**
+  String get mySupportTickets;
+
+  /// No description provided for @setLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Set Limit'**
+  String get setLimit;
+
+  /// No description provided for @removeLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Limit'**
+  String get removeLimit;
+
+  /// No description provided for @noTransactionData.
+  ///
+  /// In en, this message translates to:
+  /// **'No transaction data available'**
+  String get noTransactionData;
+
+  /// No description provided for @setMonthlyLimitMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Set a monthly limit to track your budget'**
+  String get setMonthlyLimitMessage;
+
+  /// No description provided for @subject.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject'**
+  String get subject;
+
+  /// No description provided for @subjectHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Brief description of your issue'**
+  String get subjectHint;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @priority.
+  ///
+  /// In en, this message translates to:
+  /// **'Priority'**
+  String get priority;
+
+  /// No description provided for @description.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get description;
+
+  /// No description provided for @ticketDescriptionHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Provide detailed information about your issue'**
+  String get ticketDescriptionHint;
+
+  /// No description provided for @pleaseEnterSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a subject'**
+  String get pleaseEnterSubject;
+
+  /// No description provided for @subjectMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Subject must be at least 5 characters'**
+  String get subjectMinLength;
+
+  /// No description provided for @pleaseEnterDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a description'**
+  String get pleaseEnterDescription;
+
+  /// No description provided for @descriptionMinLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Description must be at least 20 characters'**
+  String get descriptionMinLength;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

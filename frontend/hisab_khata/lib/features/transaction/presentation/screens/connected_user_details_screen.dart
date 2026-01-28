@@ -423,7 +423,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               size: 28,
             ),
             const SizedBox(width: 12),
-            const Text('Delete Connection?'),
+            Text(AppLocalizations.of(context)!.deleteConnection),
           ],
         ),
         content: Column(
@@ -431,7 +431,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Are you sure you want to delete your connection with ${userDetails.displayName}?',
+              AppLocalizations.of(
+                context,
+              )!.deleteConnectionMessage(userDetails.displayName),
               style: const TextStyle(fontSize: 15),
             ),
             const SizedBox(height: 12),
@@ -449,7 +451,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Pending due: Rs. ${userDetails.toPay.abs().toStringAsFixed(2)}',
+                        AppLocalizations.of(context)!.pendingDue(
+                          userDetails.toPay.abs().toStringAsFixed(2),
+                        ),
                         style: TextStyle(
                           color: Colors.red[900],
                           fontWeight: FontWeight.w600,
@@ -462,7 +466,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Please settle all pending dues before deleting this connection.',
+                AppLocalizations.of(context)!.settleBeforeDelete,
                 style: TextStyle(
                   fontSize: 13,
                   color: Colors.red[700],
@@ -485,10 +489,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                       size: 20,
                     ),
                     const SizedBox(width: 8),
-                    const Expanded(
+                    Expanded(
                       child: Text(
-                        'No pending dues',
-                        style: TextStyle(
+                        AppLocalizations.of(context)!.noPendingDues,
+                        style: const TextStyle(
                           color: Color(0xFF2C3E50),
                           fontWeight: FontWeight.w600,
                           fontSize: 13,
@@ -505,7 +509,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
-              'Cancel',
+              AppLocalizations.of(context)!.cancel,
               style: TextStyle(
                 color: Colors.grey[600],
                 fontWeight: FontWeight.w600,

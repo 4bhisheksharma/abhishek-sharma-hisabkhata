@@ -363,7 +363,7 @@ class AppLocalizationsNe extends AppLocalizations {
   String get amountHint => '0.00';
 
   @override
-  String get descriptionHint => 'उदाहरणका लागि, चामल, दाल, किराना सामान';
+  String get itemDescriptionHint => 'उदाहरणका लागि, चामल, दाल, किराना सामान';
 
   @override
   String get messageHint => 'सन्देश प्रविष्ट गर्नुहोस्';
@@ -493,4 +493,107 @@ class AppLocalizationsNe extends AppLocalizations {
 
   @override
   String get byaparAI => 'व्यापार द-एआई';
+
+  @override
+  String get addConnection => 'जडान थप्नुहोस्';
+
+  @override
+  String get stop => 'रोक्नुहोस्';
+
+  @override
+  String get tryAgain => 'पुन: प्रयास गर्नुहोस्';
+
+  @override
+  String get confirm => 'पुष्टि गर्नुहोस्';
+
+  @override
+  String get newImage => 'नयाँ तस्विर';
+
+  @override
+  String get deleteConnection => 'जडान मेटाउने?';
+
+  @override
+  String deleteConnectionMessage(String name) {
+    return 'के तपाई $name सँगको आफ्नो जडान मेटाउन निश्चित हुनुहुन्छ?';
+  }
+
+  @override
+  String pendingDue(String amount) {
+    return 'बाँकी रकम: रु. $amount';
+  }
+
+  @override
+  String get settleBeforeDelete => 'कृपया यो जडान मेटाउनु अघि सबै बाँकी रकम तिर्नुहोस्।';
+
+  @override
+  String get noPendingDues => 'कुनै बाँकी रकम छैन';
+
+  @override
+  String get bulkRequestResults => 'बल्क अनुरोध परिणामहरू';
+
+  @override
+  String get successful => 'सफल';
+
+  @override
+  String get skipped => 'छोडिएको';
+
+  @override
+  String get failed => 'असफल';
+
+  @override
+  String get ok => 'ठीक छ';
+
+  @override
+  String get clearAll => 'सबै खाली गर्नुहोस्';
+
+  @override
+  String get ticketDetails => 'टिकट विवरण';
+
+  @override
+  String get mySupportTickets => 'मेरो सहायता टिकटहरू';
+
+  @override
+  String get setLimit => 'सीमा सेट गर्नुहोस्';
+
+  @override
+  String get removeLimit => 'सीमा हटाउनुहोस्';
+
+  @override
+  String get noTransactionData => 'कुनै लेनदेन डाटा उपलब्ध छैन';
+
+  @override
+  String get setMonthlyLimitMessage => 'आफ्नो बजेट ट्र्याक गर्न मासिक सीमा सेट गर्नुहोस्';
+
+  @override
+  String get subject => 'विषय';
+
+  @override
+  String get subjectHint => 'तपाईको समस्याको छोटो विवरण';
+
+  @override
+  String get category => 'श्रेणी';
+
+  @override
+  String get priority => 'प्राथमिकता';
+
+  @override
+  String get description => 'विवरण';
+
+  @override
+  String get ticketDescriptionHint => 'आफ्नो समस्याको बारेमा विस्तृत जानकारी प्रदान गर्नुहोस्';
+
+  @override
+  String get pleaseEnterSubject => 'कृपया विषय प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get subjectMinLength => 'विषय कम्तीमा ५ वर्णको हुनुपर्छ';
+
+  @override
+  String get pleaseEnterDescription => 'कृपया विवरण प्रविष्ट गर्नुहोस्';
+
+  @override
+  String get descriptionMinLength => 'विवरण कम्तीमा २० वर्णको हुनुपर्छ';
+
+  @override
+  String get typeMessage => 'सन्देश टाइप गर्नुहोस्...';
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/bloc/bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -54,7 +55,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ticket Details'),
+        title: Text(AppLocalizations.of(context)!.ticketDetails),
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
       ),

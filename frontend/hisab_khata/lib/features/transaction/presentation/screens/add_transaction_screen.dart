@@ -354,7 +354,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       controller: _itemTitleController,
       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       decoration: InputDecoration(
-        hintText: AppLocalizations.of(context)!.descriptionHint,
+        hintText: AppLocalizations.of(context)!.itemDescriptionHint,
         hintStyle: TextStyle(color: Colors.grey.shade400),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
