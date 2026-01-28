@@ -16,7 +16,7 @@ class ChatbotService {
 
   Future<String> get _model async {
     await dotenv.load(fileName: ".env");
-    return dotenv.env['OPENROUTER_MODEL'] ?? 'mistralai/devstral-2512:free';
+    return dotenv.env['OPENROUTER_MODEL'] ?? 'openai/gpt-oss-120b:free';
   }
 
   Future<String> sendMessage(String message) async {
