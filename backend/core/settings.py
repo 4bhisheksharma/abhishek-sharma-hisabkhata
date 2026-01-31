@@ -37,6 +37,7 @@ AUTH_USER_MODEL = 'hisabauth.User'
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'customer_dashboard.apps.CustomerDashboardConfig',
     'hisabauth.apps.HisabauthConfig',
     'business_dashboard.apps.BusinessDashboardConfig',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'transaction.apps.TransactionConfig',
     'support_ticket.apps.SupportTicketConfig',
     'analytics.apps.AnalyticsConfig',
+    'realtime_chat.apps.RealtimeChatConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -54,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -84,6 +87,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'core.wsgi.application'
+ASGI_APPLICATION = 'core.asgi.application'
+
+# Channels Configuration
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Database
