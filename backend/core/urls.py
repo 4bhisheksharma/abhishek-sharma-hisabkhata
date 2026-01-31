@@ -53,6 +53,9 @@ urlpatterns = [
         
         # Analytics
         path('analytics/', include('analytics.urls')),
+        
+        # Real-time Chat
+        path('chat/', include('realtime_chat.urls')),
     ])),
 ]
 
