@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from customer_dashboard.models import CustomerBusinessRelationship
 
 
@@ -21,6 +22,19 @@ class ChatRoom(models.Model):
         db_table = 'chat_room'
         verbose_name = 'Chat Room'
         verbose_name_plural = 'Chat Rooms'
+    
+    def clean(self):
+        """Validate that the relationship is active"""
+        super().clean()
+        if self.relationship and not self.relationship.is_chat_allowed():
+            raise ValidationError(
+                "Cannot create chat room for inactive or blocked connections."
+            )
+    
+    def save(self, *args, **kwargs):
+        """Override save to run validation"""
+        self.full_clean()
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"Chat Room {self.chat_room_id}: {self.relationship.customer.user.full_name} <-> {self.relationship.business.business_name}"

@@ -8,9 +8,10 @@ from rest_framework.pagination import PageNumberPagination
 
 from .models import ChatRoom, Message, MessageStatus
 from .serializers import (
-    ChatRoomSerializer,
+    ChatRoomListSerializer,
     ChatRoomDetailSerializer,
-    MessageSerializer,
+    MessageListSerializer,
+    MessageDetailSerializer,
     MessageCreateSerializer,
     MessageUpdateSerializer,
     MessageStatusSerializer
@@ -31,7 +32,12 @@ class ChatRoomViewSet(viewsets.ReadOnlyModelViewSet):
     Users can only see chat rooms they are part of.
     """
     permission_classes = [IsAuthenticated, CanAccessChatRoom]
-    serializer_class = ChatRoomSerializer
+    serializer_class = ChatRoomListSerializer
+    
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return ChatRoomDetailSerializer
+        return ChatRoomListSerializer
     
     def get_queryset(self):
         """
@@ -40,14 +46,17 @@ class ChatRoomViewSet(viewsets.ReadOnlyModelViewSet):
         user = self.request.user
         
         # Get chat rooms where user is either customer or business
+        # Only show chat rooms with active connections
         queryset = ChatRoom.objects.select_related(
             'relationship__customer__user',
             'relationship__business__user'
         ).prefetch_related(
             Prefetch(
                 'messages',
-                queryset=Message.objects.filter(is_deleted=False).order_by('-created_at')[:1]
+                queryset=Message.objects.filter(is_deleted=False).order_by('-created_at')
             )
+        ).filter(
+            relationship__status='active'  # Only active connections
         )
         
         # Filter by user's role
@@ -74,7 +83,7 @@ class ChatRoomViewSet(viewsets.ReadOnlyModelViewSet):
         """Use detailed serializer for retrieve action"""
         if self.action == 'retrieve':
             return ChatRoomDetailSerializer
-        return ChatRoomSerializer
+        return ChatRoomListSerializer
     
     @action(detail=True, methods=['post'])
     def mark_as_read(self, request, pk=None):
@@ -168,7 +177,11 @@ class MessageViewSet(viewsets.ModelViewSet):
             return MessageCreateSerializer
         elif self.action in ['update', 'partial_update']:
             return MessageUpdateSerializer
-        return MessageSerializer
+        elif self.action == 'retrieve':
+            return MessageDetailSerializer
+        elif self.action == 'list':
+            return MessageListSerializer
+        return MessageListSerializer
     
     def perform_create(self, serializer):
         """Create message and set initial status"""
@@ -256,7 +269,7 @@ class ChatRoomMessagesView(generics.ListAPIView):
     """
     Get all messages for a specific chat room with pagination.
     """
-    serializer_class = MessageSerializer
+    serializer_class = MessageListSerializer
     permission_classes = [IsAuthenticated, IsChatRoomParticipant]
     pagination_class = MessagePagination
     

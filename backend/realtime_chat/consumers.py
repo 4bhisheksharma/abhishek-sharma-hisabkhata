@@ -232,7 +232,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def verify_chat_room_access(self):
-        """Verify that user has access to this chat room"""
+        """Verify that user has access to this chat room and connection is active"""
         try:
             chat_room = ChatRoom.objects.select_related(
                 'relationship__customer',
@@ -241,6 +241,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
             
             user = self.user
             relationship = chat_room.relationship
+            
+            # Check if the relationship/connection is active
+            if not relationship.is_chat_allowed():
+                return False
             
             # Check if user is customer or business in the relationship
             is_customer = (
@@ -259,9 +263,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
     @database_sync_to_async
     def save_message(self, content, message_type='text', file_url=None):
-        """Save message to database"""
+        """Save message to database if connection is active"""
         try:
-            chat_room = ChatRoom.objects.get(chat_room_id=self.chat_room_id)
+            chat_room = ChatRoom.objects.select_related(
+                'relationship'
+            ).get(chat_room_id=self.chat_room_id)
+            
+            # Check if the relationship is active before allowing message send
+            if not chat_room.relationship.is_chat_allowed():
+                print(f"Cannot send message: Connection is not active")
+                return None
             
             message = Message.objects.create(
                 chat_room=chat_room,

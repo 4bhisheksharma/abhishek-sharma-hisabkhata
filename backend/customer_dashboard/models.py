@@ -113,6 +113,16 @@ class CustomerBusinessRelationship(models.Model):
         default=False,
         help_text="Whether the customer has marked this business as favorite"
     )
+    status = models.CharField(
+        max_length=20,
+        default='active',
+        choices=[
+            ('active', 'Active'),
+            ('blocked', 'Blocked'),
+            ('deleted', 'Deleted'),
+        ],
+        help_text="Status of the connection between customer and business"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -148,3 +158,7 @@ class CustomerBusinessRelationship(models.Model):
             transaction_type__in=['purchase', 'credit']
         ).aggregate(total=Sum('amount'))['total'] or 0
         return purchases
+    
+    def is_chat_allowed(self):
+        """Check if users can send messages in this relationship"""
+        return self.status == 'active'
