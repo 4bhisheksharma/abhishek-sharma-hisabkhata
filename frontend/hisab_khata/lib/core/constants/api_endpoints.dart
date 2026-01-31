@@ -50,4 +50,12 @@ class ApiEndpoints {
   static const String createTicket = "support/tickets/";
   static const String myTickets = "support/tickets/my_tickets/";
   static String ticketDetail(int id) => "support/tickets/$id/";
+
+  // Chat endpoints
+  static const String chatRooms = "chat/rooms/";
+  static const String sendMessage = "chat/messages/send/";
+  static const String markAsRead = "chat/messages/mark-read/";
+  static const String getOrCreateChatRoom = "chat/rooms/get-or-create/";
+  static String chatMessages = "chat/messages";
+  static String webSocketBase = "ws://127.0.0.1:8000";
 }
