@@ -98,19 +98,14 @@ class ChatRepositoryImpl implements ChatRepository {
   }
 
   @override
-  Future<bool> markMessagesAsRead({
-    required int chatRoomId,
-    required List<int> messageIds,
-  }) async {
+  Future<bool> markMessagesAsRead({required int chatRoomId}) async {
     final result = await remoteDataSource.markMessagesAsRead(
       chatRoomId: chatRoomId,
-      messageIds: messageIds,
     );
 
     // Send read receipt via WebSocket
     remoteDataSource.sendMessageViaWebSocket(chatRoomId, {
       'type': 'mark_as_read',
-      'message_ids': messageIds,
     });
 
     return result;

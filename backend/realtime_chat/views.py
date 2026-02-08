@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Prefetch, Max
+from django.utils import timezone
 from rest_framework import viewsets, status, generics
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -128,6 +129,61 @@ class ChatRoomViewSet(viewsets.ReadOnlyModelViewSet):
             'total_unread': total_unread,
             'chat_rooms_count': chat_rooms.count()
         })
+    
+    @action(detail=False, methods=['post'])
+    def get_or_create(self, request):
+        """
+        Get or create a chat room for the given relationship.
+        """
+        relationship_id = request.data.get('relationship_id')
+        if not relationship_id:
+            return Response(
+                {'error': 'relationship_id is required'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            relationship_id = int(relationship_id)
+        except ValueError:
+            return Response(
+                {'error': 'Invalid relationship_id'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        from customer_dashboard.models import CustomerBusinessRelationship
+        try:
+            relationship = CustomerBusinessRelationship.objects.get(
+                pk=relationship_id,
+                status='active'
+            )
+        except CustomerBusinessRelationship.DoesNotExist:
+            return Response(
+                {'error': 'Active relationship not found'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Check if user has access to this relationship
+        user = request.user
+        if not (
+            (hasattr(user, 'customer_profile') and relationship.customer == user.customer_profile) or
+            (hasattr(user, 'business_profile') and relationship.business == user.business_profile)
+        ):
+            return Response(
+                {'error': 'You do not have access to this relationship'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Get or create chat room
+        chat_room, created = ChatRoom.objects.get_or_create(
+            relationship=relationship,
+            defaults={'created_at': timezone.now()}
+        )
+        
+        serializer = self.get_serializer(chat_room)
+        return Response({
+            'chat_room': serializer.data,
+            'created': created
+        })
 
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -182,6 +238,19 @@ class MessageViewSet(viewsets.ModelViewSet):
         elif self.action == 'list':
             return MessageListSerializer
         return MessageListSerializer
+    
+    def create(self, request, *args, **kwargs):
+        """Override create to return proper serialized response"""
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        
+        # Use MessageListSerializer for response
+        response_serializer = MessageListSerializer(
+            serializer.instance,
+            context={'request': request}
+        )
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED)
     
     def perform_create(self, serializer):
         """Create message and set initial status"""

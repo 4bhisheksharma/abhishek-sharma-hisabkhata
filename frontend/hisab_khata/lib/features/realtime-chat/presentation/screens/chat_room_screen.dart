@@ -11,8 +11,13 @@ import '../bloc/chat_state.dart';
 
 class ChatRoomScreen extends StatefulWidget {
   final int chatRoomId;
+  final String? otherUserName;
 
-  const ChatRoomScreen({super.key, required this.chatRoomId});
+  const ChatRoomScreen({
+    super.key,
+    required this.chatRoomId,
+    this.otherUserName,
+  });
 
   @override
   State<ChatRoomScreen> createState() => _ChatRoomScreenState();
@@ -60,7 +65,7 @@ class _ChatRoomScreenState extends State<ChatRoomScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chat Room ${widget.chatRoomId}'),
+        title: Text(widget.otherUserName ?? 'Chat Room ${widget.chatRoomId}'),
         elevation: 1,
       ),
       body: BlocConsumer<ChatBloc, ChatState>(

@@ -5,20 +5,11 @@ class MarkMessagesAsReadUseCase {
 
   MarkMessagesAsReadUseCase(this.repository);
 
-  Future<bool> call({
-    required int chatRoomId,
-    required List<int> messageIds,
-  }) async {
+  Future<bool> call({required int chatRoomId}) async {
     if (chatRoomId <= 0) {
       throw Exception('Invalid chat room ID');
     }
-    if (messageIds.isEmpty) {
-      throw Exception('Message IDs list cannot be empty');
-    }
 
-    return await repository.markMessagesAsRead(
-      chatRoomId: chatRoomId,
-      messageIds: messageIds,
-    );
+    return await repository.markMessagesAsRead(chatRoomId: chatRoomId);
   }
 }

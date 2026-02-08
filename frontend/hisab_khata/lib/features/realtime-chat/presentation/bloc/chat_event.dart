@@ -30,12 +30,10 @@ class SendMessageEvent extends ChatEvent {
 }
 
 class MarkMessagesAsReadEvent extends ChatEvent {
-  final List<int> messageIds;
-
-  const MarkMessagesAsReadEvent(this.messageIds);
+  const MarkMessagesAsReadEvent();
 
   @override
-  List<Object?> get props => [messageIds];
+  List<Object?> get props => [];
 }
 
 class LoadMessagesEvent extends ChatEvent {

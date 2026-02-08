@@ -28,9 +28,9 @@ class MessageListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
         fields = [
-            'message_id', 'sender', 'message_type',
+            'message_id', 'chat_room', 'sender', 'message_type',
             'content', 'file_url', 'is_edited', 'is_deleted',
-            'created_at', 'statuses', 'is_mine'
+            'created_at', 'updated_at', 'statuses', 'is_mine'
         ]
         read_only_fields = fields
 
@@ -81,7 +81,7 @@ class ChatRoomListSerializer(serializers.ModelSerializer):
     class Meta:
         model = ChatRoom
         fields = [
-            'chat_room_id', 'relationship', 'created_at',
+            'chat_room_id', 'relationship', 'created_at', 'updated_at',
             'last_message', 'unread_count', 'other_user'
         ]
         read_only_fields = fields

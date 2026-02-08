@@ -38,7 +38,8 @@ class ChatRoomListItem extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime date) {
+  String _formatDate(DateTime? date) {
+    if (date == null) return 'Unknown';
     final now = DateTime.now();
     final difference = now.difference(date);
 

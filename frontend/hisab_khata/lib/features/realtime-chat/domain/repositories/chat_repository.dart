@@ -22,10 +22,7 @@ abstract class ChatRepository {
 
   /// Marks messages as read for the current user
   /// Returns success status
-  Future<bool> markMessagesAsRead({
-    required int chatRoomId,
-    required List<int> messageIds,
-  });
+  Future<bool> markMessagesAsRead({required int chatRoomId});
 
   /// Gets message statuses for messages in a chat room
   /// Returns a stream of message statuses

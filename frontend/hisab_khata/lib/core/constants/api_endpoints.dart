@@ -52,10 +52,12 @@ class ApiEndpoints {
   static String ticketDetail(int id) => "support/tickets/$id/";
 
   // Chat endpoints
-  static const String chatRooms = "chat/rooms/";
-  static const String sendMessage = "chat/messages/send/";
-  static const String markAsRead = "chat/messages/mark-read/";
-  static const String getOrCreateChatRoom = "chat/rooms/get-or-create/";
-  static String chatMessages = "chat/messages";
+  static const String chatRooms = "chat/chat-rooms/";
+  static const String sendMessage = "chat/messages/";
+  static String markChatRoomAsRead(int chatRoomId) =>
+      "chat/chat-rooms/$chatRoomId/mark_as_read/";
+  static const String getOrCreateChatRoom = "chat/chat-rooms/get_or_create/";
+  static String chatMessages(int chatRoomId) =>
+      "chat/chat-rooms/$chatRoomId/messages/";
   static String webSocketBase = "ws://127.0.0.1:8000";
 }

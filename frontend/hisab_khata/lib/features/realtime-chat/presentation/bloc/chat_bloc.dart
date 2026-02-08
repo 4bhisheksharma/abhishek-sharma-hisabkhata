@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/features/realtime-chat/data/datasources/chat_remote_data_source.dart';
 import 'package:hisab_khata/features/realtime-chat/domain/entities/chat_room_entity.dart';
 import 'package:hisab_khata/features/realtime-chat/domain/entities/message_entity.dart';
 import '../../domain/usecases/get_chat_rooms_usecase.dart';
@@ -128,10 +129,7 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
     Emitter<ChatState> emit,
   ) async {
     try {
-      await markMessagesAsReadUseCase(
-        chatRoomId: _currentChatRoomId!,
-        messageIds: event.messageIds,
-      );
+      await markMessagesAsReadUseCase(chatRoomId: _currentChatRoomId!);
     } catch (e) {
       // Don't emit error for read receipts, just log
       print('Failed to mark messages as read: $e');

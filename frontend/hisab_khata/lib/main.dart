@@ -5,6 +5,7 @@ import 'package:hisab_khata/app.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hisab_khata/firebase_options.dart';
 import 'package:hisab_khata/services/fcm_service.dart';
+import 'package:hisab_khata/core/di/dependency_injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +15,9 @@ void main() async {
 
   // Load environment variables
   await dotenv.load(fileName: ".env");
+
+  // Initialize Dependency Injection
+  DependencyInjection().init();
 
   // Set background message handler
   FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);

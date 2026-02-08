@@ -128,8 +128,24 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => Scaffold(
             body: Center(
-              child: Text(
-                '${AppLocalizations.of(context)!.noRouteDefined} ${settings.name}',
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${AppLocalizations.of(context)!.noRouteDefined} ${settings.name}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(
+                        context,
+                      ).pushReplacementNamed(AppRoutes.login);
+                    },
+                    child: const Text('Go to Login'),
+                  ),
+                ],
               ),
             ),
           ),

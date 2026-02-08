@@ -48,7 +48,6 @@ import '../../features/request/presentation/bloc/connection_request_bloc.dart';
 import '../../features/request/data/datasource/notification_remote_data_source.dart';
 import '../../features/notification/data/repository_imp/notification_repository_impl.dart';
 import '../../features/notification/domain/repositories/notification_repository.dart';
-import '../../features/notification/domain/usecases/get_all_notifications_usecase.dart';
 import '../../features/notification/domain/usecases/get_unread_notifications_usecase.dart';
 import '../../features/request/domain/usecases/get_unread_count_usecase.dart';
 import '../../features/notification/domain/usecases/mark_notification_as_read_usecase.dart';
@@ -75,6 +74,7 @@ import '../../features/realtime-chat/domain/usecases/get_chat_rooms_usecase.dart
 import '../../features/realtime-chat/domain/usecases/get_messages_usecase.dart';
 import '../../features/realtime-chat/domain/usecases/send_message_usecase.dart';
 import '../../features/realtime-chat/domain/usecases/mark_messages_as_read_usecase.dart';
+import '../../features/realtime-chat/domain/usecases/get_or_create_chat_room_usecase.dart';
 import '../../features/realtime-chat/presentation/bloc/chat_bloc.dart';
 
 /// Dependency Injection Container
@@ -175,6 +175,7 @@ class DependencyInjection {
   late final GetMessagesUseCase _getMessagesUseCase;
   late final SendMessageUseCase _sendMessageUseCase;
   late final MarkMessagesAsReadUseCase _markMessagesAsReadUseCase;
+  late final GetOrCreateChatRoomUseCase _getOrCreateChatRoomUseCase;
 
   // BLoCs
   late final AuthBloc _authBloc;
@@ -186,8 +187,16 @@ class DependencyInjection {
   late final AnalyticsBloc _analyticsBloc;
   late final ChatBloc _chatBloc;
 
+  bool _isInitialized = false;
+
+  /// Check if DI is initialized
+  bool get isInitialized => _isInitialized;
+
   /// Initialize all dependencies
   void init() {
+    if (_isInitialized) return; // Prevent double initialization
+    _isInitialized = true;
+
     // HTTP Client
     _httpClient = http.Client();
 
@@ -333,6 +342,7 @@ class DependencyInjection {
     _getMessagesUseCase = GetMessagesUseCase(_chatRepository);
     _sendMessageUseCase = SendMessageUseCase(_chatRepository);
     _markMessagesAsReadUseCase = MarkMessagesAsReadUseCase(_chatRepository);
+    _getOrCreateChatRoomUseCase = GetOrCreateChatRoomUseCase(_chatRepository);
 
     // BLoCs
     _authBloc = AuthBloc(
@@ -429,6 +439,14 @@ class DependencyInjection {
       _connectionRequestRepository;
   NotificationRepository get notificationRepository => _notificationRepository;
   TransactionRepository get transactionRepository => _transactionRepository;
+  GetOrCreateChatRoomUseCase get getOrCreateChatRoomUseCase {
+    if (!_isInitialized) {
+      throw StateError(
+        'DependencyInjection not initialized. Call init() first.',
+      );
+    }
+    return _getOrCreateChatRoomUseCase;
+  }
 
   /// Create a new ConnectedUserDetailsBloc instance
   ConnectedUserDetailsBloc createConnectedUserDetailsBloc() {

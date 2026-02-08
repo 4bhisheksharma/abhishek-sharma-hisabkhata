@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/features/realtime-chat/presentation/screens/chat_room_wrapper_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
@@ -107,7 +108,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       ),
       centerTitle: true,
       actions: userDetails != null
-          ? [_buildDeleteButton(context, userDetails)]
+          ? [
+              _buildChatButton(context, userDetails),
+              _buildDeleteButton(context, userDetails),
+            ]
           : null,
     );
   }
@@ -396,6 +400,17 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     );
   }
 
+  Widget _buildChatButton(
+    BuildContext context,
+    ConnectedUserDetails userDetails,
+  ) {
+    return IconButton(
+      icon: const Icon(Icons.chat_bubble_outline),
+      tooltip: 'Chat',
+      onPressed: () => _navigateToChat(context),
+    );
+  }
+
   Widget _buildDeleteButton(
     BuildContext context,
     ConnectedUserDetails userDetails,
@@ -404,6 +419,26 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       icon: const Icon(Icons.delete_outline),
       tooltip: 'Delete Connection',
       onPressed: () => _showDeleteConfirmation(context, userDetails),
+    );
+  }
+
+  void _navigateToChat(BuildContext context) {
+    // Get the other user's name from the loaded state
+    final bloc = context.read<ConnectedUserDetailsBloc>();
+    String? otherUserName;
+    if (bloc.state is ConnectedUserDetailsLoaded) {
+      final state = bloc.state as ConnectedUserDetailsLoaded;
+      otherUserName = state.userDetails.displayName;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatRoomWrapperScreen(
+          relationshipId: relationshipId,
+          otherUserName: otherUserName,
+        ),
+      ),
     );
   }
 

@@ -24,10 +24,7 @@ abstract class ChatRemoteDataSource {
   });
 
   /// Mark messages as read
-  Future<bool> markMessagesAsRead({
-    required int chatRoomId,
-    required List<int> messageIds,
-  });
+  Future<bool> markMessagesAsRead({required int chatRoomId});
 
   /// Get or create chat room for relationship
   Future<ChatRoomModel> getOrCreateChatRoom(int relationshipId);
@@ -57,15 +54,37 @@ class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
   @override
   Future<List<ChatRoomModel>> getChatRooms() async {
     final response = await get(ApiEndpoints.chatRooms);
-    final List<dynamic> data = response['data'] ?? [];
+    // DRF viewset returns list directly, not wrapped in 'data'
+    final List<dynamic> data = response is List
+        ? response
+        : (response['results'] ?? []);
     return data.map((json) => ChatRoomModel.fromJson(json)).toList();
   }
 
   @override
   Future<List<MessageModel>> getMessages(int chatRoomId) async {
-    final response = await get('${ApiEndpoints.chatMessages}/$chatRoomId');
-    final List<dynamic> data = response['data'] ?? [];
+    final response = await get(ApiEndpoints.chatMessages(chatRoomId));
+    // DRF ListAPIView returns paginated data or list directly
+    final List<dynamic> data = response is List
+        ? response
+        : (response['results'] ?? []);
     return data.map((json) => MessageModel.fromJson(json)).toList();
+  }
+
+  /// Converts MessageTypeModel to snake_case string for backend
+  String _messageTypeToString(MessageTypeModel type) {
+    switch (type) {
+      case MessageTypeModel.text:
+        return 'text';
+      case MessageTypeModel.image:
+        return 'image';
+      case MessageTypeModel.file:
+        return 'file';
+      case MessageTypeModel.transactionUpdate:
+        return 'transaction_update';
+      case MessageTypeModel.system:
+        return 'system';
+    }
   }
 
   @override
@@ -80,23 +99,21 @@ class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
       body: {
         'chat_room': chatRoomId,
         'content': content,
-        'message_type': messageType.name,
+        'message_type': _messageTypeToString(messageType),
         'file_url': fileUrl,
       },
     );
-    return MessageModel.fromJson(response['data']);
+    // DRF ModelViewSet.create returns the created object directly
+    return MessageModel.fromJson(response);
   }
 
   @override
-  Future<bool> markMessagesAsRead({
-    required int chatRoomId,
-    required List<int> messageIds,
-  }) async {
+  Future<bool> markMessagesAsRead({required int chatRoomId}) async {
     final response = await post(
-      ApiEndpoints.markAsRead,
-      body: {'chat_room_id': chatRoomId, 'message_ids': messageIds},
+      ApiEndpoints.markChatRoomAsRead(chatRoomId),
+      body: {},
     );
-    return response['success'] ?? false;
+    return response['success'] ?? true;
   }
 
   @override
@@ -105,7 +122,7 @@ class ChatRemoteDataSourceImpl extends BaseRemoteDataSource
       ApiEndpoints.getOrCreateChatRoom,
       body: {'relationship_id': relationshipId},
     );
-    return ChatRoomModel.fromJson(response['data']);
+    return ChatRoomModel.fromJson(response['chat_room']);
   }
 
   @override

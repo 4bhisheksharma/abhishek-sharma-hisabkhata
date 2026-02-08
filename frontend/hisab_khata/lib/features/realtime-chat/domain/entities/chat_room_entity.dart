@@ -2,13 +2,13 @@ class ChatRoomEntity {
   final int chatRoomId;
   final int relationshipId; // Reference to CustomerBusinessRelationship
   final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   ChatRoomEntity({
     required this.chatRoomId,
     required this.relationshipId,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
 
   // Factory constructor for creating from JSON
@@ -17,7 +17,9 @@ class ChatRoomEntity {
       chatRoomId: json['chat_room_id'] as int,
       relationshipId: json['relationship'] as int,
       createdAt: DateTime.parse(json['created_at'] as String),
-      updatedAt: DateTime.parse(json['updated_at'] as String),
+      updatedAt: json['updated_at'] != null
+          ? DateTime.parse(json['updated_at'] as String)
+          : null,
     );
   }
 
@@ -27,7 +29,7 @@ class ChatRoomEntity {
       'chat_room_id': chatRoomId,
       'relationship': relationshipId,
       'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
+      'updated_at': updatedAt?.toIso8601String(),
     };
   }
 }
