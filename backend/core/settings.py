@@ -37,7 +37,6 @@ AUTH_USER_MODEL = 'hisabauth.User'
 # Application definition
 
 INSTALLED_APPS = [
-    'daphne',
     'customer_dashboard.apps.CustomerDashboardConfig',
     'hisabauth.apps.HisabauthConfig',
     'business_dashboard.apps.BusinessDashboardConfig',
@@ -47,7 +46,6 @@ INSTALLED_APPS = [
     'transaction.apps.TransactionConfig',
     'support_ticket.apps.SupportTicketConfig',
     'analytics.apps.AnalyticsConfig',
-    'realtime_chat.apps.RealtimeChatConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
