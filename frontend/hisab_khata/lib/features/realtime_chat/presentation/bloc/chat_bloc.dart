@@ -4,7 +4,6 @@ import '../../../../config/storage/storage_service.dart';
 import '../../../../core/constants/api_base_url.dart';
 import '../../data/datasources/chat_websocket_service.dart';
 import '../../data/models/message_model.dart';
-import '../../domain/entities/message_entity.dart';
 import '../../domain/usecases/get_chat_rooms_usecase.dart';
 import '../../domain/usecases/get_or_create_chat_room_usecase.dart';
 import '../../domain/usecases/get_chat_messages_usecase.dart';

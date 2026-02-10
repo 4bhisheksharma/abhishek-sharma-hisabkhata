@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/features/realtime_chat/chat_provider.dart';
+import 'package:hisab_khata/features/realtime_chat/presentation/screens/chat_detail_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
@@ -422,23 +424,44 @@ class ConnectedUserDetailsPage extends StatelessWidget {
   }
 
   void _navigateToChat(BuildContext context) {
-    // Get the other user's name from the loaded state
+    // Get the other user's info from the loaded state
     final bloc = context.read<ConnectedUserDetailsBloc>();
+    int? otherUserId;
     String? otherUserName;
+
     if (bloc.state is ConnectedUserDetailsLoaded) {
       final state = bloc.state as ConnectedUserDetailsLoaded;
+      otherUserId = state.userDetails.userId;
+      otherUserName = state.userDetails.displayName;
+    } else if (bloc.state is ConnectedUserDetailsFavoriteToggling) {
+      final state = bloc.state as ConnectedUserDetailsFavoriteToggling;
+      otherUserId = state.userDetails.userId;
+      otherUserName = state.userDetails.displayName;
+    } else if (bloc.state is ConnectedUserDetailsTransactionCreating) {
+      final state = bloc.state as ConnectedUserDetailsTransactionCreating;
+      otherUserId = state.userDetails.userId;
       otherUserName = state.userDetails.displayName;
     }
 
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => ChatRoomWrapperScreen(
-    //       relationshipId: relationshipId,
-    //       otherUserName: otherUserName,
-    //     ),
-    //   ),
-    // );
+    if (otherUserId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open chat. Please try again.')),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ChatProvider(
+          child: ChatDetailScreen(
+            chatRoomId: 0, // Will be created/fetched when screen loads
+            otherUserId: otherUserId,
+            otherUserName: otherUserName,
+          ),
+        ),
+      ),
+    );
   }
 
   void _showDeleteConfirmation(

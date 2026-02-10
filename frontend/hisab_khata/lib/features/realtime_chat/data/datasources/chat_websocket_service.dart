@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/io.dart';
-import '../models/message_model.dart';
 
 /// WebSocket connection status.
 enum WebSocketStatus {
@@ -54,10 +52,7 @@ class ChatWebSocketService {
   int? get currentChatRoomId => _currentChatRoomId;
 
   /// Initialize WebSocket URL configuration.
-  void configure({
-    required String baseUrl,
-    required String authToken,
-  }) {
+  void configure({required String baseUrl, required String authToken}) {
     _baseUrl = baseUrl;
     _authToken = authToken;
   }
@@ -78,16 +73,9 @@ class ChatWebSocketService {
 
     try {
       final wsUrl = _buildWebSocketUrl(chatRoomId);
-      _channel = IOWebSocketChannel.connect(
-        Uri.parse(wsUrl),
-        pingInterval: const Duration(seconds: 30),
-      );
+      _channel = WebSocketChannel.connect(Uri.parse(wsUrl));
 
-      _channel!.stream.listen(
-        _onMessage,
-        onError: _onError,
-        onDone: _onDone,
-      );
+      _channel!.stream.listen(_onMessage, onError: _onError, onDone: _onDone);
 
       _updateStatus(WebSocketStatus.connected);
       _reconnectAttempts = 0;
@@ -123,18 +111,12 @@ class ChatWebSocketService {
 
   /// Send typing indicator.
   void sendTypingIndicator(bool isTyping) {
-    _send({
-      'type': 'typing',
-      'is_typing': isTyping,
-    });
+    _send({'type': 'typing', 'is_typing': isTyping});
   }
 
   /// Mark messages as read.
   void markMessagesRead(List<int> messageIds) {
-    _send({
-      'type': 'mark_read',
-      'message_ids': messageIds,
-    });
+    _send({'type': 'mark_read', 'message_ids': messageIds});
   }
 
   /// Send raw data to WebSocket.
