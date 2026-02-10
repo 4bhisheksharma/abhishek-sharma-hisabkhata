@@ -138,6 +138,9 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
                 secondLabel: AppLocalizations.of(context)!.totalRequests,
                 secondValue: "${d.totalRequests}",
                 icon: Icons.person_add_outlined,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.bulkAddConnection);
+                },
               ),
             ),
 

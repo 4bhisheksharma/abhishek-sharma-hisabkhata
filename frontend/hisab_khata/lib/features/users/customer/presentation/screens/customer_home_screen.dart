@@ -138,6 +138,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
                 secondLabel: "Pending Requests",
                 secondValue: "${d.pendingRequests}",
                 icon: Icons.add_business_outlined,
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.bulkAddConnection);
+                },
               ),
             ),
 

@@ -46,7 +46,7 @@ class SharedDashboard extends StatelessWidget {
       body: body,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, '/add-connection');
+          Navigator.pushNamed(context, '/bulk-add-connection');
         },
         child: Icon(Icons.person_add),
       ),
