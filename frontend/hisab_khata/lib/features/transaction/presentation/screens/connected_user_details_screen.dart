@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hisab_khata/features/realtime-chat/presentation/screens/chat_room_wrapper_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
@@ -431,15 +430,15 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       otherUserName = state.userDetails.displayName;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ChatRoomWrapperScreen(
-          relationshipId: relationshipId,
-          otherUserName: otherUserName,
-        ),
-      ),
-    );
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(
+    //     builder: (context) => ChatRoomWrapperScreen(
+    //       relationshipId: relationshipId,
+    //       otherUserName: otherUserName,
+    //     ),
+    //   ),
+    // );
   }
 
   void _showDeleteConfirmation(

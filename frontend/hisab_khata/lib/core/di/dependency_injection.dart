@@ -67,15 +67,6 @@ import '../../features/analytics/data/repositories_imp/analytics_repository_impl
 import '../../features/analytics/domain/repositories/analytics_repository.dart';
 import '../../features/analytics/domain/usecases/analytics_usecases.dart';
 import '../../features/analytics/presentation/bloc/analytics_bloc.dart';
-import '../../features/realtime-chat/data/datasources/chat_remote_data_source.dart';
-import '../../features/realtime-chat/data/repositories_imp/chat_repository_impl.dart';
-import '../../features/realtime-chat/domain/repositories/chat_repository.dart';
-import '../../features/realtime-chat/domain/usecases/get_chat_rooms_usecase.dart';
-import '../../features/realtime-chat/domain/usecases/get_messages_usecase.dart';
-import '../../features/realtime-chat/domain/usecases/send_message_usecase.dart';
-import '../../features/realtime-chat/domain/usecases/mark_messages_as_read_usecase.dart';
-import '../../features/realtime-chat/domain/usecases/get_or_create_chat_room_usecase.dart';
-import '../../features/realtime-chat/presentation/bloc/chat_bloc.dart';
 
 /// Dependency Injection Container
 /// Manages creation and lifecycle of app dependencies
@@ -97,7 +88,6 @@ class DependencyInjection {
   late final TransactionRemoteDataSource _transactionRemoteDataSource;
   late final TicketRemoteDataSource _ticketRemoteDataSource;
   late final AnalyticsRemoteDataSource _analyticsRemoteDataSource;
-  late final ChatRemoteDataSource _chatRemoteDataSource;
 
   // Repositories
   late final AuthRepository _authRepository;
@@ -108,7 +98,6 @@ class DependencyInjection {
   late final TransactionRepository _transactionRepository;
   late final TicketRepository _ticketRepository;
   late final AnalyticsRepository _analyticsRepository;
-  late final ChatRepository _chatRepository;
 
   // Use Cases - Auth
   late final LoginUseCase _loginUseCase;
@@ -170,13 +159,6 @@ class DependencyInjection {
   late final GetMonthlySpendingLimit _getMonthlySpendingLimit;
   late final SetMonthlyLimit _setMonthlyLimit;
 
-  // Use Cases - Chat
-  late final GetChatRoomsUseCase _getChatRoomsUseCase;
-  late final GetMessagesUseCase _getMessagesUseCase;
-  late final SendMessageUseCase _sendMessageUseCase;
-  late final MarkMessagesAsReadUseCase _markMessagesAsReadUseCase;
-  late final GetOrCreateChatRoomUseCase _getOrCreateChatRoomUseCase;
-
   // BLoCs
   late final AuthBloc _authBloc;
   late final CustomerBloc _customerBloc;
@@ -185,7 +167,6 @@ class DependencyInjection {
   late final NotificationBloc _notificationBloc;
   late final TicketBloc _ticketBloc;
   late final AnalyticsBloc _analyticsBloc;
-  late final ChatBloc _chatBloc;
 
   bool _isInitialized = false;
 
@@ -219,7 +200,6 @@ class DependencyInjection {
     );
     _ticketRemoteDataSource = TicketRemoteDataSourceImpl(client: _httpClient);
     _analyticsRemoteDataSource = AnalyticsRemoteDataSource(client: _httpClient);
-    _chatRemoteDataSource = ChatRemoteDataSourceImpl(client: _httpClient);
 
     // Repositories
     _authRepository = AuthRepositoryImpl(
@@ -245,9 +225,6 @@ class DependencyInjection {
     );
     _analyticsRepository = AnalyticsRepositoryImpl(
       remoteDataSource: _analyticsRemoteDataSource,
-    );
-    _chatRepository = ChatRepositoryImpl(
-      remoteDataSource: _chatRemoteDataSource,
     );
 
     // Use Cases - Auth
@@ -337,12 +314,6 @@ class DependencyInjection {
     _getMonthlySpendingLimit = GetMonthlySpendingLimit(_analyticsRepository);
     _setMonthlyLimit = SetMonthlyLimit(_analyticsRepository);
 
-    // Use Cases - Chat
-    _getChatRoomsUseCase = GetChatRoomsUseCase(_chatRepository);
-    _getMessagesUseCase = GetMessagesUseCase(_chatRepository);
-    _sendMessageUseCase = SendMessageUseCase(_chatRepository);
-    _markMessagesAsReadUseCase = MarkMessagesAsReadUseCase(_chatRepository);
-    _getOrCreateChatRoomUseCase = GetOrCreateChatRoomUseCase(_chatRepository);
 
     // BLoCs
     _authBloc = AuthBloc(
@@ -402,12 +373,6 @@ class DependencyInjection {
       getMonthlySpendingLimit: _getMonthlySpendingLimit,
       setMonthlyLimit: _setMonthlyLimit,
     );
-    _chatBloc = ChatBloc(
-      getChatRoomsUseCase: _getChatRoomsUseCase,
-      getMessagesUseCase: _getMessagesUseCase,
-      sendMessageUseCase: _sendMessageUseCase,
-      markMessagesAsReadUseCase: _markMessagesAsReadUseCase,
-    );
   }
 
   /// Dispose resources
@@ -420,7 +385,6 @@ class DependencyInjection {
     _notificationBloc.close();
     _ticketBloc.close();
     _analyticsBloc.close();
-    _chatBloc.close();
   }
 
   // Getters
@@ -431,7 +395,6 @@ class DependencyInjection {
   NotificationBloc get notificationBloc => _notificationBloc;
   TicketBloc get ticketBloc => _ticketBloc;
   AnalyticsBloc get analyticsBloc => _analyticsBloc;
-  ChatBloc get chatBloc => _chatBloc;
   AuthRepository get authRepository => _authRepository;
   CustomerRepository get customerRepository => _customerRepository;
   BusinessRepository get businessRepository => _businessRepository;
@@ -439,14 +402,6 @@ class DependencyInjection {
       _connectionRequestRepository;
   NotificationRepository get notificationRepository => _notificationRepository;
   TransactionRepository get transactionRepository => _transactionRepository;
-  GetOrCreateChatRoomUseCase get getOrCreateChatRoomUseCase {
-    if (!_isInitialized) {
-      throw StateError(
-        'DependencyInjection not initialized. Call init() first.',
-      );
-    }
-    return _getOrCreateChatRoomUseCase;
-  }
 
   /// Create a new ConnectedUserDetailsBloc instance
   ConnectedUserDetailsBloc createConnectedUserDetailsBloc() {
