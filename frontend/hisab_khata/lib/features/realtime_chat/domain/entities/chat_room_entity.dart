@@ -44,13 +44,15 @@ class ChatRoomEntity extends Equatable {
   });
 
   /// Get display name for the chat room (other participant's name).
+  /// Returns business name for businesses, full name for others.
   String getDisplayName(int currentUserId) {
     if (otherParticipant != null) {
-      return otherParticipant!.fullName;
+      return otherParticipant!.displayName;
     }
-    return participantOne.userId == currentUserId
-        ? participantTwo.fullName
-        : participantOne.fullName;
+    final other = participantOne.userId == currentUserId
+        ? participantTwo
+        : participantOne;
+    return other.displayName;
   }
 
   /// Get the other participant's info.
@@ -58,7 +60,9 @@ class ChatRoomEntity extends Equatable {
     if (otherParticipant != null) {
       return otherParticipant!;
     }
-    return participantOne.userId == currentUserId ? participantTwo : participantOne;
+    return participantOne.userId == currentUserId
+        ? participantTwo
+        : participantOne;
   }
 
   /// Check if user is a participant.
@@ -68,13 +72,13 @@ class ChatRoomEntity extends Equatable {
 
   @override
   List<Object?> get props => [
-        chatRoomId,
-        participantOne,
-        participantTwo,
-        otherParticipant,
-        lastMessage,
-        unreadCount,
-        lastMessageAt,
-        createdAt,
-      ];
+    chatRoomId,
+    participantOne,
+    participantTwo,
+    otherParticipant,
+    lastMessage,
+    unreadCount,
+    lastMessageAt,
+    createdAt,
+  ];
 }

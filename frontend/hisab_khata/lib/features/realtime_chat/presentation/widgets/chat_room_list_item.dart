@@ -26,7 +26,9 @@ class ChatRoomListItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: hasUnread ? AppTheme.lightBlue.withOpacity(0.3) : AppTheme.white,
+          color: hasUnread
+              ? AppTheme.lightBlue.withOpacity(0.3)
+              : AppTheme.white,
           border: Border(
             bottom: BorderSide(color: AppTheme.lightGrey.withOpacity(0.5)),
           ),
@@ -42,7 +44,7 @@ class ChatRoomListItem extends StatelessWidget {
                   : null,
               child: otherUser.profilePicture == null
                   ? Text(
-                      _getInitials(otherUser.fullName),
+                      _getInitials(otherUser.displayName),
                       style: const TextStyle(
                         color: AppTheme.white,
                         fontWeight: FontWeight.bold,
@@ -64,10 +66,12 @@ class ChatRoomListItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          otherUser.fullName,
+                          otherUser.displayName,
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: hasUnread ? FontWeight.w600 : FontWeight.w500,
+                            fontWeight: hasUnread
+                                ? FontWeight.w600
+                                : FontWeight.w500,
                             color: AppTheme.textPrimary,
                           ),
                           maxLines: 1,
@@ -82,7 +86,9 @@ class ChatRoomListItem extends StatelessWidget {
                             color: hasUnread
                                 ? AppTheme.primaryBlue
                                 : AppTheme.textSecondary,
-                            fontWeight: hasUnread ? FontWeight.w600 : FontWeight.normal,
+                            fontWeight: hasUnread
+                                ? FontWeight.w600
+                                : FontWeight.normal,
                           ),
                         ),
                     ],
@@ -100,7 +106,9 @@ class ChatRoomListItem extends StatelessWidget {
                             color: hasUnread
                                 ? AppTheme.textPrimary
                                 : AppTheme.textSecondary,
-                            fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
+                            fontWeight: hasUnread
+                                ? FontWeight.w500
+                                : FontWeight.normal,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -118,7 +126,9 @@ class ChatRoomListItem extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
-                            chatRoom.unreadCount > 99 ? '99+' : '${chatRoom.unreadCount}',
+                            chatRoom.unreadCount > 99
+                                ? '99+'
+                                : '${chatRoom.unreadCount}',
                             style: const TextStyle(
                               color: AppTheme.white,
                               fontSize: 12,

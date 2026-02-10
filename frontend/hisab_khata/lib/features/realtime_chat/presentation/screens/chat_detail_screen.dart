@@ -117,12 +117,12 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(ChatState state) {
-    String title = widget.otherUserName ?? 'Chat';
+    String displayName = widget.otherUserName ?? 'User';
     String? subtitle;
     int? currentUserId = context.read<ChatBloc>().currentUserId;
 
     if (state is ChatRoomActive) {
-      title = state.chatRoom.getDisplayName(currentUserId ?? 0);
+      displayName = state.chatRoom.getDisplayName(currentUserId ?? 0);
 
       // Show connection status or typing indicator
       if (state.isOtherUserTyping) {
@@ -131,14 +131,16 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         subtitle = _getConnectionStatusText(state.connectionStatus);
       }
     } else if (state is MessagesLoading) {
-      title = state.chatRoom.getDisplayName(currentUserId ?? 0);
+      displayName = state.chatRoom.getDisplayName(currentUserId ?? 0);
     }
+
+    final title = 'Chat with $displayName';
 
     return AppBar(
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title),
+          Text(title, style: const TextStyle(fontSize: 16)),
           if (subtitle != null)
             Text(
               subtitle,

@@ -5,10 +5,29 @@ from hisabauth.models import User
 
 class UserBasicSerializer(serializers.ModelSerializer):
     """Basic user info for chat context."""
+    is_business = serializers.SerializerMethodField()
+    business_name = serializers.SerializerMethodField()
+    display_name = serializers.SerializerMethodField()
     
     class Meta:
         model = User
-        fields = ['user_id', 'full_name', 'email', 'profile_picture']
+        fields = ['user_id', 'full_name', 'email', 'profile_picture', 'is_business', 'business_name', 'display_name']
+    
+    def get_is_business(self, obj):
+        """Check if user has a business profile."""
+        return hasattr(obj, 'business_profile') and obj.business_profile is not None
+    
+    def get_business_name(self, obj):
+        """Get business name if user is a business."""
+        if hasattr(obj, 'business_profile') and obj.business_profile:
+            return obj.business_profile.business_name
+        return None
+    
+    def get_display_name(self, obj):
+        """Get display name (business name for businesses, full name for others)."""
+        if hasattr(obj, 'business_profile') and obj.business_profile:
+            return obj.business_profile.business_name
+        return obj.full_name
 
 
 class MessageSerializer(serializers.ModelSerializer):

@@ -70,18 +70,12 @@ class _MessageListState extends State<MessageList> {
             const SizedBox(height: 16),
             Text(
               'No messages yet',
-              style: TextStyle(
-                color: AppTheme.textSecondary,
-                fontSize: 16,
-              ),
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 8),
             Text(
               'Start the conversation!',
-              style: TextStyle(
-                color: AppTheme.textSecondary,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
             ),
           ],
         ),
@@ -119,7 +113,8 @@ class _MessageListState extends State<MessageList> {
         final messageItem = item as _MessageItem;
         return MessageBubble(
           message: messageItem.message,
-          isFromCurrentUser: messageItem.message.sender.userId == widget.currentUserId,
+          isFromCurrentUser:
+              messageItem.message.sender.userId == widget.currentUserId,
           isFirstInGroup: messageItem.isFirstInGroup,
           isLastInGroup: messageItem.isLastInGroup,
         );
@@ -129,10 +124,9 @@ class _MessageListState extends State<MessageList> {
 
   List<_ListItem> _buildListItems() {
     final items = <_ListItem>[];
-    DateTime? lastDate;
-    int? lastSenderId;
 
-    // Reverse to process oldest first, but we'll reverse the output for ListView.reverse
+    // With ListView.reverse=true, index 0 appears at BOTTOM
+    // So we process messages newest→oldest, putting newest at index 0
     final reversedMessages = widget.messages.reversed.toList();
 
     for (int i = 0; i < reversedMessages.length; i++) {
@@ -143,32 +137,48 @@ class _MessageListState extends State<MessageList> {
         message.createdAt.day,
       );
 
-      // Check if we need a date separator
-      if (lastDate == null || lastDate != messageDate) {
-        items.add(_DateSeparator(date: messageDate));
-        lastDate = messageDate;
-        lastSenderId = null; // Reset sender grouping on new day
-      }
+      // In reversed list: prev = newer message, next = older message
+      final prevMessage = i > 0 ? reversedMessages[i - 1] : null;
+      final nextMessage = i + 1 < reversedMessages.length
+          ? reversedMessages[i + 1]
+          : null;
 
-      // Determine grouping with adjacent messages
-      final isFirstInGroup = lastSenderId != message.sender.userId;
-      final nextMessage =
-          i + 1 < reversedMessages.length ? reversedMessages[i + 1] : null;
-      final isLastInGroup = nextMessage == null ||
+      // isLastInGroup: bottom of group visually (newer message is different or none)
+      final isLastInGroup =
+          prevMessage == null ||
+          prevMessage.sender.userId != message.sender.userId ||
+          _isDifferentDay(message.createdAt, prevMessage.createdAt);
+
+      // isFirstInGroup: top of group visually (older message is different or none)
+      final isFirstInGroup =
+          nextMessage == null ||
           nextMessage.sender.userId != message.sender.userId ||
           _isDifferentDay(message.createdAt, nextMessage.createdAt);
 
-      items.add(_MessageItem(
-        message: message,
-        isFirstInGroup: isFirstInGroup,
-        isLastInGroup: isLastInGroup,
-      ));
+      items.add(
+        _MessageItem(
+          message: message,
+          isFirstInGroup: isFirstInGroup,
+          isLastInGroup: isLastInGroup,
+        ),
+      );
 
-      lastSenderId = message.sender.userId;
+      // Add date separator after all messages of this date
+      // (appears above messages visually due to reverse)
+      final nextMsgDate = nextMessage != null
+          ? DateTime(
+              nextMessage.createdAt.year,
+              nextMessage.createdAt.month,
+              nextMessage.createdAt.day,
+            )
+          : null;
+
+      if (nextMsgDate == null || nextMsgDate != messageDate) {
+        items.add(_DateSeparator(date: messageDate));
+      }
     }
 
-    // Reverse for ListView.reverse display
-    return items.reversed.toList();
+    return items;
   }
 
   bool _isDifferentDay(DateTime a, DateTime b) {
