@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from hisabauth.views import RegisterView, LoginView, ChangePasswordView, FCMTokenView
+from hisabauth.views import RegisterView, LoginView, ChangePasswordView, FCMTokenView, FCMTestView
 from otp_verification.views import VerifyOTPView, ResendOTPView
 
 urlpatterns = [
@@ -32,6 +32,7 @@ urlpatterns = [
         path('auth/login/', LoginView.as_view(), name='login'),
         path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
         path('auth/fcm-token/', FCMTokenView.as_view(), name='fcm-token'),
+        path('auth/fcm-test/', FCMTestView.as_view(), name='fcm-test'),
         
         # Customer Dashboard
         path('customer/', include('customer_dashboard.urls')),

@@ -329,10 +329,14 @@ class _NotificationTile extends StatelessWidget {
     switch (type.toLowerCase()) {
       case 'connection_request':
         return Icons.person_add;
-      case 'connection_accepted':
+      case 'connection_request_accepted':
+      case 'request_accepted':
         return Icons.handshake;
-      case 'connection_rejected':
+      case 'connection_request_rejected':
+      case 'request_rejected':
         return Icons.person_remove;
+      case 'connection_deleted':
+        return Icons.link_off;
       case 'reminder':
         return Icons.notifications_active;
       case 'update':

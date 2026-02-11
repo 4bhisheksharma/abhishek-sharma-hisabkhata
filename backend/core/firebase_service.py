@@ -54,23 +54,29 @@ class FirebaseService:
             return False
         
         try:
+            # Ensure all data values are strings (Firebase requirement)
+            clean_data = {str(k): str(v) for k, v in (data or {}).items()}
+            
             # Create message
             message = messaging.Message(
                 notification=messaging.Notification(
                     title=title,
                     body=body,
                 ),
-                data=data or {},
+                data=clean_data,
                 token=fcm_token,
                 android=messaging.AndroidConfig(
+                    priority='high',
                     notification=messaging.AndroidNotification(
-                        icon="ic_notification",
                         color="#2196F3",
                         sound="default",
-                        channel_id="hisab_khata_notifications"
+                        channel_id="hisab_khata_notifications",
+                        default_sound=True,
+                        notification_count=1,
                     )
                 ),
                 apns=messaging.APNSConfig(
+                    headers={'apns-priority': '10'},
                     payload=messaging.APNSPayload(
                         aps=messaging.Aps(
                             alert=messaging.ApsAlert(
@@ -121,23 +127,29 @@ class FirebaseService:
             return {"success_count": 0, "failure_count": 0}
         
         try:
+            # Ensure all data values are strings (Firebase requirement)
+            clean_data = {str(k): str(v) for k, v in (data or {}).items()}
+            
             # Create multicast message
             message = messaging.MulticastMessage(
                 notification=messaging.Notification(
                     title=title,
                     body=body,
                 ),
-                data=data or {},
+                data=clean_data,
                 tokens=fcm_tokens,
                 android=messaging.AndroidConfig(
+                    priority='high',
                     notification=messaging.AndroidNotification(
-                        icon="ic_notification",
                         color="#2196F3",
                         sound="default",
-                        channel_id="hisab_khata_notifications"
+                        channel_id="hisab_khata_notifications",
+                        default_sound=True,
+                        notification_count=1,
                     )
                 ),
                 apns=messaging.APNSConfig(
+                    headers={'apns-priority': '10'},
                     payload=messaging.APNSPayload(
                         aps=messaging.Aps(
                             alert=messaging.ApsAlert(
@@ -237,16 +249,40 @@ class FirebaseService:
         return cls.send_push_notification(requester_fcm_token, title, body, data)
     
     @classmethod
-    def send_notification(cls, fcm_token, title, body):
+    def send_connection_deleted_notification(cls, receiver_fcm_token, deleter_name):
         """
-        Send a simple push notification
+        Send notification when a connection is deleted
+        
+        Args:
+            receiver_fcm_token (str): FCM token of the other user
+            deleter_name (str): Name of the person who deleted the connection
+        
+        Returns:
+            bool: True if successful, False otherwise
+        """
+        title = "Connection Deleted"
+        body = f"{deleter_name} has removed the connection with you."
+        
+        data = {
+            "type": "connection_deleted",
+            "deleter_name": deleter_name,
+            "action": "view_connections"
+        }
+        
+        return cls.send_push_notification(receiver_fcm_token, title, body, data)
+    
+    @classmethod
+    def send_notification(cls, fcm_token, title, body, data=None):
+        """
+        Send a push notification with optional data
         
         Args:
             fcm_token (str): FCM token of the target device
             title (str): Notification title
             body (str): Notification body
+            data (dict): Optional additional data
         
         Returns:
             bool: True if successful, False otherwise
         """
-        return cls.send_push_notification(fcm_token, title, body)
+        return cls.send_push_notification(fcm_token, title, body, data)

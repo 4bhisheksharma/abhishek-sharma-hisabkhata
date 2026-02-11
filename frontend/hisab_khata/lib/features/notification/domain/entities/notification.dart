@@ -33,8 +33,11 @@ class Notification extends Equatable {
   });
 
   bool get isConnectionRequest => type == 'connection_request';
-  bool get isConnectionAccepted => type == 'connection_request_accepted';
-  bool get isConnectionRejected => type == 'connection_request_rejected';
+  bool get isConnectionAccepted =>
+      type == 'connection_request_accepted' || type == 'request_accepted';
+  bool get isConnectionRejected =>
+      type == 'connection_request_rejected' || type == 'request_rejected';
+  bool get isConnectionDeleted => type == 'connection_deleted';
 
   Notification copyWith({
     int? notificationId,

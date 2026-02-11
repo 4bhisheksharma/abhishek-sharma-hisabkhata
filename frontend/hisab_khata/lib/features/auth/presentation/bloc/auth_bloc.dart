@@ -8,6 +8,7 @@ import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/change_password_usecase.dart';
 import 'package:hisab_khata/services/fcm_service.dart';
+import 'package:hisab_khata/config/storage/storage_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 
@@ -153,6 +154,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final user = await getCurrentUserUseCase();
         if (user != null) {
           emit(Authenticated(user: user));
+
+          // Initialize FCM with the stored auth token so push notifications
+          // work even when the app is restarted with an existing session
+          if (!FCMService.isInitialized) {
+            final accessToken = await StorageService.getAccessToken();
+            if (accessToken != null) {
+              await FCMService.initialize(authToken: accessToken);
+            }
+          }
         } else {
           emit(const Unauthenticated());
         }

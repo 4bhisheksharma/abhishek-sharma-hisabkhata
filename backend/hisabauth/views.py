@@ -3,13 +3,17 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from hisabauth.serializer import UserSerializer, UserProfileSerializer
 from hisabauth.models import User, Role
 from otp_verification.services import send_otp_email, verify_otp
 from otp_verification.models import PendingRegistration
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
+from core.firebase_service import FirebaseService
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class RegisterView(APIView):
@@ -210,18 +214,11 @@ class FCMTokenView(APIView):
     """
     Handle FCM token operations for push notifications
     """
+    permission_classes = [IsAuthenticated]
     
     def post(self, request):
         """Store/update FCM token for the authenticated user"""
         try:
-            # Check if user is authenticated
-            if not request.user.is_authenticated:
-                return Response({
-                    'status': 401,
-                    'message': 'Authentication required',
-                    'data': None
-                }, status=status.HTTP_401_UNAUTHORIZED)
-            
             fcm_token = request.data.get('fcm_token')
             
             if not fcm_token:
@@ -233,8 +230,17 @@ class FCMTokenView(APIView):
             
             # Update user's FCM token
             user = request.user
+            old_token = user.fcm_token
             user.fcm_token = fcm_token
             user.save()
+            
+            logger.info(f"FCM token updated for user {user.email} (user_id={user.user_id})")
+            logger.info(f"  New token: {fcm_token[:30]}...")
+            if old_token:
+                token_changed = old_token != fcm_token
+                logger.info(f"  Token changed: {token_changed}")
+            else:
+                logger.info(f"  Previous token was None")
             
             return Response({
                 'status': 200,
@@ -247,6 +253,7 @@ class FCMTokenView(APIView):
             }, status=status.HTTP_200_OK)
             
         except Exception as e:
+            logger.error(f"Error updating FCM token: {str(e)}")
             return Response({
                 'status': 500,
                 'message': 'Internal server error',
@@ -256,18 +263,11 @@ class FCMTokenView(APIView):
     def delete(self, request):
         """Remove FCM token for the authenticated user (on logout)"""
         try:
-            # Check if user is authenticated
-            if not request.user.is_authenticated:
-                return Response({
-                    'status': 401,
-                    'message': 'Authentication required',
-                    'data': None
-                }, status=status.HTTP_401_UNAUTHORIZED)
-            
-            # Remove user's FCM token
             user = request.user
             user.fcm_token = None
             user.save()
+            
+            logger.info(f"FCM token cleared for user {user.email}")
             
             return Response({
                 'status': 200,
@@ -285,3 +285,99 @@ class FCMTokenView(APIView):
                 'message': 'Internal server error',
                 'data': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class FCMTestView(APIView):
+    """
+    Send a test push notification to the currently authenticated user.
+    Use this to verify FCM delivery end-to-end.
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        user = request.user
+        
+        logger.info(f"\n{'='*50}")
+        logger.info(f"FCM TEST NOTIFICATION for {user.email}")
+        logger.info(f"  User ID: {user.user_id}")
+        logger.info(f"  FCM Token in DB: {user.fcm_token[:40] if user.fcm_token else 'NONE'}...")
+        logger.info(f"{'='*50}")
+        
+        if not user.fcm_token:
+            return Response({
+                'status': 400,
+                'message': 'No FCM token stored for your account. Open the app first to register the token.',
+                'data': {
+                    'user_id': user.user_id,
+                    'email': user.email,
+                    'fcm_token': None
+                }
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Send test notification
+        success = FirebaseService.send_push_notification(
+            fcm_token=user.fcm_token,
+            title="Test Notification",
+            body=f"Hello {user.full_name}! If you see this, FCM is working.",
+            data={
+                "type": "test",
+                "message": "This is a test push notification"
+            }
+        )
+        
+        if success:
+            return Response({
+                'status': 200,
+                'message': 'Test notification sent successfully via FCM',
+                'data': {
+                    'user_id': user.user_id,
+                    'email': user.email,
+                    'fcm_token_prefix': user.fcm_token[:30] + '...',
+                    'firebase_accepted': True
+                }
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({
+                'status': 500,
+                'message': 'Failed to send test notification. Check server logs.',
+                'data': {
+                    'user_id': user.user_id,
+                    'email': user.email,
+                    'fcm_token_prefix': user.fcm_token[:30] + '...',
+                    'firebase_accepted': False
+                }
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    def get(self, request):
+        """Check FCM token status for current user and all users (debug)"""
+        user = request.user
+        
+        # Get all users with FCM tokens
+        users_with_tokens = User.objects.exclude(fcm_token__isnull=True).exclude(fcm_token='').values_list(
+            'user_id', 'email', 'full_name', 'fcm_token'
+        )
+        
+        token_info = []
+        for uid, email, name, token in users_with_tokens:
+            token_info.append({
+                'user_id': uid,
+                'email': email,
+                'full_name': name,
+                'fcm_token_prefix': token[:30] + '...' if token else None,
+                'is_current_user': uid == user.user_id
+            })
+        
+        return Response({
+            'status': 200,
+            'message': 'FCM token debug info',
+            'data': {
+                'current_user': {
+                    'user_id': user.user_id,
+                    'email': user.email,
+                    'has_fcm_token': bool(user.fcm_token),
+                    'fcm_token_prefix': user.fcm_token[:30] + '...' if user.fcm_token else None,
+                },
+                'all_users_with_tokens': token_info,
+                'total_users_with_tokens': len(token_info)
+            }
+        }, status=status.HTTP_200_OK)

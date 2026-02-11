@@ -257,6 +257,18 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     'status': connection_request.status
                 })
                 
+                # Send push notification to receiver if they have FCM token
+                if receiver.fcm_token:
+                    try:
+                        FirebaseService.send_connection_request_notification(
+                            receiver.fcm_token,
+                            request.user.full_name,
+                            request.user.email
+                        )
+                        logger.info(f"Push notification sent to {receiver.email} for bulk connection request")
+                    except Exception as e:
+                        logger.error(f"Failed to send push notification to {receiver.email}: {str(e)}")
+                
             except Exception as e:
                 results['failed'].append({
                     'user_id': receiver.user_id,
@@ -454,10 +466,9 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             # Send push notification if the other user has FCM token
             if other_user.fcm_token:
                 try:
-                    FirebaseService.send_notification(
+                    FirebaseService.send_connection_deleted_notification(
                         other_user.fcm_token,
-                        "Connection Deleted",
-                        f"{request.user.full_name} has removed the connection with you."
+                        request.user.full_name
                     )
                     logger.info(f"Push notification sent to {other_user.email} for connection deletion")
                 except Exception as e:
@@ -619,6 +630,23 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     'sender_email': connection_request.sender.email,
                     'new_status': new_status
                 })
+                
+                # Send push notification to sender if they have FCM token
+                if connection_request.sender.fcm_token:
+                    try:
+                        if new_status == 'accepted':
+                            FirebaseService.send_request_accepted_notification(
+                                connection_request.sender.fcm_token,
+                                request.user.full_name
+                            )
+                        elif new_status == 'rejected':
+                            FirebaseService.send_request_rejected_notification(
+                                connection_request.sender.fcm_token,
+                                request.user.full_name
+                            )
+                        logger.info(f"Push notification sent to {connection_request.sender.email} for bulk {new_status}")
+                    except Exception as e:
+                        logger.error(f"Failed to send push notification to {connection_request.sender.email}: {str(e)}")
                 
             except BusinessCustomerRequest.DoesNotExist:
                 results['failed'].append({
