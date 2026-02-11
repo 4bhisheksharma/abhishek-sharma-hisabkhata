@@ -6,7 +6,6 @@ import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../domain/entities/notification.dart' as entity;
 import '../bloc/bloc.dart';
-import '../../../request/presentation/screens/connection_requests_screen.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -125,15 +124,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
                                 );
                               }
 
-                              // Navigate to connection requests screen if it's a connection request notification
+                              // Navigate to connection requests screen (tab index 2) if it's a connection request notification
                               if (notification.isConnectionRequest) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const ConnectionRequestsScreen(),
-                                  ),
-                                );
+                                Navigator.pop(context, 2);
                               }
                             },
                             onDelete: () {

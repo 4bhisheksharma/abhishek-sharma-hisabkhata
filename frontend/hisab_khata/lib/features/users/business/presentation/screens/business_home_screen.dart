@@ -272,13 +272,19 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
             showLoyaltyPoints: false,
             currentNavIndex: _currentNavIndex,
             onNavTap: _onNavTap,
-            onNotificationTap: () {
-              Navigator.push(
+            onNotificationTap: () async {
+              final result = await Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const NotificationScreen(),
                 ),
               );
+              // If a tab index was returned, navigate to it
+              if (result != null && result is int && mounted) {
+                setState(() {
+                  _currentNavIndex = result;
+                });
+              }
             },
             body: _buildBodyContent(state),
           );
