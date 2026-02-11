@@ -52,4 +52,7 @@ abstract class ConnectionRequestRepository {
     int? userId,
     int? requestId,
   });
+  Future<Either<Failure, Map<String, dynamic>>> cancelRequest({
+    required int requestId,
+  });
 }

@@ -186,4 +186,20 @@ class ConnectionRequestRepositoryImpl implements ConnectionRequestRepository {
       return Left(Failure(e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, Map<String, dynamic>>> cancelRequest({
+    required int requestId,
+  }) async {
+    try {
+      final result = await remoteDataSource.cancelRequest(requestId: requestId);
+      return Right(result);
+    } on UnauthenticatedException catch (e) {
+      return Left(Failure(e.exceptionMessage));
+    } on ServerException catch (e) {
+      return Left(Failure(e.exceptionMessage));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
 }

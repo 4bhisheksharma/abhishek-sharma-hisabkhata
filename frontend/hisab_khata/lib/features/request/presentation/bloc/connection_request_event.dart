@@ -104,3 +104,18 @@ class DeleteConnectionEvent extends ConnectionRequestEvent {
   @override
   List<Object?> get props => [userId, requestId];
 }
+
+/// Cancel a sent connection request event
+class CancelConnectionRequestEvent extends ConnectionRequestEvent {
+  final int requestId;
+
+  const CancelConnectionRequestEvent({required this.requestId});
+
+  @override
+  List<Object?> get props => [requestId];
+}
+
+/// Fetch both sent and received requests for the connection requests screen
+class FetchAllConnectionRequestsEvent extends ConnectionRequestEvent {
+  const FetchAllConnectionRequestsEvent();
+}

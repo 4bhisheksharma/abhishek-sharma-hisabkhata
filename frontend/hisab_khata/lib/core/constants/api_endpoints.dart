@@ -33,6 +33,7 @@ class ApiEndpoints {
       "request/connections/delete-connection/";
   static String updateRequestStatus(int id) =>
       "request/connections/$id/update-status/";
+  static String cancelRequest(int id) => "request/connections/$id/cancel/";
 
   // Notification endpoints
   static const String allNotifications = "notifications/";

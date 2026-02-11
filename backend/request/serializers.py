@@ -58,9 +58,11 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
     sender_email = serializers.EmailField(source='sender.email', read_only=True)
     sender_name = serializers.CharField(source='sender.full_name', read_only=True)
     sender_phone = serializers.CharField(source='sender.phone_number', read_only=True)
+    sender_profile_picture = serializers.ImageField(source='sender.profile_picture', read_only=True)
     receiver_email = serializers.EmailField(source='receiver.email', read_only=True)
     receiver_name = serializers.CharField(source='receiver.full_name', read_only=True)
     receiver_phone = serializers.CharField(source='receiver.phone_number', read_only=True)
+    receiver_profile_picture = serializers.ImageField(source='receiver.profile_picture', read_only=True)
     
     class Meta:
         model = BusinessCustomerRequest
@@ -70,10 +72,12 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
             'sender_email',
             'sender_name',
             'sender_phone',
+            'sender_profile_picture',
             'receiver',
             'receiver_email',
             'receiver_name',
             'receiver_phone',
+            'receiver_profile_picture',
             'status',
             'created_at',
             'updated_at'
@@ -84,9 +88,11 @@ class ConnectionRequestSerializer(serializers.ModelSerializer):
             'sender_email',
             'sender_name',
             'sender_phone',
+            'sender_profile_picture',
             'receiver_email',
             'receiver_name',
             'receiver_phone',
+            'receiver_profile_picture',
             'created_at',
             'updated_at'
         ]

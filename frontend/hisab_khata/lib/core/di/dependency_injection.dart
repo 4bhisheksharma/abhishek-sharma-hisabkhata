@@ -45,6 +45,7 @@ import '../../features/request/domain/usecases/get_pending_received_requests_use
 import '../../features/request/domain/usecases/get_connected_users_usecase.dart';
 import '../../features/request/domain/usecases/update_request_status_usecase.dart';
 import '../../features/request/domain/usecases/delete_connection_usecase.dart';
+import '../../features/request/domain/usecases/cancel_connection_request_usecase.dart';
 import '../../features/request/presentation/bloc/connection_request_bloc.dart';
 import '../../features/request/data/datasource/notification_remote_data_source.dart';
 import '../../features/notification/data/repository_imp/notification_repository_impl.dart';
@@ -134,6 +135,7 @@ class DependencyInjection {
   late final GetConnectedUsersUseCase _getConnectedUsersUseCase;
   late final UpdateRequestStatusUseCase _updateRequestStatusUseCase;
   late final DeleteConnectionUseCase _deleteConnectionUseCase;
+  late final CancelConnectionRequestUseCase _cancelConnectionRequestUseCase;
 
   // Use Cases - Notification
   late final GetAllNotificationsUseCase _getAllNotificationsUseCase;
@@ -280,6 +282,9 @@ class DependencyInjection {
     _deleteConnectionUseCase = DeleteConnectionUseCase(
       _connectionRequestRepository,
     );
+    _cancelConnectionRequestUseCase = CancelConnectionRequestUseCase(
+      _connectionRequestRepository,
+    );
 
     // Use Cases - Notification
     _getAllNotificationsUseCase = GetAllNotificationsUseCase(
@@ -353,6 +358,7 @@ class DependencyInjection {
       getConnectedUsersUseCase: _getConnectedUsersUseCase,
       updateRequestStatusUseCase: _updateRequestStatusUseCase,
       deleteConnectionUseCase: _deleteConnectionUseCase,
+      cancelConnectionRequestUseCase: _cancelConnectionRequestUseCase,
     );
     _notificationBloc = NotificationBloc(
       getAllNotificationsUseCase: _getAllNotificationsUseCase,

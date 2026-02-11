@@ -6,7 +6,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_s
 import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
-import 'package:hisab_khata/shared/widgets/placeholder_page.dart';
+import 'package:hisab_khata/features/request/presentation/screens/connection_requests_screen.dart';
 import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
@@ -225,14 +225,8 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
         const ConnectedUsersList(
           filterBusinesses: false, // Business sees customers
         ),
-        // 2 - Connection Placeholder
-        PlaceholderPage(
-          title: AppLocalizations.of(context)!.connectionPlaceholder,
-          icon: Icons.connect_without_contact_rounded,
-          description: AppLocalizations.of(
-            context,
-          )!.connectionPlaceholderDescription,
-        ),
+        // 2 - Connection Requests (Received + Sent)
+        const ConnectionRequestsScreen(),
         // 3 - Analytics
         const BusinessAnalyticsScreen(),
         // 4 - Profile (handled via navigation)

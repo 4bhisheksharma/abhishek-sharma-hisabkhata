@@ -9,6 +9,7 @@ import '../../domain/usecases/get_pending_received_requests_usecase.dart';
 import '../../domain/usecases/get_connected_users_usecase.dart';
 import '../../domain/usecases/update_request_status_usecase.dart';
 import '../../domain/usecases/delete_connection_usecase.dart';
+import '../../domain/usecases/cancel_connection_request_usecase.dart';
 import 'connection_request_event.dart';
 import 'connection_request_state.dart';
 
@@ -24,6 +25,7 @@ class ConnectionRequestBloc
   final GetConnectedUsersUseCase getConnectedUsersUseCase;
   final UpdateRequestStatusUseCase updateRequestStatusUseCase;
   final DeleteConnectionUseCase deleteConnectionUseCase;
+  final CancelConnectionRequestUseCase cancelConnectionRequestUseCase;
 
   ConnectionRequestBloc({
     required this.searchUsersUseCase,
@@ -36,6 +38,7 @@ class ConnectionRequestBloc
     required this.getConnectedUsersUseCase,
     required this.updateRequestStatusUseCase,
     required this.deleteConnectionUseCase,
+    required this.cancelConnectionRequestUseCase,
   }) : super(const ConnectionRequestInitial()) {
     on<SearchUsersEvent>(_onSearchUsers);
     on<FetchPaginatedUsersEvent>(_onFetchPaginatedUsers);
@@ -48,6 +51,8 @@ class ConnectionRequestBloc
     on<GetConnectedUsersEvent>(_onGetConnectedUsers);
     on<UpdateRequestStatusEvent>(_onUpdateRequestStatus);
     on<DeleteConnectionEvent>(_onDeleteConnection);
+    on<CancelConnectionRequestEvent>(_onCancelConnectionRequest);
+    on<FetchAllConnectionRequestsEvent>(_onFetchAllConnectionRequests);
   }
 
   /// Handle search users event
@@ -262,6 +267,62 @@ class ConnectionRequestBloc
           message: response['message'] ?? 'Connection deleted successfully',
           deletedUserInfo: response['deleted_user'] ?? {},
         ),
+      ),
+    );
+  }
+
+  /// Handle cancel connection request event
+  Future<void> _onCancelConnectionRequest(
+    CancelConnectionRequestEvent event,
+    Emitter<ConnectionRequestState> emit,
+  ) async {
+    emit(const ConnectionRequestLoading());
+    final result = await cancelConnectionRequestUseCase(
+      requestId: event.requestId,
+    );
+    result.fold(
+      (failure) =>
+          emit(ConnectionRequestError(message: failure.failureMessage)),
+      (response) {
+        // After cancel, reload all requests
+        add(const FetchAllConnectionRequestsEvent());
+      },
+    );
+  }
+
+  /// Handle fetch all (sent + received) connection requests
+  Future<void> _onFetchAllConnectionRequests(
+    FetchAllConnectionRequestsEvent event,
+    Emitter<ConnectionRequestState> emit,
+  ) async {
+    emit(const ConnectionRequestLoading());
+
+    final sentResult = await getSentRequestsUseCase();
+    final receivedResult = await getReceivedRequestsUseCase();
+
+    // If either fails, emit error
+    final sentRequests = sentResult.fold(
+      (failure) => null,
+      (requests) => requests,
+    );
+    final receivedRequests = receivedResult.fold(
+      (failure) => null,
+      (requests) => requests,
+    );
+
+    if (sentRequests == null && receivedRequests == null) {
+      emit(
+        const ConnectionRequestError(
+          message: 'Failed to load connection requests',
+        ),
+      );
+      return;
+    }
+
+    emit(
+      AllConnectionRequestsLoaded(
+        sentRequests: sentRequests ?? [],
+        receivedRequests: receivedRequests ?? [],
       ),
     );
   }

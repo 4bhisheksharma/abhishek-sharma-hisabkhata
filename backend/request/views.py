@@ -516,6 +516,51 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
     
+    @action(detail=True, methods=['delete'], url_path='cancel')
+    def cancel_request(self, request, pk=None):
+        """
+        Cancel a pending connection request.
+        Only the sender can cancel their own pending request.
+        """
+        connection_request = self.get_object()
+        
+        # Only the sender can cancel
+        if connection_request.sender != request.user:
+            return Response(
+                {'error': 'Only the sender can cancel a request'},
+                status=status.HTTP_403_FORBIDDEN
+            )
+        
+        # Can only cancel pending requests
+        if connection_request.status != 'pending':
+            return Response(
+                {'error': f'Cannot cancel request with status: {connection_request.status}'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        request_id = connection_request.business_customer_request_id
+        receiver = connection_request.receiver
+        
+        # Delete the request
+        connection_request.delete()
+        
+        # Notify the receiver
+        Notification.objects.create(
+            sender=request.user,
+            receiver=receiver,
+            title="Connection Request Cancelled",
+            message=f"{request.user.full_name} cancelled their connection request.",
+            type="connection_request_cancelled"
+        )
+        
+        return Response(
+            {
+                'message': 'Connection request cancelled successfully',
+                'request_id': request_id
+            },
+            status=status.HTTP_200_OK
+        )
+    
     @action(detail=True, methods=['patch'], url_path='update-status')
     def update_status(self, request, pk=None):
         """

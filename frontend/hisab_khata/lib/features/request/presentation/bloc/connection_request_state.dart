@@ -134,6 +134,20 @@ class ConnectionRequestError extends ConnectionRequestState {
   List<Object?> get props => [message];
 }
 
+/// Combined sent + received requests loaded state
+class AllConnectionRequestsLoaded extends ConnectionRequestState {
+  final List<ConnectionRequest> sentRequests;
+  final List<ConnectionRequest> receivedRequests;
+
+  const AllConnectionRequestsLoaded({
+    required this.sentRequests,
+    required this.receivedRequests,
+  });
+
+  @override
+  List<Object?> get props => [sentRequests, receivedRequests];
+}
+
 /// Paginated users loaded state — used by the bulk add screen
 class PaginatedUsersLoaded extends ConnectionRequestState {
   final List<UserSearchResult> users;

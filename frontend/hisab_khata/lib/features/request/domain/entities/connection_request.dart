@@ -6,10 +6,12 @@ class ConnectionRequest extends Equatable {
   final String senderEmail;
   final String senderName;
   final String? senderPhone;
+  final String? senderProfilePicture;
   final int receiver;
   final String receiverEmail;
   final String receiverName;
   final String? receiverPhone;
+  final String? receiverProfilePicture;
   final String status; // 'pending', 'accepted', 'rejected'
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -20,10 +22,12 @@ class ConnectionRequest extends Equatable {
     required this.senderEmail,
     required this.senderName,
     this.senderPhone,
+    this.senderProfilePicture,
     required this.receiver,
     required this.receiverEmail,
     required this.receiverName,
     this.receiverPhone,
+    this.receiverProfilePicture,
     required this.status,
     required this.createdAt,
     required this.updatedAt,
@@ -40,10 +44,12 @@ class ConnectionRequest extends Equatable {
     senderEmail,
     senderName,
     senderPhone,
+    senderProfilePicture,
     receiver,
     receiverEmail,
     receiverName,
     receiverPhone,
+    receiverProfilePicture,
     status,
     createdAt,
     updatedAt,
