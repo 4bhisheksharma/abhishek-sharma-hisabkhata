@@ -133,3 +133,50 @@ class ConnectionRequestError extends ConnectionRequestState {
   @override
   List<Object?> get props => [message];
 }
+
+/// Paginated users loaded state — used by the bulk add screen
+class PaginatedUsersLoaded extends ConnectionRequestState {
+  final List<UserSearchResult> users;
+  final bool hasMore;
+  final int currentPage;
+  final int totalCount;
+  final bool isLoadingMore;
+  final String? searchQuery;
+
+  const PaginatedUsersLoaded({
+    required this.users,
+    required this.hasMore,
+    required this.currentPage,
+    required this.totalCount,
+    this.isLoadingMore = false,
+    this.searchQuery,
+  });
+
+  PaginatedUsersLoaded copyWith({
+    List<UserSearchResult>? users,
+    bool? hasMore,
+    int? currentPage,
+    int? totalCount,
+    bool? isLoadingMore,
+    String? searchQuery,
+  }) {
+    return PaginatedUsersLoaded(
+      users: users ?? this.users,
+      hasMore: hasMore ?? this.hasMore,
+      currentPage: currentPage ?? this.currentPage,
+      totalCount: totalCount ?? this.totalCount,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      searchQuery: searchQuery ?? this.searchQuery,
+    );
+  }
+
+  @override
+  List<Object?> get props => [
+    users,
+    hasMore,
+    currentPage,
+    totalCount,
+    isLoadingMore,
+    searchQuery,
+  ];
+}

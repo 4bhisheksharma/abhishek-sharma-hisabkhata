@@ -59,6 +59,27 @@ class GetConnectedUsersEvent extends ConnectionRequestEvent {
   const GetConnectedUsersEvent();
 }
 
+/// Fetch paginated users (initial load or search)
+class FetchPaginatedUsersEvent extends ConnectionRequestEvent {
+  final String? search;
+  final int page;
+  final int pageSize;
+
+  const FetchPaginatedUsersEvent({
+    this.search,
+    this.page = 1,
+    this.pageSize = 20,
+  });
+
+  @override
+  List<Object?> get props => [search, page, pageSize];
+}
+
+/// Load next page of paginated users
+class LoadMoreUsersEvent extends ConnectionRequestEvent {
+  const LoadMoreUsersEvent();
+}
+
 /// Update request status event
 class UpdateRequestStatusEvent extends ConnectionRequestEvent {
   final int requestId;

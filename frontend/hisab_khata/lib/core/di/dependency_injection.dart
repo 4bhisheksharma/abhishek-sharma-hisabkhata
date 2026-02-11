@@ -36,6 +36,7 @@ import '../../features/request/data/datasource/connection_request_remote_data_so
 import '../../features/request/data/repository_imp/connection_request_repository_impl.dart';
 import '../../features/request/domain/repositories/connection_request_repository.dart';
 import '../../features/request/domain/usecases/search_users_usecase.dart';
+import '../../features/request/domain/usecases/fetch_paginated_users_usecase.dart';
 import '../../features/request/domain/usecases/send_bulk_connection_request_usecase.dart';
 import '../../features/request/domain/usecases/send_connection_request_usecase.dart';
 import '../../features/request/domain/usecases/get_sent_requests_usecase.dart';
@@ -123,6 +124,7 @@ class DependencyInjection {
 
   // Use Cases - Connection Request
   late final SearchUsersUseCase _searchUsersUseCase;
+  late final FetchPaginatedUsersUseCase _fetchPaginatedUsersUseCase;
   late final SendConnectionRequestUseCase _sendConnectionRequestUseCase;
   late final SendBulkConnectionRequestUseCase _sendBulkConnectionRequestUseCase;
   late final GetSentRequestsUseCase _getSentRequestsUseCase;
@@ -251,6 +253,9 @@ class DependencyInjection {
 
     // Use Cases - Connection Request
     _searchUsersUseCase = SearchUsersUseCase(_connectionRequestRepository);
+    _fetchPaginatedUsersUseCase = FetchPaginatedUsersUseCase(
+      _connectionRequestRepository,
+    );
     _sendConnectionRequestUseCase = SendConnectionRequestUseCase(
       _connectionRequestRepository,
     );
@@ -314,7 +319,6 @@ class DependencyInjection {
     _getMonthlySpendingLimit = GetMonthlySpendingLimit(_analyticsRepository);
     _setMonthlyLimit = SetMonthlyLimit(_analyticsRepository);
 
-
     // BLoCs
     _authBloc = AuthBloc(
       loginUseCase: _loginUseCase,
@@ -340,6 +344,7 @@ class DependencyInjection {
     );
     _connectionRequestBloc = ConnectionRequestBloc(
       searchUsersUseCase: _searchUsersUseCase,
+      fetchPaginatedUsersUseCase: _fetchPaginatedUsersUseCase,
       sendConnectionRequestUseCase: _sendConnectionRequestUseCase,
       sendBulkConnectionRequestUseCase: _sendBulkConnectionRequestUseCase,
       getSentRequestsUseCase: _getSentRequestsUseCase,

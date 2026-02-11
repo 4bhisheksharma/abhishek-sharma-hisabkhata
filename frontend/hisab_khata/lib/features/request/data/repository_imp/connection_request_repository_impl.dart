@@ -4,6 +4,7 @@ import '../../../../core/errors/exceptions.dart';
 import '../../domain/entities/bulk_send_request_response.dart';
 import '../../domain/entities/connection_request.dart';
 import '../../domain/entities/connected_user.dart';
+import '../../domain/entities/paginated_users_response.dart';
 import '../../domain/entities/user_search_result.dart';
 import '../../domain/repositories/connection_request_repository.dart';
 import '../datasource/connection_request_remote_data_source.dart';
@@ -19,6 +20,28 @@ class ConnectionRequestRepositoryImpl implements ConnectionRequestRepository {
   ) async {
     try {
       final result = await remoteDataSource.searchUsers(query);
+      return Right(result);
+    } on UnauthenticatedException catch (e) {
+      return Left(Failure(e.exceptionMessage));
+    } on ServerException catch (e) {
+      return Left(Failure(e.exceptionMessage));
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, PaginatedUsersResponse>> fetchPaginatedUsers({
+    String? search,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    try {
+      final result = await remoteDataSource.fetchPaginatedUsers(
+        search: search,
+        page: page,
+        pageSize: pageSize,
+      );
       return Right(result);
     } on UnauthenticatedException catch (e) {
       return Left(Failure(e.exceptionMessage));

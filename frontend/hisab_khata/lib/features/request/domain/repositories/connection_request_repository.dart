@@ -4,11 +4,19 @@ import 'package:hisab_khata/core/errors/failures.dart';
 import '../entities/bulk_send_request_response.dart';
 import '../entities/connection_request.dart';
 import '../entities/connected_user.dart';
+import '../entities/paginated_users_response.dart';
 import '../entities/user_search_result.dart';
 
 abstract class ConnectionRequestRepository {
   /// Search users by email or phone number
   Future<Either<Failure, List<UserSearchResult>>> searchUsers(String query);
+
+  /// Fetch paginated users with optional search query
+  Future<Either<Failure, PaginatedUsersResponse>> fetchPaginatedUsers({
+    String? search,
+    int page = 1,
+    int pageSize = 20,
+  });
 
   /// Send connection request to user by email or user ID
   Future<Either<Failure, ConnectionRequest>> sendRequest({

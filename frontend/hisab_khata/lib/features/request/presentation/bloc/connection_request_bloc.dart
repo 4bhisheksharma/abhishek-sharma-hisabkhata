@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/usecases/fetch_paginated_users_usecase.dart';
 import '../../domain/usecases/search_users_usecase.dart';
 import '../../domain/usecases/send_bulk_connection_request_usecase.dart';
 import '../../domain/usecases/send_connection_request_usecase.dart';
@@ -14,6 +15,7 @@ import 'connection_request_state.dart';
 class ConnectionRequestBloc
     extends Bloc<ConnectionRequestEvent, ConnectionRequestState> {
   final SearchUsersUseCase searchUsersUseCase;
+  final FetchPaginatedUsersUseCase fetchPaginatedUsersUseCase;
   final SendConnectionRequestUseCase sendConnectionRequestUseCase;
   final SendBulkConnectionRequestUseCase sendBulkConnectionRequestUseCase;
   final GetSentRequestsUseCase getSentRequestsUseCase;
@@ -25,6 +27,7 @@ class ConnectionRequestBloc
 
   ConnectionRequestBloc({
     required this.searchUsersUseCase,
+    required this.fetchPaginatedUsersUseCase,
     required this.sendConnectionRequestUseCase,
     required this.sendBulkConnectionRequestUseCase,
     required this.getSentRequestsUseCase,
@@ -35,6 +38,8 @@ class ConnectionRequestBloc
     required this.deleteConnectionUseCase,
   }) : super(const ConnectionRequestInitial()) {
     on<SearchUsersEvent>(_onSearchUsers);
+    on<FetchPaginatedUsersEvent>(_onFetchPaginatedUsers);
+    on<LoadMoreUsersEvent>(_onLoadMoreUsers);
     on<SendConnectionRequestEvent>(_onSendConnectionRequest);
     on<SendBulkConnectionRequestEvent>(_onSendBulkConnectionRequest);
     on<GetSentRequestsEvent>(_onGetSentRequests);
@@ -56,6 +61,79 @@ class ConnectionRequestBloc
       (failure) =>
           emit(ConnectionRequestError(message: failure.failureMessage)),
       (users) => emit(UserSearchSuccess(users: users)),
+    );
+  }
+
+  /// Handle fetch paginated users (initial load or new search)
+  Future<void> _onFetchPaginatedUsers(
+    FetchPaginatedUsersEvent event,
+    Emitter<ConnectionRequestState> emit,
+  ) async {
+    // Show full loading only for page 1 (initial or new search)
+    if (event.page == 1) {
+      emit(const ConnectionRequestLoading());
+    }
+
+    final result = await fetchPaginatedUsersUseCase(
+      search: event.search,
+      page: event.page,
+      pageSize: event.pageSize,
+    );
+
+    result.fold(
+      (failure) =>
+          emit(ConnectionRequestError(message: failure.failureMessage)),
+      (response) => emit(
+        PaginatedUsersLoaded(
+          users: response.results,
+          hasMore: response.hasNextPage,
+          currentPage: event.page,
+          totalCount: response.count,
+          searchQuery: event.search,
+        ),
+      ),
+    );
+  }
+
+  /// Handle load more users (next page)
+  Future<void> _onLoadMoreUsers(
+    LoadMoreUsersEvent event,
+    Emitter<ConnectionRequestState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is! PaginatedUsersLoaded ||
+        !currentState.hasMore ||
+        currentState.isLoadingMore) {
+      return;
+    }
+
+    // Emit loading-more state (keeps existing users visible)
+    emit(currentState.copyWith(isLoadingMore: true));
+
+    final nextPage = currentState.currentPage + 1;
+    final result = await fetchPaginatedUsersUseCase(
+      search: currentState.searchQuery,
+      page: nextPage,
+    );
+
+    result.fold(
+      (failure) {
+        // On failure, revert loading-more flag
+        emit(currentState.copyWith(isLoadingMore: false));
+      },
+      (response) {
+        // Append new users to existing list
+        final allUsers = [...currentState.users, ...response.results];
+        emit(
+          PaginatedUsersLoaded(
+            users: allUsers,
+            hasMore: response.hasNextPage,
+            currentPage: nextPage,
+            totalCount: response.count,
+            searchQuery: currentState.searchQuery,
+          ),
+        );
+      },
     );
   }
 

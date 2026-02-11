@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
@@ -21,15 +22,19 @@ class BulkAddConnectionScreen extends StatefulWidget {
 
 class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
   final _searchController = TextEditingController();
+  final _scrollController = ScrollController();
   final Set<int> _selectedUserIds = {};
-  List<UserSearchResult> _filteredUsers = [];
   String _userRole = '';
-  bool _hasSearched = false;
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     _loadUserRole();
+    _scrollController.addListener(_onScroll);
+
+    // Load first page of all users immediately
+    context.read<ConnectionRequestBloc>().add(const FetchPaginatedUsersEvent());
   }
 
   Future<void> _loadUserRole() async {
@@ -42,6 +47,8 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
+    _debounce?.cancel();
     super.dispose();
   }
 
@@ -54,24 +61,30 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     return 'Add Multiple Connections';
   }
 
-  void _handleSearch(String query) {
-    final trimmedQuery = query.trim();
-    if (trimmedQuery.isEmpty) {
-      // Clear results when search is empty
-      setState(() {
-        _filteredUsers = [];
-        _hasSearched = false;
-      });
-      return;
+  /// Triggers loading the next page when scrolled near the bottom
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      final state = context.read<ConnectionRequestBloc>().state;
+      if (state is PaginatedUsersLoaded &&
+          state.hasMore &&
+          !state.isLoadingMore) {
+        context.read<ConnectionRequestBloc>().add(const LoadMoreUsersEvent());
+      }
     }
+  }
 
-    setState(() {
-      _hasSearched = true;
+  /// Debounced search — waits 400ms after the user stops typing
+  void _handleSearch(String query) {
+    _debounce?.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      final trimmedQuery = query.trim();
+      context.read<ConnectionRequestBloc>().add(
+        FetchPaginatedUsersEvent(
+          search: trimmedQuery.isEmpty ? null : trimmedQuery,
+        ),
+      );
     });
-
-    context.read<ConnectionRequestBloc>().add(
-      SearchUsersEvent(query: trimmedQuery),
-    );
   }
 
   void _toggleUserSelection(int userId) {
@@ -214,19 +227,16 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              // Clear selection and go back if fully successful
               if (response.isFullySuccessful) {
                 setState(() {
                   _selectedUserIds.clear();
                 });
                 Navigator.of(context).pop();
               } else {
-                // Remove successfully sent users from selection
                 setState(() {
                   for (var result in response.successful) {
                     _selectedUserIds.remove(result.receiverId);
                   }
-                  // Also remove skipped users
                   for (var result in response.skipped) {
                     _selectedUserIds.remove(result.receiverId);
                   }
@@ -240,6 +250,128 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     );
   }
 
+  Widget _buildUserTile(UserSearchResult user) {
+    final isSelected = _selectedUserIds.contains(user.userId);
+    final canSelect = user.canSendRequest;
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: isSelected ? AppTheme.primaryBlue : Colors.transparent,
+          width: 2,
+        ),
+      ),
+      child: CheckboxListTile(
+        value: isSelected,
+        onChanged: canSelect
+            ? (value) => _toggleUserSelection(user.userId)
+            : null,
+        title: Row(
+          children: [
+            Expanded(
+              child: Text(
+                user.fullName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            if (user.connectionStatus != null)
+              _buildStatusChip(user.connectionStatus!),
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                const Icon(Icons.email, size: 14, color: Colors.grey),
+                const SizedBox(width: 4),
+                Expanded(
+                  child: Text(user.email, style: const TextStyle(fontSize: 12)),
+                ),
+              ],
+            ),
+            if (user.phoneNumber != null) ...[
+              const SizedBox(height: 2),
+              Row(
+                children: [
+                  const Icon(Icons.phone, size: 14, color: Colors.grey),
+                  const SizedBox(width: 4),
+                  Text(user.phoneNumber!, style: const TextStyle(fontSize: 12)),
+                ],
+              ),
+            ],
+          ],
+        ),
+        secondary: CircleAvatar(
+          backgroundColor: AppTheme.primaryBlue,
+          backgroundImage:
+              user.profilePicture != null &&
+                  ImageUtils.getFullImageUrl(user.profilePicture) != null
+              ? NetworkImage(ImageUtils.getFullImageUrl(user.profilePicture)!)
+              : null,
+          child:
+              user.profilePicture == null ||
+                  ImageUtils.getFullImageUrl(user.profilePicture) == null
+              ? Text(
+                  user.fullName.isNotEmpty
+                      ? user.fullName[0].toUpperCase()
+                      : '?',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+              : null,
+        ),
+        activeColor: AppTheme.primaryBlue,
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(String status) {
+    Color color;
+    String label;
+    switch (status) {
+      case 'pending':
+        color = Colors.orange;
+        label = 'Pending';
+        break;
+      case 'accepted':
+        color = Colors.green;
+        label = 'Connected';
+        break;
+      case 'rejected':
+        color = Colors.red;
+        label = 'Rejected';
+        break;
+      default:
+        color = Colors.grey;
+        label = status;
+    }
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.5)),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 10,
+          color: color,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ConnectionRequestBloc, ConnectionRequestState>(
@@ -248,13 +380,6 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
           _showBulkResultDialog(state);
         } else if (state is ConnectionRequestError) {
           MySnackbar.showError(context, state.message);
-        } else if (state is UserSearchSuccess) {
-          setState(() {
-            // Filter out users who are already connected or have pending requests
-            _filteredUsers = state.users
-                .where((user) => user.canSendRequest)
-                .toList();
-          });
         }
       },
       child: Scaffold(
@@ -321,7 +446,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                 ),
               ),
 
-              // Selection info
+              // Selection info bar
               if (_selectedUserIds.isNotEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(
@@ -348,166 +473,127 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                   ),
                 ),
 
-              // User list
+              // User list with infinite scroll
               Expanded(
                 child: BlocBuilder<ConnectionRequestBloc, ConnectionRequestState>(
+                  buildWhen: (previous, current) =>
+                      current is PaginatedUsersLoaded ||
+                      current is ConnectionRequestLoading ||
+                      current is ConnectionRequestError,
                   builder: (context, state) {
-                    if (state is ConnectionRequestLoading &&
-                        _filteredUsers.isEmpty) {
+                    // Initial loading
+                    if (state is ConnectionRequestLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    if (_filteredUsers.isEmpty) {
+                    // Error state
+                    if (state is ConnectionRequestError) {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              _hasSearched
-                                  ? Icons.search_off
-                                  : Icons.person_search,
+                              Icons.error_outline,
                               size: 64,
-                              color: Colors.grey[400],
+                              color: Colors.red[300],
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              _hasSearched
-                                  ? 'No users found'
-                                  : 'Search for users',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _hasSearched
-                                  ? 'Try searching with a different email or phone number'
-                                  : 'Use the search bar above to find users by email or phone number',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.grey[500],
-                              ),
+                              state.message,
+                              style: TextStyle(color: Colors.red[400]),
                               textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: () {
+                                context.read<ConnectionRequestBloc>().add(
+                                  const FetchPaginatedUsersEvent(),
+                                );
+                              },
+                              child: const Text('Retry'),
                             ),
                           ],
                         ),
                       );
                     }
 
-                    return ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: _filteredUsers.length,
-                      itemBuilder: (context, index) {
-                        final user = _filteredUsers[index];
-                        final isSelected = _selectedUserIds.contains(
-                          user.userId,
-                        );
-
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            side: BorderSide(
-                              color: isSelected
-                                  ? AppTheme.primaryBlue
-                                  : Colors.transparent,
-                              width: 2,
-                            ),
-                          ),
-                          child: CheckboxListTile(
-                            value: isSelected,
-                            onChanged: (value) {
-                              _toggleUserSelection(user.userId);
-                            },
-                            title: Text(
-                              user.fullName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                    // Loaded state
+                    if (state is PaginatedUsersLoaded) {
+                      if (state.users.isEmpty) {
+                        return Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                state.searchQuery != null
+                                    ? Icons.search_off
+                                    : Icons.people_outline,
+                                size: 64,
+                                color: Colors.grey[400],
                               ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.email,
-                                      size: 14,
-                                      color: Colors.grey,
-                                    ),
-                                    const SizedBox(width: 4),
-                                    Expanded(
-                                      child: Text(
-                                        user.email,
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                    ),
-                                  ],
+                              const SizedBox(height: 16),
+                              Text(
+                                state.searchQuery != null
+                                    ? 'No users found for "${state.searchQuery}"'
+                                    : 'No users available',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.grey[600],
+                                  fontWeight: FontWeight.w500,
                                 ),
-                                if (user.phoneNumber != null) ...[
-                                  const SizedBox(height: 2),
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.phone,
-                                        size: 14,
-                                        color: Colors.grey,
-                                      ),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        user.phoneNumber!,
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ],
-                            ),
-                            secondary: CircleAvatar(
-                              backgroundColor: AppTheme.primaryBlue,
-                              backgroundImage:
-                                  user.profilePicture != null &&
-                                      ImageUtils.getFullImageUrl(
-                                            user.profilePicture,
-                                          ) !=
-                                          null
-                                  ? NetworkImage(
-                                      ImageUtils.getFullImageUrl(
-                                        user.profilePicture,
-                                      )!,
-                                    )
-                                  : null,
-                              child:
-                                  user.profilePicture == null ||
-                                      ImageUtils.getFullImageUrl(
-                                            user.profilePicture,
-                                          ) ==
-                                          null
-                                  ? Text(
-                                      user.fullName.isNotEmpty
-                                          ? user.fullName[0].toUpperCase()
-                                          : '?',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                            activeColor: AppTheme.primaryBlue,
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
                           ),
                         );
-                      },
-                    );
+                      }
+
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          final search = _searchController.text.trim();
+                          context.read<ConnectionRequestBloc>().add(
+                            FetchPaginatedUsersEvent(
+                              search: search.isEmpty ? null : search,
+                            ),
+                          );
+                          await context
+                              .read<ConnectionRequestBloc>()
+                              .stream
+                              .firstWhere(
+                                (s) =>
+                                    s is PaginatedUsersLoaded ||
+                                    s is ConnectionRequestError,
+                              );
+                        },
+                        child: ListView.builder(
+                          controller: _scrollController,
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          itemCount:
+                              state.users.length + (state.hasMore ? 1 : 0),
+                          itemBuilder: (context, index) {
+                            // Loading indicator at the bottom
+                            if (index == state.users.length) {
+                              return const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+
+                            return _buildUserTile(state.users[index]);
+                          },
+                        ),
+                      );
+                    }
+
+                    // Default — show loading
+                    return const Center(child: CircularProgressIndicator());
                   },
                 ),
               ),
 
-              // Send button
+              // Total count + Send button
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -521,7 +607,32 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                   ],
                 ),
                 child: SafeArea(
-                  child:
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      // Show total count
+                      BlocBuilder<
+                        ConnectionRequestBloc,
+                        ConnectionRequestState
+                      >(
+                        buildWhen: (_, current) =>
+                            current is PaginatedUsersLoaded,
+                        builder: (context, state) {
+                          if (state is PaginatedUsersLoaded) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Text(
+                                '${state.totalCount} user(s) available',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
+                      ),
                       BlocBuilder<
                         ConnectionRequestBloc,
                         ConnectionRequestState
@@ -543,6 +654,8 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                           );
                         },
                       ),
+                    ],
+                  ),
                 ),
               ),
             ],

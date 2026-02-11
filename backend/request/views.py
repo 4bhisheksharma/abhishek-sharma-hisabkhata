@@ -2,6 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
 from .models import BusinessCustomerRequest
 from .serializers import (
@@ -23,6 +24,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+class UserSearchPagination(PageNumberPagination):
+    """Pagination for user search/list endpoint"""
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 50
+
+
 class ConnectionRequestViewSet(viewsets.ModelViewSet):
     """
     ViewSet for managing connection requests between users
@@ -40,27 +48,43 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], url_path='search-users')
     def search_users(self, request):
         """
-        Search for users by email, phone_number, or full_name
-        Query params: search (email, phone_number, or full_name)
+        Search/list users with cursor-based pagination.
+        
+        Query params:
+            - search (optional): Filter by email, phone_number, or full_name
+            - page (optional): Page number (default: 1)
+            - page_size (optional): Items per page (default: 20, max: 50)
+        
+        If no search query is provided, returns all users (paginated).
+        Always excludes the current authenticated user.
         """
         search_query = request.query_params.get('search', '').strip()
         
-        if not search_query:
-            return Response(
-                {'error': 'Please provide a search query (email, phone_number, or full_name)'},
-                status=status.HTTP_400_BAD_REQUEST
+        # Base queryset: all active users except the current user
+        users_qs = User.objects.filter(
+            is_active=True
+        ).exclude(
+            user_id=request.user.user_id
+        ).order_by('full_name', 'user_id')
+        
+        # Apply search filter if provided
+        if search_query:
+            users_qs = users_qs.filter(
+                Q(email__icontains=search_query) | 
+                Q(phone_number__icontains=search_query) |
+                Q(full_name__icontains=search_query)
             )
         
-        # Search by email, phone_number, or full_name
-        users = User.objects.filter(
-            Q(email__icontains=search_query) | 
-            Q(phone_number__icontains=search_query) |
-            Q(full_name__icontains=search_query)
-        ).exclude(user_id=request.user.user_id)[:10]  # Limit to 10 results
+        # Paginate
+        paginator = UserSearchPagination()
+        page = paginator.paginate_queryset(users_qs, request)
         
-        # Check existing connections for each user
+        if page is None:
+            page = []
+        
+        # Build results with connection status
         results = []
-        for user in users:
+        for user in page:
             user_data = UserSearchSerializer(user).data
             
             # Check if there's an existing request
@@ -77,7 +101,7 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             
             results.append(user_data)
         
-        return Response(results, status=status.HTTP_200_OK)
+        return paginator.get_paginated_response(results)
     
     @action(detail=False, methods=['post'], url_path='send-request')
     def send_request(self, request):

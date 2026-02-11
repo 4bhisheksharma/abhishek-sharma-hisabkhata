@@ -3,11 +3,17 @@ import '../../../../core/constants/api_endpoints.dart';
 import '../models/bulk_send_request_response_model.dart';
 import '../models/connection_request_model.dart';
 import '../models/connected_user_model.dart';
+import '../models/paginated_users_response_model.dart';
 import '../models/user_search_result_model.dart';
 
 /// Abstract class defining connection request remote data source contract
 abstract class ConnectionRequestRemoteDataSource {
   Future<List<UserSearchResultModel>> searchUsers(String query);
+  Future<PaginatedUsersResponseModel> fetchPaginatedUsers({
+    String? search,
+    int page = 1,
+    int pageSize = 20,
+  });
   Future<ConnectionRequestModel> sendRequest({
     String? receiverEmail,
     int? receiverId,
@@ -38,8 +44,36 @@ class ConnectionRequestRemoteDataSourceImpl extends BaseRemoteDataSource
       queryParameters: {'search': query},
     );
 
+    // Handle paginated response — extract 'results' list
+    if (response is Map<String, dynamic> && response.containsKey('results')) {
+      final List<dynamic> data = response['results'];
+      return data.map((json) => UserSearchResultModel.fromJson(json)).toList();
+    }
+
     final List<dynamic> data = response;
     return data.map((json) => UserSearchResultModel.fromJson(json)).toList();
+  }
+
+  @override
+  Future<PaginatedUsersResponseModel> fetchPaginatedUsers({
+    String? search,
+    int page = 1,
+    int pageSize = 20,
+  }) async {
+    final queryParams = <String, String>{
+      'page': page.toString(),
+      'page_size': pageSize.toString(),
+    };
+    if (search != null && search.trim().isNotEmpty) {
+      queryParams['search'] = search.trim();
+    }
+
+    final response = await get(
+      ApiEndpoints.searchUsers,
+      queryParameters: queryParams,
+    );
+
+    return PaginatedUsersResponseModel.fromJson(response);
   }
 
   @override
