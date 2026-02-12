@@ -1,0 +1,183 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% block extrastyle %}{{ block.super }}
+<style>
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    border-left: 4px solid;
+  }
+
+  .stat-card.users {
+    border-left-color: #00d09e;
+  }
+
+  .stat-card.transactions {
+    border-left-color: #00c853;
+  }
+
+  .stat-card.requests {
+    border-left-color: #ff6f00;
+  }
+
+  .stat-card.tickets {
+    border-left-color: #d32f2f;
+  }
+
+  .stat-card h3 {
+    font-size: 0.875rem;
+    color: #858796;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .stat-card .value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #5a5c69;
+  }
+
+  .stat-card .icon {
+    float: right;
+    font-size: 2rem;
+    opacity: 0.3;
+  }
+
+  .app-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .module {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    overflow: hidden;
+  }
+
+  .module h2 {
+    border-radius: 0;
+    margin: 0;
+  }
+
+  .module table {
+    margin: 0;
+  }
+</style>
+{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+<div id="content-main">
+  <h1>Dashboard Overview</h1>
+
+  <!-- Dashboard Statistics Cards -->
+  <div class="dashboard-stats">
+    <div class="stat-card users">
+      <i class="fas fa-users icon"></i>
+      <h3>Total Users</h3>
+      <div class="value" id="total-users">-</div>
+    </div>
+
+    <div class="stat-card transactions">
+      <i class="fas fa-exchange-alt icon"></i>
+      <h3>Transactions</h3>
+      <div class="value" id="total-transactions">-</div>
+    </div>
+
+    <div class="stat-card requests">
+      <i class="fas fa-hand-holding-usd icon"></i>
+      <h3>Pending Requests</h3>
+      <div class="value" id="pending-requests">-</div>
+    </div>
+
+    <div class="stat-card tickets">
+      <i class="fas fa-ticket-alt icon"></i>
+      <h3>Support Tickets</h3>
+      <div class="value" id="support-tickets">-</div>
+    </div>
+  </div>
+
+  <!-- App List -->
+  <div class="app-list">
+    {% if app_list %}
+    {% for app in app_list %}
+    <div class="module">
+      <h2>
+        <a
+          href="{{ app.app_url }}"
+          class="section"
+          title="{% blocktranslate with name=app.name %}Models in the {{ name }} application{% endblocktranslate %}"
+        >
+          {{ app.name }}
+        </a>
+      </h2>
+      <table>
+        {% for model in app.models %}
+        <tr class="model-{{ model.object_name|lower }}">
+          {% if model.admin_url %}
+          <th scope="row">
+            <a href="{{ model.admin_url }}">{{ model.name }}</a>
+          </th>
+          {% else %}
+          <th scope="row">{{ model.name }}</th>
+          {% endif %}
+          {% if model.add_url %}
+          <td>
+            <a href="{{ model.add_url }}" class="addlink"
+              >{% translate 'Add' %}</a
+            >
+          </td>
+          {% else %}
+          <td>&nbsp;</td>
+          {% endif %}
+          {% if model.admin_url %}
+          {% if model.view_only %}
+          <td>
+            <a href="{{ model.admin_url }}" class="viewlink"
+              >{% translate 'View' %}</a
+            >
+          </td>
+          {% else %}
+          <td>
+            <a href="{{ model.admin_url }}" class="changelink"
+              >{% translate 'Change' %}</a
+            >
+          </td>
+          {% endif %}
+          {% else %}
+          <td>&nbsp;</td>
+          {% endif %}
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>{% translate "You don't have permission to view or edit anything." %}</p>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // You can fetch real statistics via AJAX here
+  // For now, using placeholder values
+  document.addEventListener("DOMContentLoaded", function () {
+    // Example: Replace with actual API calls
+    document.getElementById("total-users").textContent = "0";
+    document.getElementById("total-transactions").textContent = "0";
+    document.getElementById("pending-requests").textContent = "0";
+    document.getElementById("support-tickets").textContent = "0";
+  });
+</script>
+{% endblock %}

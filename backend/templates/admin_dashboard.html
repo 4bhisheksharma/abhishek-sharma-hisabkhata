@@ -1,0 +1,217 @@
+{% extends "base.html" %} {% load static %} {% block title %}Admin Dashboard -
+Hisab Khata{% endblock %} {% block sidebar %}
+<div class="sidebar p-3" style="width: 250px">
+  <div class="text-center mb-4">
+    <h4 class="text-white"><i class="fas fa-book"></i> Hisab Khata</h4>
+    <p class="text-white-50 small">Admin Panel</p>
+  </div>
+
+  <nav class="nav flex-column">
+    <a class="nav-link active" href="{% url 'admin:index' %}">
+      <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+    </a>
+    <a class="nav-link" href="{% url 'admin:hisabauth_user_changelist' %}">
+      <i class="fas fa-users me-2"></i> Users
+    </a>
+    <a
+      class="nav-link"
+      href="{% url 'admin:transaction_transaction_changelist' %}"
+    >
+      <i class="fas fa-exchange-alt me-2"></i> Transactions
+    </a>
+    <a class="nav-link" href="{% url 'admin:request_request_changelist' %}">
+      <i class="fas fa-hand-holding-usd me-2"></i> Requests
+    </a>
+    <a
+      class="nav-link"
+      href="{% url 'admin:support_ticket_supportticket_changelist' %}"
+    >
+      <i class="fas fa-ticket-alt me-2"></i> Support Tickets
+    </a>
+    <a
+      class="nav-link"
+      href="{% url 'admin:notification_notification_changelist' %}"
+    >
+      <i class="fas fa-bell me-2"></i> Notifications
+    </a>
+    <a class="nav-link" href="{% url 'admin:analytics_analytics_changelist' %}">
+      <i class="fas fa-chart-bar me-2"></i> Analytics
+    </a>
+
+    <hr
+      class="sidebar-divider my-3"
+      style="border-color: rgba(255, 255, 255, 0.2)"
+    />
+
+    <a class="nav-link" href="{% url 'admin:logout' %}">
+      <i class="fas fa-sign-out-alt me-2"></i> Logout
+    </a>
+  </nav>
+</div>
+{% endblock %} {% block navbar %}
+<nav class="navbar navbar-light bg-white">
+  <div class="container-fluid">
+    <h5 class="mb-0">{% block page_title %}Dashboard{% endblock %}</h5>
+    <div class="d-flex align-items-center">
+      <span class="me-3">
+        <i class="fas fa-user-circle fa-lg text-muted"></i>
+        <span class="ms-2">{{ user.get_full_name|default:user.username }}</span>
+      </span>
+    </div>
+  </div>
+</nav>
+{% endblock %} {% block content %}
+<div class="row">
+  <!-- Statistics Cards -->
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-primary h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-primary text-uppercase mb-1"
+            >
+              Total Users
+            </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-users fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-success h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-success text-uppercase mb-1"
+            >
+              Transactions
+            </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-exchange-alt fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-warning h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-warning text-uppercase mb-1"
+            >
+              Pending Requests
+            </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-hand-holding-usd fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-3 col-md-6 mb-4">
+    <div class="card border-left-danger h-100 py-2">
+      <div class="card-body">
+        <div class="row no-gutters align-items-center">
+          <div class="col mr-2">
+            <div
+              class="text-xs font-weight-bold text-danger text-uppercase mb-1"
+            >
+              Support Tickets
+            </div>
+            <div class="h5 mb-0 font-weight-bold text-gray-800">0</div>
+          </div>
+          <div class="col-auto">
+            <i class="fas fa-ticket-alt fa-2x text-gray-300"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+  <div class="col-lg-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-clock me-2"></i> Recent Transactions
+      </div>
+      <div class="card-body">
+        <p class="text-muted">No recent transactions</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-exclamation-circle me-2"></i> Pending Support Tickets
+      </div>
+      <div class="card-body">
+        <p class="text-muted">No pending tickets</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts Row -->
+<div class="row">
+  <div class="col-lg-12 mb-4">
+    <div class="card">
+      <div class="card-header">
+        <i class="fas fa-chart-line me-2"></i> Analytics Overview
+      </div>
+      <div class="card-body">
+        <canvas id="analyticsChart" height="80"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Sample chart - replace with real data
+  const ctx = document.getElementById("analyticsChart");
+  if (ctx) {
+    new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+        datasets: [
+          {
+            label: "Transactions",
+            data: [0, 0, 0, 0, 0, 0],
+            borderColor: "rgb(0, 208, 158)",
+            backgroundColor: "rgba(0, 208, 158, 0.1)",
+            tension: 0.4,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: "top",
+          },
+        },
+      },
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,387 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  body {
+    background: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    padding: 20px;
+  }
+
+  #container {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    max-width: 1000px;
+    width: 100%;
+    display: flex;
+    overflow: hidden;
+    min-height: 550px;
+  }
+
+  /* Left Side - Login Form */
+  .login-form-section {
+    flex: 1;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: white;
+  }
+
+  /* Right Side - Welcome Message */
+  .welcome-section {
+    flex: 1;
+    background: linear-gradient(135deg, #00d09e 0%, #00bf92 100%);
+    padding: 60px 50px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #header {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  #header h1 {
+    margin: 0;
+  }
+
+  .logo-section {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .logo-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #00d09e 0%, #00bf92 100%);
+    border-radius: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+
+  .logo-icon i {
+    font-size: 40px;
+    color: white;
+  }
+
+  .logo-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #212121;
+    margin: 0;
+  }
+
+  .logo-subtitle {
+    font-size: 14px;
+    color: #757575;
+    margin: 5px 0 0;
+  }
+
+  #content {
+    padding: 0;
+  }
+
+  #content-main {
+    width: 100%;
+  }
+
+  .form-row {
+    margin-bottom: 20px;
+  }
+
+  .form-row label {
+    display: block;
+    margin-bottom: 8px;
+    color: #424242;
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .form-row input[type="text"],
+  .form-row input[type="password"],
+  .form-row input[type="email"] {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s;
+    box-sizing: border-box;
+  }
+
+  .form-row input:focus {
+    outline: none;
+    border-color: #00d09e;
+    box-shadow: 0 0 0 3px rgba(0, 208, 158, 0.1);
+  }
+
+  .form-row input::placeholder {
+    color: #bdbdbd;
+  }
+
+  .password-reset-link {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+
+  .password-reset-link a {
+    color: #00d09e;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .password-reset-link a:hover {
+    color: #00a87e;
+    text-decoration: underline;
+  }
+
+  .submit-row {
+    margin-top: 30px;
+    padding: 0;
+  }
+
+  .submit-row input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background: #00d09e;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+
+  .submit-row input[type="submit"]:hover {
+    background: #00a87e;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 208, 158, 0.3);
+  }
+
+  .errornote {
+    background: #d32f2f;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  /* Welcome Section Styles */
+  .welcome-section h2 {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .welcome-section p {
+    font-size: 16px;
+    line-height: 1.6;
+    opacity: 0.9;
+    margin-bottom: 30px;
+  }
+
+  .feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 30px 0;
+  }
+
+  .feature-list li {
+    padding: 10px 0;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+  }
+
+  .feature-list li i {
+    margin-right: 12px;
+    font-size: 18px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 40px;
+  }
+
+  .stat-item {
+    flex: 1;
+  }
+
+  .stat-value {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+    opacity: 0.8;
+  }
+
+  #footer {
+    text-align: center;
+    margin-top: 30px;
+    color: #757575;
+    font-size: 12px;
+  }
+
+  @media (max-width: 768px) {
+    #container {
+      flex-direction: column;
+    }
+
+    .welcome-section {
+      display: none;
+    }
+
+    .login-form-section {
+      padding: 40px 30px;
+    }
+  }
+</style>
+{% endblock %}
+{% block bodyclass %}{{ block.super }} login{% endblock %}
+{% block usertools %}{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block content %}
+<div class="login-form-section">
+  <div class="logo-section">
+    <div class="logo-icon">
+      <i class="fas fa-book"></i>
+    </div>
+    <h1 class="logo-title">Hisab Khata</h1>
+    <p class="logo-subtitle">Admin Dashboard</p>
+    <p style="color: #757575; font-size: 13px; margin-top: 10px">
+      Sign in to your account
+    </p>
+  </div>
+
+  {% if form.errors and not form.non_field_errors %}
+  <p class="errornote">
+    {% if form.errors.items|length == 1 %}
+      {% translate "Please correct the error below." %}
+    {% else %}
+      {% translate "Please correct the errors below." %}
+    {% endif %}
+  </p>
+  {% endif %}
+  {% if form.non_field_errors %}
+  {% for error in form.non_field_errors %}
+  <p class="errornote">{{ error }}</p>
+  {% endfor %}
+  {% endif %}
+
+  <div id="content-main">
+    {% if user.is_authenticated %}
+    <p class="errornote">
+      {% blocktranslate trimmed %} You are authenticated as {{ username }}, but
+      are not authorized to access this page. Would you like to login to a
+      different account? {% endblocktranslate %}
+    </p>
+    {% endif %}
+
+    <form action="{{ app_path }}" method="post" id="login-form">
+      {% csrf_token %}
+      <div class="form-row">
+        {{ form.username.errors }}
+        <label for="id_username">Email Address</label>
+        <input
+          type="text"
+          name="username"
+          id="id_username"
+          placeholder="Enter your email"
+          autofocus
+          required
+        />
+      </div>
+      <div class="form-row">
+        {{ form.password.errors }}
+        <label for="id_password">Password</label>
+        <input
+          type="password"
+          name="password"
+          id="id_password"
+          placeholder="Enter your password"
+          required
+        />
+        <input type="hidden" name="next" value="{{ next }}" />
+      </div>
+
+      {% url 'admin_password_reset' as password_reset_url %}
+      {% if password_reset_url %}
+      <div class="password-reset-link">
+        <a href="{{ password_reset_url }}">Forgot password?</a>
+      </div>
+      {% endif %}
+
+      <div class="submit-row">
+        <input type="submit" value="Sign In" />
+      </div>
+    </form>
+  </div>
+
+  <div id="footer">
+    <p>&copy; 2026 Hisab Khata. All rights reserved.</p>
+  </div>
+</div>
+
+<div class="welcome-section">
+  <div>
+    <h2>Welcome Back!</h2>
+    <p>
+      Access your admin dashboard and manage your business with powerful
+      analytics and insights.
+    </p>
+
+    <ul class="feature-list">
+      <li>
+        <i class="fas fa-chart-line"></i>
+        Real-time Analytics
+      </li>
+      <li>
+        <i class="fas fa-users"></i>
+        User Management
+      </li>
+      <li>
+        <i class="fas fa-shield-alt"></i>
+        Analytics and Security
+      </li>
+      <li>
+        <i class="fas fa-broadcast-tower"></i>
+        Communication and Broadcasting
+      </li>
+    </ul>
+
+    <div class="stats-row">
+      <div class="stat-item">
+        <div class="stat-value">10K+</div>
+        <div class="stat-label">Active Users</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">99.9%</div>
+        <div class="stat-label">Uptime</div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

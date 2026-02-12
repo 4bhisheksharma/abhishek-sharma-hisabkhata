@@ -1,0 +1,113 @@
+{% comment %} Hisab Khata Admin Theme - Color Variables This file defines the
+color scheme matching the Flutter frontend {% endcomment %}
+
+<style>
+  /* Hisab Khata Theme Colors - Matching Flutter App */
+  :root {
+    /* Primary Colors - Teal/Turquoise Theme */
+    --hk-primary: #00d09e;
+    --hk-primary-dark: #00a87e;
+    --hk-primary-light: #33ddb3;
+
+    /* Secondary Colors */
+    --hk-secondary: #00bf92;
+    --hk-accent: #00e5ad;
+    --hk-light-bg: #e0f7f1;
+
+    /* Financial Status Colors */
+    --hk-success: #00c853;
+    --hk-error: #d32f2f;
+    --hk-warning: #ff6f00;
+    --hk-info: #0288d1;
+
+    /* Neutral Colors */
+    --hk-white: #ffffff;
+    --hk-black: #000000;
+    --hk-grey: #757575;
+    --hk-light-grey: #e0e0e0;
+    --hk-dark-grey: #424242;
+    --hk-bg-grey: #f5f5f5;
+
+    /* Text Colors */
+    --hk-text-primary: #212121;
+    --hk-text-secondary: #757575;
+    --hk-text-on-primary: #ffffff;
+  }
+
+  /* Apply theme colors to Django admin elements */
+  .button.default,
+  input[type="submit"].default,
+  .button[class=""],
+  input[type="submit"][class=""] {
+    background-color: var(--hk-primary) !important;
+    color: var(--hk-text-on-primary) !important;
+  }
+
+  .button.default:hover,
+  input[type="submit"].default:hover {
+    background-color: var(--hk-primary-dark) !important;
+  }
+
+  a:link,
+  a:visited {
+    color: var(--hk-primary);
+  }
+
+  a:hover,
+  a:active {
+    color: var(--hk-primary-dark);
+  }
+
+  .selector-chosen h2 {
+    background-color: var(--hk-primary) !important;
+  }
+
+  .calendar td a:hover,
+  .calendar td a:focus {
+    background: var(--hk-primary);
+  }
+
+  .calendar td.selected a {
+    background: var(--hk-primary-dark);
+  }
+
+  .deletelink,
+  .deletelink-box {
+    background: var(--hk-error) !important;
+  }
+
+  .addlink {
+    background: var(--hk-success) !important;
+  }
+
+  /* Success messages */
+  .success,
+  .messagelist .success {
+    background-color: var(--hk-light-bg);
+    border-color: var(--hk-success);
+    color: var(--hk-text-primary);
+  }
+
+  /* Error messages */
+  .errors,
+  .errorlist,
+  .messagelist .error {
+    background-color: #ffebee;
+    border-color: var(--hk-error);
+    color: var(--hk-error);
+  }
+
+  /* Warning messages */
+  .messagelist .warning {
+    background-color: #fff3e0;
+    border-color: var(--hk-warning);
+    color: #e65100;
+  }
+
+  /* Info messages */
+  .messagelist .info {
+    background-color: #e1f5fe;
+    border-color: var(--hk-info);
+    color: #01579b;
+  }
+</style>

@@ -1,0 +1,83 @@
+{% extends "admin/base.html" %}
+{% block title %}{{ title }} | Hisab Khata Admin{% endblock %}
+{% block branding %}
+<h1 id="site-name">
+  <a
+    href="{% url 'admin:index' %}"
+    style="color: #00d09e; text-decoration: none; font-weight: bold"
+  >
+    <i class="fas fa-book"></i> Hisab Khata Admin Panel
+  </a>
+</h1>
+{% endblock %}
+{% block nav-global %}{% endblock %}
+{% block extrahead %}
+{{ block.super }}
+<!-- Font Awesome -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+/>
+{% endblock %}
+{% block extrastyle %}
+{{ block.super }}
+{% include "admin/custom_styles.html" %}
+<style>
+  /* Custom admin styling - Hisab Khata Theme */
+  #header {
+    background: linear-gradient(135deg, #00d09e 0%, #00a87e 100%);
+    color: white;
+    overflow: visible;
+  }
+
+  #site-name a {
+    color: white !important;
+  }
+
+  #site-name a:hover {
+    opacity: 0.9;
+  }
+
+  .module h2,
+  .module caption,
+  .inline-group h2 {
+    background: #00d09e;
+  }
+
+  div.breadcrumbs {
+    background: #e0f7f1;
+    color: #424242;
+    border-bottom: 1px solid #33ddb3;
+  }
+
+  div.breadcrumbs a {
+    color: #00a87e;
+  }
+
+  .button,
+  input[type="submit"],
+  input[type="button"],
+  .submit-row input,
+  a.button {
+    background: #00d09e;
+    border: none;
+    transition: all 0.3s;
+  }
+
+  .button:hover,
+  input[type="submit"]:hover,
+  input[type="button"]:hover,
+  .submit-row input:hover,
+  a.button:hover {
+    background: #00a87e;
+  }
+
+  .object-tools a.addlink {
+    background: #00c853;
+  }
+
+  .object-tools a.addlink:hover {
+    background: #00a844;
+  }
+</style>
+{% endblock %}
