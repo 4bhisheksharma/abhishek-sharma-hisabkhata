@@ -2,10 +2,23 @@ import os
 import json
 import firebase_admin
 from firebase_admin import credentials, messaging
+from firebase_admin import exceptions as firebase_exceptions
+from firebase_admin._messaging_utils import UnregisteredError
 from django.conf import settings
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _clear_stale_fcm_token(fcm_token):
+    """Clear a stale/unregistered FCM token from all users who have it."""
+    try:
+        from hisabauth.models import User
+        updated = User.objects.filter(fcm_token=fcm_token).update(fcm_token=None)
+        if updated:
+            logger.info(f"Cleared stale FCM token from {updated} user(s)")
+    except Exception as e:
+        logger.error(f"Failed to clear stale FCM token: {str(e)}")
 
 
 class FirebaseService:
@@ -95,11 +108,19 @@ class FirebaseService:
             logger.info(f"Push notification sent successfully: {response}")
             return True
             
-        except messaging.InvalidArgumentError as e:
+        except UnregisteredError:
+            logger.warning(f"FCM token is unregistered/expired, clearing from DB")
+            _clear_stale_fcm_token(fcm_token)
+            return False
+        except firebase_exceptions.InvalidArgumentError as e:
             logger.error(f"Invalid argument for push notification: {str(e)}")
             return False
-        except messaging.UnavailableError as e:
+        except firebase_exceptions.UnavailableError as e:
             logger.error(f"FCM service unavailable: {str(e)}")
+            return False
+        except firebase_exceptions.NotFoundError as e:
+            logger.error(f"FCM token not found: {str(e)}")
+            _clear_stale_fcm_token(fcm_token)
             return False
         except Exception as e:
             logger.error(f"Failed to send push notification: {str(e)}")
