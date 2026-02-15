@@ -48,6 +48,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
   }
 
   void _rejectRequest(int requestId) {
+    // Rejecting a request deletes it from the backend, allowing the sender to send again
     context.read<ConnectionRequestBloc>().add(
       UpdateRequestStatusEvent(requestId: requestId, status: 'rejected'),
     );
@@ -126,7 +127,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         label = 'Accepted';
         icon = Icons.check_circle_outline;
         break;
-      case 'rejected':
+      case 'rejected': // Should not occur as rejected requests are deleted
         color = Colors.red;
         label = 'Rejected';
         icon = Icons.cancel_outlined;

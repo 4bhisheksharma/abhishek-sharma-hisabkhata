@@ -122,32 +122,32 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         ).first()
         
         if existing_request:
-            # If the existing request was rejected or accepted (connection was deleted), delete it and allow resending
-            if existing_request.status in ['rejected', 'accepted']:
-                # Check if there's an active relationship for accepted connections
-                if existing_request.status == 'accepted':
-                    # Verify no active relationship exists (connection was properly deleted)
-                    sender_user = existing_request.sender
-                    receiver_user = existing_request.receiver
-                    
-                    relationship_exists = CustomerBusinessRelationship.objects.filter(
-                        Q(customer__user=sender_user, business__user=receiver_user) |
-                        Q(customer__user=receiver_user, business__user=sender_user)
-                    ).exists()
-                    
-                    if relationship_exists:
-                        return Response(
-                            {
-                                'error': 'You are already connected with this user',
-                                'existing_request': ConnectionRequestSerializer(existing_request).data
-                            },
-                            status=status.HTTP_400_BAD_REQUEST
-                        )
+            # If there's an accepted request, check if relationship still exists
+            if existing_request.status == 'accepted':
+                # Verify no active relationship exists (connection was properly deleted)
+                sender_user = existing_request.sender
+                receiver_user = existing_request.receiver
                 
-                # Delete the old request and allow new one
+                relationship_exists = CustomerBusinessRelationship.objects.filter(
+                    Q(customer__user=sender_user, business__user=receiver_user) |
+                    Q(customer__user=receiver_user, business__user=sender_user)
+                ).exists()
+                
+                if relationship_exists:
+                    return Response(
+                        {
+                            'error': 'You are already connected with this user',
+                            'existing_request': ConnectionRequestSerializer(existing_request).data
+                        },
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+                
+                # Connection was deleted, so delete the old request and allow new one
                 existing_request.delete()
-            else:
-                # Pending request
+            elif existing_request.status == 'rejected':
+                # Rejected request still in DB (legacy), delete it and allow re-sending
+                existing_request.delete()
+            elif existing_request.status == 'pending':
                 return Response(
                     {
                         'error': 'A connection request already exists between you and this user',
@@ -240,22 +240,38 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     })
                     continue
                 
-                # Check if request already exists (pending, accepted, or rejected)
+                # Check if request already exists
                 existing_request = BusinessCustomerRequest.objects.filter(
                     Q(sender=request.user, receiver=receiver) |
                     Q(sender=receiver, receiver=request.user)
                 ).first()
                 
                 if existing_request:
-                    results['skipped'].append({
-                        'user_id': receiver.user_id,
-                        'email': receiver.email,
-                        'full_name': receiver.full_name,
-                        'reason': f'Request already exists with status: {existing_request.status}',
-                        'existing_request_id': existing_request.business_customer_request_id,
-                        'existing_status': existing_request.status
-                    })
-                    continue
+                    # If pending, skip
+                    if existing_request.status == 'pending':
+                        results['skipped'].append({
+                            'user_id': receiver.user_id,
+                            'email': receiver.email,
+                            'full_name': receiver.full_name,
+                            'reason': f'Request already exists with status: {existing_request.status}',
+                            'existing_request_id': existing_request.business_customer_request_id,
+                            'existing_status': existing_request.status
+                        })
+                        continue
+                    # If rejected, delete the old request and allow creating a new one
+                    elif existing_request.status == 'rejected':
+                        existing_request.delete()
+                    # If accepted, skip (already connected)
+                    elif existing_request.status == 'accepted':
+                        results['skipped'].append({
+                            'user_id': receiver.user_id,
+                            'email': receiver.email,
+                            'full_name': receiver.full_name,
+                            'reason': 'Already connected',
+                            'existing_request_id': existing_request.business_customer_request_id,
+                            'existing_status': existing_request.status
+                        })
+                        continue
                 
                 # Create new request within transaction
                 with transaction.atomic():
@@ -325,14 +341,14 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
     
     @action(detail=False, methods=['get'], url_path='sent')
     def sent_requests(self, request):
-        """Get all requests sent by the authenticated user"""
+        """Get all requests sent by the authenticated user (pending and accepted only)"""
         requests = BusinessCustomerRequest.objects.filter(sender=request.user)
         serializer = ConnectionRequestSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=['get'], url_path='received')
     def received_requests(self, request):
-        """Get all requests received by the authenticated user"""
+        """Get all requests received by the authenticated user (pending and accepted only)"""
         requests = BusinessCustomerRequest.objects.filter(receiver=request.user)
         serializer = ConnectionRequestSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -566,6 +582,9 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         """
         Accept or reject a connection request
         Body: { "status": "accepted" | "rejected" }
+        
+        Note: When a request is rejected, it is immediately deleted from the database
+        to allow the sender to send a new request in the future.
         """
         connection_request = self.get_object()
         
@@ -586,47 +605,53 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         serializer = UpdateRequestStatusSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
-        connection_request.status = serializer.validated_data['status']
-        connection_request.save()
+        status_text = serializer.validated_data['status']
+        sender = connection_request.sender
         
         # If accepted, create CustomerBusinessRelationship
-        if serializer.validated_data['status'] == 'accepted':
+        if status_text == 'accepted':
+            connection_request.status = status_text
+            connection_request.save()
             self._create_customer_business_relationship(connection_request)
+        elif status_text == 'rejected':
+            # Delete rejected requests immediately to allow re-sending
+            connection_request.delete()
         
         # Send notification to sender about status update
-        status_text = serializer.validated_data['status']
         Notification.objects.create(
             sender=request.user,
-            receiver=connection_request.sender,
+            receiver=sender,
             title=f"Connection Request {status_text.capitalize()}",
             message=f"{request.user.full_name} {status_text} your connection request.",
             type=f"connection_request_{status_text}"
         )
         
         # Send push notification to sender if they have FCM token
-        if connection_request.sender.fcm_token:
+        if sender.fcm_token:
             try:
                 if status_text == 'accepted':
                     FirebaseService.send_request_accepted_notification(
-                        connection_request.sender.fcm_token,
+                        sender.fcm_token,
                         request.user.full_name
                     )
                 elif status_text == 'rejected':
                     FirebaseService.send_request_rejected_notification(
-                        connection_request.sender.fcm_token,
+                        sender.fcm_token,
                         request.user.full_name
                     )
-                logger.info(f"Push notification sent to {connection_request.sender.email} for request {status_text}")
+                logger.info(f"Push notification sent to {sender.email} for request {status_text}")
             except Exception as e:
-                logger.error(f"Failed to send push notification to {connection_request.sender.email}: {str(e)}")
+                logger.error(f"Failed to send push notification to {sender.email}: {str(e)}")
         
-        return Response(
-            {
-                'message': f'Request {serializer.validated_data["status"]} successfully',
-                'request': ConnectionRequestSerializer(connection_request).data
-            },
-            status=status.HTTP_200_OK
-        )
+        response_data = {
+            'message': f'Request {status_text} successfully',
+        }
+        
+        # Only include request data if it still exists (not rejected)
+        if status_text == 'accepted':
+            response_data['request'] = ConnectionRequestSerializer(connection_request).data
+        
+        return Response(response_data, status=status.HTTP_200_OK)
     
     @action(detail=False, methods=['patch'], url_path='bulk-update-status')
     def bulk_update_status(self, request):
@@ -677,17 +702,24 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                 
                 # Update status within transaction
                 with transaction.atomic():
-                    connection_request.status = new_status
-                    connection_request.save()
+                    sender = connection_request.sender
+                    sender_name = sender.full_name
+                    sender_email = sender.email
+                    sender_fcm_token = sender.fcm_token
                     
-                    # If accepted, create CustomerBusinessRelationship
+                    # If accepted, update and create CustomerBusinessRelationship
                     if new_status == 'accepted':
+                        connection_request.status = new_status
+                        connection_request.save()
                         self._create_customer_business_relationship(connection_request)
+                    elif new_status == 'rejected':
+                        # Delete rejected requests immediately to allow re-sending
+                        connection_request.delete()
                     
                     # Send notification to sender
                     Notification.objects.create(
                         sender=request.user,
-                        receiver=connection_request.sender,
+                        receiver=sender,
                         title=f"Connection Request {new_status.capitalize()}",
                         message=f"{request.user.full_name} {new_status} your connection request.",
                         type=f"connection_request_{new_status}"
@@ -695,27 +727,27 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                 
                 results['successful'].append({
                     'request_id': request_id,
-                    'sender_name': connection_request.sender.full_name,
-                    'sender_email': connection_request.sender.email,
+                    'sender_name': sender_name,
+                    'sender_email': sender_email,
                     'new_status': new_status
                 })
                 
                 # Send push notification to sender if they have FCM token
-                if connection_request.sender.fcm_token:
+                if sender_fcm_token:
                     try:
                         if new_status == 'accepted':
                             FirebaseService.send_request_accepted_notification(
-                                connection_request.sender.fcm_token,
+                                sender_fcm_token,
                                 request.user.full_name
                             )
                         elif new_status == 'rejected':
                             FirebaseService.send_request_rejected_notification(
-                                connection_request.sender.fcm_token,
+                                sender_fcm_token,
                                 request.user.full_name
                             )
-                        logger.info(f"Push notification sent to {connection_request.sender.email} for bulk {new_status}")
+                        logger.info(f"Push notification sent to {sender_email} for bulk {new_status}")
                     except Exception as e:
-                        logger.error(f"Failed to send push notification to {connection_request.sender.email}: {str(e)}")
+                        logger.error(f"Failed to send push notification to {sender_email}: {str(e)}")
                 
             except BusinessCustomerRequest.DoesNotExist:
                 results['failed'].append({

@@ -6,7 +6,8 @@ class UserSearchResult extends Equatable {
   final String? phoneNumber;
   final String fullName;
   final String? profilePicture;
-  final String? connectionStatus; // null, 'pending', 'accepted', 'rejected'
+  final String? connectionStatus; // null, 'pending', 'accepted'
+  // Note: 'rejected' status is no longer returned as rejected requests are deleted
   final int? requestId;
   final bool? isSender;
 
@@ -24,8 +25,12 @@ class UserSearchResult extends Equatable {
   bool get hasConnection => connectionStatus != null;
   bool get isPending => connectionStatus == 'pending';
   bool get isAccepted => connectionStatus == 'accepted';
-  bool get isRejected => connectionStatus == 'rejected';
-  bool get canSendRequest => connectionStatus == null;
+  bool get isRejected =>
+      connectionStatus ==
+      'rejected'; // Should not occur as rejected requests are deleted
+  bool get canSendRequest =>
+      connectionStatus == null ||
+      connectionStatus == 'rejected'; // Allow re-sending to rejected users
 
   @override
   List<Object?> get props => [

@@ -245,7 +245,13 @@ class ConnectionRequestBloc
     result.fold(
       (failure) =>
           emit(ConnectionRequestError(message: failure.failureMessage)),
-      (request) => emit(RequestStatusUpdated(request: request)),
+      (request) {
+        emit(RequestStatusUpdated(request: request));
+        // If rejected, the request is deleted from backend, so reload to reflect changes
+        if (event.status == 'rejected') {
+          add(const FetchAllConnectionRequestsEvent());
+        }
+      },
     );
   }
 

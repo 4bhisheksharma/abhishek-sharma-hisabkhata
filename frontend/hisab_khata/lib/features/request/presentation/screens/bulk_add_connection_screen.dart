@@ -346,7 +346,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
         color = Colors.green;
         label = 'Connected';
         break;
-      case 'rejected':
+      case 'rejected': // Should not occur as rejected requests are deleted
         color = Colors.red;
         label = 'Rejected';
         break;

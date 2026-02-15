@@ -20,3 +20,5 @@ class LocaleProvider extends InheritedWidget {
     return oldWidget.locale != locale;
   }
 }
+
+//yo delete garda vayo, bloc le handle garxa sabai

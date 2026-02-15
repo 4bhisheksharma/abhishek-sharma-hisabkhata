@@ -6,6 +6,14 @@ class BusinessCustomerRequest(models.Model):
     """
     Model to handle connection requests between users
     Any user can send a request to any other user
+    
+    Status flow:
+    - pending: Initial state when request is created
+    - accepted: Receiver accepted the request (creates CustomerBusinessRelationship)
+    - rejected: Receiver rejected the request (automatically deleted to allow re-sending)
+    
+    Note: Rejected requests are immediately deleted from the database to allow
+    the sender to send a new request in the future without constraints.
     """
     
     STATUS_CHOICES = [

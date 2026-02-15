@@ -150,6 +150,28 @@ class ConnectionRequestRemoteDataSourceImpl extends BaseRemoteDataSource
       body: body,
     );
 
+    // If request is rejected, backend deletes it and returns only a message
+    // Create a placeholder request object for rejected status
+    if (!response.containsKey('request')) {
+      // Request was rejected and deleted from backend
+      return ConnectionRequestModel(
+        businessCustomerRequestId: requestId,
+        sender: 0, // Placeholder
+        receiver: 0, // Placeholder
+        status: status,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        senderEmail: '',
+        senderName: '',
+        senderPhone: null,
+        senderProfilePicture: null,
+        receiverEmail: '',
+        receiverName: '',
+        receiverPhone: null,
+        receiverProfilePicture: null,
+      );
+    }
+
     return ConnectionRequestModel.fromJson(response['request']);
   }
 
