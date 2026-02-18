@@ -47,6 +47,12 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
           MySnackbar.showError(context, state.message);
         }
       },
+      buildWhen: (previous, current) {
+        // Only rebuild for states relevant to this widget
+        return current is ConnectionRequestLoading ||
+            current is ConnectionRequestError ||
+            current is ConnectedUsersLoaded;
+      },
       builder: (context, state) {
         if (state is ConnectionRequestLoading) {
           return const Center(
@@ -74,7 +80,10 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
           return _buildUsersList(filteredUsers);
         }
 
-        // Initial state - trigger load
+        // Initial/unrelated state - trigger load
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) _loadConnectedUsers();
+        });
         return const Center(
           child: Padding(
             padding: EdgeInsets.all(32.0),

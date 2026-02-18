@@ -7,6 +7,8 @@ import 'package:hisab_khata/features/users/shared/presentation/dashboard.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/my_stats_card.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/business_customer_list_item.dart';
 import 'package:hisab_khata/features/request/presentation/screens/connection_requests_screen.dart';
+import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
+import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/shared/widgets/connected_users_list.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
@@ -74,12 +76,20 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
         setState(() {
           _currentNavIndex = 1;
         });
+        // Reload connected users since this BLoC is shared with other tabs
+        context.read<ConnectionRequestBloc>().add(
+          const GetConnectedUsersEvent(),
+        );
         break;
       case 2:
-        // Connection Placeholder
+        // Connection Requests
         setState(() {
           _currentNavIndex = 2;
         });
+        // Reload connection requests since this BLoC is shared with other tabs
+        context.read<ConnectionRequestBloc>().add(
+          const FetchAllConnectionRequestsEvent(),
+        );
         break;
       case 3:
         // Analytics

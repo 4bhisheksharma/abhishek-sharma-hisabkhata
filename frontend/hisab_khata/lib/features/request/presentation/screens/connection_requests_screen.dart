@@ -623,7 +623,10 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                   );
                 }
 
-                // Initial / unknown state — show loader
+                // Initial / unknown state — trigger load
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) _loadRequests();
+                });
                 return const Center(
                   child: CircularProgressIndicator(color: AppTheme.primaryBlue),
                 );
