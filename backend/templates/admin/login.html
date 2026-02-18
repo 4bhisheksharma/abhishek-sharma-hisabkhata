@@ -364,136 +364,139 @@
 {% block nav-sidebar %}{% endblock %}
 {% block breadcrumbs %}{% endblock %}
 {% block content %}
-<div class="login-form-section">
-  <div class="logo-section">
-    <div class="logo-icon">
-      <i class="fas fa-book-open"></i>
+
+<div id="container">
+  <div class="login-form-section">
+    <div class="logo-section">
+      <div class="logo-icon">
+        <i class="fas fa-book-open"></i>
+      </div>
+      <h1 class="logo-title">Hisab Khata</h1>
+      <p class="logo-subtitle">Admin Dashboard</p>
+      <p class="logo-desc">Sign in to your account</p>
     </div>
-    <h1 class="logo-title">Hisab Khata</h1>
-    <p class="logo-subtitle">Admin Dashboard</p>
-    <p class="logo-desc">Sign in to your account</p>
-  </div>
 
-  {% if form.errors and not form.non_field_errors %}
-  <p class="errornote">
-    {% if form.errors.items|length == 1 %}
-      {% translate "Please correct the error below." %}
-    {% else %}
-      {% translate "Please correct the errors below." %}
-    {% endif %}
-  </p>
-  {% endif %}
-  {% if form.non_field_errors %}
-  {% for error in form.non_field_errors %}
-  <p class="errornote">{{ error }}</p>
-  {% endfor %}
-  {% endif %}
-
-  <div id="content-main">
-    {% if user.is_authenticated %}
+    {% if form.errors and not form.non_field_errors %}
     <p class="errornote">
-      {% blocktranslate trimmed %} You are authenticated as {{ username }}, but
-      are not authorized to access this page. Would you like to login to a
-      different account? {% endblocktranslate %}
+      {% if form.errors.items|length == 1 %}
+        {% translate "Please correct the error below." %}
+      {% else %}
+        {% translate "Please correct the errors below." %}
+      {% endif %}
     </p>
     {% endif %}
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="errornote">{{ error }}</p>
+    {% endfor %}
+    {% endif %}
 
-    <form action="{{ app_path }}" method="post" id="login-form">
-      {% csrf_token %}
-      <div class="form-row">
-        {{ form.username.errors }}
-        <label for="id_username">Email Address</label>
-        <div class="input-wrapper">
-          <i class="fas fa-envelope input-icon"></i>
-          <input
-            type="text"
-            name="username"
-            id="id_username"
-            placeholder="Enter your email"
-            autofocus
-            required
-          />
-        </div>
-      </div>
-      <div class="form-row">
-        {{ form.password.errors }}
-        <label for="id_password">Password</label>
-        <div class="input-wrapper">
-          <i class="fas fa-lock input-icon"></i>
-          <input
-            type="password"
-            name="password"
-            id="id_password"
-            placeholder="Enter your password"
-            required
-          />
-          <button type="button" class="toggle-password" onclick="togglePassword()">
-            <i class="fas fa-eye" id="toggle-icon"></i>
-          </button>
-        </div>
-        <input type="hidden" name="next" value="{{ next }}" />
-      </div>
+    <div id="content-main">
+      {% if user.is_authenticated %}
+      <p class="errornote">
+        {% blocktranslate trimmed %} You are authenticated as {{ username }}, but
+        are not authorized to access this page. Would you like to login to a
+        different account? {% endblocktranslate %}
+      </p>
+      {% endif %}
 
-      <div class="form-options">
-        <label class="remember-me">
-          <input type="checkbox" name="remember" />
-          <span>Remember me</span>
-        </label>
-        {% url 'admin_password_reset' as password_reset_url %}
-        {% if password_reset_url %}
-        <div class="forgot-link">
-          <a href="{{ password_reset_url }}">Forgot password?</a>
+      <form action="{{ app_path }}" method="post" id="login-form">
+        {% csrf_token %}
+        <div class="form-row">
+          {{ form.username.errors }}
+          <label for="id_username">Email Address</label>
+          <div class="input-wrapper">
+            <i class="fas fa-envelope input-icon"></i>
+            <input
+              type="text"
+              name="username"
+              id="id_username"
+              placeholder="Enter your email"
+              autofocus
+              required
+            />
+          </div>
         </div>
-        {% endif %}
-      </div>
+        <div class="form-row">
+          {{ form.password.errors }}
+          <label for="id_password">Password</label>
+          <div class="input-wrapper">
+            <i class="fas fa-lock input-icon"></i>
+            <input
+              type="password"
+              name="password"
+              id="id_password"
+              placeholder="Enter your password"
+              required
+            />
+            <button type="button" class="toggle-password" onclick="togglePassword()">
+              <i class="fas fa-eye" id="toggle-icon"></i>
+            </button>
+          </div>
+          <input type="hidden" name="next" value="{{ next }}" />
+        </div>
 
-      <div class="submit-row">
-        <input type="submit" value="Sign In" />
-      </div>
-    </form>
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" name="remember" />
+            <span>Remember me</span>
+          </label>
+          {% url 'admin_password_reset' as password_reset_url %}
+          {% if password_reset_url %}
+          <div class="forgot-link">
+            <a href="{{ password_reset_url }}">Forgot password?</a>
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="submit-row">
+          <input type="submit" value="Sign In" />
+        </div>
+      </form>
+    </div>
+
+    <div id="footer">
+      <p>&copy; 2026 Hisab Khata | All rights reserved</p>
+      <a href="#">Privacy Policy</a> <span style="color: #ccc; margin: 0 4px;">|</span> <a href="#">Terms of Service</a>
+    </div>
   </div>
 
-  <div id="footer">
-    <p>&copy; 2026 Hisab Khata | All rights reserved</p>
-    <a href="#">Privacy Policy</a> <span style="color: #ccc; margin: 0 4px;">|</span> <a href="#">Terms of Service</a>
-  </div>
-</div>
+  <div class="welcome-section">
+    <div>
+      <h2>Welcome Back!</h2>
+      <p>
+        Access your admin dashboard and manage your business with powerful
+        analytics and insights.
+      </p>
 
-<div class="welcome-section">
-  <div>
-    <h2>Welcome Back!</h2>
-    <p>
-      Access your admin dashboard and manage your business with powerful
-      analytics and insights.
-    </p>
+      <ul class="feature-list">
+        <li>
+          <span class="feature-icon"><i class="fas fa-chart-line"></i></span>
+          Real-time Analytics
+        </li>
+        <li>
+          <span class="feature-icon"><i class="fas fa-users-cog"></i></span>
+          User Management
+        </li>
+        <li>
+          <span class="feature-icon"><i class="fas fa-shield-alt"></i></span>
+          Analytics and Security
+        </li>
+        <li>
+          <span class="feature-icon"><i class="fas fa-satellite-dish"></i></span>
+          Communication and Broadcasting
+        </li>
+      </ul>
 
-    <ul class="feature-list">
-      <li>
-        <span class="feature-icon"><i class="fas fa-chart-line"></i></span>
-        Real-time Analytics
-      </li>
-      <li>
-        <span class="feature-icon"><i class="fas fa-users-cog"></i></span>
-        User Management
-      </li>
-      <li>
-        <span class="feature-icon"><i class="fas fa-shield-alt"></i></span>
-        Analytics and Security
-      </li>
-      <li>
-        <span class="feature-icon"><i class="fas fa-satellite-dish"></i></span>
-        Communication and Broadcasting
-      </li>
-    </ul>
-
-    <div class="stats-row">
-      <div class="stat-item">
-        <div class="stat-value">10K+</div>
-        <div class="stat-label">Active Users</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value">99.9%</div>
-        <div class="stat-label">Uptime</div>
+      <div class="stats-row">
+        <div class="stat-item">
+          <div class="stat-value">10K+</div>
+          <div class="stat-label">Active Users</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">99.9%</div>
+          <div class="stat-label">Uptime</div>
+        </div>
       </div>
     </div>
   </div>
