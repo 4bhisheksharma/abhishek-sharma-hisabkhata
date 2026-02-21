@@ -503,10 +503,10 @@
     <div class="sidebar-section">
       <div class="sidebar-section-label">User Management</div>
       <ul class="sidebar-nav">
-        <li><a href="{% url 'admin:business_dashboard_business_changelist' %}"><i class="fas fa-store"></i> Business Owners</a></li>
-        <li><a href="{% url 'admin:customer_dashboard_customer_changelist' %}"><i class="fas fa-users"></i> Customers</a></li>
-        <li><a href="{% url 'admin:hisabauth_role_changelist' %}"><i class="fas fa-user-shield"></i> Role Management</a></li>
-        <li><a href="{% url 'admin:support_ticket_supportticket_changelist' %}"><i class="fas fa-headset"></i> Support Tickets</a></li>
+        <li><a href="{% url 'admin_user_management' %}"><i class="fas fa-store"></i> Business Owners</a></li>
+        <li><a href="{% url 'admin_user_management' %}?section=customers"><i class="fas fa-users"></i> Customers</a></li>
+        <li><a href="{% url 'admin_user_management' %}?section=roles"><i class="fas fa-user-shield"></i> Role Management</a></li>
+        <li><a href="{% url 'admin_user_management' %}?section=tickets"><i class="fas fa-headset"></i> Support Tickets</a></li>
       </ul>
     </div>
 
