@@ -1,17 +1,198 @@
 from django.shortcuts import render
+from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from django.db.models import Sum, Count
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from django.db.models import Sum, Count, Q
+from django.db.models.functions import TruncMonth, TruncDate
+from django.utils import timezone
+from dateutil.relativedelta import relativedelta
+import json
+
 from transaction.models import Transaction
 from customer_dashboard.models import CustomerBusinessRelationship, Customer
 from business_dashboard.models import Business
-from django.db.models.functions import TruncMonth
-from django.utils import timezone
-from dateutil.relativedelta import relativedelta
+from hisabauth.models import User, Role, UserRole
+from support_ticket.models import SupportTicket
+from request.models import BusinessCustomerRequest
+from notification.models import Notification
 
 # Create your views here.
+
+
+@staff_member_required
+def admin_dashboard_view(request):
+    """Render the admin dashboard with real statistics."""
+    now = timezone.now()
+    last_month_start = (now - relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    # --- Stats cards ---
+    total_businesses = Business.objects.count()
+    total_businesses_last_month = Business.objects.filter(created_at__lt=this_month_start).count()
+    businesses_last_month_count = Business.objects.filter(
+        created_at__gte=last_month_start, created_at__lt=this_month_start
+    ).count()
+    business_growth = round(
+        (businesses_last_month_count / max(total_businesses_last_month - businesses_last_month_count, 1)) * 100
+    ) if total_businesses_last_month else 0
+
+    active_customers = Customer.objects.filter(status='active').count()
+    customers_last_month_count = Customer.objects.filter(
+        created_at__gte=last_month_start, created_at__lt=this_month_start
+    ).count()
+    total_customers_before = Customer.objects.filter(created_at__lt=this_month_start).count()
+    customer_growth = round(
+        (customers_last_month_count / max(total_customers_before - customers_last_month_count, 1)) * 100
+    ) if total_customers_before else 0
+
+    total_transactions = Transaction.objects.count()
+    transactions_last_month = Transaction.objects.filter(
+        created_at__gte=last_month_start, created_at__lt=this_month_start
+    ).count()
+    transactions_before = Transaction.objects.filter(created_at__lt=this_month_start).count()
+    transaction_growth = round(
+        (transactions_last_month / max(transactions_before - transactions_last_month, 1)) * 100
+    ) if transactions_before else 0
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+    total_open_tickets = SupportTicket.objects.filter(status__in=['open', 'in_progress']).count()
+
+    # --- User distribution ---
+    total_users = User.objects.filter(is_active=True).count()
+    num_customers = Customer.objects.count()
+    num_businesses = Business.objects.count()
+    num_staff = User.objects.filter(is_staff=True, is_superuser=False).count()
+    num_admins = User.objects.filter(is_superuser=True).count()
+
+    if total_users > 0:
+        pct_customers = round((num_customers / total_users) * 100, 2)
+        pct_businesses = round((num_businesses / total_users) * 100, 2)
+        pct_staff = round((num_staff / total_users) * 100, 2)
+        pct_admins = round((num_admins / total_users) * 100, 2)
+    else:
+        pct_customers = pct_businesses = pct_staff = pct_admins = 0
+
+    # --- Platform growth (last 6 months) ---
+    six_months_ago = (now - relativedelta(months=5)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    growth_labels = []
+    business_growth_data = []
+    customer_growth_data = []
+
+    for i in range(6):
+        month_date = six_months_ago + relativedelta(months=i)
+        month_label = month_date.strftime('%b')
+        growth_labels.append(month_label)
+
+        biz_count = Business.objects.filter(created_at__lte=month_date + relativedelta(months=1)).count()
+        cust_count = Customer.objects.filter(created_at__lte=month_date + relativedelta(months=1)).count()
+        business_growth_data.append(biz_count)
+        customer_growth_data.append(cust_count)
+
+    # --- Recent activity ---
+    recent_businesses = Business.objects.select_related('user').order_by('-created_at')[:5]
+    recent_tickets = SupportTicket.objects.select_related('user').order_by('-created_at')[:5]
+    recent_transactions = Transaction.objects.select_related(
+        'relationship__customer__user', 'relationship__business'
+    ).order_by('-created_at')[:5]
+
+    # Build activity feed
+    activities = []
+    for biz in recent_businesses:
+        activities.append({
+            'type': 'business',
+            'icon': 'fa-store',
+            'color': '#00d09e',
+            'text': f'New business registered: {biz.business_name}',
+            'time': biz.created_at,
+        })
+    for ticket in recent_tickets:
+        if ticket.status == 'resolved':
+            activities.append({
+                'type': 'ticket_resolved',
+                'icon': 'fa-headset',
+                'color': '#0288d1',
+                'text': f'Support ticket resolved: {ticket.subject}',
+                'time': ticket.updated_at,
+            })
+        else:
+            activities.append({
+                'type': 'ticket',
+                'icon': 'fa-exclamation-triangle',
+                'color': '#d32f2f',
+                'text': f'Support ticket: {ticket.subject} ({ticket.get_priority_display()})',
+                'time': ticket.created_at,
+            })
+
+    # Sort activities by time descending, take top 5
+    activities.sort(key=lambda x: x['time'], reverse=True)
+    activities = activities[:5]
+
+    # Calculate time ago for each activity
+    for activity in activities:
+        delta = now - activity['time']
+        if delta.days > 0:
+            activity['time_ago'] = f"{delta.days} day{'s' if delta.days > 1 else ''} ago"
+        elif delta.seconds >= 3600:
+            hours = delta.seconds // 3600
+            activity['time_ago'] = f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif delta.seconds >= 60:
+            minutes = delta.seconds // 60
+            activity['time_ago'] = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            activity['time_ago'] = "Just now"
+
+    context = {
+        'total_businesses': total_businesses,
+        'business_growth': business_growth,
+        'active_customers': active_customers,
+        'customer_growth': customer_growth,
+        'total_transactions': total_transactions,
+        'transaction_growth': transaction_growth,
+        'urgent_tickets': urgent_tickets,
+        'total_open_tickets': total_open_tickets,
+
+        'pct_customers': pct_customers,
+        'pct_businesses': pct_businesses,
+        'pct_staff': pct_staff,
+        'pct_admins': pct_admins,
+        'num_customers': num_customers,
+        'num_businesses': num_businesses,
+        'num_staff': num_staff,
+        'num_admins': num_admins,
+
+        'growth_labels': json.dumps(growth_labels),
+        'business_growth_data': json.dumps(business_growth_data),
+        'customer_growth_data': json.dumps(customer_growth_data),
+
+        'activities': activities,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_dashboard.html', context)
+
+
+class AdminDashboardStatsAPI(APIView):
+    """API endpoint for admin dashboard statistics (JSON)."""
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        now = timezone.now()
+        data = {
+            'total_businesses': Business.objects.count(),
+            'active_customers': Customer.objects.filter(status='active').count(),
+            'total_transactions': Transaction.objects.count(),
+            'urgent_tickets': SupportTicket.objects.filter(
+                Q(priority='urgent') | Q(priority='high'),
+                status__in=['open', 'in_progress']
+            ).count(),
+            'total_users': User.objects.filter(is_active=True).count(),
+        }
+        return Response(data)
 
 class PaidVsToPayView(APIView):
     """API view for paid vs to pay analytics data"""
