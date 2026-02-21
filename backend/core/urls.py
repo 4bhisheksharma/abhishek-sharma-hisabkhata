@@ -20,11 +20,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from hisabauth.views import RegisterView, LoginView, ChangePasswordView, FCMTokenView, FCMTestView
 from otp_verification.views import VerifyOTPView, ResendOTPView
-from analytics.views import admin_dashboard_view
+from analytics.views import admin_dashboard_view, admin_user_management_view
 
 urlpatterns = [
     # Custom Admin Dashboard (must be before admin/)
     path('admin/dashboard/', admin_dashboard_view, name='admin_dashboard'),
+    path('admin/dashboard/users/', admin_user_management_view, name='admin_user_management'),
     path('admin/', admin.site.urls),
     # All API endpoints under 'api/'
     path('api/', include([

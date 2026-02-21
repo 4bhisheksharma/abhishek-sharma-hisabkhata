@@ -194,6 +194,189 @@ class AdminDashboardStatsAPI(APIView):
         }
         return Response(data)
 
+
+@staff_member_required
+def admin_user_management_view(request):
+    """Render the User Management page with real data."""
+    now = timezone.now()
+    last_month_start = (now - relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    # ── Stat cards ──
+    total_business_owners = Business.objects.count()
+    biz_before = Business.objects.filter(created_at__lt=this_month_start).count()
+    biz_new = Business.objects.filter(created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    biz_growth = round((biz_new / max(biz_before - biz_new, 1)) * 100) if biz_before else 0
+
+    active_accounts = Business.objects.filter(is_verified=True).count()
+    active_before = Business.objects.filter(is_verified=True, created_at__lt=this_month_start).count()
+    active_new = Business.objects.filter(is_verified=True, created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    active_growth = round((active_new / max(active_before - active_new, 1)) * 100) if active_before else 0
+
+    total_customers = Customer.objects.count()
+    cust_before = Customer.objects.filter(created_at__lt=this_month_start).count()
+    cust_new = Customer.objects.filter(created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    cust_growth = round((cust_new / max(cust_before - cust_new, 1)) * 100) if cust_before else 0
+
+    inactive_accounts = Customer.objects.filter(status='inactive').count() + User.objects.filter(is_active=False).count()
+    inactive_before = User.objects.filter(is_active=False, created_at__lt=this_month_start).count()
+    inactive_new = User.objects.filter(is_active=False, created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    inactive_growth = round((inactive_new / max(inactive_before - inactive_new, 1)) * 100) if inactive_before else 0
+
+    # ── Business Owners list ──
+    biz_filter = request.GET.get('biz_filter', 'all')
+    businesses_qs = Business.objects.select_related('user').order_by('-created_at')
+    if biz_filter == 'active':
+        businesses_qs = businesses_qs.filter(is_verified=True, user__is_active=True)
+    elif biz_filter == 'inactive':
+        businesses_qs = businesses_qs.filter(Q(is_verified=False) | Q(user__is_active=False))
+    elif biz_filter == 'pending':
+        businesses_qs = businesses_qs.filter(is_verified=False, user__is_active=True)
+
+    businesses = []
+    for biz in businesses_qs[:6]:
+        if biz.is_verified and biz.user.is_active:
+            biz_status = 'active'
+        elif not biz.user.is_active:
+            biz_status = 'inactive'
+        else:
+            biz_status = 'pending'
+        businesses.append({
+            'business_id': biz.business_id,
+            'business_name': biz.business_name,
+            'owner_name': biz.user.full_name,
+            'is_verified': biz.is_verified,
+            'is_active': biz.user.is_active,
+            'status': biz_status,
+            'user_id': biz.user.user_id,
+        })
+
+    # ── Customer Accounts list ──
+    cust_search = request.GET.get('cust_search', '').strip()
+    customers_qs = Customer.objects.select_related('user').order_by('-created_at')
+    if cust_search:
+        customers_qs = customers_qs.filter(
+            Q(user__full_name__icontains=cust_search) |
+            Q(user__email__icontains=cust_search) |
+            Q(user__phone_number__icontains=cust_search)
+        )
+
+    customers = []
+    for cust in customers_qs[:5]:
+        # Calculate total spent
+        relationships = CustomerBusinessRelationship.objects.filter(customer=cust)
+        total_spent = Transaction.objects.filter(
+            relationship__in=relationships, amount__gt=0
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        customers.append({
+            'customer_id': cust.customer_id,
+            'full_name': cust.user.full_name,
+            'email': cust.user.email,
+            'profile_picture': cust.user.profile_picture.url if cust.user.profile_picture else None,
+            'member_since': cust.created_at.strftime('%b %Y'),
+            'total_spent': float(total_spent),
+            'status': cust.status,
+            'user_id': cust.user.user_id,
+        })
+
+    # ── Roles list ──
+    roles = []
+    for role in Role.objects.all():
+        user_count = UserRole.objects.filter(role=role).count()
+        # Assign description based on role name
+        if 'admin' in role.name.lower() or 'super' in role.name.lower():
+            description = 'Full system access'
+            icon_color = '#ef4444'
+            permissions = ['All Permissions']
+        elif 'manager' in role.name.lower():
+            description = 'Department management'
+            icon_color = '#f59e0b'
+            permissions = ['User Management', 'Reports']
+        elif 'support' in role.name.lower() or 'agent' in role.name.lower():
+            description = 'Customer support'
+            icon_color = '#3b82f6'
+            permissions = ['Ticket Management']
+        elif 'business' in role.name.lower():
+            description = 'Business account access'
+            icon_color = '#00d09e'
+            permissions = ['Business Dashboard']
+        elif 'customer' in role.name.lower():
+            description = 'Customer account access'
+            icon_color = '#8b5cf6'
+            permissions = ['Customer Dashboard']
+        else:
+            description = 'Custom role'
+            icon_color = '#6b7280'
+            permissions = [role.name]
+
+        roles.append({
+            'role_id': role.role_id,
+            'name': role.name,
+            'description': description,
+            'icon_color': icon_color,
+            'permissions': permissions,
+            'user_count': user_count,
+        })
+
+    # ── Recent Support Tickets ──
+    recent_tickets = []
+    for ticket in SupportTicket.objects.select_related('user').order_by('-created_at')[:5]:
+        delta = now - ticket.created_at
+        if delta.days > 0:
+            time_ago = f"{delta.days} day{'s' if delta.days > 1 else ''} ago"
+        elif delta.seconds >= 3600:
+            hours = delta.seconds // 3600
+            time_ago = f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif delta.seconds >= 60:
+            minutes = delta.seconds // 60
+            time_ago = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            time_ago = "Just now"
+
+        recent_tickets.append({
+            'id': ticket.id,
+            'subject': ticket.subject,
+            'category': ticket.get_category_display(),
+            'description': ticket.description[:60] + ('...' if len(ticket.description) > 60 else ''),
+            'priority': ticket.priority,
+            'priority_display': ticket.get_priority_display(),
+            'status': ticket.status,
+            'status_display': ticket.get_status_display(),
+            'user_name': ticket.user.full_name,
+            'user_initial': ticket.user.full_name[0].upper() if ticket.user.full_name else 'U',
+            'time_ago': time_ago,
+        })
+
+    # Urgent ticket count (for notification badge)
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+
+    context = {
+        'total_business_owners': total_business_owners,
+        'biz_growth': biz_growth,
+        'active_accounts': active_accounts,
+        'active_growth': active_growth,
+        'total_customers': total_customers,
+        'cust_growth': cust_growth,
+        'inactive_accounts': inactive_accounts,
+        'inactive_growth': inactive_growth,
+
+        'businesses': businesses,
+        'biz_filter': biz_filter,
+        'customers': customers,
+        'cust_search': cust_search,
+
+        'roles': roles,
+        'recent_tickets': recent_tickets,
+        'urgent_tickets': urgent_tickets,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_user_management.html', context)
+
+
 class PaidVsToPayView(APIView):
     """API view for paid vs to pay analytics data"""
     permission_classes = [IsAuthenticated]

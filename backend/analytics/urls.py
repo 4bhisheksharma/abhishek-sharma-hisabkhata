@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     PaidVsToPayView, MonthlyTransactionTrendView, TotalTransactionsView,
     TotalAmountView, MonthlySpendingLimitView, AdminDashboardStatsAPI,
-    admin_dashboard_view
+    admin_dashboard_view, admin_user_management_view
 )
 
 app_name = 'analytics'
