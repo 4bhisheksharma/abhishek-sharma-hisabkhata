@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_theme.dart';
+import '../../../../shared/widgets/my_snackbar.dart';
 import '../bloc/chat_bloc.dart';
 import '../bloc/chat_event.dart';
 import '../bloc/chat_state.dart';
@@ -27,11 +28,18 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppTheme.backgroundGrey,
       appBar: AppBar(
-        title: const Text('Messages'),
+        backgroundColor: AppTheme.primaryBlue,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: const Text(
+          'Messages',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
+            icon: const Icon(Icons.refresh_rounded),
             onPressed: () {
               context.read<ChatBloc>().add(const LoadChatRoomsEvent());
             },
@@ -41,12 +49,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
       body: BlocConsumer<ChatBloc, ChatState>(
         listener: (context, state) {
           if (state is ChatError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.message),
-                backgroundColor: AppTheme.errorRed,
-              ),
-            );
+            MySnackbar.showError(context, state.message);
           }
         },
         builder: (context, state) {
@@ -74,30 +77,40 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
 
   Widget _buildEmptyState() {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.chat_bubble_outline_rounded,
-            size: 80,
-            color: AppTheme.lightGrey,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'No conversations yet',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textPrimary,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: AppTheme.lightBlue,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.chat_bubble_outline_rounded,
+                size: 56,
+                color: AppTheme.primaryBlue,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Start a conversation with your\nconnected users',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
-          ),
-        ],
+            const SizedBox(height: 24),
+            const Text(
+              'No conversations yet',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Start a conversation with your\nconnected users',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -106,6 +119,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
     final currentUserId = context.read<ChatBloc>().currentUserId ?? 0;
 
     return RefreshIndicator(
+      color: AppTheme.primaryBlue,
       onRefresh: () async {
         context.read<ChatBloc>().add(const LoadChatRoomsEvent());
       },
@@ -127,37 +141,65 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
 
   Widget _buildErrorState(String message) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 64, color: AppTheme.errorRed),
-          const SizedBox(height: 16),
-          Text(
-            'Something went wrong',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textPrimary,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppTheme.errorRed.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.error_outline_rounded,
+                size: 48,
+                color: AppTheme.errorRed,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 32),
-            child: Text(
-              message,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
+            const SizedBox(height: 20),
+            const Text(
+              'Something went wrong',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
             ),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              context.read<ChatBloc>().add(const LoadChatRoomsEvent());
-            },
-            icon: const Icon(Icons.refresh),
-            label: const Text('Retry'),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                message,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppTheme.textSecondary,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: () {
+                context.read<ChatBloc>().add(const LoadChatRoomsEvent());
+              },
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text('Retry'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primaryBlue,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

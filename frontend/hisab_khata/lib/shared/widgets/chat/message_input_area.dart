@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../config/theme/app_theme.dart';
 
 class MessageInputArea extends StatefulWidget {
   final Function(String) onSendMessage;
@@ -48,8 +49,8 @@ class _MessageInputAreaState extends State<MessageInputArea> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Colors.grey[300]!)),
+        color: AppTheme.white,
+        border: Border(top: BorderSide(color: AppTheme.dividerColor)),
       ),
       child: Row(
         children: [
@@ -58,8 +59,9 @@ class _MessageInputAreaState extends State<MessageInputArea> {
               controller: _controller,
               decoration: InputDecoration(
                 hintText: widget.hintText,
+                hintStyle: const TextStyle(color: AppTheme.textHint),
                 filled: true,
-                fillColor: Colors.grey[100],
+                fillColor: AppTheme.backgroundGrey,
                 border: OutlineInputBorder(
                   borderSide: BorderSide.none,
                   borderRadius: BorderRadius.circular(24),
@@ -74,10 +76,17 @@ class _MessageInputAreaState extends State<MessageInputArea> {
             ),
           ),
           const SizedBox(width: 8),
-          IconButton(
-            onPressed: widget.isLoading ? null : _sendMessage,
-            icon: const Icon(Icons.send),
-            color: Theme.of(context).primaryColor,
+          Container(
+            decoration: const BoxDecoration(
+              color: AppTheme.primaryBlue,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: widget.isLoading ? null : _sendMessage,
+              icon: const Icon(Icons.send_rounded, size: 20),
+              color: Colors.white,
+              disabledColor: Colors.white.withValues(alpha: 0.5),
+            ),
           ),
         ],
       ),

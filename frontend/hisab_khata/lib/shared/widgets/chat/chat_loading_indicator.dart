@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../../../config/theme/app_theme.dart';
 
 class ChatLoadingIndicator extends StatelessWidget {
   final Color? color;
@@ -12,7 +13,7 @@ class ChatLoadingIndicator extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: LoadingAnimationWidget.staggeredDotsWave(
-        color: color ?? Theme.of(context).primaryColor,
+        color: color ?? AppTheme.primaryBlue,
         size: size,
       ),
     );

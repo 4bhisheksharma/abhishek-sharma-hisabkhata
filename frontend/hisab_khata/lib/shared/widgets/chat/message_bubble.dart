@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../config/theme/app_theme.dart';
 import 'chat_message.dart';
 
 class MessageBubble extends StatelessWidget {
@@ -25,10 +26,10 @@ class MessageBubble extends StatelessWidget {
         children: [
           if (!message.isUser)
             botAvatar ??
-                CircleAvatar(
-                  backgroundColor: Colors.grey[300],
+                const CircleAvatar(
+                  backgroundColor: AppTheme.lightBlue,
                   radius: 20,
-                  child: const Icon(Icons.smart_toy, color: Colors.grey),
+                  child: Icon(Icons.smart_toy, color: AppTheme.primaryBlue),
                 ),
           if (!message.isUser) const SizedBox(width: 8),
           Flexible(
@@ -39,8 +40,8 @@ class MessageBubble extends StatelessWidget {
               ),
               decoration: BoxDecoration(
                 color: message.isUser
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[200],
+                    ? AppTheme.primaryBlue
+                    : AppTheme.surfaceGrey,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(16),
                   topRight: const Radius.circular(16),
@@ -51,24 +52,37 @@ class MessageBubble extends StatelessWidget {
                       ? const Radius.circular(4)
                       : const Radius.circular(16),
                 ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.04),
+                    blurRadius: 4,
+                    offset: const Offset(0, 1),
+                  ),
+                ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   if (message.senderName != null && !message.isUser)
-                    Text(
-                      message.senderName!,
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.grey[600],
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: Text(
+                        message.senderName!,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryDark,
+                        ),
                       ),
                     ),
                   Text(
                     message.text,
                     style: TextStyle(
-                      color: message.isUser ? Colors.white : Colors.black87,
-                      fontSize: 16,
+                      color: message.isUser
+                          ? AppTheme.textOnPrimary
+                          : AppTheme.textPrimary,
+                      fontSize: 15,
+                      height: 1.4,
                     ),
                   ),
                   if (message.timestamp != null)
@@ -79,8 +93,8 @@ class MessageBubble extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 10,
                           color: message.isUser
-                              ? Colors.white70
-                              : Colors.grey[500],
+                              ? Colors.white.withValues(alpha: 0.7)
+                              : AppTheme.textHint,
                         ),
                       ),
                     ),
@@ -91,10 +105,10 @@ class MessageBubble extends StatelessWidget {
           if (message.isUser) const SizedBox(width: 8),
           if (message.isUser)
             userAvatar ??
-                CircleAvatar(
-                  backgroundColor: Theme.of(context).primaryColor,
+                const CircleAvatar(
+                  backgroundColor: AppTheme.primaryDark,
                   radius: 20,
-                  child: const Icon(Icons.person, color: Colors.white),
+                  child: Icon(Icons.person, color: Colors.white),
                 ),
         ],
       ),

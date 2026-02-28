@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../config/theme/app_theme.dart';
+import '../../../../shared/widgets/my_snackbar.dart';
 import '../../data/datasources/chat_websocket_service.dart';
 import '../bloc/chat_bloc.dart';
 import '../bloc/chat_event.dart';
@@ -103,16 +104,15 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
         }
 
         if (state is ChatError && state.previousState != null) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: AppTheme.errorRed,
-            ),
-          );
+          MySnackbar.showError(context, state.message);
         }
       },
       builder: (context, state) {
-        return Scaffold(appBar: _buildAppBar(state), body: _buildBody(state));
+        return Scaffold(
+          backgroundColor: AppTheme.backgroundGrey,
+          appBar: _buildAppBar(state),
+          body: _buildBody(state),
+        );
       },
     );
   }
@@ -121,67 +121,119 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     String displayName = widget.otherUserName ?? 'User';
     String? subtitle;
     int? currentUserId = context.read<ChatBloc>().currentUserId;
+    WebSocketStatus connectionStatus = WebSocketStatus.disconnected;
 
     if (state is ChatRoomActive) {
       displayName = state.chatRoom.getDisplayName(currentUserId ?? 0);
+      connectionStatus = state.connectionStatus;
 
-      // Show connection status or typing indicator
       if (state.isOtherUserTyping) {
         subtitle = 'typing...';
-      } else if (state.connectionStatus != WebSocketStatus.connected) {
+      } else if (state.connectionStatus == WebSocketStatus.connected) {
+        subtitle = 'Online';
+      } else {
         subtitle = _getConnectionStatusText(state.connectionStatus);
       }
     } else if (state is MessagesLoading) {
       displayName = state.chatRoom.getDisplayName(currentUserId ?? 0);
+      subtitle = 'Loading...';
     }
 
-    final title = 'Chat with $displayName';
-
     return AppBar(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      backgroundColor: AppTheme.primaryBlue,
+      foregroundColor: Colors.white,
+      elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_rounded),
+        onPressed: () => Navigator.of(context).pop(),
+      ),
+      titleSpacing: 0,
+      title: Row(
         children: [
-          Text(title, style: const TextStyle(fontSize: 16)),
-          if (subtitle != null)
-            Text(
-              subtitle,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.normal,
-                color: AppTheme.white.withValues(alpha: 0.8),
+          // Avatar with online indicator
+          Stack(
+            children: [
+              CircleAvatar(
+                radius: 18,
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
+                child: Text(
+                  _getInitials(displayName),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
               ),
+              if (state is ChatRoomActive)
+                Positioned(
+                  bottom: 0,
+                  right: 0,
+                  child: Container(
+                    width: 12,
+                    height: 12,
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(connectionStatus),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: AppTheme.primaryBlue,
+                        width: 2,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(width: 12),
+          // Name and status
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  displayName,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                if (subtitle != null)
+                  Text(
+                    subtitle,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
+                  ),
+              ],
             ),
+          ),
         ],
       ),
-      actions: [
-        if (state is ChatRoomActive)
-          _buildConnectionIndicator(state.connectionStatus),
-      ],
     );
   }
 
-  Widget _buildConnectionIndicator(WebSocketStatus status) {
-    Color color;
+  Color _getStatusColor(WebSocketStatus status) {
     switch (status) {
       case WebSocketStatus.connected:
-        color = AppTheme.successGreen;
-        break;
+        return AppTheme.successGreen;
       case WebSocketStatus.connecting:
       case WebSocketStatus.reconnecting:
-        color = AppTheme.warningOrange;
-        break;
+        return AppTheme.warningOrange;
       default:
-        color = AppTheme.errorRed;
+        return AppTheme.lightGrey;
     }
+  }
 
-    return Padding(
-      padding: const EdgeInsets.only(right: 16),
-      child: Container(
-        width: 10,
-        height: 10,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      ),
-    );
+  String _getInitials(String name) {
+    final parts = name.trim().split(' ');
+    if (parts.isEmpty || parts[0].isEmpty) return '?';
+    if (parts.length == 1) return parts[0][0].toUpperCase();
+    return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
   }
 
   String _getConnectionStatusText(WebSocketStatus status) {
@@ -259,34 +311,60 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   Widget _buildErrorState(ChatError state) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.error_outline, size: 64, color: AppTheme.errorRed),
-          const SizedBox(height: 16),
-          Text(
-            'Something went wrong',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
-              color: AppTheme.textPrimary,
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppTheme.errorRed.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.chat_bubble_outline_rounded,
+                size: 48,
+                color: AppTheme.errorRed,
+              ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            state.message,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
-          ),
-          const SizedBox(height: 24),
-          ElevatedButton.icon(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            icon: const Icon(Icons.arrow_back),
-            label: const Text('Go Back'),
-          ),
-        ],
+            const SizedBox(height: 20),
+            const Text(
+              'Unable to load chat',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              state.message,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppTheme.textSecondary,
+              ),
+            ),
+            const SizedBox(height: 24),
+            OutlinedButton.icon(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.arrow_back_rounded, size: 18),
+              label: const Text('Go Back'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: AppTheme.textSecondary,
+                side: const BorderSide(color: AppTheme.dividerColor),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
