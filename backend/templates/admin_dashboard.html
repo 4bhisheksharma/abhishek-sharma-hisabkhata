@@ -467,6 +467,43 @@
       flex-shrink: 0;
     }
 
+    /* ── Ticket Styles ── */
+    .ticket-item {
+      padding: 16px 0; border-bottom: 1px solid var(--border);
+    }
+    .ticket-item:last-child { border-bottom: none; }
+    .ticket-top { display: flex; align-items: flex-start; gap: 12px; }
+    .ticket-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 600; font-size: 13px; color: #fff; flex-shrink: 0;
+    }
+    .ticket-header { flex: 1; }
+    .ticket-header .ticket-user { font-size: 13.5px; font-weight: 600; }
+    .ticket-header .ticket-category { font-size: 12px; color: var(--text-muted); }
+    .priority-badge {
+      font-size: 10.5px; font-weight: 700; padding: 3px 10px; border-radius: 6px;
+    }
+    .priority-badge.high, .priority-badge.urgent { background: #fef2f2; color: var(--danger); }
+    .priority-badge.medium { background: #fef3c7; color: #b45309; }
+    .priority-badge.low { background: #eff6ff; color: var(--info); }
+    .ticket-desc {
+      font-size: 12.5px; color: var(--text-secondary); margin: 6px 0 6px 48px; line-height: 1.4;
+    }
+    .ticket-footer { display: flex; align-items: center; justify-content: space-between; margin-left: 48px; }
+    .ticket-time { font-size: 11.5px; color: var(--text-muted); }
+    .ticket-status {
+      font-size: 11px; font-weight: 600; padding: 4px 12px; border-radius: 6px; cursor: pointer;
+      border: none;
+    }
+    .ticket-status.open, .ticket-status.in_progress { background: var(--primary); color: #fff; }
+    .ticket-status.resolved { background: #e5e7eb; color: var(--text-secondary); }
+    .ticket-status.closed { background: #e5e7eb; color: var(--text-muted); }
+    .view-all-top {
+      font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;
+    }
+    .view-all-top:hover { text-decoration: underline; }
+
     /* Responsive */
     @media (max-width: 1200px) {
       .charts-row { grid-template-columns: 1fr 1fr; }
@@ -513,20 +550,24 @@
     <div class="sidebar-section">
       <div class="sidebar-section-label">Analytics</div>
       <ul class="sidebar-nav">
-        <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-chart-line"></i> Platform Analytics</a></li>
-        <li><a href="{% url 'admin:index' %}"><i class="fas fa-shield-alt"></i> Fraud Detection</a></li>
+        <li><a href="{% url 'admin_analytics' %}"><i class="fas fa-chart-line"></i> Platform Analytics</a></li>
+        <li><a href="{% url 'admin_analytics' %}#fraud"><i class="fas fa-shield-alt"></i> Fraud Detection</a></li>
       </ul>
     </div>
 
     <div class="sidebar-section">
       <div class="sidebar-section-label">Communication</div>
       <ul class="sidebar-nav">
-        <li><a href="{% url 'admin:notification_notification_changelist' %}"><i class="fas fa-bullhorn"></i> Notifications</a></li>
+        <li><a href="{% url 'admin_communication' %}"><i class="fas fa-bullhorn"></i> Notifications</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section" style="margin-top: auto; padding-bottom: 20px;">
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_logout' %}" style="color: #ef4444;" onclick="return confirm('Are you sure you want to logout?')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
       </ul>
     </div>
   </aside>
-
-  <!-- ── MAIN CONTENT ── -->
   <div class="main-content">
     <!-- Top Bar -->
     <header class="topbar">
@@ -535,7 +576,7 @@
         <p>Monitor platform statistics and system health</p>
       </div>
       <div class="topbar-right">
-        <button class="notification-btn" onclick="window.location.href='{% url "admin:notification_notification_changelist" %}'">
+        <button class="notification-btn" onclick="window.location.href='{% url "admin_communication" %}'">
           <i class="fas fa-bell"></i>
           {% if urgent_tickets > 0 %}
           <span class="notification-badge">{{ urgent_tickets }}</span>
@@ -661,17 +702,17 @@
           </div>
           <div class="card-body">
             <div class="quick-actions">
-              <a href="{% url 'admin:notification_notification_add' %}" class="quick-action-btn primary-action">
+              <a href="{% url 'admin_communication' %}" class="quick-action-btn primary-action">
                 <i class="fas fa-bullhorn"></i> Send Notification
               </a>
-              <a href="{% url 'admin:index' %}" class="quick-action-btn">
-                <i class="fas fa-download"></i> Export Data
+              <a href="{% url 'admin_analytics' %}" class="quick-action-btn">
+                <i class="fas fa-chart-bar"></i> View Analytics
               </a>
-              <a href="{% url 'admin:index' %}" class="quick-action-btn">
-                <i class="fas fa-shield-alt"></i> Run Security Scan
+              <a href="{% url 'admin_all_businesses' %}" class="quick-action-btn">
+                <i class="fas fa-store"></i> Manage Businesses
               </a>
-              <a href="{% url 'admin:index' %}" class="quick-action-btn">
-                <i class="fas fa-cog"></i> System Settings
+              <a href="{% url 'admin_all_customers' %}" class="quick-action-btn">
+                <i class="fas fa-users"></i> Manage Customers
               </a>
             </div>
           </div>
@@ -682,7 +723,7 @@
       <div class="card activity-card">
         <div class="card-header">
           <h3>Recent Platform Activity</h3>
-          <a href="{% url 'admin:index' %}">View All Activity</a>
+          <a href="{% url 'admin_analytics' %}">View All Activity</a>
         </div>
         <div class="card-body">
           <ul class="activity-list">
@@ -711,10 +752,102 @@
         </div>
       </div>
 
+      <!-- ── Recent Support Tickets ── -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <h3>Recent Support Tickets</h3>
+          <a href="{% url 'admin_user_management' %}?section=tickets" class="view-all-top">View All</a>
+        </div>
+        <div class="card-body">
+          {% for ticket in recent_tickets %}
+          <div class="ticket-item">
+            <div class="ticket-top">
+              <div class="ticket-avatar" style="background: {% cycle '#00d09e' '#3b82f6' '#8b5cf6' '#f59e0b' '#ef4444' %};">
+                {{ ticket.user_initial }}
+              </div>
+              <div class="ticket-header">
+                <div class="ticket-user">{{ ticket.user_name }}</div>
+                <div class="ticket-category">{{ ticket.category }}</div>
+              </div>
+              <span class="priority-badge {{ ticket.priority }}">{{ ticket.priority_display }}</span>
+            </div>
+            <div class="ticket-desc">{{ ticket.description }}</div>
+            <div class="ticket-footer">
+              <span class="ticket-time">{{ ticket.time_ago }}</span>
+              <button id="dash-ticket-status-{{ ticket.id }}"
+                 class="ticket-status {{ ticket.status }}"
+                 onclick="cycleTicketStatus({{ ticket.id }}, '{{ ticket.status }}')">
+                {{ ticket.status_display }}
+              </button>
+            </div>
+          </div>
+          {% empty %}
+          <div style="padding: 24px 0; text-align: center; color: var(--text-muted); font-size: 13px;">
+            No support tickets yet.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
     </div><!-- /page-body -->
   </div><!-- /main-content -->
 
   <script>
+    // ── CSRF helper ──
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    // ── Ticket status cycling via AJAX ──
+    function updateTicketStatus(ticketId, newStatus) {
+      const csrftoken = getCookie('csrftoken');
+      fetch('/api/analytics/admin/update-ticket/' + ticketId + '/', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrftoken },
+        credentials: 'same-origin',
+        body: JSON.stringify({ status: newStatus }),
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === 200) {
+          const btn = document.getElementById('dash-ticket-status-' + ticketId);
+          if (btn) {
+            btn.className = 'ticket-status ' + data.ticket_status;
+            btn.textContent = data.ticket_status_display;
+          }
+          showToast(data.message, 'success');
+        } else {
+          showToast(data.message || 'Error updating ticket', 'error');
+        }
+      })
+      .catch(() => showToast('Network error. Please try again.', 'error'));
+    }
+
+    function cycleTicketStatus(ticketId, currentStatus) {
+      const cycle = { 'open': 'in_progress', 'in_progress': 'resolved', 'resolved': 'closed', 'closed': 'open' };
+      updateTicketStatus(ticketId, cycle[currentStatus] || 'in_progress');
+    }
+
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.style.cssText = 'position:fixed;top:24px;right:24px;z-index:9999;padding:14px 24px;border-radius:10px;font-size:13.5px;font-weight:600;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.15);transition:opacity 0.4s;';
+      toast.style.background = type === 'success' ? '#10b981' : '#ef4444';
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3000);
+    }
+
     // ── Animate stat values ──
     function animateValue(element, start, end, duration) {
       if (start === end) { element.textContent = end; return; }

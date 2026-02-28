@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import logout as auth_logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -19,6 +20,17 @@ from request.models import BusinessCustomerRequest
 from notification.models import Notification
 
 # Create your views here.
+
+
+def admin_logout_view(request):
+    """Log the admin user out and redirect to login page."""
+    auth_logout(request)
+    return redirect('admin:login')
+
+
+def admin_index_redirect(request):
+    """Redirect /admin/ to the custom dashboard."""
+    return redirect('admin_dashboard')
 
 
 @staff_member_required
@@ -96,10 +108,39 @@ def admin_dashboard_view(request):
 
     # --- Recent activity ---
     recent_businesses = Business.objects.select_related('user').order_by('-created_at')[:5]
-    recent_tickets = SupportTicket.objects.select_related('user').order_by('-created_at')[:5]
+    recent_tickets_raw = SupportTicket.objects.select_related('user').order_by('-created_at')[:5]
     recent_transactions = Transaction.objects.select_related(
         'relationship__customer__user', 'relationship__business'
     ).order_by('-created_at')[:5]
+
+    # Build recent tickets list for dashboard
+    recent_tickets = []
+    for ticket in recent_tickets_raw:
+        delta = now - ticket.created_at
+        if delta.days > 0:
+            time_ago = f"{delta.days} day{'s' if delta.days > 1 else ''} ago"
+        elif delta.seconds >= 3600:
+            hours = delta.seconds // 3600
+            time_ago = f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif delta.seconds >= 60:
+            minutes = delta.seconds // 60
+            time_ago = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            time_ago = "Just now"
+
+        recent_tickets.append({
+            'id': ticket.id,
+            'subject': ticket.subject,
+            'category': ticket.get_category_display(),
+            'description': ticket.description[:60] + ('...' if len(ticket.description) > 60 else ''),
+            'priority': ticket.priority,
+            'priority_display': ticket.get_priority_display(),
+            'status': ticket.status,
+            'status_display': ticket.get_status_display(),
+            'user_name': ticket.user.full_name,
+            'user_initial': ticket.user.full_name[0].upper() if ticket.user.full_name else 'U',
+            'time_ago': time_ago,
+        })
 
     # Build activity feed
     activities = []
@@ -111,7 +152,7 @@ def admin_dashboard_view(request):
             'text': f'New business registered: {biz.business_name}',
             'time': biz.created_at,
         })
-    for ticket in recent_tickets:
+    for ticket in recent_tickets_raw:
         if ticket.status == 'resolved':
             activities.append({
                 'type': 'ticket_resolved',
@@ -171,6 +212,7 @@ def admin_dashboard_view(request):
         'customer_growth_data': json.dumps(customer_growth_data),
 
         'activities': activities,
+        'recent_tickets': recent_tickets,
         'admin_user': request.user,
     }
     return render(request, 'admin_dashboard.html', context)
@@ -236,11 +278,14 @@ def admin_user_management_view(request):
     businesses = []
     for biz in businesses_qs[:6]:
         if biz.is_verified and biz.user.is_active:
-            biz_status = 'active'
+            biz_status = 'verified'
+            biz_status_label = 'Verified'
         elif not biz.user.is_active:
-            biz_status = 'inactive'
+            biz_status = 'not-verified'
+            biz_status_label = 'Not Verified'
         else:
             biz_status = 'pending'
+            biz_status_label = 'Pending'
         businesses.append({
             'business_id': biz.business_id,
             'business_name': biz.business_name,
@@ -248,6 +293,7 @@ def admin_user_management_view(request):
             'is_verified': biz.is_verified,
             'is_active': biz.user.is_active,
             'status': biz_status,
+            'status_label': biz_status_label,
             'user_id': biz.user.user_id,
         })
 
@@ -654,6 +700,134 @@ class TotalAmountView(APIView):
         }, status=status.HTTP_200_OK)
 
 
+class AdminToggleBusinessVerifiedView(APIView):
+    """API endpoint to toggle business verified status."""
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, business_id):
+        try:
+            business = Business.objects.get(business_id=business_id)
+            business.is_verified = not business.is_verified
+            business.save(update_fields=['is_verified', 'updated_at'])
+            return Response({
+                'status': 200,
+                'message': f'Business {business.business_name} is now {"verified" if business.is_verified else "not verified"}.',
+                'is_verified': business.is_verified,
+            })
+        except Business.DoesNotExist:
+            return Response({'status': 404, 'message': 'Business not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class AdminToggleUserActiveView(APIView):
+    """API endpoint to toggle user active/inactive status."""
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, user_id):
+        try:
+            user = User.objects.get(user_id=user_id)
+            if user.is_superuser:
+                return Response({'status': 403, 'message': 'Cannot deactivate superuser.'}, status=status.HTTP_403_FORBIDDEN)
+            user.is_active = not user.is_active
+            user.save(update_fields=['is_active', 'updated_at'])
+            return Response({
+                'status': 200,
+                'message': f'User {user.full_name} is now {"active" if user.is_active else "inactive"}.',
+                'is_active': user.is_active,
+            })
+        except User.DoesNotExist:
+            return Response({'status': 404, 'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class AdminUserListView(APIView):
+    """API endpoint to list all users with filtering."""
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        role_filter = request.query_params.get('role', None)
+        status_filter = request.query_params.get('status', None)
+        search = request.query_params.get('search', '').strip()
+
+        users_qs = User.objects.all().order_by('-created_at')
+
+        if search:
+            users_qs = users_qs.filter(
+                Q(full_name__icontains=search) |
+                Q(email__icontains=search) |
+                Q(phone_number__icontains=search)
+            )
+        if status_filter == 'active':
+            users_qs = users_qs.filter(is_active=True)
+        elif status_filter == 'inactive':
+            users_qs = users_qs.filter(is_active=False)
+
+        if role_filter:
+            users_qs = users_qs.filter(user_roles__role__name__iexact=role_filter)
+
+        users = []
+        for u in users_qs[:50]:
+            roles = list(u.user_roles.values_list('role__name', flat=True))
+            users.append({
+                'user_id': u.user_id,
+                'full_name': u.full_name,
+                'email': u.email,
+                'phone_number': u.phone_number,
+                'is_active': u.is_active,
+                'is_staff': u.is_staff,
+                'is_superuser': u.is_superuser,
+                'roles': roles,
+                'created_at': u.created_at.isoformat(),
+            })
+        return Response({'status': 200, 'data': users})
+
+
+class AdminDeleteUserView(APIView):
+    """API endpoint to delete a user account."""
+    permission_classes = [IsAdminUser]
+
+    def delete(self, request, user_id):
+        try:
+            user = User.objects.get(user_id=user_id)
+            if user.is_superuser:
+                return Response({'status': 403, 'message': 'Cannot delete superuser.'}, status=status.HTTP_403_FORBIDDEN)
+            name = user.full_name
+            user.delete()
+            return Response({'status': 200, 'message': f'User {name} has been deleted.'})
+        except User.DoesNotExist:
+            return Response({'status': 404, 'message': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
+class AdminUpdateTicketStatusView(APIView):
+    """API endpoint to update ticket status from admin panel."""
+    permission_classes = [IsAdminUser]
+
+    def patch(self, request, ticket_id):
+        try:
+            ticket = SupportTicket.objects.get(id=ticket_id)
+            new_status = request.data.get('status')
+            admin_response = request.data.get('admin_response')
+
+            if new_status:
+                if new_status not in dict(SupportTicket.STATUS_CHOICES):
+                    return Response({'status': 400, 'message': 'Invalid status.'}, status=status.HTTP_400_BAD_REQUEST)
+                if new_status in ['resolved', 'closed'] and ticket.status not in ['resolved', 'closed']:
+                    ticket.resolved_at = timezone.now()
+                    ticket.resolved_by = request.user
+                ticket.status = new_status
+
+            if admin_response:
+                ticket.admin_response = admin_response
+
+            ticket.save()
+            return Response({
+                'status': 200,
+                'message': f'Ticket updated to {ticket.get_status_display()}.',
+                'ticket_status': ticket.status,
+                'ticket_status_display': ticket.get_status_display(),
+            })
+        except SupportTicket.DoesNotExist:
+            return Response({'status': 404, 'message': 'Ticket not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+
 class MonthlySpendingLimitView(APIView):
     """API view for customer's monthly spending vs limit analytics"""
     permission_classes = [IsAuthenticated]
@@ -689,3 +863,422 @@ class MonthlySpendingLimitView(APIView):
                 'message': f'Error retrieving monthly spending data: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# ═══════════════════════════════════════════════════════════════
+#  ADMIN PAGES: All Businesses / All Customers / Analytics / Communication
+# ═══════════════════════════════════════════════════════════════
+
+def _time_ago(dt):
+    """Helper to format a datetime as a human-readable 'X ago' string."""
+    now = timezone.now()
+    delta = now - dt
+    if delta.days > 0:
+        return f"{delta.days} day{'s' if delta.days > 1 else ''} ago"
+    elif delta.seconds >= 3600:
+        hours = delta.seconds // 3600
+        return f"{hours} hour{'s' if hours > 1 else ''} ago"
+    elif delta.seconds >= 60:
+        minutes = delta.seconds // 60
+        return f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+    return "Just now"
+
+
+@staff_member_required
+def admin_all_businesses_view(request):
+    """Full listing of all businesses with search, filter and pagination."""
+    from django.core.paginator import Paginator
+
+    search = request.GET.get('search', '').strip()
+    status_filter = request.GET.get('status', 'all')
+
+    qs = Business.objects.select_related('user').order_by('-created_at')
+
+    if search:
+        qs = qs.filter(
+            Q(business_name__icontains=search) |
+            Q(user__full_name__icontains=search) |
+            Q(user__email__icontains=search)
+        )
+    if status_filter == 'verified':
+        qs = qs.filter(is_verified=True, user__is_active=True)
+    elif status_filter == 'not_verified':
+        qs = qs.filter(Q(is_verified=False) | Q(user__is_active=False))
+    elif status_filter == 'pending':
+        qs = qs.filter(is_verified=False, user__is_active=True)
+
+    paginator = Paginator(qs, 15)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    businesses = []
+    for biz in page_obj:
+        if biz.is_verified and biz.user.is_active:
+            biz_status, biz_label = 'verified', 'Verified'
+        elif not biz.user.is_active:
+            biz_status, biz_label = 'not-verified', 'Not Verified'
+        else:
+            biz_status, biz_label = 'pending', 'Pending'
+
+        # Count customers for this business
+        cust_count = CustomerBusinessRelationship.objects.filter(business=biz).count()
+        total_revenue = Transaction.objects.filter(
+            relationship__business=biz, amount__gt=0
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        businesses.append({
+            'business_id': biz.business_id,
+            'business_name': biz.business_name,
+            'owner_name': biz.user.full_name,
+            'email': biz.user.email,
+            'phone': biz.user.phone_number,
+            'is_verified': biz.is_verified,
+            'status': biz_status,
+            'status_label': biz_label,
+            'customer_count': cust_count,
+            'total_revenue': float(total_revenue),
+            'created_at': biz.created_at.strftime('%b %d, %Y'),
+        })
+
+    # Stats
+    total_count = Business.objects.count()
+    verified_count = Business.objects.filter(is_verified=True).count()
+    pending_count = Business.objects.filter(is_verified=False, user__is_active=True).count()
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+
+    context = {
+        'businesses': businesses,
+        'page_obj': page_obj,
+        'search': search,
+        'status_filter': status_filter,
+        'total_count': total_count,
+        'verified_count': verified_count,
+        'pending_count': pending_count,
+        'unverified_count': total_count - verified_count,
+        'urgent_tickets': urgent_tickets,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_all_businesses.html', context)
+
+
+@staff_member_required
+def admin_all_customers_view(request):
+    """Full listing of all customers with search, filter and pagination."""
+    from django.core.paginator import Paginator
+
+    search = request.GET.get('search', '').strip()
+    status_filter = request.GET.get('status', 'all')
+
+    qs = Customer.objects.select_related('user').order_by('-created_at')
+
+    if search:
+        qs = qs.filter(
+            Q(user__full_name__icontains=search) |
+            Q(user__email__icontains=search) |
+            Q(user__phone_number__icontains=search)
+        )
+    if status_filter in ('active', 'inactive', 'suspended'):
+        qs = qs.filter(status=status_filter)
+
+    paginator = Paginator(qs, 15)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
+    customers = []
+    for cust in page_obj:
+        relationships = CustomerBusinessRelationship.objects.filter(customer=cust)
+        total_spent = Transaction.objects.filter(
+            relationship__in=relationships, amount__gt=0
+        ).aggregate(total=Sum('amount'))['total'] or 0
+
+        customers.append({
+            'customer_id': cust.customer_id,
+            'full_name': cust.user.full_name,
+            'email': cust.user.email,
+            'phone': cust.user.phone_number,
+            'profile_picture': cust.user.profile_picture.url if cust.user.profile_picture else None,
+            'status': cust.status,
+            'status_label': cust.get_status_display() if hasattr(cust, 'get_status_display') else cust.status.title(),
+            'monthly_limit': float(cust.monthly_limit) if cust.monthly_limit else 0,
+            'total_spent': float(total_spent),
+            'business_count': relationships.count(),
+            'member_since': cust.created_at.strftime('%b %d, %Y'),
+        })
+
+    total_count = Customer.objects.count()
+    active_count = Customer.objects.filter(status='active').count()
+    inactive_count = Customer.objects.filter(status='inactive').count()
+    suspended_count = Customer.objects.filter(status='suspended').count()
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+
+    context = {
+        'customers': customers,
+        'page_obj': page_obj,
+        'search': search,
+        'status_filter': status_filter,
+        'total_count': total_count,
+        'active_count': active_count,
+        'inactive_count': inactive_count,
+        'suspended_count': suspended_count,
+        'urgent_tickets': urgent_tickets,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_all_customers.html', context)
+
+
+@staff_member_required
+def admin_analytics_view(request):
+    """Analytics dashboard with platform metrics, activity feed and fraud detection."""
+    now = timezone.now()
+    last_month_start = (now - relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    # ── Stats ──
+    total_users = User.objects.filter(is_active=True).count()
+    total_businesses = Business.objects.count()
+    total_customers = Customer.objects.count()
+    total_transactions = Transaction.objects.count()
+    total_revenue = float(
+        Transaction.objects.filter(amount__gt=0).aggregate(total=Sum('amount'))['total'] or 0
+    )
+    open_tickets = SupportTicket.objects.filter(status__in=['open', 'in_progress']).count()
+
+    # Growth percentages
+    users_before = User.objects.filter(is_active=True, created_at__lt=this_month_start).count()
+    users_new = User.objects.filter(is_active=True, created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    user_growth = round((users_new / max(users_before - users_new, 1)) * 100) if users_before else 0
+
+    txn_before = Transaction.objects.filter(created_at__lt=this_month_start).count()
+    txn_new = Transaction.objects.filter(created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    txn_growth = round((txn_new / max(txn_before - txn_new, 1)) * 100) if txn_before else 0
+
+    # ── Monthly platform metrics (last 6 months) ──
+    six_months_ago = (now - relativedelta(months=5)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    metric_labels = []
+    biz_data = []
+    cust_data = []
+    txn_data = []
+    for i in range(6):
+        month_date = six_months_ago + relativedelta(months=i)
+        next_month = month_date + relativedelta(months=1)
+        metric_labels.append(month_date.strftime('%b'))
+        biz_data.append(Business.objects.filter(created_at__gte=month_date, created_at__lt=next_month).count())
+        cust_data.append(Customer.objects.filter(created_at__gte=month_date, created_at__lt=next_month).count())
+        txn_data.append(Transaction.objects.filter(created_at__gte=month_date, created_at__lt=next_month).count())
+
+    # ── Recent platform activity ──
+    recent_businesses = Business.objects.select_related('user').order_by('-created_at')[:5]
+    recent_tickets_raw = SupportTicket.objects.select_related('user').order_by('-created_at')[:5]
+    recent_txn = Transaction.objects.select_related(
+        'relationship__customer__user', 'relationship__business'
+    ).order_by('-created_at')[:5]
+
+    activities = []
+    for biz in recent_businesses:
+        activities.append({
+            'icon': 'fa-store', 'color': '#00d09e',
+            'text': f'New business registered: {biz.business_name}',
+            'time': biz.created_at, 'time_ago': _time_ago(biz.created_at),
+        })
+    for t in recent_txn:
+        activities.append({
+            'icon': 'fa-right-left', 'color': '#3b82f6',
+            'text': f'Transaction of Rs.{t.amount} — {t.relationship.business.business_name}',
+            'time': t.created_at, 'time_ago': _time_ago(t.created_at),
+        })
+    for ticket in recent_tickets_raw:
+        activities.append({
+            'icon': 'fa-headset', 'color': '#ef4444',
+            'text': f'Ticket: {ticket.subject} ({ticket.get_priority_display()})',
+            'time': ticket.created_at, 'time_ago': _time_ago(ticket.created_at),
+        })
+    activities.sort(key=lambda x: x['time'], reverse=True)
+    activities = activities[:8]
+
+    # ── Fraud detection section (meaningful alerts) ──
+    fraud_alerts = []
+    inactive_users = User.objects.filter(is_active=False).count()
+    if inactive_users:
+        fraud_alerts.append({
+            'icon': 'fa-user-slash', 'severity': 'medium',
+            'title': 'Inactive Accounts',
+            'desc': f'{inactive_users} deactivated user account{"s" if inactive_users > 1 else ""}',
+        })
+    suspended_custs = Customer.objects.filter(status='suspended').count()
+    if suspended_custs:
+        fraud_alerts.append({
+            'icon': 'fa-ban', 'severity': 'high',
+            'title': 'Suspended Customers',
+            'desc': f'{suspended_custs} customer account{"s" if suspended_custs > 1 else ""} suspended',
+        })
+    unverified_biz = Business.objects.filter(is_verified=False).count()
+    if unverified_biz:
+        fraud_alerts.append({
+            'icon': 'fa-shield-halved', 'severity': 'low',
+            'title': 'Unverified Businesses',
+            'desc': f'{unverified_biz} business{"es" if unverified_biz > 1 else ""} pending verification',
+        })
+    urgent_tickets = SupportTicket.objects.filter(priority='urgent', status__in=['open', 'in_progress']).count()
+    if urgent_tickets:
+        fraud_alerts.append({
+            'icon': 'fa-exclamation-triangle', 'severity': 'high',
+            'title': 'Urgent Support Tickets',
+            'desc': f'{urgent_tickets} urgent ticket{"s" if urgent_tickets > 1 else ""} unresolved',
+        })
+    if not fraud_alerts:
+        fraud_alerts.append({
+            'icon': 'fa-check-circle', 'severity': 'low',
+            'title': 'All Clear',
+            'desc': 'No alerts at this time',
+        })
+
+    all_urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+
+    context = {
+        'total_users': total_users,
+        'user_growth': user_growth,
+        'total_businesses': total_businesses,
+        'total_customers': total_customers,
+        'total_transactions': total_transactions,
+        'txn_growth': txn_growth,
+        'total_revenue': total_revenue,
+        'open_tickets': open_tickets,
+
+        'metric_labels': json.dumps(metric_labels),
+        'biz_data': json.dumps(biz_data),
+        'cust_data': json.dumps(cust_data),
+        'txn_data': json.dumps(txn_data),
+
+        'activities': activities,
+        'fraud_alerts': fraud_alerts,
+        'urgent_tickets': all_urgent_tickets,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_analytics.html', context)
+
+
+@staff_member_required
+def admin_communication_view(request):
+    """Communication & Broadcast page."""
+    # Recent broadcasts (notifications sent by admin users)
+    admin_users = User.objects.filter(is_superuser=True)
+    recent_broadcasts = Notification.objects.filter(
+        sender__in=admin_users
+    ).order_by('-created_at')[:10]
+
+    broadcasts = []
+    for notif in recent_broadcasts:
+        broadcasts.append({
+            'id': notif.notification_id,
+            'title': notif.title,
+            'message': notif.message[:80] + ('...' if len(notif.message) > 80 else ''),
+            'type': notif.type,
+            'receiver_name': notif.receiver.full_name,
+            'is_read': notif.is_read,
+            'created_at': notif.created_at.strftime('%b %d, %Y %I:%M %p'),
+            'time_ago': _time_ago(notif.created_at),
+        })
+
+    total_sent = Notification.objects.filter(sender__in=admin_users).count()
+    total_read = Notification.objects.filter(sender__in=admin_users, is_read=True).count()
+    total_unread = total_sent - total_read
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+
+    context = {
+        'broadcasts': broadcasts,
+        'total_sent': total_sent,
+        'total_read': total_read,
+        'total_unread': total_unread,
+        'urgent_tickets': urgent_tickets,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_communication.html', context)
+
+
+class AdminSendBroadcastView(APIView):
+    """API endpoint to send broadcast notification to users."""
+    permission_classes = [IsAdminUser]
+
+    def post(self, request):
+        title = request.data.get('title', '').strip()
+        message = request.data.get('message', '').strip()
+        notif_type = request.data.get('type', 'announcement')
+        target = request.data.get('target', 'all')  # all / businesses / customers
+
+        if not title or not message:
+            return Response({'status': 400, 'message': 'Title and message are required.'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Determine target users
+        if target == 'businesses':
+            receivers = User.objects.filter(
+                business_profile__isnull=False, is_active=True
+            )
+        elif target == 'customers':
+            receivers = User.objects.filter(
+                customer_profile__isnull=False, is_active=True
+            )
+        else:
+            receivers = User.objects.filter(is_active=True).exclude(pk=request.user.pk)
+
+        created = 0
+        for user in receivers:
+            Notification.objects.create(
+                sender=request.user,
+                receiver=user,
+                title=title,
+                message=message,
+                type=notif_type,
+            )
+            created += 1
+
+        return Response({
+            'status': 200,
+            'message': f'Broadcast sent to {created} user{"s" if created != 1 else ""}.',
+            'count': created,
+        })
+
+
+class AdminTicketDetailView(APIView):
+    """API endpoint to get full ticket details including admin response."""
+    permission_classes = [IsAdminUser]
+
+    def get(self, request, ticket_id):
+        try:
+            ticket = SupportTicket.objects.select_related('user', 'resolved_by').get(id=ticket_id)
+            return Response({
+                'status': 200,
+                'data': {
+                    'id': ticket.id,
+                    'subject': ticket.subject,
+                    'description': ticket.description,
+                    'category': ticket.get_category_display(),
+                    'priority': ticket.priority,
+                    'priority_display': ticket.get_priority_display(),
+                    'status': ticket.status,
+                    'status_display': ticket.get_status_display(),
+                    'admin_response': ticket.admin_response or '',
+                    'user_name': ticket.user.full_name,
+                    'user_email': ticket.user.email,
+                    'resolved_by': ticket.resolved_by.full_name if ticket.resolved_by else None,
+                    'resolved_at': ticket.resolved_at.isoformat() if ticket.resolved_at else None,
+                    'created_at': ticket.created_at.isoformat(),
+                }
+            })
+        except SupportTicket.DoesNotExist:
+            return Response({'status': 404, 'message': 'Ticket not found.'}, status=status.HTTP_404_NOT_FOUND)

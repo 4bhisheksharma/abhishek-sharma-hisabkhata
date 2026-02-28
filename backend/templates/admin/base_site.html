@@ -3,7 +3,7 @@
 {% block branding %}
 <h1 id="site-name">
   <a
-    href="{% url 'admin:index' %}"
+    href="{% url 'admin_dashboard' %}"
     style="color: #fff; text-decoration: none; font-weight: bold"
   >
     <i class="fas fa-book"></i> Hisab Khata
@@ -306,44 +306,44 @@
 
   <div class="hk-sidebar-nav">
     <!-- Dashboard -->
-    <a href="{% url 'admin:index' %}" class="hk-nav-item active" id="nav-dashboard">
+    <a href="{% url 'admin_dashboard' %}" class="hk-nav-item active" id="nav-dashboard">
       <i class="fas fa-chart-line"></i>
       Dashboard
     </a>
 
     <!-- User Management -->
     <div class="hk-nav-section">User Management</div>
-    <a href="{% url 'admin:hisabauth_user_changelist' %}?role=business_owner" class="hk-nav-item" id="nav-business">
+    <a href="{% url 'admin_user_management' %}" class="hk-nav-item" id="nav-business">
       <i class="fas fa-store"></i>
       Business Owners
     </a>
-    <a href="{% url 'admin:hisabauth_user_changelist' %}?role=customer" class="hk-nav-item" id="nav-customers">
+    <a href="{% url 'admin_user_management' %}?section=customers" class="hk-nav-item" id="nav-customers">
       <i class="fas fa-users"></i>
       Customers
     </a>
-    <a href="{% url 'admin:hisabauth_user_changelist' %}" class="hk-nav-item" id="nav-roles">
+    <a href="{% url 'admin_user_management' %}?section=roles" class="hk-nav-item" id="nav-roles">
       <i class="fas fa-user-shield"></i>
       Role Management
     </a>
-    <a href="{% url 'admin:support_ticket_supportticket_changelist' %}" class="hk-nav-item" id="nav-tickets">
+    <a href="{% url 'admin_user_management' %}?section=tickets" class="hk-nav-item" id="nav-tickets">
       <i class="fas fa-headset"></i>
       Support Tickets
     </a>
 
     <!-- Analytics -->
     <div class="hk-nav-section">Analytics</div>
-    <a href="{% url 'admin:index' %}" class="hk-nav-item" id="nav-analytics">
+    <a href="{% url 'admin_analytics' %}" class="hk-nav-item" id="nav-analytics">
       <i class="fas fa-chart-bar"></i>
       Platform Analytics
     </a>
-    <a href="{% url 'admin:index' %}" class="hk-nav-item" id="nav-fraud">
+    <a href="{% url 'admin_analytics' %}#fraud" class="hk-nav-item" id="nav-fraud">
       <i class="fas fa-user-secret"></i>
       Fraud Detection
     </a>
 
     <!-- Communication -->
     <div class="hk-nav-section">Communication</div>
-    <a href="{% url 'admin:notification_notification_changelist' %}" class="hk-nav-item" id="nav-notifications">
+    <a href="{% url 'admin_communication' %}" class="hk-nav-item" id="nav-notifications">
       <i class="fas fa-bullhorn"></i>
       Notifications
     </a>
@@ -351,7 +351,7 @@
     <hr class="hk-nav-divider" />
 
     <!-- Logout -->
-    <a href="{% url 'admin:logout' %}" class="hk-nav-item" style="color: #d32f2f;">
+    <a href="{% url 'admin_logout' %}" class="hk-nav-item" style="color: #d32f2f;" onclick="return confirm('Are you sure you want to logout?')">
       <i class="fas fa-sign-out-alt"></i>
       Logout
     </a>

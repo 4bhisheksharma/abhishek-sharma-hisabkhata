@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Business Owners - Admin Panel</title>
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #00d09e; --primary-dark: #00b386;
+      --sidebar-bg: #1a1d29; --sidebar-hover: #2a2d3a;
+      --sidebar-active: rgba(0, 208, 158, 0.12);
+      --bg: #f0f2f5; --card-bg: #ffffff;
+      --text-primary: #1a1d29; --text-secondary: #6b7280; --text-muted: #9ca3af;
+      --border: #e5e7eb; --danger: #ef4444; --success: #10b981;
+      --info: #3b82f6; --warning: #f59e0b; --purple: #8b5cf6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); display: flex; min-height: 100vh; }
+
+    /* Sidebar */
+    .sidebar { width: 260px; min-height: 100vh; background: var(--sidebar-bg); color: #fff; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; }
+    .sidebar-brand { padding: 24px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-brand .brand-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+    .sidebar-brand .brand-text h3 { font-size: 16px; font-weight: 700; }
+    .sidebar-brand .brand-text p { font-size: 11px; color: var(--text-muted); }
+    .sidebar-section { padding: 16px 16px 4px; }
+    .sidebar-section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.35); padding: 0 8px; margin-bottom: 8px; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: all 0.2s; margin: 2px 0; }
+    .sidebar-nav a:hover { background: var(--sidebar-hover); color: #fff; }
+    .sidebar-nav a.active { background: var(--sidebar-active); color: var(--primary); }
+    .sidebar-nav a i { width: 20px; text-align: center; font-size: 14px; }
+
+    /* Main */
+    .main-content { flex: 1; margin-left: 260px; min-height: 100vh; }
+    .topbar { background: var(--card-bg); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .topbar-title h1 { font-size: 22px; font-weight: 700; }
+    .topbar-title p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .topbar-right { display: flex; align-items: center; gap: 20px; }
+    .notification-btn { position: relative; background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-secondary); padding: 8px; border-radius: 8px; }
+    .notification-btn:hover { background: var(--bg); }
+    .notification-badge { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .admin-profile { display: flex; align-items: center; gap: 10px; }
+    .admin-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 14px; }
+    .admin-profile span { font-size: 14px; font-weight: 600; }
+
+    .page-body { padding: 28px 32px; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 24px; }
+    .stat-card { background: var(--card-bg); border-radius: 14px; padding: 20px 22px; display: flex; align-items: flex-start; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+    .stat-icon-wrap { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .stat-icon-wrap.green { background: #ecfdf5; color: var(--primary); }
+    .stat-icon-wrap.blue { background: #eff6ff; color: var(--info); }
+    .stat-icon-wrap.purple { background: #f3f0ff; color: var(--purple); }
+    .stat-icon-wrap.orange { background: #fef3c7; color: var(--warning); }
+    .stat-body .stat-label { font-size: 12.5px; color: var(--text-secondary); font-weight: 500; }
+    .stat-body .stat-value { font-size: 26px; font-weight: 800; color: var(--text-primary); margin-top: 2px; }
+
+    /* Card */
+    .card { background: var(--card-bg); border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+    .card-header { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+    .card-header h3 { font-size: 16px; font-weight: 700; }
+
+    /* Toolbar */
+    .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .search-box { padding: 9px 14px 9px 38px; border: 1px solid var(--border); border-radius: 10px; font-size: 13px; background: var(--bg); outline: none; min-width: 260px; }
+    .search-box:focus { border-color: var(--primary); }
+    .search-wrap { position: relative; }
+    .search-wrap i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
+
+    .filter-tabs { display: flex; gap: 8px; }
+    .filter-tab { padding: 6px 16px; border-radius: 20px; font-size: 12.5px; font-weight: 600; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-secondary); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .filter-tab:hover { border-color: var(--primary); color: var(--primary); }
+    .filter-tab.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* Table */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { padding: 12px 16px; font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); text-align: left; border-bottom: 1px solid var(--border); }
+    .data-table td { padding: 14px 16px; font-size: 13.5px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover { background: #f9fafb; }
+
+    .user-cell { display: flex; align-items: center; gap: 12px; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: #f0f2f5; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; color: var(--text-secondary); flex-shrink: 0; }
+    .user-cell .name { font-weight: 600; font-size: 13.5px; }
+    .user-cell .email { font-size: 12px; color: var(--text-muted); }
+
+    .status-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 10px; }
+    .status-badge.verified { background: #ecfdf5; color: var(--success); }
+    .status-badge.not-verified { background: #fef2f2; color: var(--danger); }
+    .status-badge.pending { background: #fef3c7; color: #b45309; }
+
+    .toggle-switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; display: inline-block; }
+    .toggle-switch input { display: none; }
+    .toggle-slider { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #d1d5db; border-radius: 24px; cursor: pointer; transition: 0.3s; }
+    .toggle-slider::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: 0.3s; }
+    .toggle-switch input:checked + .toggle-slider { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-slider::before { transform: translateX(18px); }
+
+    .action-btn { padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-secondary); cursor: pointer; text-decoration: none; transition: all 0.2s; }
+    .action-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .action-btn.danger:hover { border-color: var(--danger); color: var(--danger); }
+
+    /* Pagination */
+    .pagination { display: flex; justify-content: center; align-items: center; gap: 6px; padding: 20px 24px; border-top: 1px solid var(--border); }
+    .pagination a, .pagination span { padding: 8px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); color: var(--text-secondary); transition: all 0.2s; }
+    .pagination a:hover { border-color: var(--primary); color: var(--primary); }
+    .pagination .current { background: var(--primary); color: #fff; border-color: var(--primary); }
+    .pagination .disabled { opacity: 0.4; pointer-events: none; }
+
+    .empty-state { padding: 48px 24px; text-align: center; color: var(--text-muted); font-size: 14px; }
+    .money { font-weight: 600; color: var(--text-primary); }
+
+    @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .stats-grid { grid-template-columns: 1fr; } .page-body { padding: 16px; } }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-icon">H</div>
+      <div class="brand-text"><h3>Admin Panel</h3><p>System Management</p></div>
+    </div>
+    <div class="sidebar-section">
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_dashboard' %}"><i class="fas fa-th-large"></i> Dashboard</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">User Management</div>
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_user_management' %}" class="active"><i class="fas fa-store"></i> Business Owners</a></li>
+        <li><a href="{% url 'admin_user_management' %}?section=customers"><i class="fas fa-users"></i> Customers</a></li>
+        <li><a href="{% url 'admin_user_management' %}?section=roles"><i class="fas fa-user-shield"></i> Role Management</a></li>
+        <li><a href="{% url 'admin_user_management' %}?section=tickets"><i class="fas fa-headset"></i> Support Tickets</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Analytics</div>
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_analytics' %}"><i class="fas fa-chart-line"></i> Platform Analytics</a></li>
+        <li><a href="{% url 'admin_analytics' %}#fraud"><i class="fas fa-shield-alt"></i> Fraud Detection</a></li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-label">Communication</div>
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_communication' %}"><i class="fas fa-bullhorn"></i> Notifications</a></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section" style="margin-top: auto; padding-bottom: 20px;">
+      <ul class="sidebar-nav">
+        <li><a href="{% url 'admin_logout' %}" style="color: #ef4444;" onclick="return confirm('Are you sure you want to logout?')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+    <header class="topbar">
+      <div class="topbar-title">
+        <h1>All Business Owners</h1>
+        <p>Manage and monitor all business accounts</p>
+      </div>
+      <div class="topbar-right">
+        <button class="notification-btn" onclick="window.location.href='{% url "admin_communication" %}'">
+          <i class="fas fa-bell"></i>
+          {% if urgent_tickets > 0 %}<span class="notification-badge">{{ urgent_tickets }}</span>{% endif %}
+        </button>
+        <div class="admin-profile">
+          <div class="admin-avatar">{{ admin_user.full_name|truncatechars:1 }}</div>
+          <span>{{ admin_user.full_name|default:"Admin" }}</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="page-body">
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon-wrap green"><i class="fas fa-store"></i></div>
+          <div class="stat-body"><span class="stat-label">Total Businesses</span><div class="stat-value">{{ total_count }}</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon-wrap blue"><i class="fas fa-check-circle"></i></div>
+          <div class="stat-body"><span class="stat-label">Verified</span><div class="stat-value">{{ verified_count }}</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon-wrap orange"><i class="fas fa-clock"></i></div>
+          <div class="stat-body"><span class="stat-label">Pending</span><div class="stat-value">{{ pending_count }}</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon-wrap purple"><i class="fas fa-times-circle"></i></div>
+          <div class="stat-body"><span class="stat-label">Unverified</span><div class="stat-value">{{ unverified_count }}</div></div>
+        </div>
+      </div>
+
+      <!-- Table Card -->
+      <div class="card">
+        <div class="card-header">
+          <h3>Business Owners</h3>
+          <div class="toolbar">
+            <div class="filter-tabs">
+              <a class="filter-tab {% if status_filter == 'all' %}active{% endif %}" href="?status=all{% if search %}&search={{ search }}{% endif %}">All</a>
+              <a class="filter-tab {% if status_filter == 'verified' %}active{% endif %}" href="?status=verified{% if search %}&search={{ search }}{% endif %}">Verified</a>
+              <a class="filter-tab {% if status_filter == 'not_verified' %}active{% endif %}" href="?status=not_verified{% if search %}&search={{ search }}{% endif %}">Not Verified</a>
+              <a class="filter-tab {% if status_filter == 'pending' %}active{% endif %}" href="?status=pending{% if search %}&search={{ search }}{% endif %}">Pending</a>
+            </div>
+            <form method="get" class="search-wrap">
+              <input type="hidden" name="status" value="{{ status_filter }}" />
+              <i class="fas fa-search"></i>
+              <input type="text" name="search" class="search-box" placeholder="Search businesses..." value="{{ search }}" />
+            </form>
+          </div>
+        </div>
+
+        {% if businesses %}
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Business</th>
+              <th>Owner</th>
+              <th>Status</th>
+              <th>Customers</th>
+              <th>Revenue</th>
+              <th>Joined</th>
+              <th>Verified</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for biz in businesses %}
+            <tr>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">{{ biz.owner_name|truncatechars:1 }}</div>
+                  <div>
+                    <div class="name">{{ biz.business_name }}</div>
+                    <div class="email">ID: BO-{{ biz.business_id|stringformat:"04d" }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>
+                <div class="name">{{ biz.owner_name }}</div>
+                <div style="font-size:12px;color:var(--text-muted);">{{ biz.email }}</div>
+              </td>
+              <td>
+                <span class="status-badge {{ biz.status }}" id="biz-status-{{ biz.business_id }}">{{ biz.status_label }}</span>
+              </td>
+              <td>{{ biz.customer_count }}</td>
+              <td class="money">Rs. {{ biz.total_revenue|floatformat:0 }}</td>
+              <td style="font-size:12.5px;color:var(--text-muted);">{{ biz.created_at }}</td>
+              <td>
+                <label class="toggle-switch" title="Toggle Verified">
+                  <input type="checkbox" {% if biz.is_verified %}checked{% endif %}
+                         data-business-id="{{ biz.business_id }}" onchange="toggleBusinessVerified(this)" />
+                  <span class="toggle-slider"></span>
+                </label>
+              </td>
+              <td>
+                <a href="{% url 'admin:business_dashboard_business_change' biz.business_id %}" class="action-btn" title="Edit"><i class="fas fa-pen"></i></a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        <!-- Pagination -->
+        {% if page_obj.has_other_pages %}
+        <div class="pagination">
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}&status={{ status_filter }}&search={{ search }}">&laquo; Prev</a>
+          {% else %}
+          <span class="disabled">&laquo; Prev</span>
+          {% endif %}
+
+          {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}&status={{ status_filter }}&search={{ search }}">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}&status={{ status_filter }}&search={{ search }}">Next &raquo;</a>
+          {% else %}
+          <span class="disabled">Next &raquo;</span>
+          {% endif %}
+        </div>
+        {% endif %}
+
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-store" style="font-size: 36px; margin-bottom: 12px; display: block; opacity: 0.3;"></i>
+          No business owners found.
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getCookie(name) {
+      let v = null; if (document.cookie) { document.cookie.split(';').forEach(c => { c = c.trim(); if (c.startsWith(name + '=')) v = decodeURIComponent(c.substring(name.length + 1)); }); } return v;
+    }
+    function showToast(msg, type) {
+      const t = document.createElement('div');
+      t.style.cssText = 'position:fixed;top:24px;right:24px;z-index:9999;padding:14px 24px;border-radius:10px;font-size:13.5px;font-weight:600;color:#fff;box-shadow:0 4px 16px rgba(0,0,0,0.15);transition:opacity 0.4s;';
+      t.style.background = type === 'success' ? '#10b981' : '#ef4444';
+      t.textContent = msg; document.body.appendChild(t);
+      setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 3000);
+    }
+    function toggleBusinessVerified(el) {
+      const bizId = el.dataset.businessId, csrf = getCookie('csrftoken');
+      fetch('/api/analytics/admin/toggle-business-verified/' + bizId + '/', {
+        method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf }, credentials: 'same-origin',
+      }).then(r => r.json()).then(data => {
+        if (data.status === 200) {
+          const badge = document.getElementById('biz-status-' + bizId);
+          badge.className = 'status-badge ' + (data.is_verified ? 'verified' : 'not-verified');
+          badge.textContent = data.is_verified ? 'Verified' : 'Not Verified';
+          showToast(data.message, 'success');
+        } else { el.checked = !el.checked; showToast(data.message || 'Error', 'error'); }
+      }).catch(() => { el.checked = !el.checked; showToast('Network error', 'error'); });
+    }
+  </script>
+</body>
+</html>
