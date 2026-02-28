@@ -304,6 +304,90 @@
         </div>
         {% endif %}
       </div>
+
+      <!-- Verification Requests Section -->
+      <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+          <h3><i class="fas fa-file-alt" style="color: var(--warning); margin-right: 8px;"></i>Verification Requests</h3>
+          <div class="toolbar">
+            <div class="filter-tabs">
+              <a class="filter-tab {% if ver_filter == 'all' or not ver_filter %}active{% endif %}" href="?status={{ status_filter }}&search={{ search }}&ver=all">All</a>
+              <a class="filter-tab {% if ver_filter == 'pending' %}active{% endif %}" href="?status={{ status_filter }}&search={{ search }}&ver=pending">Pending</a>
+              <a class="filter-tab {% if ver_filter == 'approved' %}active{% endif %}" href="?status={{ status_filter }}&search={{ search }}&ver=approved">Approved</a>
+              <a class="filter-tab {% if ver_filter == 'rejected' %}active{% endif %}" href="?status={{ status_filter }}&search={{ search }}&ver=rejected">Rejected</a>
+            </div>
+          </div>
+        </div>
+
+        {% if verification_requests %}
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Business</th>
+              <th>Document Type</th>
+              <th>Document</th>
+              <th>Note</th>
+              <th>Status</th>
+              <th>Submitted</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for vr in verification_requests %}
+            <tr id="ver-row-{{ vr.id }}">
+              <td>#{{ vr.id }}</td>
+              <td>
+                <div class="user-cell">
+                  <div class="user-avatar">{{ vr.owner_name|truncatechars:1 }}</div>
+                  <div>
+                    <div class="name">{{ vr.business_name }}</div>
+                    <div class="email">{{ vr.owner_email }}</div>
+                  </div>
+                </div>
+              </td>
+              <td>{{ vr.document_type }}</td>
+              <td>
+                {% if vr.document_url %}
+                <a href="{{ vr.document_url }}" target="_blank" class="action-btn" style="color: var(--info); border-color: var(--info);">
+                  <i class="fas fa-eye"></i> View
+                </a>
+                {% else %}
+                <span style="color: var(--text-muted);">No document</span>
+                {% endif %}
+              </td>
+              <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ vr.note|default:"-" }}</td>
+              <td>
+                <span class="status-badge {% if vr.status == 'approved' %}verified{% elif vr.status == 'rejected' %}not-verified{% else %}pending{% endif %}" id="ver-status-{{ vr.id }}">
+                  {{ vr.status_label }}
+                </span>
+              </td>
+              <td style="font-size:12.5px;color:var(--text-muted);">{{ vr.created_at }}</td>
+              <td>
+                {% if vr.status == 'pending' %}
+                <button class="action-btn" style="color: var(--success); border-color: var(--success); margin-right: 4px;" onclick="reviewVerification({{ vr.id }}, 'approve')" title="Approve">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button class="action-btn danger" onclick="reviewVerification({{ vr.id }}, 'reject')" title="Reject">
+                  <i class="fas fa-times"></i>
+                </button>
+                {% elif vr.status == 'approved' %}
+                <span style="color: var(--success); font-size: 12px; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span>
+                {% else %}
+                <span style="color: var(--danger); font-size: 12px; font-weight: 600;"><i class="fas fa-times-circle"></i> Rejected</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+          <i class="fas fa-file-alt" style="font-size: 36px; margin-bottom: 12px; display: block; opacity: 0.3;"></i>
+          No verification requests found.
+        </div>
+        {% endif %}
+      </div>
     </div>
   </div>
 
@@ -330,6 +414,39 @@
           showToast(data.message, 'success');
         } else { el.checked = !el.checked; showToast(data.message || 'Error', 'error'); }
       }).catch(() => { el.checked = !el.checked; showToast('Network error', 'error'); });
+    }
+    function reviewVerification(reqId, action) {
+      const remarks = action === 'reject' ? prompt('Enter rejection reason (optional):') || '' : '';
+      const csrf = getCookie('csrftoken');
+      fetch('/api/analytics/admin/verification-requests/' + reqId + '/review/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrf },
+        credentials: 'same-origin',
+        body: JSON.stringify({ action: action, remarks: remarks }),
+      }).then(r => r.json()).then(data => {
+        if (data.status === 200) {
+          showToast(data.message, 'success');
+          // Update the row UI
+          const statusBadge = document.getElementById('ver-status-' + reqId);
+          if (action === 'approve') {
+            statusBadge.className = 'status-badge verified';
+            statusBadge.textContent = 'Approved';
+          } else {
+            statusBadge.className = 'status-badge not-verified';
+            statusBadge.textContent = 'Rejected';
+          }
+          // Replace action buttons
+          const row = document.getElementById('ver-row-' + reqId);
+          const actionCell = row.querySelector('td:last-child');
+          if (action === 'approve') {
+            actionCell.innerHTML = '<span style="color: var(--success); font-size: 12px; font-weight: 600;"><i class="fas fa-check-circle"></i> Approved</span>';
+          } else {
+            actionCell.innerHTML = '<span style="color: var(--danger); font-size: 12px; font-weight: 600;"><i class="fas fa-times-circle"></i> Rejected</span>';
+          }
+        } else {
+          showToast(data.message || 'Error', 'error');
+        }
+      }).catch(() => showToast('Network error', 'error'));
     }
   </script>
 </body>

@@ -4,6 +4,7 @@ import 'package:hisab_khata/core/constants/api_endpoints.dart';
 import 'package:hisab_khata/features/users/shared/data/models/recent_connection_model.dart';
 import '../models/business_dashboard_model.dart';
 import '../models/business_profile_model.dart';
+import '../models/verification_request_model.dart';
 
 /// Abstract class defining business remote data source contract
 abstract class BusinessRemoteDataSource {
@@ -24,6 +25,19 @@ abstract class BusinessRemoteDataSource {
 
   /// Get recently added customers for this business
   Future<List<RecentConnectionModel>> getRecentCustomers({int limit = 10});
+
+  /// Submit a verification request with a document
+  Future<VerificationRequestModel> submitVerificationRequest({
+    required File document,
+    String documentType,
+    String? note,
+  });
+
+  /// Get verification status
+  Future<VerificationStatusModel> getVerificationStatus();
+
+  /// Get all verification requests for the business
+  Future<List<VerificationRequestModel>> getVerificationRequests();
 }
 
 /// Implementation of BusinessRemoteDataSource using BaseRemoteDataSource
@@ -108,5 +122,50 @@ class BusinessRemoteDataSourceImpl extends BaseRemoteDataSource
     return data
         .map((json) => RecentConnectionModel.fromCustomerJson(json))
         .toList();
+  }
+
+  @override
+  Future<VerificationRequestModel> submitVerificationRequest({
+    required File document,
+    String documentType = 'business_registration',
+    String? note,
+  }) async {
+    final fields = <String, String>{'document_type': documentType};
+    if (note != null && note.isNotEmpty) {
+      fields['note'] = note;
+    }
+
+    final files = <String, File>{'document': document};
+
+    final response = await multipart(
+      ApiEndpoints.businessVerificationRequest,
+      'POST',
+      fields: fields,
+      files: files,
+      includeAuth: true,
+    );
+
+    return VerificationRequestModel.fromJson(response['data']);
+  }
+
+  @override
+  Future<VerificationStatusModel> getVerificationStatus() async {
+    final response = await get(
+      ApiEndpoints.businessVerificationStatus,
+      includeAuth: true,
+    );
+
+    return VerificationStatusModel.fromJson(response['data']);
+  }
+
+  @override
+  Future<List<VerificationRequestModel>> getVerificationRequests() async {
+    final response = await get(
+      ApiEndpoints.businessVerificationRequest,
+      includeAuth: true,
+    );
+
+    final List<dynamic> data = response['data'] ?? [];
+    return data.map((json) => VerificationRequestModel.fromJson(json)).toList();
   }
 }

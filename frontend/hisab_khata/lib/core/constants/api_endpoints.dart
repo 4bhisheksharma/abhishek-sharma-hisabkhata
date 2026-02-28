@@ -16,6 +16,10 @@ class ApiEndpoints {
   static const String businessDashboard = "business/dashboard/";
   static const String businessProfile = "business/profile/";
   static const String recentCustomers = "business/recent-customers/";
+  static const String businessVerificationRequest =
+      "business/verification/request/";
+  static const String businessVerificationStatus =
+      "business/verification/status/";
 
   // Connection Request endpoints
   static const String searchUsers = "request/connections/search-users/";

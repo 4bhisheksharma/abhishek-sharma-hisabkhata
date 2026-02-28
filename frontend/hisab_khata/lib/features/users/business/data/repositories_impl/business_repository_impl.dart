@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:hisab_khata/features/users/business/domain/entities/business_dashboard.dart';
 import 'package:hisab_khata/features/users/business/domain/entities/business_profile.dart';
+import 'package:hisab_khata/features/users/business/domain/entities/verification_request.dart';
 import 'package:hisab_khata/features/users/business/domain/repositories/business_repository.dart';
 import 'package:hisab_khata/features/users/business/data/datasources/business_remote_data_source.dart';
 import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
@@ -78,6 +79,51 @@ class BusinessRepositoryImpl implements BusinessRepository {
       return Left(e.exceptionMessage);
     } catch (e) {
       return Left('Failed to fetch recent customers: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, VerificationRequest>> submitVerificationRequest({
+    required String documentPath,
+    String documentType = 'business_registration',
+    String? note,
+  }) async {
+    try {
+      final result = await remoteDataSource.submitVerificationRequest(
+        document: File(documentPath),
+        documentType: documentType,
+        note: note,
+      );
+      return Right(result);
+    } on ServerException catch (e) {
+      return Left(e.exceptionMessage);
+    } catch (e) {
+      return Left('Failed to submit verification request: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, VerificationStatus>> getVerificationStatus() async {
+    try {
+      final status = await remoteDataSource.getVerificationStatus();
+      return Right(status);
+    } on ServerException catch (e) {
+      return Left(e.exceptionMessage);
+    } catch (e) {
+      return Left('Failed to get verification status: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, List<VerificationRequest>>>
+  getVerificationRequests() async {
+    try {
+      final requests = await remoteDataSource.getVerificationRequests();
+      return Right(requests);
+    } on ServerException catch (e) {
+      return Left(e.exceptionMessage);
+    } catch (e) {
+      return Left('Failed to get verification requests: ${e.toString()}');
     }
   }
 }

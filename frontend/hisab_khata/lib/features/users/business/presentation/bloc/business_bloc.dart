@@ -3,6 +3,8 @@ import 'package:hisab_khata/features/users/business/domain/usecases/get_business
 import 'package:hisab_khata/features/users/business/domain/usecases/get_business_profile.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/update_business_profile.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/get_recent_customers.dart';
+import 'package:hisab_khata/features/users/business/domain/usecases/submit_verification_request.dart';
+import 'package:hisab_khata/features/users/business/domain/usecases/get_verification_status.dart';
 import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
 import 'business_event.dart';
 import 'business_state.dart';
@@ -13,17 +15,23 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   final GetBusinessProfile getBusinessProfile;
   final UpdateBusinessProfile updateBusinessProfile;
   final GetRecentCustomers getRecentCustomers;
+  final SubmitVerificationRequest submitVerificationRequest;
+  final GetVerificationStatus getVerificationStatus;
 
   BusinessBloc({
     required this.getBusinessDashboard,
     required this.getBusinessProfile,
     required this.updateBusinessProfile,
     required this.getRecentCustomers,
+    required this.submitVerificationRequest,
+    required this.getVerificationStatus,
   }) : super(const BusinessInitial()) {
     on<LoadBusinessDashboard>(_onLoadDashboard);
     on<LoadBusinessProfile>(_onLoadProfile);
     on<UpdateBusinessProfileEvent>(_onUpdateProfile);
     on<LoadRecentCustomers>(_onLoadRecentCustomers);
+    on<SubmitVerificationRequestEvent>(_onSubmitVerification);
+    on<LoadVerificationStatus>(_onLoadVerificationStatus);
   }
 
   Future<void> _onLoadDashboard(
@@ -103,5 +111,42 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
         ),
       );
     }
+  }
+
+  Future<void> _onSubmitVerification(
+    SubmitVerificationRequestEvent event,
+    Emitter<BusinessState> emit,
+  ) async {
+    emit(const BusinessLoading());
+
+    final result = await submitVerificationRequest(
+      documentPath: event.documentPath,
+      documentType: event.documentType,
+      note: event.note,
+    );
+
+    result.fold(
+      (error) => emit(BusinessError(error)),
+      (request) => emit(
+        BusinessVerificationRequestSubmitted(
+          request,
+          'Verification request submitted successfully',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onLoadVerificationStatus(
+    LoadVerificationStatus event,
+    Emitter<BusinessState> emit,
+  ) async {
+    emit(const BusinessLoading());
+
+    final result = await getVerificationStatus();
+
+    result.fold(
+      (error) => emit(BusinessError(error)),
+      (status) => emit(BusinessVerificationStatusLoaded(status)),
+    );
   }
 }

@@ -5,6 +5,7 @@ from .views import (
     AdminToggleBusinessVerifiedView, AdminToggleUserActiveView,
     AdminUserListView, AdminDeleteUserView, AdminUpdateTicketStatusView,
     AdminSendBroadcastView, AdminTicketDetailView,
+    AdminVerificationRequestsView, AdminReviewVerificationView,
     admin_dashboard_view, admin_user_management_view,
     admin_all_businesses_view, admin_all_customers_view,
     admin_analytics_view, admin_communication_view,
@@ -28,4 +29,6 @@ urlpatterns = [
     path('admin/update-ticket/<int:ticket_id>/', AdminUpdateTicketStatusView.as_view(), name='admin_update_ticket'),
     path('admin/ticket/<int:ticket_id>/', AdminTicketDetailView.as_view(), name='admin_ticket_detail'),
     path('admin/broadcast/', AdminSendBroadcastView.as_view(), name='admin_send_broadcast'),
+    path('admin/verification-requests/', AdminVerificationRequestsView.as_view(), name='admin_verification_requests'),
+    path('admin/verification-requests/<int:request_id>/review/', AdminReviewVerificationView.as_view(), name='admin_review_verification'),
 ]

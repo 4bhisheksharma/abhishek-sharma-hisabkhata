@@ -51,3 +51,24 @@ class LoadRecentCustomers extends BusinessEvent {
   @override
   List<Object?> get props => [limit];
 }
+
+/// Event to submit a verification request
+class SubmitVerificationRequestEvent extends BusinessEvent {
+  final String documentPath;
+  final String documentType;
+  final String? note;
+
+  const SubmitVerificationRequestEvent({
+    required this.documentPath,
+    this.documentType = 'business_registration',
+    this.note,
+  });
+
+  @override
+  List<Object?> get props => [documentPath, documentType, note];
+}
+
+/// Event to load verification status
+class LoadVerificationStatus extends BusinessEvent {
+  const LoadVerificationStatus();
+}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Business
+from .models import Business, BusinessVerificationRequest
 from hisabauth.models import User
 
 
@@ -94,3 +94,30 @@ class RecentCustomerSerializer(serializers.Serializer):
     def get_contact(self, obj):
         """Return phone number if available"""
         return obj.customer.user.phone_number or None
+
+
+class BusinessVerificationRequestSerializer(serializers.ModelSerializer):
+    """Serializer for submitting a verification request"""
+    business_name = serializers.CharField(source='business.business_name', read_only=True)
+    document_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = BusinessVerificationRequest
+        fields = [
+            'id', 'business_name', 'document', 'document_url',
+            'document_type', 'note', 'status', 'admin_remarks',
+            'reviewed_at', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'status', 'admin_remarks', 'reviewed_at', 'created_at', 'updated_at']
+
+    def get_document_url(self, obj):
+        if obj.document:
+            return f"/media/{obj.document}"
+        return None
+
+
+class BusinessVerificationStatusSerializer(serializers.Serializer):
+    """Serializer for checking verification status"""
+    is_verified = serializers.BooleanField()
+    has_pending_request = serializers.BooleanField()
+    latest_request = BusinessVerificationRequestSerializer(allow_null=True)

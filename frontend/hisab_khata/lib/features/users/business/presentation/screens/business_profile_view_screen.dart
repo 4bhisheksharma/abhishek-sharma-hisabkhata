@@ -4,6 +4,7 @@ import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
+import 'package:hisab_khata/features/users/business/presentation/screens/business_verification_screen.dart';
 import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/shared/widgets/dashboard/profile_menu_item.dart';
 import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
@@ -134,6 +135,30 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           title: AppLocalizations.of(context)!.editProfile,
                           onTap: () {
                             Navigator.pushNamed(context, '/business-profile');
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        ProfileMenuItem(
+                          icon: profile.isVerified
+                              ? Icons.verified
+                              : Icons.verified_user_outlined,
+                          iconColor: profile.isVerified
+                              ? const Color(0xFF00C853)
+                              : const Color(0xFFFF6F00),
+                          iconBgColor: profile.isVerified
+                              ? const Color(0xFFE8F5E9)
+                              : const Color(0xFFFFF3E0),
+                          title: profile.isVerified
+                              ? 'Verification Status'
+                              : 'Request Verification',
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const BusinessVerificationScreen(),
+                              ),
+                            );
                           },
                         ),
                         const SizedBox(height: 12),

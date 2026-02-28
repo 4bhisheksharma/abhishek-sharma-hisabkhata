@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:hisab_khata/features/users/business/domain/entities/business_dashboard.dart';
 import 'package:hisab_khata/features/users/business/domain/entities/business_profile.dart';
+import 'package:hisab_khata/features/users/business/domain/entities/verification_request.dart';
 import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
 
 /// Base class for all business states
@@ -49,6 +50,23 @@ class BusinessProfileUpdated extends BusinessState {
   const BusinessProfileUpdated(this.profile, this.message);
   @override
   List<Object?> get props => [profile, message];
+}
+
+/// Verification status loaded
+class BusinessVerificationStatusLoaded extends BusinessState {
+  final VerificationStatus verificationStatus;
+  const BusinessVerificationStatusLoaded(this.verificationStatus);
+  @override
+  List<Object?> get props => [verificationStatus];
+}
+
+/// Verification request submitted
+class BusinessVerificationRequestSubmitted extends BusinessState {
+  final VerificationRequest request;
+  final String message;
+  const BusinessVerificationRequestSubmitted(this.request, this.message);
+  @override
+  List<Object?> get props => [request, message];
 }
 
 /// Error state

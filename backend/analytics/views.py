@@ -884,6 +884,75 @@ def _time_ago(dt):
     return "Just now"
 
 
+class AdminVerificationRequestsView(APIView):
+    """API endpoint to list and review business verification requests."""
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        """List all verification requests, optionally filtered by status."""
+        from business_dashboard.models import BusinessVerificationRequest
+        status_filter = request.query_params.get('status', None)
+        qs = BusinessVerificationRequest.objects.select_related(
+            'business', 'business__user', 'reviewed_by'
+        ).order_by('-created_at')
+        if status_filter in ('pending', 'approved', 'rejected'):
+            qs = qs.filter(status=status_filter)
+
+        data = []
+        for req in qs:
+            data.append({
+                'id': req.id,
+                'business_id': req.business.business_id,
+                'business_name': req.business.business_name,
+                'owner_name': req.business.user.full_name,
+                'owner_email': req.business.user.email,
+                'document': req.document.url if req.document else None,
+                'document_type': req.document_type,
+                'note': req.note,
+                'status': req.status,
+                'admin_remarks': req.admin_remarks,
+                'reviewed_by': req.reviewed_by.full_name if req.reviewed_by else None,
+                'reviewed_at': req.reviewed_at.isoformat() if req.reviewed_at else None,
+                'created_at': req.created_at.isoformat(),
+            })
+
+        return Response({'status': 200, 'data': data})
+
+
+class AdminReviewVerificationView(APIView):
+    """API endpoint for admin to approve or reject a verification request."""
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, request_id):
+        from business_dashboard.models import BusinessVerificationRequest
+        try:
+            ver_req = BusinessVerificationRequest.objects.select_related('business').get(id=request_id)
+        except BusinessVerificationRequest.DoesNotExist:
+            return Response({'status': 404, 'message': 'Verification request not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        action = request.data.get('action')  # 'approve' or 'reject'
+        remarks = request.data.get('remarks', '')
+
+        if action not in ('approve', 'reject'):
+            return Response({'status': 400, 'message': 'Action must be "approve" or "reject".'}, status=status.HTTP_400_BAD_REQUEST)
+
+        ver_req.status = 'approved' if action == 'approve' else 'rejected'
+        ver_req.admin_remarks = remarks
+        ver_req.reviewed_by = request.user
+        ver_req.reviewed_at = timezone.now()
+        ver_req.save()
+
+        if action == 'approve':
+            ver_req.business.is_verified = True
+            ver_req.business.save(update_fields=['is_verified', 'updated_at'])
+
+        return Response({
+            'status': 200,
+            'message': f'Verification request {action}d successfully.',
+            'is_verified': ver_req.business.is_verified,
+        })
+
+
 @staff_member_required
 def admin_all_businesses_view(request):
     """Full listing of all businesses with search, filter and pagination."""
@@ -962,6 +1031,34 @@ def admin_all_businesses_view(request):
         'urgent_tickets': urgent_tickets,
         'admin_user': request.user,
     }
+
+    # Verification Requests
+    from business_dashboard.models import BusinessVerificationRequest
+    ver_filter = request.GET.get('ver', 'all')
+    ver_qs = BusinessVerificationRequest.objects.select_related(
+        'business', 'business__user'
+    ).order_by('-created_at')
+    if ver_filter in ('pending', 'approved', 'rejected'):
+        ver_qs = ver_qs.filter(status=ver_filter)
+
+    verification_requests = []
+    for vr in ver_qs[:20]:
+        verification_requests.append({
+            'id': vr.id,
+            'business_name': vr.business.business_name,
+            'owner_name': vr.business.user.full_name,
+            'owner_email': vr.business.user.email,
+            'document_url': vr.document.url if vr.document else None,
+            'document_type': vr.document_type,
+            'note': vr.note or '',
+            'status': vr.status,
+            'status_label': vr.get_status_display(),
+            'admin_remarks': vr.admin_remarks or '',
+            'created_at': vr.created_at.strftime('%b %d, %Y'),
+        })
+    context['verification_requests'] = verification_requests
+    context['ver_filter'] = ver_filter
+
     return render(request, 'admin_all_businesses.html', context)
 
 

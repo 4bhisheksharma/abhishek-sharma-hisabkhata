@@ -31,6 +31,8 @@ import '../../features/users/business/domain/usecases/get_business_dashboard.dar
 import '../../features/users/business/domain/usecases/get_business_profile.dart';
 import '../../features/users/business/domain/usecases/update_business_profile.dart';
 import '../../features/users/business/domain/usecases/get_recent_customers.dart';
+import '../../features/users/business/domain/usecases/submit_verification_request.dart';
+import '../../features/users/business/domain/usecases/get_verification_status.dart';
 import '../../features/users/business/presentation/bloc/business_bloc.dart';
 import '../../features/request/data/datasource/connection_request_remote_data_source.dart';
 import '../../features/request/data/repository_imp/connection_request_repository_impl.dart';
@@ -122,6 +124,8 @@ class DependencyInjection {
   late final GetBusinessProfile _getBusinessProfile;
   late final UpdateBusinessProfile _updateBusinessProfile;
   late final GetRecentCustomers _getRecentCustomers;
+  late final SubmitVerificationRequest _submitVerificationRequest;
+  late final GetVerificationStatus _getVerificationStatus;
 
   // Use Cases - Connection Request
   late final SearchUsersUseCase _searchUsersUseCase;
@@ -252,6 +256,8 @@ class DependencyInjection {
     _getBusinessProfile = GetBusinessProfile(_businessRepository);
     _updateBusinessProfile = UpdateBusinessProfile(_businessRepository);
     _getRecentCustomers = GetRecentCustomers(_businessRepository);
+    _submitVerificationRequest = SubmitVerificationRequest(_businessRepository);
+    _getVerificationStatus = GetVerificationStatus(_businessRepository);
 
     // Use Cases - Connection Request
     _searchUsersUseCase = SearchUsersUseCase(_connectionRequestRepository);
@@ -346,6 +352,8 @@ class DependencyInjection {
       getBusinessProfile: _getBusinessProfile,
       updateBusinessProfile: _updateBusinessProfile,
       getRecentCustomers: _getRecentCustomers,
+      submitVerificationRequest: _submitVerificationRequest,
+      getVerificationStatus: _getVerificationStatus,
     );
     _connectionRequestBloc = ConnectionRequestBloc(
       searchUsersUseCase: _searchUsersUseCase,
