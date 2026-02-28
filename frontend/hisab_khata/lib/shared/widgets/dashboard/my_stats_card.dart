@@ -36,7 +36,7 @@ class MyStatCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppTheme.primaryBlue.withOpacity(0.3),
+              color: AppTheme.primaryBlue.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 4),
             ),
@@ -51,7 +51,7 @@ class MyStatCard extends StatelessWidget {
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.25),
+                  color: Colors.white.withValues(alpha: 0.25),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(icon, color: Colors.white, size: 28),
@@ -82,14 +82,14 @@ class MyStatCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.store_outlined,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               size: 14,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               firstLabel,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
@@ -113,14 +113,14 @@ class MyStatCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.pending_outlined,
-                              color: Colors.white.withOpacity(0.9),
+                              color: Colors.white.withValues(alpha: 0.9),
                               size: 14,
                             ),
                             const SizedBox(width: 4),
                             Text(
                               secondLabel,
                               style: TextStyle(
-                                color: Colors.white.withOpacity(0.9),
+                                color: Colors.white.withValues(alpha: 0.9),
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,

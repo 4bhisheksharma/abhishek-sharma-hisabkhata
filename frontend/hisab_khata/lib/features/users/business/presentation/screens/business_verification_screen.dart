@@ -7,6 +7,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_b
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class BusinessVerificationScreen extends StatefulWidget {
   const BusinessVerificationScreen({super.key});
@@ -113,9 +114,7 @@ class _BusinessVerificationScreenState
         },
         builder: (context, state) {
           if (state is BusinessLoading && !_isSubmitting) {
-            return const Center(
-              child: CircularProgressIndicator(color: AppTheme.primaryBlue),
-            );
+            return const VerificationShimmer();
           }
 
           if (state is BusinessVerificationStatusLoaded) {

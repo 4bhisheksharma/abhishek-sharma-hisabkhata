@@ -17,6 +17,7 @@ import '../widgets/transactions_list.dart';
 import '../../domain/entities/connected_user_details.dart';
 import '../../domain/entities/transaction.dart';
 import 'add_transaction_screen.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 /// Page showing connected user details with transactions
 class ConnectedUserDetailsPage extends StatelessWidget {
@@ -119,7 +120,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, ConnectedUserDetailsState state) {
     if (state is ConnectedUserDetailsLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const UserDetailsShimmer();
     }
 
     if (state is ConnectedUserDetailsError) {
@@ -161,7 +162,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     }
 
     if (userDetails == null) {
-      return const Center(child: CircularProgressIndicator());
+      return const UserDetailsShimmer();
     }
 
     return RefreshIndicator(

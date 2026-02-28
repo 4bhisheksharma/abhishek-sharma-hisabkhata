@@ -27,10 +27,12 @@ class ChatRoomListItem extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
           color: hasUnread
-              ? AppTheme.lightBlue.withOpacity(0.3)
+              ? AppTheme.lightBlue.withValues(alpha: 0.3)
               : AppTheme.white,
           border: Border(
-            bottom: BorderSide(color: AppTheme.lightGrey.withOpacity(0.5)),
+            bottom: BorderSide(
+              color: AppTheme.lightGrey.withValues(alpha: 0.5),
+            ),
           ),
         ),
         child: Row(

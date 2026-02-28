@@ -8,6 +8,7 @@ import 'package:hisab_khata/features/analytics/presentation/widgets/monthly_tren
 import 'package:hisab_khata/features/analytics/presentation/widgets/monthly_spending_progress_widget.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/analytics_stat_card.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class CustomerAnalyticsScreen extends StatefulWidget {
   const CustomerAnalyticsScreen({super.key});
@@ -284,22 +285,7 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
   }
 
   Widget _buildLoadingCard() {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: const Center(child: CircularProgressIndicator()),
-    );
+    return const AnalyticsCardShimmer();
   }
 
   Widget _buildErrorCard(String message) {

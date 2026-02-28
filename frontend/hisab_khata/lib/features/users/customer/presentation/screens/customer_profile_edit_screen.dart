@@ -8,6 +8,7 @@ import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_s
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/validators/validators.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
@@ -105,7 +106,7 @@ class _CustomerProfileEditScreenState extends State<CustomerProfileEditScreen> {
 
         builder: (context, state) {
           if (state is CustomerLoading && _fullNameController.text.isEmpty) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProfileEditShimmer();
           }
 
           return SingleChildScrollView(

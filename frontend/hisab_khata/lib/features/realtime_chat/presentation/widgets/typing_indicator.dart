@@ -43,7 +43,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -89,7 +89,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: AppTheme.primaryBlue.withOpacity(0.7),
+              color: AppTheme.primaryBlue.withValues(alpha: 0.7),
               shape: BoxShape.circle,
             ),
           ),

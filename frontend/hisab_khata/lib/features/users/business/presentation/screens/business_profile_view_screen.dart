@@ -13,6 +13,7 @@ import 'package:hisab_khata/shared/widgets/language_switcher.dart';
 import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -54,7 +55,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
       body: BlocBuilder<BusinessBloc, BusinessState>(
         builder: (context, state) {
           if (state is BusinessLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const ProfileViewShimmer();
           }
 
           if (state is BusinessProfileLoaded ||

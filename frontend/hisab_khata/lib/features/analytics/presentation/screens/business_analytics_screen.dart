@@ -6,6 +6,7 @@ import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_state
 import 'package:hisab_khata/features/analytics/presentation/widgets/paid_vs_to_pay_bar_chart.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/analytics_stat_card.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class BusinessAnalyticsScreen extends StatefulWidget {
   const BusinessAnalyticsScreen({super.key});
@@ -313,22 +314,7 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
   }
 
   Widget _buildLoadingCard() {
-    return Container(
-      height: 200,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: const Center(child: CircularProgressIndicator()),
-    );
+    return const AnalyticsCardShimmer();
   }
 
   Widget _buildErrorCard(String message) {

@@ -8,6 +8,7 @@ import '../bloc/chat_state.dart';
 import '../widgets/chat_input.dart';
 import '../widgets/message_list.dart';
 import '../widgets/typing_indicator.dart';
+import '../../../../shared/widgets/shimmer/shimmer_widgets.dart';
 
 /// Screen to display chat conversation with a user.
 class ChatDetailScreen extends StatefulWidget {
@@ -147,7 +148,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
               style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.normal,
-                color: AppTheme.white.withOpacity(0.8),
+                color: AppTheme.white.withValues(alpha: 0.8),
               ),
             ),
         ],
@@ -200,7 +201,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
 
   Widget _buildBody(ChatState state) {
     if (state is ChatRoomOpening || state is MessagesLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const ChatMessagesShimmer();
     }
 
     if (state is ChatRoomActive) {

@@ -6,6 +6,7 @@ import 'package:hisab_khata/features/raise-ticket/presentation/bloc/bloc.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/create_ticket_screen.dart';
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/ticket_detail_screen.dart';
 import 'package:intl/intl.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class MyTicketsScreen extends StatefulWidget {
   const MyTicketsScreen({super.key});
@@ -84,7 +85,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
       body: BlocBuilder<TicketBloc, TicketState>(
         builder: (context, state) {
           if (state is TicketLoading) {
-            return const Center(child: CircularProgressIndicator());
+            return const TicketListShimmer();
           }
 
           if (state is TicketError) {
@@ -196,7 +197,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
                                   decoration: BoxDecoration(
                                     color: _getPriorityColor(
                                       ticket.priority,
-                                    ).withOpacity(0.1),
+                                    ).withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(6),
                                     border: Border.all(
                                       color: _getPriorityColor(ticket.priority),
@@ -264,7 +265,7 @@ class _MyTicketsScreenState extends State<MyTicketsScreen> {
                                   decoration: BoxDecoration(
                                     color: _getStatusColor(
                                       ticket.status,
-                                    ).withOpacity(0.1),
+                                    ).withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Text(

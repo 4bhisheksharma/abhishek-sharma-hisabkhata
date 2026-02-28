@@ -29,7 +29,9 @@ class EditableProfilePicture extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: radius,
-              backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+              backgroundColor: Theme.of(
+                context,
+              ).primaryColor.withValues(alpha: 0.1),
               backgroundImage: selectedImage != null
                   ? FileImage(selectedImage!)
                   : (ImageUtils.getFullImageUrl(currentProfilePicture) != null

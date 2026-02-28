@@ -17,6 +17,7 @@ import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/config/route/app_router.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 import '../../../../analytics/presentation/screens/business_analytics_screen.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class BusinessHomeScreen extends StatefulWidget {
   const BusinessHomeScreen({super.key});
@@ -266,9 +267,7 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
       },
       builder: (context, state) {
         if (state is BusinessLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const DashboardShimmer();
         }
 
         if (state is BusinessDashboardLoaded) {

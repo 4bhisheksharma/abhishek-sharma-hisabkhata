@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
+  // Prevent instantiation
+  AppTheme._();
 
+  // Common Dimensions
+  static const double borderRadiusSmall = 8.0;
+  static const double borderRadiusMedium = 12.0;
+  static const double borderRadiusLarge = 16.0;
+  static const double borderRadiusXLarge = 24.0;
 
   // Primary Colors - Teal/Turquoise Theme
   static const Color primaryBlue = Color(0xFF00D09E);
@@ -71,7 +78,7 @@ class AppTheme {
       ),
     ),
 
-    // Card Theme // yo widget mai huna sakcha --todo
+    // Card Theme
     cardTheme: CardThemeData(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

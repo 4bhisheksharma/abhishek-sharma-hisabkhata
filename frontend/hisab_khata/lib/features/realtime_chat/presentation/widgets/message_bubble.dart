@@ -30,23 +30,30 @@ class MessageBubble extends StatelessWidget {
         right: isFromCurrentUser ? 12.0 : 48.0,
       ),
       child: Column(
-        crossAxisAlignment:
-            isFromCurrentUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment: isFromCurrentUser
+            ? CrossAxisAlignment.end
+            : CrossAxisAlignment.start,
         children: [
           Container(
             decoration: BoxDecoration(
-              color: isFromCurrentUser
-                  ? AppTheme.primaryBlue
-                  : AppTheme.white,
+              color: isFromCurrentUser ? AppTheme.primaryBlue : AppTheme.white,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(isFirstInGroup || isFromCurrentUser ? 16 : 4),
-                topRight: Radius.circular(isFirstInGroup || !isFromCurrentUser ? 16 : 4),
-                bottomLeft: Radius.circular(isLastInGroup || isFromCurrentUser ? 16 : 4),
-                bottomRight: Radius.circular(isLastInGroup || !isFromCurrentUser ? 16 : 4),
+                topLeft: Radius.circular(
+                  isFirstInGroup || isFromCurrentUser ? 16 : 4,
+                ),
+                topRight: Radius.circular(
+                  isFirstInGroup || !isFromCurrentUser ? 16 : 4,
+                ),
+                bottomLeft: Radius.circular(
+                  isLastInGroup || isFromCurrentUser ? 16 : 4,
+                ),
+                bottomRight: Radius.circular(
+                  isLastInGroup || !isFromCurrentUser ? 16 : 4,
+                ),
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -77,7 +84,7 @@ class MessageBubble extends StatelessWidget {
                         _formatTime(message.createdAt),
                         style: TextStyle(
                           color: isFromCurrentUser
-                              ? AppTheme.white.withOpacity(0.7)
+                              ? AppTheme.white.withValues(alpha: 0.7)
                               : AppTheme.textSecondary,
                           fontSize: 11,
                         ),
@@ -89,7 +96,7 @@ class MessageBubble extends StatelessWidget {
                           size: 14,
                           color: message.isRead
                               ? Colors.lightBlueAccent
-                              : AppTheme.white.withOpacity(0.7),
+                              : AppTheme.white.withValues(alpha: 0.7),
                         ),
                       ],
                     ],

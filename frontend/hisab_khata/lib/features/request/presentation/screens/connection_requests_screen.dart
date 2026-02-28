@@ -7,6 +7,7 @@ import '../../domain/entities/connection_request.dart';
 import '../bloc/connection_request_bloc.dart';
 import '../bloc/connection_request_event.dart';
 import '../bloc/connection_request_state.dart';
+import '../../../../shared/widgets/shimmer/shimmer_widgets.dart';
 
 /// Tabbed screen showing Received and Sent connection requests.
 /// Embedded directly inside the home screen's IndexedStack (nav index 2).
@@ -140,9 +141,9 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -177,7 +178,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Text(
@@ -525,7 +526,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -580,11 +581,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                   current is ConnectionRequestError,
               builder: (context, state) {
                 if (state is ConnectionRequestLoading) {
-                  return const Center(
-                    child: CircularProgressIndicator(
-                      color: AppTheme.primaryBlue,
-                    ),
-                  );
+                  return const ConnectionRequestsShimmer();
                 }
 
                 if (state is ConnectionRequestError) {
@@ -627,9 +624,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   if (mounted) _loadRequests();
                 });
-                return const Center(
-                  child: CircularProgressIndicator(color: AppTheme.primaryBlue),
-                );
+                return const ConnectionRequestsShimmer();
               },
             ),
           ),

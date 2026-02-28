@@ -6,6 +6,7 @@ import '../bloc/chat_event.dart';
 import '../bloc/chat_state.dart';
 import '../widgets/chat_room_list_item.dart';
 import 'chat_detail_screen.dart';
+import '../../../../shared/widgets/shimmer/shimmer_widgets.dart';
 
 /// Screen to display list of chat rooms.
 class ChatRoomsScreen extends StatefulWidget {
@@ -50,9 +51,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
         },
         builder: (context, state) {
           if (state is ChatRoomsLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const ChatRoomsShimmer();
           }
 
           if (state is ChatRoomsEmpty) {
@@ -96,10 +95,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
           Text(
             'Start a conversation with your\nconnected users',
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14,
-              color: AppTheme.textSecondary,
-            ),
+            style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
           ),
         ],
       ),
@@ -134,11 +130,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(
-            Icons.error_outline,
-            size: 64,
-            color: AppTheme.errorRed,
-          ),
+          Icon(Icons.error_outline, size: 64, color: AppTheme.errorRed),
           const SizedBox(height: 16),
           Text(
             'Something went wrong',
@@ -154,10 +146,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
             child: Text(
               message,
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 14,
-                color: AppTheme.textSecondary,
-              ),
+              style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
             ),
           ),
           const SizedBox(height: 24),

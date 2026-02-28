@@ -80,7 +80,7 @@ class _ChatInputState extends State<ChatInput> {
         color: AppTheme.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),
@@ -109,9 +109,7 @@ class _ChatInputState extends State<ChatInput> {
                         textCapitalization: TextCapitalization.sentences,
                         decoration: const InputDecoration(
                           hintText: 'Type a message...',
-                          hintStyle: TextStyle(
-                            color: AppTheme.textSecondary,
-                          ),
+                          hintStyle: TextStyle(color: AppTheme.textSecondary),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 12),
                         ),

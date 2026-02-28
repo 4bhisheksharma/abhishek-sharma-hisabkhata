@@ -17,6 +17,7 @@ import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/config/route/app_router.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 import '../../../../analytics/presentation/screens/customer_analytics_screen.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({super.key});
@@ -266,9 +267,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
       },
       builder: (context, state) {
         if (state is CustomerLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          );
+          return const DashboardShimmer();
         }
 
         if (state is CustomerDashboardLoaded) {

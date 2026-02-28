@@ -11,6 +11,7 @@ import '../../../../shared/utils/image_utils.dart';
 import '../../../../shared/widgets/my_button.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../domain/entities/user_search_result.dart';
+import '../../../../shared/widgets/shimmer/shimmer_widgets.dart';
 
 class BulkAddConnectionScreen extends StatefulWidget {
   const BulkAddConnectionScreen({super.key});
@@ -357,9 +358,9 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.5)),
+        border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Text(
         label,
@@ -453,7 +454,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                     horizontal: 16,
                     vertical: 8,
                   ),
-                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -483,7 +484,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                   builder: (context, state) {
                     // Initial loading
                     if (state is ConnectionRequestLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const BulkAddConnectionShimmer();
                     }
 
                     // Error state
@@ -588,7 +589,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                     }
 
                     // Default — show loading
-                    return const Center(child: CircularProgressIndicator());
+                    return const BulkAddConnectionShimmer();
                   },
                 ),
               ),
@@ -600,7 +601,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                   color: Colors.white,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       offset: const Offset(0, -5),
                     ),

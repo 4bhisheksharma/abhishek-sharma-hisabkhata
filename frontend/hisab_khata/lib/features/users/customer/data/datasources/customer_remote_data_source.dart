@@ -59,8 +59,9 @@ class CustomerRemoteDataSourceImpl extends BaseRemoteDataSource
       final fields = <String, String>{};
       if (fullName != null) fields['full_name'] = fullName;
       if (phoneNumber != null) fields['phone_number'] = phoneNumber;
-      if (preferredLanguage != null)
+      if (preferredLanguage != null) {
         fields['preferred_language'] = preferredLanguage;
+      }
 
       final files = <String, File>{'profile_picture': profilePicture};
 
@@ -78,8 +79,9 @@ class CustomerRemoteDataSourceImpl extends BaseRemoteDataSource
       final body = <String, dynamic>{};
       if (fullName != null) body['full_name'] = fullName;
       if (phoneNumber != null) body['phone_number'] = phoneNumber;
-      if (preferredLanguage != null)
+      if (preferredLanguage != null) {
         body['preferred_language'] = preferredLanguage;
+      }
 
       final response = await patch(
         ApiEndpoints.customerProfile,

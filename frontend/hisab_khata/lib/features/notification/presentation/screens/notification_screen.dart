@@ -4,6 +4,7 @@ import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
+import '../../../../shared/widgets/shimmer/shimmer_widgets.dart';
 import '../../domain/entities/notification.dart' as entity;
 import '../bloc/bloc.dart';
 
@@ -71,9 +72,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
           },
           builder: (context, state) {
             if (state is NotificationLoading) {
-              return const Center(
-                child: CircularProgressIndicator(color: AppTheme.primaryBlue),
-              );
+              return const NotificationListShimmer();
             }
 
             if (state is AllNotificationsLoaded) {
@@ -137,7 +136,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                               );
                             },
                           );
-                        }).toList(),
+                        }),
                       ],
                     );
                   }),
@@ -231,12 +230,12 @@ class _NotificationTile extends StatelessWidget {
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
             color: notification.isRead
-                ? Colors.white.withOpacity(0.7)
+                ? Colors.white.withValues(alpha: 0.7)
                 : Colors.white,
             borderRadius: BorderRadius.circular(12),
             border: Border(
               bottom: BorderSide(
-                color: AppTheme.primaryBlue.withOpacity(0.3),
+                color: AppTheme.primaryBlue.withValues(alpha: 0.3),
                 width: 1,
               ),
             ),
@@ -294,7 +293,7 @@ class _NotificationTile extends StatelessWidget {
                       notification.message,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.black.withOpacity(0.6),
+                        color: Colors.black.withValues(alpha: 0.6),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -304,7 +303,7 @@ class _NotificationTile extends StatelessWidget {
                       _formatDateTime(notification.createdAt),
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppTheme.primaryBlue.withOpacity(0.7),
+                        color: AppTheme.primaryBlue.withValues(alpha: 0.7),
                         fontWeight: FontWeight.w500,
                       ),
                     ),

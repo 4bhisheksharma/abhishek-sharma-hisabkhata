@@ -10,6 +10,7 @@ import 'package:hisab_khata/features/request/presentation/bloc/connection_reques
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
+import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
 /// A reusable widget that displays the list of connected users
 /// Handles loading, empty, and error states automatically
@@ -55,12 +56,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
       },
       builder: (context, state) {
         if (state is ConnectionRequestLoading) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.all(32.0),
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return const ConnectedUsersListShimmer();
         }
 
         if (state is ConnectionRequestError) {
@@ -84,12 +80,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (mounted) _loadConnectedUsers();
         });
-        return const Center(
-          child: Padding(
-            padding: EdgeInsets.all(32.0),
-            child: CircularProgressIndicator(),
-          ),
-        );
+        return const ConnectedUsersListShimmer();
       },
     );
   }
@@ -114,13 +105,13 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: AppTheme.primaryBlue.withOpacity(0.1),
+                color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 emptyIcon,
                 size: 80,
-                color: AppTheme.primaryBlue.withOpacity(0.5),
+                color: AppTheme.primaryBlue.withValues(alpha: 0.5),
               ),
             ),
             const SizedBox(height: 24),
@@ -179,7 +170,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
             Container(
               padding: const EdgeInsets.all(24),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -270,7 +261,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                     vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryBlue.withOpacity(0.1),
+                    color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
@@ -306,7 +297,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.grey.withOpacity(0.2), width: 1),
+        side: BorderSide(color: Colors.grey.withValues(alpha: 0.2), width: 1),
       ),
       child: InkWell(
         onTap: () {
@@ -336,13 +327,13 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      AppTheme.primaryBlue.withOpacity(0.8),
+                      AppTheme.primaryBlue.withValues(alpha: 0.8),
                       AppTheme.primaryBlue,
                     ],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: AppTheme.primaryBlue.withOpacity(0.3),
+                      color: AppTheme.primaryBlue.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -387,7 +378,9 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                               vertical: 3,
                             ),
                             decoration: BoxDecoration(
-                              color: AppTheme.primaryBlue.withOpacity(0.1),
+                              color: AppTheme.primaryBlue.withValues(
+                                alpha: 0.1,
+                              ),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Row(
@@ -442,7 +435,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
@@ -462,7 +455,10 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [AppTheme.primaryBlue.withOpacity(0.8), AppTheme.primaryBlue],
+          colors: [
+            AppTheme.primaryBlue.withValues(alpha: 0.8),
+            AppTheme.primaryBlue,
+          ],
         ),
       ),
       child: Center(
