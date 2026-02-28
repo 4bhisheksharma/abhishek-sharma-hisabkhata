@@ -77,7 +77,13 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(vertical: 32),
-                    decoration: const BoxDecoration(color: Color(0xFFE8F5F3)),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surfaceGrey,
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(28),
+                        bottomRight: Radius.circular(28),
+                      ),
+                    ),
                     child: Column(
                       children: [
                         // Profile Picture
@@ -92,7 +98,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                           style: const TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.w700,
-                            color: Colors.black87,
+                            color: AppTheme.textPrimary,
                           ),
                         ),
                       ],

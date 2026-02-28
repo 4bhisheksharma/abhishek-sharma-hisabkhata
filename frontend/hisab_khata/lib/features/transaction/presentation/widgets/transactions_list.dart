@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import '../../domain/entities/transaction.dart';
 import 'transaction_list_item.dart';
 
@@ -47,7 +48,7 @@ class TransactionsList extends StatelessWidget {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: transactions.length,
             separatorBuilder: (_, __) =>
-                Divider(height: 1, color: Colors.grey.shade200),
+                const Divider(height: 1, color: AppTheme.dividerColor),
             itemBuilder: (context, index) {
               return TransactionListItem(
                 transaction: transactions[index],
@@ -69,19 +70,19 @@ class TransactionsList extends StatelessWidget {
           Icon(
             Icons.receipt_long_outlined,
             size: 64,
-            color: Colors.grey.shade300,
+            color: AppTheme.dividerColor,
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'No transactions yet',
-            style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
+            style: TextStyle(fontSize: 16, color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 8),
           Text(
             isCustomerView
                 ? 'Your transactions will appear here'
                 : 'Add transactions for this customer',
-            style: TextStyle(fontSize: 13, color: Colors.grey.shade400),
+            style: const TextStyle(fontSize: 13, color: AppTheme.textHint),
           ),
         ],
       ),

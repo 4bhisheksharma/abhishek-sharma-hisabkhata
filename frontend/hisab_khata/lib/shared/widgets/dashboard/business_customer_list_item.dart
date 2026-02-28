@@ -20,68 +20,89 @@ class BusinessCustomerListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: AppTheme.lightBlue,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            // Avatar
-            CircleAvatar(
-              radius: 24,
-              backgroundColor: AppTheme.primaryBlue,
-              backgroundImage:
-                  profileImageUrl != null &&
-                      ImageUtils.getFullImageUrl(profileImageUrl) != null
-                  ? NetworkImage(ImageUtils.getFullImageUrl(profileImageUrl)!)
-                  : null,
-              child:
-                  profileImageUrl == null ||
-                      ImageUtils.getFullImageUrl(profileImageUrl) == null
-                  ? const Icon(Icons.person, color: Colors.white, size: 28)
-                  : null,
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: AppTheme.lightGrey.withValues(alpha: 0.5),
+              width: 1,
             ),
-            const SizedBox(width: 12),
-            // Business Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    businessName,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    phoneNumber,
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey[600],
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+          ),
+          child: Row(
+            children: [
+              // Avatar
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: AppTheme.lightBlue,
+                backgroundImage:
+                    profileImageUrl != null &&
+                        ImageUtils.getFullImageUrl(profileImageUrl) != null
+                    ? NetworkImage(ImageUtils.getFullImageUrl(profileImageUrl)!)
+                    : null,
+                child:
+                    profileImageUrl == null ||
+                        ImageUtils.getFullImageUrl(profileImageUrl) == null
+                    ? const Icon(
+                        Icons.person_rounded,
+                        color: AppTheme.primaryBlue,
+                        size: 24,
+                      )
+                    : null,
               ),
-            ),
-            // Amount
-            Text(
-              amount,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+              const SizedBox(width: 12),
+              // Business Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      businessName,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: AppTheme.textPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      phoneNumber,
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.textSecondary,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              // Amount
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: AppTheme.lightBlue,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  amount,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.primaryBlue,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -48,7 +48,7 @@ class SharedDashboard extends StatelessWidget {
         onPressed: () {
           Navigator.pushNamed(context, '/bulk-add-connection');
         },
-        child: Icon(Icons.person_add),
+        child: const Icon(Icons.person_add_rounded),
       ),
 
       bottomNavigationBar: onNavTap != null

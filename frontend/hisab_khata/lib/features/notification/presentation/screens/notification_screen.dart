@@ -31,33 +31,27 @@ class _NotificationScreenState extends State<NotificationScreen> {
         backgroundColor: AppTheme.primaryBlue,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           AppLocalizations.of(context)!.notification,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
           ),
         ),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications, color: Colors.white),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          color: AppTheme.lightBlue,
+          color: Colors.white,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
+            topLeft: Radius.circular(28),
+            topRight: Radius.circular(28),
           ),
         ),
         child: BlocConsumer<NotificationBloc, NotificationState>(
@@ -78,9 +72,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
             if (state is AllNotificationsLoaded) {
               if (state.notifications.isEmpty) {
                 return Center(
-                  child: Text(
-                    AppLocalizations.of(context)!.noNotificationsYet,
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.notifications_off_outlined,
+                        size: 56,
+                        color: AppTheme.lightGrey,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        AppLocalizations.of(context)!.noNotificationsYet,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          color: AppTheme.textSecondary,
+                        ),
+                      ),
+                    ],
                   ),
                 );
               }
@@ -104,9 +112,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           child: Text(
                             entry.key,
                             style: const TextStyle(
-                              fontSize: 14,
+                              fontSize: 13,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              color: AppTheme.textSecondary,
+                              letterSpacing: 0.3,
                             ),
                           ),
                         ),
@@ -210,6 +219,7 @@ class _NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconInfo = _getIconInfoForType(notification.type);
     return Dismissible(
       key: Key(notification.notificationId.toString()),
       direction: DismissDirection.endToStart,
@@ -218,26 +228,27 @@ class _NotificationTile extends StatelessWidget {
         alignment: Alignment.centerRight,
         padding: const EdgeInsets.only(right: 20),
         decoration: BoxDecoration(
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(12),
+          color: AppTheme.errorRed,
+          borderRadius: BorderRadius.circular(14),
         ),
-        child: const Icon(Icons.delete, color: Colors.white),
+        child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
       ),
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
         child: Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.all(12),
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: notification.isRead
-                ? Colors.white.withValues(alpha: 0.7)
-                : Colors.white,
-            borderRadius: BorderRadius.circular(12),
-            border: Border(
-              bottom: BorderSide(
-                color: AppTheme.primaryBlue.withValues(alpha: 0.3),
-                width: 1,
-              ),
+                ? Colors.white
+                : AppTheme.lightBlue.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: notification.isRead
+                  ? AppTheme.dividerColor
+                  : AppTheme.primaryBlue.withValues(alpha: 0.15),
+              width: 1,
             ),
           ),
           child: Row(
@@ -245,17 +256,13 @@ class _NotificationTile extends StatelessWidget {
             children: [
               // Icon
               Container(
-                width: 48,
-                height: 48,
+                width: 44,
+                height: 44,
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryBlue,
+                  color: iconInfo.$2.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(
-                  _getIconForType(notification.type),
-                  color: Colors.white,
-                  size: 24,
-                ),
+                child: Icon(iconInfo.$1, color: iconInfo.$2, size: 22),
               ),
               const SizedBox(width: 12),
               // Content
@@ -269,11 +276,11 @@ class _NotificationTile extends StatelessWidget {
                           child: Text(
                             notification.title,
                             style: TextStyle(
-                              fontSize: 16,
+                              fontSize: 14,
                               fontWeight: notification.isRead
                                   ? FontWeight.w500
-                                  : FontWeight.w700,
-                              color: Colors.black87,
+                                  : FontWeight.w600,
+                              color: AppTheme.textPrimary,
                             ),
                           ),
                         ),
@@ -291,19 +298,19 @@ class _NotificationTile extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       notification.message,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black.withValues(alpha: 0.6),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        color: AppTheme.textSecondary,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 6),
                     Text(
                       _formatDateTime(notification.createdAt),
                       style: TextStyle(
-                        fontSize: 12,
-                        color: AppTheme.primaryBlue.withValues(alpha: 0.7),
+                        fontSize: 11,
+                        color: AppTheme.textHint,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -317,24 +324,46 @@ class _NotificationTile extends StatelessWidget {
     );
   }
 
-  IconData _getIconForType(String type) {
+  (IconData, Color) _getIconInfoForType(String type) {
     switch (type.toLowerCase()) {
       case 'connection_request':
-        return Icons.person_add;
+        return (Icons.person_add_rounded, AppTheme.infoBlue);
       case 'connection_request_accepted':
       case 'request_accepted':
-        return Icons.handshake;
+        return (Icons.handshake_rounded, AppTheme.successGreen);
       case 'connection_request_rejected':
       case 'request_rejected':
-        return Icons.person_remove;
+        return (Icons.person_off_rounded, AppTheme.errorRed);
+      case 'connection_request_cancelled':
+        return (Icons.cancel_outlined, AppTheme.warningOrange);
       case 'connection_deleted':
-        return Icons.link_off;
+        return (Icons.link_off_rounded, AppTheme.errorRed);
+      case 'transaction_added':
+        return (Icons.receipt_long_rounded, AppTheme.primaryBlue);
+      case 'payment_received':
+        return (Icons.payments_rounded, AppTheme.successGreen);
+      case 'due_reminder':
+      case 'bulk_payment_reminder':
+        return (Icons.alarm_rounded, AppTheme.warningOrange);
+      case 'monthly_limit_exceeded':
+        return (Icons.trending_up_rounded, AppTheme.errorRed);
+      case 'favorite_added':
+        return (Icons.star_rounded, const Color(0xFFFFC107));
+      case 'verification_approved':
+        return (Icons.verified_rounded, AppTheme.successGreen);
+      case 'verification_rejected':
+        return (Icons.gpp_bad_rounded, AppTheme.errorRed);
+      case 'broadcast':
+      case 'system':
+        return (Icons.campaign_rounded, AppTheme.infoBlue);
+      case 'loyalty_points':
+        return (Icons.card_giftcard_rounded, AppTheme.primaryBlue);
       case 'reminder':
-        return Icons.notifications_active;
+        return (Icons.notifications_active_rounded, AppTheme.warningOrange);
       case 'update':
-        return Icons.star;
+        return (Icons.new_releases_rounded, AppTheme.infoBlue);
       default:
-        return Icons.notifications;
+        return (Icons.notifications_rounded, AppTheme.primaryBlue);
     }
   }
 

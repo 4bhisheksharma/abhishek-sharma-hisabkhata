@@ -117,15 +117,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               // Bottom Card Section
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.lightBlue,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.all(28.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
@@ -136,18 +136,18 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                           children: [
                             Text(
                               AppLocalizations.of(context)!.enterOtp,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: Colors.black87,
+                                color: AppTheme.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 8),
                             Text(
                               AppLocalizations.of(context)!.otpSent,
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black54,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: AppTheme.textSecondary,
                               ),
                             ),
                           ],
@@ -187,7 +187,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               vertical: 12,
                             ),
                             decoration: BoxDecoration(
-                              color: AppTheme.lightBlue,
+                              color: AppTheme.surfaceGrey,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(
@@ -198,7 +198,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.black87,
+                                color: _controller.resendTimer > 0
+                                    ? AppTheme.textSecondary
+                                    : AppTheme.primaryBlue,
                               ),
                             ),
                           ),

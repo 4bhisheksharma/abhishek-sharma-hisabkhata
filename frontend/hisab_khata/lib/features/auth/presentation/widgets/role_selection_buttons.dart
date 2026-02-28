@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 //role selection buttons ko lagi widget
 class RoleSelectionButtons extends StatelessWidget {
@@ -15,68 +16,38 @@ class RoleSelectionButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () => onRoleChanged('business'),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: selectedRole == 'business'
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: selectedRole == 'business'
-                      ? Colors.transparent
-                      : Colors.black26,
-                ),
-              ),
-              child: Text(
-                'As Business',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: selectedRole == 'business'
-                      ? Colors.white
-                      : Colors.black87,
-                ),
-              ),
-            ),
-          ),
-        ),
+        Expanded(child: _buildRoleButton('business', 'As Business')),
         const SizedBox(width: 12),
-        Expanded(
-          child: GestureDetector(
-            onTap: () => onRoleChanged('customer'),
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              decoration: BoxDecoration(
-                color: selectedRole == 'customer'
-                    ? Theme.of(context).primaryColor
-                    : Colors.transparent,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: selectedRole == 'customer'
-                      ? Colors.transparent
-                      : Colors.black26,
-                ),
-              ),
-              child: Text(
-                'As Customer',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: selectedRole == 'customer'
-                      ? Colors.white
-                      : Colors.black87,
-                ),
-              ),
-            ),
+        Expanded(child: _buildRoleButton('customer', 'As Customer')),
+      ],
+    );
+  }
+
+  Widget _buildRoleButton(String role, String label) {
+    final isSelected = selectedRole == role;
+    return GestureDetector(
+      onTap: () => onRoleChanged(role),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.primaryBlue : AppTheme.surfaceGrey,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? AppTheme.primaryBlue : AppTheme.dividerColor,
           ),
         ),
-      ],
+        child: Text(
+          label,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+            color: isSelected ? Colors.white : AppTheme.textPrimary,
+          ),
+        ),
+      ),
     );
   }
 }

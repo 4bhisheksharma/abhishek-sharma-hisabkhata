@@ -86,15 +86,15 @@ class _SignupScreenState extends State<SignupScreen> {
               // Bottom Card Section
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.lightBlue,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.all(28.0),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -217,9 +217,9 @@ class _SignupScreenState extends State<SignupScreen> {
                             child: RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 12,
-                                  color: Colors.black54,
+                                  color: AppTheme.textSecondary,
                                 ),
                                 children: [
                                   TextSpan(
@@ -231,19 +231,19 @@ class _SignupScreenState extends State<SignupScreen> {
                                     text: AppLocalizations.of(
                                       context,
                                     )!.termsOfUse,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                      color: AppTheme.textPrimary,
                                     ),
                                   ),
-                                  TextSpan(text: " and "),
+                                  const TextSpan(text: " and "),
                                   TextSpan(
                                     text: AppLocalizations.of(
                                       context,
                                     )!.privacyPolicy,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
+                                      color: AppTheme.textPrimary,
                                     ),
                                   ),
                                 ],
@@ -276,8 +276,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   AppLocalizations.of(
                                     context,
                                   )!.alreadyHaveAccount,
-                                  style: TextStyle(
-                                    color: Colors.black54,
+                                  style: const TextStyle(
+                                    color: AppTheme.textSecondary,
                                     fontSize: 14,
                                   ),
                                 ),

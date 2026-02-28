@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/bloc/chat_provider.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/screens/chat_detail_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
@@ -18,6 +19,7 @@ import '../../domain/entities/connected_user_details.dart';
 import '../../domain/entities/transaction.dart';
 import 'add_transaction_screen.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
+import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 
 /// Page showing connected user details with transactions
 class ConnectedUserDetailsPage extends StatelessWidget {
@@ -43,20 +45,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
         BlocListener<ConnectionRequestBloc, ConnectionRequestState>(
           listener: (context, state) {
             if (state is ConnectionDeletedSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              MySnackbar.showSuccess(context, state.message);
               Navigator.of(context).pop();
             } else if (state is ConnectionRequestError) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message),
-                  backgroundColor: Colors.red,
-                ),
-              );
+              MySnackbar.showError(context, state.message);
             }
           },
         ),
@@ -101,12 +93,12 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       foregroundColor: Colors.white,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
+        icon: const Icon(Icons.arrow_back_rounded),
         onPressed: () => Navigator.of(context).pop(),
       ),
       title: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 20),
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
       ),
       centerTitle: true,
       actions: userDetails != null
@@ -128,11 +120,15 @@ class ConnectedUserDetailsPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.grey.shade400),
+            Icon(
+              Icons.error_outline_rounded,
+              size: 64,
+              color: AppTheme.textHint,
+            ),
             const SizedBox(height: 16),
             Text(
               state.message,
-              style: TextStyle(color: Colors.grey.shade600),
+              style: const TextStyle(color: AppTheme.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -212,10 +208,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: AppTheme.surfaceGrey,
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
+          bottomLeft: Radius.circular(28),
+          bottomRight: Radius.circular(28),
         ),
       ),
       padding: const EdgeInsets.all(24),
@@ -366,10 +362,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     }
 
     if (userDetails == null || userDetails.toPay <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(AppLocalizations.of(context)!.noPendingDuesToPay),
-        ),
+      MySnackbar.showInfo(
+        context,
+        AppLocalizations.of(context)!.noPendingDuesToPay,
       );
       return;
     }
@@ -389,13 +384,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               description: description,
             ),
           );
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Payment of Rs. ${amount.toStringAsFixed(2)} recorded',
-              ),
-              backgroundColor: Colors.green,
-            ),
+          MySnackbar.showSuccess(
+            context,
+            'Payment of Rs. ${amount.toStringAsFixed(2)} recorded',
           );
         },
       ),
@@ -445,9 +436,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     }
 
     if (otherUserId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Unable to open chat. Please try again.')),
-      );
+      MySnackbar.showError(context, 'Unable to open chat. Please try again.');
       return;
     }
 
@@ -568,8 +557,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: TextStyle(
-                color: Colors.grey[600],
+              style: const TextStyle(
+                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -680,7 +669,7 @@ class _PayDueDialogState extends State<_PayDueDialog> {
                           'Current due: Rs. ${widget.currentDue.toStringAsFixed(2)}',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.grey.shade600,
+                            color: AppTheme.textSecondary,
                           ),
                         ),
                       ],

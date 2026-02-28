@@ -119,7 +119,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               emptyMessage,
               style: const TextStyle(
                 fontSize: 20,
-                color: Color(0xFF2C3E50),
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -127,9 +127,9 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
             const SizedBox(height: 12),
             Text(
               emptySubtitle,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey[600],
+                color: AppTheme.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -139,7 +139,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.addConnection);
               },
-              icon: const Icon(Icons.person_add_outlined),
+              icon: const Icon(Icons.person_add_rounded),
               label: Text(AppLocalizations.of(context)!.addConnection),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
@@ -184,16 +184,16 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               'Failed to load connections',
               style: TextStyle(
                 fontSize: 18,
-                color: Color(0xFF2C3E50),
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 12),
             Text(
               message,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 14,
-                color: Colors.grey[600],
+                color: AppTheme.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
@@ -251,7 +251,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFF2C3E50),
+                    color: AppTheme.textPrimary,
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -365,7 +365,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                             style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF2C3E50),
+                              color: AppTheme.textPrimary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -412,15 +412,15 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                         Icon(
                           Icons.email_outlined,
                           size: 14,
-                          color: Colors.grey[600],
+                          color: AppTheme.textHint,
                         ),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
                             user.contactInfo,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 13,
-                              color: Colors.grey[600],
+                              color: AppTheme.textSecondary,
                             ),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -436,11 +436,11 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: AppTheme.primaryBlue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 16,
+                  Icons.chevron_right_rounded,
+                  size: 20,
                   color: AppTheme.primaryBlue,
                 ),
               ),

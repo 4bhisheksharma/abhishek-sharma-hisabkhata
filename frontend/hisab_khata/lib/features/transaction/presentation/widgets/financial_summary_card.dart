@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 /// Reusable financial summary widget showing amounts based on user view
 /// For Customer: Shows "Your Due" (what they owe) and "You Paid"
@@ -31,8 +32,8 @@ class FinancialSummaryCard extends StatelessWidget {
           label: isCustomerView ? 'Your Due' : 'To Receive',
           amount: toPay,
           color: toPay > 0
-              ? (isCustomerView ? Colors.red.shade600 : Colors.green.shade600)
-              : Colors.grey.shade600,
+              ? (isCustomerView ? AppTheme.errorRed : AppTheme.successGreen)
+              : AppTheme.textSecondary,
           isLarge: true,
         ),
         const SizedBox(height: 12),
@@ -42,7 +43,7 @@ class FinancialSummaryCard extends StatelessWidget {
           icon: Icons.check_circle_outline,
           label: isCustomerView ? 'You Paid' : 'Received',
           amount: totalPaid,
-          color: Colors.grey.shade600,
+          color: AppTheme.textSecondary,
           isLarge: false,
         ),
       ],
@@ -62,25 +63,33 @@ class FinancialSummaryCard extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(icon, size: isLarge ? 18 : 16, color: color),
-            const SizedBox(width: 6),
+            Container(
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Icon(icon, size: isLarge ? 16 : 14, color: color),
+            ),
+            const SizedBox(width: 8),
             Text(
               label,
               style: TextStyle(
-                fontSize: isLarge ? 14 : 13,
-                color: color,
+                fontSize: isLarge ? 13 : 12,
+                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
         Text(
           '$currency ${_formatAmount(amount)}',
           style: TextStyle(
-            fontSize: isLarge ? 32 : 22,
-            fontWeight: FontWeight.bold,
+            fontSize: isLarge ? 30 : 20,
+            fontWeight: FontWeight.w700,
             color: color,
+            letterSpacing: -0.5,
           ),
         ),
       ],

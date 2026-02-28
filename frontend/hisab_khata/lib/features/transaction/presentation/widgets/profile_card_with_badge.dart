@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/utils/image_utils.dart';
 
 /// Reusable profile card with favorite star badge
@@ -31,19 +32,7 @@ class ProfileCardWithBadge extends StatelessWidget {
           height: size,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Theme.of(context).colorScheme.primary,
-              width: 3,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(
-                  context,
-                ).colorScheme.primary.withValues(alpha: 0.2),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+            border: Border.all(color: AppTheme.primaryBlue, width: 2.5),
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(13),
@@ -68,16 +57,9 @@ class ProfileCardWithBadge extends StatelessWidget {
                 height: 36,
                 decoration: BoxDecoration(
                   color: isFavorite
-                      ? Theme.of(context).colorScheme.primary
-                      : Colors.grey.shade300,
+                      ? AppTheme.primaryBlue
+                      : AppTheme.dividerColor,
                   shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
                 ),
                 child: isLoading
                     ? const Padding(
@@ -88,7 +70,9 @@ class ProfileCardWithBadge extends StatelessWidget {
                         ),
                       )
                     : Icon(
-                        isFavorite ? Icons.star : Icons.star_border,
+                        isFavorite
+                            ? Icons.star_rounded
+                            : Icons.star_border_rounded,
                         color: Colors.white,
                         size: 20,
                       ),
@@ -101,8 +85,12 @@ class ProfileCardWithBadge extends StatelessWidget {
 
   Widget _buildPlaceholder(BuildContext context) {
     return Container(
-      color: Colors.grey.shade200,
-      child: Icon(Icons.person, size: size * 0.5, color: Colors.grey.shade400),
+      color: AppTheme.surfaceGrey,
+      child: Icon(
+        Icons.person_rounded,
+        size: size * 0.5,
+        color: AppTheme.textHint,
+      ),
     );
   }
 }

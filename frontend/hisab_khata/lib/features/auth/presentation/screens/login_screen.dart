@@ -72,15 +72,15 @@ class _LoginScreenState extends State<LoginScreen> {
               // Bottom Card Section
               Expanded(
                 child: Container(
-                  decoration: BoxDecoration(
-                    color: AppTheme.lightBlue,
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(40),
-                      topRight: Radius.circular(40),
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(32.0),
+                    padding: const EdgeInsets.all(28.0),
                     child: Form(
                       key: _formKey,
                       child: Column(
@@ -145,15 +145,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: Text(
                                 AppLocalizations.of(context)!.forgotPassword,
-                                style: TextStyle(
-                                  color: Colors.black87,
+                                style: const TextStyle(
+                                  color: AppTheme.textSecondary,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 180),
+                          const SizedBox(height: 140),
 
                           // Sign Up Link
                           Center(
@@ -162,8 +162,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 Text(
                                   AppLocalizations.of(context)!.dontHaveAccount,
-                                  style: TextStyle(
-                                    color: Colors.black54,
+                                  style: const TextStyle(
+                                    color: AppTheme.textSecondary,
                                     fontSize: 14,
                                   ),
                                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 
 /// Reusable payment ratio progress bar
 class PaymentRatioBar extends StatelessWidget {
@@ -25,24 +26,24 @@ class PaymentRatioBar extends StatelessWidget {
     if (isCustomerView) {
       // Customer view - focus on payment status
       if (toPay <= 0) {
-        return '✓ All dues cleared!';
+        return 'All dues cleared!';
       } else if (_paidPercentage >= 80) {
-        return '✓ Great! Almost all dues paid';
+        return 'Great! Almost all dues paid';
       } else if (_paidPercentage >= 50) {
-        return '⚠ Consider clearing pending dues';
+        return 'Consider clearing pending dues';
       } else {
-        return '⚠ Outstanding balance pending';
+        return 'Outstanding balance pending';
       }
     } else {
       // Business view - focus on collection status
       if (toPay <= 0) {
-        return '✓ All payments collected';
+        return 'All payments collected';
       } else if (_paidPercentage >= 80) {
-        return '✓ Good collection rate';
+        return 'Good collection rate';
       } else if (_paidPercentage >= 50) {
-        return '📊 Moderate collection';
+        return 'Moderate collection';
       } else {
-        return '📊 Pending collection';
+        return 'Pending collection';
       }
     }
   }
@@ -58,7 +59,7 @@ class PaymentRatioBar extends StatelessWidget {
           height: 32,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            color: Colors.grey.shade200,
+            color: AppTheme.dividerColor,
           ),
           child: Stack(
             children: [
@@ -93,7 +94,7 @@ class PaymentRatioBar extends StatelessWidget {
                   child: Text(
                     '$currency${_formatAmount(toPay)}',
                     style: TextStyle(
-                      color: Colors.grey.shade700,
+                      color: AppTheme.textSecondary,
                       fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
@@ -107,7 +108,7 @@ class PaymentRatioBar extends StatelessWidget {
         // Ratio message
         Text(
           _ratioMessage,
-          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+          style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
         ),
       ],
     );

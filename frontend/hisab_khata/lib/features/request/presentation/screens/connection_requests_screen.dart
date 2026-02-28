@@ -97,16 +97,16 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
   Widget _buildAvatar(String? profilePicture, String name) {
     final imageUrl = ImageUtils.getFullImageUrl(profilePicture);
     return CircleAvatar(
-      radius: 24,
-      backgroundColor: AppTheme.primaryBlue,
+      radius: 22,
+      backgroundColor: AppTheme.lightBlue,
       backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
       child: imageUrl == null
           ? Text(
               name.isNotEmpty ? name[0].toUpperCase() : '?',
               style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+                color: AppTheme.primaryBlue,
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
               ),
             )
           : null,
@@ -205,20 +205,34 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 64, color: Colors.grey[400]),
-            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: AppTheme.lightBlue,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                icon,
+                size: 48,
+                color: AppTheme.primaryBlue.withValues(alpha: 0.5),
+              ),
+            ),
+            const SizedBox(height: 20),
             Text(
               title,
-              style: TextStyle(
-                fontSize: 18,
+              style: const TextStyle(
+                fontSize: 17,
                 fontWeight: FontWeight.w600,
-                color: Colors.grey[600],
+                color: AppTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               subtitle,
-              style: TextStyle(fontSize: 13, color: Colors.grey[500]),
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppTheme.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -275,11 +289,11 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
 
   Widget _buildReceivedCard(ConnectionRequest request) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 1,
+      margin: const EdgeInsets.only(bottom: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           children: [
             Row(
@@ -293,22 +307,26 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                       Text(
                         request.senderName,
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: AppTheme.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         request.senderEmail,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
                       if (request.senderPhone != null) ...[
                         const SizedBox(height: 1),
                         Text(
                           request.senderPhone!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[500],
+                            color: AppTheme.textHint,
                           ),
                         ),
                       ],
@@ -322,7 +340,10 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                     const SizedBox(height: 4),
                     Text(
                       _timeAgo(request.createdAt),
-                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.textHint,
+                      ),
                     ),
                   ],
                 ),
@@ -421,11 +442,11 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
 
   Widget _buildSentCard(ConnectionRequest request) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 10),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 1,
+      margin: const EdgeInsets.only(bottom: 8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(14),
         child: Column(
           children: [
             Row(
@@ -442,22 +463,26 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                       Text(
                         request.receiverName,
                         style: const TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.w600,
                           fontSize: 15,
+                          color: AppTheme.textPrimary,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
                         request.receiverEmail,
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppTheme.textSecondary,
+                        ),
                       ),
                       if (request.receiverPhone != null) ...[
                         const SizedBox(height: 1),
                         Text(
                           request.receiverPhone!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[500],
+                            color: AppTheme.textHint,
                           ),
                         ),
                       ],
@@ -471,7 +496,10 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                     const SizedBox(height: 4),
                     Text(
                       _timeAgo(request.createdAt),
-                      style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                      style: const TextStyle(
+                        fontSize: 11,
+                        color: AppTheme.textHint,
+                      ),
                     ),
                   ],
                 ),
@@ -540,7 +568,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
               ),
               indicatorSize: TabBarIndicatorSize.tab,
               labelColor: Colors.white,
-              unselectedLabelColor: Colors.grey[600],
+              unselectedLabelColor: AppTheme.textSecondary,
               labelStyle: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,

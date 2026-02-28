@@ -4,6 +4,7 @@ import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
+import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
@@ -51,16 +52,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       listener: (context, state) {
         if (state is PasswordChangeSuccess) {
           Navigator.of(context).pop();
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-              backgroundColor: Colors.green,
-            ),
-          );
+          MySnackbar.showSuccess(context, state.message);
         } else if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message), backgroundColor: Colors.red),
-          );
+          MySnackbar.showError(context, state.message);
         }
       },
       child: Dialog(
@@ -103,7 +97,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.grey[800],
+                                color: AppTheme.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -111,7 +105,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                               'Update your account password',
                               style: TextStyle(
                                 fontSize: 13,
-                                color: Colors.grey[600],
+                                color: AppTheme.textSecondary,
                               ),
                             ),
                           ],
@@ -120,7 +114,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                       IconButton(
                         onPressed: () => Navigator.of(context).pop(),
                         icon: const Icon(Icons.close),
-                        color: Colors.grey[600],
+                        color: AppTheme.textSecondary,
                       ),
                     ],
                   ),
@@ -234,14 +228,14 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            side: BorderSide(color: Colors.grey[300]!),
+                            side: BorderSide(color: AppTheme.dividerColor),
                           ),
                           child: Text(
                             'Cancel',
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Colors.grey[700],
+                              color: AppTheme.textSecondary,
                             ),
                           ),
                         ),
@@ -292,10 +286,10 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       children: [
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w600,
-            color: Colors.grey[800],
+            color: AppTheme.textPrimary,
           ),
         ),
         const SizedBox(height: 8),
@@ -305,16 +299,16 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
           validator: validator,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: TextStyle(color: Colors.grey[400]),
+            hintStyle: const TextStyle(color: AppTheme.textHint),
             filled: true,
-            fillColor: Colors.grey[50],
+            fillColor: AppTheme.surfaceGrey,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: const BorderSide(color: AppTheme.dividerColor),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide(color: Colors.grey[300]!),
+              borderSide: const BorderSide(color: AppTheme.dividerColor),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -333,7 +327,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                 obscure
                     ? Icons.visibility_outlined
                     : Icons.visibility_off_outlined,
-                color: Colors.grey[600],
+                color: AppTheme.textSecondary,
               ),
               onPressed: onToggleVisibility,
             ),

@@ -52,9 +52,10 @@ class _MyTextFieldState extends State<MyTextField> {
         Text(
           widget.label,
           style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.textPrimary,
+            letterSpacing: 0.2,
           ),
         ),
         const SizedBox(height: 8),
@@ -67,10 +68,14 @@ class _MyTextFieldState extends State<MyTextField> {
           maxLines: widget.maxLines,
           maxLength: widget.maxLength,
           onChanged: widget.onChanged,
-          style: const TextStyle(color: Colors.black54),
+          style: const TextStyle(
+            color: AppTheme.textPrimary,
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+          ),
           decoration: InputDecoration(
             hintText: widget.hintText ?? widget.label,
-            hintStyle: const TextStyle(color: Colors.black38),
+            hintStyle: const TextStyle(color: AppTheme.textHint, fontSize: 14),
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.showPasswordToggle
                 ? IconButton(
@@ -78,7 +83,8 @@ class _MyTextFieldState extends State<MyTextField> {
                       _obscureText
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
-                      color: Colors.black54,
+                      color: AppTheme.grey,
+                      size: 20,
                     ),
                     onPressed: () {
                       setState(() {
@@ -88,7 +94,7 @@ class _MyTextFieldState extends State<MyTextField> {
                   )
                 : null,
             filled: true,
-            fillColor: AppTheme.lightBlue,
+            fillColor: AppTheme.surfaceGrey,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,
@@ -99,18 +105,24 @@ class _MyTextFieldState extends State<MyTextField> {
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+              borderSide: const BorderSide(
+                color: AppTheme.primaryBlue,
+                width: 1.5,
+              ),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red),
+              borderSide: const BorderSide(color: AppTheme.errorRed),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Colors.red, width: 2),
+              borderSide: const BorderSide(
+                color: AppTheme.errorRed,
+                width: 1.5,
+              ),
             ),
             contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
+              horizontal: 16,
               vertical: 16,
             ),
           ),

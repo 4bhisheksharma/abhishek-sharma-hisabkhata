@@ -88,21 +88,21 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
           backgroundColor: AppTheme.primaryBlue,
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
             _appBarTitle,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 18,
               fontWeight: FontWeight.w600,
             ),
           ),
           centerTitle: true,
           actions: [
             IconButton(
-              icon: const Icon(Icons.group_add, color: Colors.white),
+              icon: const Icon(Icons.group_add_rounded, color: Colors.white),
               tooltip: 'Add Multiple Connections',
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.bulkAddConnection);
@@ -114,10 +114,10 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
           width: double.infinity,
           height: double.infinity,
           decoration: const BoxDecoration(
-            color: AppTheme.lightBlue,
+            color: Colors.white,
             borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(30),
-              topRight: Radius.circular(30),
+              topLeft: Radius.circular(28),
+              topRight: Radius.circular(28),
             ),
           ),
           child: SingleChildScrollView(

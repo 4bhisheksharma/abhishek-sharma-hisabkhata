@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:hisab_khata/config/theme/app_theme.dart';
 import '../../domain/entities/transaction.dart';
 
 /// Reusable transaction list item widget
@@ -35,15 +36,15 @@ class TransactionListItem extends StatelessWidget {
   IconData get _icon {
     switch (transaction.transactionType) {
       case TransactionType.purchase:
-        return Icons.shopping_bag_outlined;
+        return Icons.shopping_bag_rounded;
       case TransactionType.payment:
-        return Icons.payments_outlined;
+        return Icons.payments_rounded;
       case TransactionType.credit:
-        return Icons.credit_card;
+        return Icons.credit_card_rounded;
       case TransactionType.refund:
-        return Icons.replay;
+        return Icons.replay_rounded;
       case TransactionType.adjustment:
-        return Icons.tune;
+        return Icons.tune_rounded;
     }
   }
 
@@ -88,10 +89,10 @@ class TransactionListItem extends StatelessWidget {
   /// For Business: Purchase/Credit = Green (receives more), Payment/Refund = Green (received)
   Color get _amountColor {
     if (isCustomerView) {
-      return transaction.isDebit ? Colors.red.shade700 : Colors.green.shade700;
+      return transaction.isDebit ? AppTheme.errorRed : AppTheme.successGreen;
     } else {
       // Business view - all incoming is good
-      return transaction.isDebit ? Colors.green.shade700 : Colors.blue.shade700;
+      return transaction.isDebit ? AppTheme.successGreen : AppTheme.infoBlue;
     }
   }
 
@@ -110,22 +111,22 @@ class TransactionListItem extends StatelessWidget {
 
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(14),
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
         child: Row(
           children: [
             // Icon
             Container(
-              width: 48,
-              height: 48,
+              width: 44,
+              height: 44,
               decoration: BoxDecoration(
-                color: _iconBackgroundColor,
+                color: _iconBackgroundColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(_icon, color: Colors.white, size: 24),
+              child: Icon(_icon, color: _iconBackgroundColor, size: 22),
             ),
-            const SizedBox(width: 16),
+            const SizedBox(width: 14),
             // Description and date
             Expanded(
               child: Column(
@@ -134,16 +135,20 @@ class TransactionListItem extends StatelessWidget {
                   Text(
                     _displayText,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
+                      color: AppTheme.textPrimary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 3),
                   Text(
                     dateFormat.format(transaction.transactionDate),
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppTheme.textHint,
+                    ),
                   ),
                 ],
               ),
@@ -152,8 +157,8 @@ class TransactionListItem extends StatelessWidget {
             Text(
               '$_amountPrefix$currency ${_formatAmount(transaction.amount)}',
               style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
                 color: _amountColor,
               ),
             ),
