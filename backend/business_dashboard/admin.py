@@ -1,6 +1,10 @@
 from django.contrib import admin
 from django.utils import timezone
 from business_dashboard.models import Business, BusinessVerificationRequest
+from notification.services import notify_verification_approved, notify_verification_rejected
+
+import logging
+logger = logging.getLogger(__name__)
 
 @admin.register(Business)
 class BusinessAdmin(admin.ModelAdmin):
@@ -62,13 +66,22 @@ class BusinessVerificationRequestAdmin(admin.ModelAdmin):
             if obj.status == 'approved':
                 obj.business.is_verified = True
                 obj.business.save()
+                try:
+                    notify_verification_approved(obj.business.user)
+                except Exception as e:
+                    logger.error(f"Verification approved notification error: {e}")
             elif obj.status == 'rejected':
                 obj.business.is_verified = False
                 obj.business.save()
+                try:
+                    notify_verification_rejected(obj.business.user, obj.admin_remarks or '')
+                except Exception as e:
+                    logger.error(f"Verification rejected notification error: {e}")
         super().save_model(request, obj, form, change)
 
     @admin.action(description='Approve selected verification requests')
     def approve_requests(self, request, queryset):
+        count = 0
         for req in queryset.filter(status='pending'):
             req.status = 'approved'
             req.reviewed_by = request.user
@@ -77,14 +90,25 @@ class BusinessVerificationRequestAdmin(admin.ModelAdmin):
             req.save()
             req.business.is_verified = True
             req.business.save()
-        self.message_user(request, f'{queryset.count()} request(s) approved successfully.')
+            try:
+                notify_verification_approved(req.business.user)
+            except Exception as e:
+                logger.error(f"Verification approved notification error: {e}")
+            count += 1
+        self.message_user(request, f'{count} request(s) approved successfully.')
 
     @admin.action(description='Reject selected verification requests')
     def reject_requests(self, request, queryset):
+        count = 0
         for req in queryset.filter(status='pending'):
             req.status = 'rejected'
             req.reviewed_by = request.user
             req.reviewed_at = timezone.now()
             req.admin_remarks = req.admin_remarks or 'Rejected by admin'
             req.save()
-        self.message_user(request, f'{queryset.count()} request(s) rejected.')
+            try:
+                notify_verification_rejected(req.business.user, req.admin_remarks or '')
+            except Exception as e:
+                logger.error(f"Verification rejected notification error: {e}")
+            count += 1
+        self.message_user(request, f'{count} request(s) rejected.')

@@ -188,14 +188,6 @@ SIMPLE_JWT = {
 # Path to your Firebase Admin SDK service account key JSON file
 FIREBASE_ADMIN_CREDENTIAL = os.getenv('FIREBASE_ADMIN_CREDENTIAL')
 
-# Firebase project configuration
-FCM_DJANGO_SETTINGS = {
-    "APP_VERBOSE_NAME": "Hisab Khata",
-    "FCM_SERVER_KEY": os.getenv('FCM_SERVER_KEY'),
-    "ONE_DEVICE_PER_USER": False,
-    "DELETE_INACTIVE_DEVICES": True,
-}
-
 # Admin panel redirect settings
 LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/admin/dashboard/'

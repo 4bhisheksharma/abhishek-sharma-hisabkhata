@@ -349,10 +349,25 @@ class FCMTestView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
     def get(self, request):
-        """Check FCM token status for current user and all users (debug)"""
+        """Check FCM token status — restricted to staff users for security."""
         user = request.user
         
-        # Get all users with FCM tokens
+        # Only staff/admin can see all users' token info
+        if not user.is_staff:
+            return Response({
+                'status': 200,
+                'message': 'FCM token info',
+                'data': {
+                    'current_user': {
+                        'user_id': user.user_id,
+                        'email': user.email,
+                        'has_fcm_token': bool(user.fcm_token),
+                        'fcm_token_prefix': user.fcm_token[:30] + '...' if user.fcm_token else None,
+                    },
+                }
+            }, status=status.HTTP_200_OK)
+        
+        # Staff can see all users with FCM tokens
         users_with_tokens = User.objects.exclude(fcm_token__isnull=True).exclude(fcm_token='').values_list(
             'user_id', 'email', 'full_name', 'fcm_token'
         )

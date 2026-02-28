@@ -16,9 +16,14 @@ from .serializers import (
     BulkUpdateStatusSerializer
 )
 from hisabauth.models import User
-from notification.models import Notification
+from notification.services import (
+    notify_connection_request,
+    notify_connection_accepted,
+    notify_connection_rejected,
+    notify_connection_cancelled,
+    notify_connection_deleted,
+)
 from customer_dashboard.models import CustomerBusinessRelationship
-from core.firebase_service import FirebaseService
 import logging
 
 logger = logging.getLogger(__name__)
@@ -162,31 +167,11 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             receiver=receiver
         )
         
-        # Send in-app notification to receiver
-        Notification.objects.create(
-            sender=request.user,
-            receiver=receiver,
-            title="New Connection Request",
-            message=f"{request.user.full_name} sent you a connection request.",
-            type="connection_request"
-        )
-        
-        # Send push notification to receiver if they have FCM token
-        if receiver.fcm_token:
-            try:
-                logger.info(f"Attempting to send push notification to {receiver.email}")
-                logger.info(f"Receiver FCM Token: {receiver.fcm_token[:20]}...")
-                success = FirebaseService.send_connection_request_notification(
-                    receiver.fcm_token,
-                    request.user.full_name,
-                    request.user.email
-                )
-                if success:
-                    logger.info(f"Push notification sent successfully to {receiver.email}")
-                else:
-                    logger.error(f"Failed to send push notification to {receiver.email}")
-            except Exception as e:
-                logger.error(f"Exception while sending push notification to {receiver.email}: {str(e)}")
+        # Send in-app + push notification via centralized service
+        try:
+            notify_connection_request(sender=request.user, receiver=receiver)
+        except Exception as e:
+            logger.error(f"Connection request notification error: {e}")
         
         return Response(
             {
@@ -280,14 +265,8 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                         receiver=receiver
                     )
                     
-                    # Send in-app notification to receiver
-                    Notification.objects.create(
-                        sender=request.user,
-                        receiver=receiver,
-                        title="New Connection Request",
-                        message=f"{request.user.full_name} sent you a connection request.",
-                        type="connection_request"
-                    )
+                    # Send in-app + push notification via centralized service
+                    notify_connection_request(sender=request.user, receiver=receiver)
                 
                 results['successful'].append({
                     'user_id': receiver.user_id,
@@ -296,18 +275,6 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     'request_id': connection_request.business_customer_request_id,
                     'status': connection_request.status
                 })
-                
-                # Send push notification to receiver if they have FCM token
-                if receiver.fcm_token:
-                    try:
-                        FirebaseService.send_connection_request_notification(
-                            receiver.fcm_token,
-                            request.user.full_name,
-                            request.user.email
-                        )
-                        logger.info(f"Push notification sent to {receiver.email} for bulk connection request")
-                    except Exception as e:
-                        logger.error(f"Failed to send push notification to {receiver.email}: {str(e)}")
                 
             except Exception as e:
                 results['failed'].append({
@@ -494,25 +461,11 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             # Delete the connection request
             connection_request.delete()
             
-            # Send notification to the other user
-            Notification.objects.create(
-                sender=request.user,
-                receiver=other_user,
-                title="Connection Deleted",
-                message=f"{request.user.full_name} has removed the connection with you.",
-                type="connection_deleted"
-            )
-            
-            # Send push notification if the other user has FCM token
-            if other_user.fcm_token:
-                try:
-                    FirebaseService.send_connection_deleted_notification(
-                        other_user.fcm_token,
-                        request.user.full_name
-                    )
-                    logger.info(f"Push notification sent to {other_user.email} for connection deletion")
-                except Exception as e:
-                    logger.error(f"Failed to send push notification to {other_user.email}: {str(e)}")
+            # Send in-app + push notification via centralized service
+            try:
+                notify_connection_deleted(deleter=request.user, other_user=other_user)
+            except Exception as e:
+                logger.error(f"Connection deleted notification error: {e}")
             
             return Response(
                 {
@@ -560,14 +513,11 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         # Delete the request
         connection_request.delete()
         
-        # Notify the receiver
-        Notification.objects.create(
-            sender=request.user,
-            receiver=receiver,
-            title="Connection Request Cancelled",
-            message=f"{request.user.full_name} cancelled their connection request.",
-            type="connection_request_cancelled"
-        )
+        # Notify the receiver (in-app + push) — previously missing FCM push
+        try:
+            notify_connection_cancelled(canceller=request.user, receiver=receiver)
+        except Exception as e:
+            logger.error(f"Connection cancelled notification error: {e}")
         
         return Response(
             {
@@ -617,31 +567,14 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             # Delete rejected requests immediately to allow re-sending
             connection_request.delete()
         
-        # Send notification to sender about status update
-        Notification.objects.create(
-            sender=request.user,
-            receiver=sender,
-            title=f"Connection Request {status_text.capitalize()}",
-            message=f"{request.user.full_name} {status_text} your connection request.",
-            type=f"connection_request_{status_text}"
-        )
-        
-        # Send push notification to sender if they have FCM token
-        if sender.fcm_token:
-            try:
-                if status_text == 'accepted':
-                    FirebaseService.send_request_accepted_notification(
-                        sender.fcm_token,
-                        request.user.full_name
-                    )
-                elif status_text == 'rejected':
-                    FirebaseService.send_request_rejected_notification(
-                        sender.fcm_token,
-                        request.user.full_name
-                    )
-                logger.info(f"Push notification sent to {sender.email} for request {status_text}")
-            except Exception as e:
-                logger.error(f"Failed to send push notification to {sender.email}: {str(e)}")
+        # Send in-app + push notification via centralized service
+        try:
+            if status_text == 'accepted':
+                notify_connection_accepted(accepter=request.user, requester=sender)
+            elif status_text == 'rejected':
+                notify_connection_rejected(rejecter=request.user, requester=sender)
+        except Exception as e:
+            logger.error(f"Connection status notification error: {e}")
         
         response_data = {
             'message': f'Request {status_text} successfully',
@@ -705,7 +638,6 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     sender = connection_request.sender
                     sender_name = sender.full_name
                     sender_email = sender.email
-                    sender_fcm_token = sender.fcm_token
                     
                     # If accepted, update and create CustomerBusinessRelationship
                     if new_status == 'accepted':
@@ -716,14 +648,11 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                         # Delete rejected requests immediately to allow re-sending
                         connection_request.delete()
                     
-                    # Send notification to sender
-                    Notification.objects.create(
-                        sender=request.user,
-                        receiver=sender,
-                        title=f"Connection Request {new_status.capitalize()}",
-                        message=f"{request.user.full_name} {new_status} your connection request.",
-                        type=f"connection_request_{new_status}"
-                    )
+                    # Send in-app + push notification via centralized service
+                    if new_status == 'accepted':
+                        notify_connection_accepted(accepter=request.user, requester=sender)
+                    elif new_status == 'rejected':
+                        notify_connection_rejected(rejecter=request.user, requester=sender)
                 
                 results['successful'].append({
                     'request_id': request_id,
@@ -731,23 +660,6 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     'sender_email': sender_email,
                     'new_status': new_status
                 })
-                
-                # Send push notification to sender if they have FCM token
-                if sender_fcm_token:
-                    try:
-                        if new_status == 'accepted':
-                            FirebaseService.send_request_accepted_notification(
-                                sender_fcm_token,
-                                request.user.full_name
-                            )
-                        elif new_status == 'rejected':
-                            FirebaseService.send_request_rejected_notification(
-                                sender_fcm_token,
-                                request.user.full_name
-                            )
-                        logger.info(f"Push notification sent to {sender_email} for bulk {new_status}")
-                    except Exception as e:
-                        logger.error(f"Failed to send push notification to {sender_email}: {str(e)}")
                 
             except BusinessCustomerRequest.DoesNotExist:
                 results['failed'].append({

@@ -76,18 +76,33 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     );
   }
 
-  /// Handle mark notification as read event
+  /// Handle mark notification as read event — uses optimistic update to avoid
+  /// flickering the full list with a loading spinner.
   Future<void> _onMarkNotificationAsRead(
     MarkNotificationAsReadEvent event,
     Emitter<NotificationState> emit,
   ) async {
-    emit(const NotificationLoading());
+    // Optimistic update: if we already have a loaded list, update locally first
+    final currentState = state;
+    if (currentState is AllNotificationsLoaded) {
+      final updated = currentState.notifications.map((n) {
+        if (n.notificationId == event.notificationId) {
+          return n.copyWith(isRead: true);
+        }
+        return n;
+      }).toList();
+      emit(AllNotificationsLoaded(notifications: updated));
+    }
+
     final result = await markNotificationAsReadUseCase(event.notificationId);
     result.fold(
-      (failure) => emit(NotificationError(message: failure.failureMessage)),
+      (failure) {
+        // Revert on failure — reload from server
+        add(const GetAllNotificationsEvent());
+      },
       (notification) {
         emit(NotificationMarkedAsRead(notification: notification));
-        // Reload notifications
+        // Reload to stay in sync with server
         add(const GetAllNotificationsEvent());
       },
     );

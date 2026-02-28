@@ -13,8 +13,18 @@ from .serializers import (
     FavoriteSerializer,
     AddFavoriteSerializer,
 )
-from customer_dashboard.models import CustomerBusinessRelationship
+from customer_dashboard.models import Customer, CustomerBusinessRelationship
 from business_dashboard.models import Business
+from notification.services import (
+    notify_transaction_added,
+    notify_payment_received,
+    notify_monthly_limit_exceeded,
+    notify_favorite_added,
+)
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class TransactionViewSet(viewsets.ModelViewSet):
@@ -80,6 +90,50 @@ class TransactionViewSet(viewsets.ModelViewSet):
             
             # Update the pending due based on transaction type
             relationship.update_pending_due()
+
+        # --- Notifications ---
+        try:
+            current_user = request.user
+            customer_user = relationship.customer.user
+            business_user = relationship.business.user
+
+            # Determine recipient (the "other" party)
+            if current_user == customer_user:
+                other_user = business_user
+            else:
+                other_user = customer_user
+
+            if transaction_type in ['payment', 'refund']:
+                # Customer made a payment → notify business
+                notify_payment_received(
+                    payer_user=current_user,
+                    business_user=other_user,
+                    amount=amount,
+                    relationship_id=relationship.relationship_id,
+                )
+            else:
+                # Business added a purchase/credit → notify customer
+                notify_transaction_added(
+                    sender_user=current_user,
+                    receiver_user=other_user,
+                    amount=amount,
+                    transaction_type=transaction_type,
+                    relationship_id=relationship.relationship_id,
+                    description=data.get('description', ''),
+                )
+
+            # Check monthly limit for the customer after any transaction
+            customer = relationship.customer
+            if customer.monthly_limit > 0:
+                overview = Customer.objects.get_monthly_spending_overview(customer)
+                if overview['is_over_budget']:
+                    notify_monthly_limit_exceeded(
+                        customer_user=customer_user,
+                        total_spent=overview['total_spent'],
+                        monthly_limit=float(customer.monthly_limit),
+                    )
+        except Exception as e:
+            logger.error(f"Transaction notification error: {e}")
         
         return Response(
             TransactionSerializer(new_transaction).data,
@@ -272,6 +326,15 @@ class FavoriteViewSet(viewsets.ModelViewSet):
             customer=customer,
             business=business
         )
+
+        # Notify the business owner that they were favorited
+        try:
+            notify_favorite_added(
+                customer_user=request.user,
+                business_user=business.user,
+            )
+        except Exception as e:
+            logger.error(f"Favorite notification error: {e}")
         
         return Response(
             FavoriteSerializer(favorite).data,

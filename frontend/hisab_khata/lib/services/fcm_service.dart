@@ -126,7 +126,8 @@ class FCMService {
     const AndroidNotificationChannel channel = AndroidNotificationChannel(
       'hisab_khata_notifications',
       'Hisab Khata Notifications',
-      description: 'Notifications for connection requests and updates',
+      description:
+          'Notifications for connections, transactions, reminders, and updates',
       importance: Importance.high,
       playSound: true,
     );
@@ -231,7 +232,7 @@ class FCMService {
             'hisab_khata_notifications',
             'Hisab Khata Notifications',
             channelDescription:
-                'Notifications for connection requests and updates',
+                'Notifications for connections, transactions, reminders, and updates',
             icon: '@mipmap/ic_launcher',
             importance: Importance.high,
             priority: Priority.high,
@@ -266,11 +267,11 @@ class FCMService {
   }
 
   /// Navigate to appropriate screen based on notification type.
-  /// Matches the `type` field sent from the backend's FirebaseService.
+  /// Matches the `type` field sent from the backend notification service.
   static void _navigateBasedOnType(Map<String, dynamic> data) {
-    final BuildContext? context = _getNavigatorContext();
-    if (context == null) {
-      debugPrint('Navigator context is null, cannot navigate');
+    final navigatorState = NavigationService.navigatorKey.currentState;
+    if (navigatorState == null) {
+      debugPrint('Navigator state is null, cannot navigate');
       return;
     }
 
@@ -278,28 +279,61 @@ class FCMService {
     debugPrint('Navigating for notification type: $type');
 
     switch (type) {
+      // --- Connection types ---
       case 'connection_request':
-        Navigator.pushNamed(context, AppRoutes.connectionRequests);
+        navigatorState.pushNamed(AppRoutes.connectionRequests);
         break;
       case 'request_accepted':
       case 'connection_request_accepted':
-        Navigator.pushNamed(context, AppRoutes.customerHome);
+        navigatorState.pushNamed(AppRoutes.customerHome);
         break;
       case 'request_rejected':
       case 'connection_request_rejected':
-        Navigator.pushNamed(context, AppRoutes.connectionRequests);
+      case 'connection_request_cancelled':
+        navigatorState.pushNamed(AppRoutes.connectionRequests);
         break;
       case 'connection_deleted':
-        Navigator.pushNamed(context, AppRoutes.customerHome);
+        navigatorState.pushNamed(AppRoutes.customerHome);
         break;
-      default:
-        Navigator.pushNamed(context, AppRoutes.notifications);
-    }
-  }
 
-  /// Get navigator context from the global navigator key
-  static BuildContext? _getNavigatorContext() {
-    return NavigationService.navigatorKey.currentContext;
+      // --- Transaction types ---
+      case 'transaction_added':
+      case 'payment_received':
+      case 'due_reminder':
+      case 'bulk_payment_reminder':
+        // Navigate to connected user details if sender info is available,
+        // otherwise fall back to notifications list.
+        navigatorState.pushNamed(AppRoutes.notifications);
+        break;
+
+      // --- Limit types ---
+      case 'monthly_limit_exceeded':
+        navigatorState.pushNamed(AppRoutes.customerHome);
+        break;
+
+      // --- Favorite / loyalty ---
+      case 'favorite_added':
+        navigatorState.pushNamed(AppRoutes.businessHome);
+        break;
+      case 'loyalty_points':
+        navigatorState.pushNamed(AppRoutes.notifications);
+        break;
+
+      // --- Verification ---
+      case 'verification_approved':
+      case 'verification_rejected':
+        navigatorState.pushNamed(AppRoutes.businessProfile);
+        break;
+
+      // --- Broadcast / system ---
+      case 'broadcast':
+      case 'system':
+        navigatorState.pushNamed(AppRoutes.notifications);
+        break;
+
+      default:
+        navigatorState.pushNamed(AppRoutes.notifications);
+    }
   }
 
   /// Encode notification data payload as JSON string (safe for special chars)
