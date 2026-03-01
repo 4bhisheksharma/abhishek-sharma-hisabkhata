@@ -3,3 +3,5 @@ migrations/__pycache__
 
 # Firebase service account key
 core/firebase-service-account.json
+
+media/

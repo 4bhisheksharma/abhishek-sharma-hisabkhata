@@ -33,6 +33,9 @@ dependencies:
   speech_to_text: ^7.3.0
   web_socket_channel: ^3.0.0
   shimmer_animation: ^2.2.2+1
+  esewa_flutter_sdk:
+    path: ./esewa_flutter_sdk 
+
 
   flutter_localizations:
     sdk: flutter

@@ -64,3 +64,10 @@ macos/Runner/GoogleService-Info.plist
 firebase_app_id_file.json
 .firebase/
 firebase.json
+esewa_flutter_sdk/android
+esewa_flutter_sdk/ios
+esewa_flutter_sdk/test
+esewa_flutter_sdk/CHANGELOG.md
+esewa_flutter_sdk/LICENSE
+esewa_flutter_sdk/pubspec.yaml
+esewa_flutter_sdk/pubspec.lock
