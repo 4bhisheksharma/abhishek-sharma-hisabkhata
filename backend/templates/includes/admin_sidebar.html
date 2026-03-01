@@ -1,0 +1,40 @@
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">H</div>
+    <div class="brand-text"><h3>Admin Panel</h3><p>System Management</p></div>
+  </div>
+  <div class="sidebar-section">
+    <ul class="sidebar-nav">
+      <li><a href="{% url 'admin_dashboard' %}" class="{% if active_page == 'dashboard' %}active{% endif %}"><i class="fas fa-th-large"></i> Dashboard</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">User Management</div>
+    <ul class="sidebar-nav">
+      <li><a href="{% url 'admin_user_management' %}" class="{% if active_page == 'business_owners' %}active{% endif %}"><i class="fas fa-store"></i> Business Owners</a></li>
+      <li><a href="{% url 'admin_customers' %}" class="{% if active_page == 'customers' %}active{% endif %}"><i class="fas fa-users"></i> Customers</a></li>
+      <li><a href="{% url 'admin_roles' %}" class="{% if active_page == 'roles' %}active{% endif %}"><i class="fas fa-user-shield"></i> Role Management</a></li>
+      <li><a href="{% url 'admin_support_tickets' %}" class="{% if active_page == 'tickets' %}active{% endif %}"><i class="fas fa-headset"></i> Support Tickets
+        {% if urgent_tickets > 0 %}<span class="sub-label">{{ urgent_tickets }}</span>{% endif %}
+      </a></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Analytics</div>
+    <ul class="sidebar-nav">
+      <li><a href="{% url 'admin_analytics' %}" class="{% if active_page == 'analytics' %}active{% endif %}"><i class="fas fa-chart-line"></i> Platform Analytics</a></li>
+      <li><a href="{% url 'admin_fraud_detection' %}" class="{% if active_page == 'fraud' %}active{% endif %}"><i class="fas fa-shield-alt"></i> Fraud Detection</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Communication</div>
+    <ul class="sidebar-nav">
+      <li><a href="{% url 'admin_communication' %}" class="{% if active_page == 'communication' %}active{% endif %}"><i class="fas fa-bullhorn"></i> Notifications</a></li>
+    </ul>
+  </div>
+  <div class="sidebar-section" style="margin-top: auto; padding-bottom: 20px;">
+    <ul class="sidebar-nav">
+      <li><a href="{% url 'admin_logout' %}" style="color: #ef4444;" onclick="return confirm('Are you sure you want to logout?')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+    </ul>
+  </div>
+</aside>

@@ -12,6 +12,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showLoyaltyPoints;
   final VoidCallback? onProfileTap;
   final VoidCallback? onNotificationTap;
+  final bool hasUnreadNotifications;
 
   const MyAppBar({
     super.key,
@@ -24,10 +25,11 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showLoyaltyPoints = false,
     this.onProfileTap,
     this.onNotificationTap,
+    this.hasUnreadNotifications = false,
   });
 
   @override
-  Size get preferredSize => const Size.fromHeight(220);
+  Size get preferredSize => const Size.fromHeight(220); //can tuik adjust height as needed
 
   String _getGreeting() {
     final hour = DateTime.now().hour;
@@ -195,10 +197,32 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             color: Colors.white.withValues(alpha: 0.25),
                           ),
                         ),
-                        child: const Icon(
-                          Icons.notifications_none_rounded,
-                          color: Colors.white,
-                          size: 20,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(
+                              Icons.notifications_none_rounded,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                            if (hasUnreadNotifications)
+                              Positioned(
+                                top: -2,
+                                right: -2,
+                                child: Container(
+                                  width: 10,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: Colors.white,
+                                      width: 1.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
                     ),

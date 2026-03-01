@@ -9,6 +9,8 @@ from .views import (
     admin_dashboard_view, admin_user_management_view,
     admin_all_businesses_view, admin_all_customers_view,
     admin_analytics_view, admin_communication_view,
+    admin_customers_view, admin_role_management_view,
+    admin_support_tickets_view, admin_fraud_detection_view,
 )
 
 app_name = 'analytics'

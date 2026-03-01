@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Role Management - Admin Panel</title>
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #00d09e; --primary-dark: #00b386;
+      --sidebar-bg: #1a1d29; --sidebar-hover: #2a2d3a;
+      --sidebar-active: rgba(0, 208, 158, 0.12);
+      --bg: #f0f2f5; --card-bg: #ffffff;
+      --text-primary: #1a1d29; --text-secondary: #6b7280; --text-muted: #9ca3af;
+      --border: #e5e7eb; --danger: #ef4444; --success: #10b981;
+      --info: #3b82f6; --warning: #f59e0b; --purple: #8b5cf6;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); display: flex; min-height: 100vh; }
+    .sidebar { width: 260px; min-height: 100vh; background: var(--sidebar-bg); color: #fff; display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; overflow-y: auto; }
+    .sidebar-brand { padding: 24px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .sidebar-brand .brand-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; }
+    .sidebar-brand .brand-text h3 { font-size: 16px; font-weight: 700; }
+    .sidebar-brand .brand-text p { font-size: 11px; color: var(--text-muted); }
+    .sidebar-section { padding: 16px 16px 4px; }
+    .sidebar-section-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: rgba(255,255,255,0.35); padding: 0 8px; margin-bottom: 8px; }
+    .sidebar-nav { list-style: none; }
+    .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; color: rgba(255,255,255,0.65); text-decoration: none; font-size: 13.5px; font-weight: 500; transition: all 0.2s; margin: 2px 0; }
+    .sidebar-nav a:hover { background: var(--sidebar-hover); color: #fff; }
+    .sidebar-nav a.active { background: var(--sidebar-active); color: var(--primary); }
+    .sidebar-nav a i { width: 20px; text-align: center; font-size: 14px; }
+    .sidebar-nav .sub-label { background: var(--primary); color: #fff; font-size: 10px; font-weight: 600; padding: 3px 10px; border-radius: 10px; margin-left: auto; }
+    .main-content { flex: 1; margin-left: 260px; min-height: 100vh; }
+    .topbar { background: var(--card-bg); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+    .topbar-title h1 { font-size: 22px; font-weight: 700; }
+    .topbar-title p { font-size: 13px; color: var(--text-secondary); margin-top: 2px; }
+    .topbar-right { display: flex; align-items: center; gap: 20px; }
+    .notification-btn { position: relative; background: none; border: none; cursor: pointer; font-size: 20px; color: var(--text-secondary); padding: 8px; border-radius: 8px; }
+    .notification-btn:hover { background: var(--bg); }
+    .notification-dot { position: absolute; top: 6px; right: 6px; width: 10px; height: 10px; background: var(--danger); border-radius: 50%; border: 2px solid var(--card-bg); }
+    .notification-badge { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: var(--danger); color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .admin-profile { display: flex; align-items: center; gap: 10px; }
+    .admin-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600; font-size: 14px; }
+    .admin-profile span { font-size: 14px; font-weight: 600; }
+    .page-body { padding: 28px 32px; }
+
+    .card { background: var(--card-bg); border-radius: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); border: 1px solid var(--border); }
+    .card-header { padding: 20px 24px 0; display: flex; justify-content: space-between; align-items: center; }
+    .card-header h3 { font-size: 16px; font-weight: 700; }
+    .card-body { padding: 16px 24px 24px; }
+
+    .add-role-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 16px; border-radius: 8px; background: var(--primary); color: #fff; font-size: 12.5px; font-weight: 600; border: none; cursor: pointer; text-decoration: none; transition: background 0.2s; }
+    .add-role-btn:hover { background: var(--primary-dark); }
+
+    .roles-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 16px; }
+    .role-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: transform 0.15s, box-shadow 0.15s; }
+    .role-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .role-card-top { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+    .role-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .role-info { flex: 1; }
+    .role-info .role-name { font-size: 15px; font-weight: 700; }
+    .role-info .role-desc { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
+    .role-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .role-tag { font-size: 10.5px; font-weight: 600; padding: 3px 10px; border-radius: 6px; }
+    .role-tag.perm { background: #ecfdf5; color: var(--success); }
+    .role-tag.users { background: #eff6ff; color: var(--info); }
+    .role-actions-bar { display: flex; justify-content: flex-end; margin-top: 12px; }
+    .role-edit-btn { font-size: 12px; font-weight: 600; padding: 5px 14px; border-radius: 6px; background: var(--bg); border: 1px solid var(--border); color: var(--text-secondary); text-decoration: none; transition: all 0.2s; }
+    .role-edit-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+    @media (max-width: 768px) { .sidebar { display: none; } .main-content { margin-left: 0; } .page-body { padding: 16px; } .roles-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  {% with active_page='roles' %}
+  {% include 'includes/admin_sidebar.html' %}
+  {% endwith %}
+
+  <div class="main-content">
+    {% with page_title='Role Management' page_subtitle='Configure and manage user roles and permissions' %}
+    {% include 'includes/admin_topbar.html' %}
+    {% endwith %}
+
+    <div class="page-body">
+      <div class="card">
+        <div class="card-header">
+          <h3>All Roles ({{ roles|length }})</h3>
+          <a href="{% url 'admin:hisabauth_role_add' %}" class="add-role-btn"><i class="fas fa-plus"></i> Add Role</a>
+        </div>
+        <div class="card-body">
+          <div class="roles-grid">
+            {% for role in roles %}
+            <div class="role-card">
+              <div class="role-card-top">
+                <div class="role-icon" style="background: {{ role.icon_color }}18; color: {{ role.icon_color }};">
+                  <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="role-info">
+                  <div class="role-name">{{ role.name }}</div>
+                  <div class="role-desc">{{ role.description }}</div>
+                </div>
+              </div>
+              <div class="role-tags">
+                {% for perm in role.permissions %}
+                <span class="role-tag perm">{{ perm }}</span>
+                {% endfor %}
+                <span class="role-tag users">{{ role.user_count }} User{{ role.user_count|pluralize }}</span>
+              </div>
+              <div class="role-actions-bar">
+                <a href="{% url 'admin:hisabauth_role_change' role.role_id %}" class="role-edit-btn"><i class="fas fa-pen" style="margin-right:4px;font-size:10px;"></i> Edit</a>
+              </div>
+            </div>
+            {% empty %}
+            <div style="padding: 40px; text-align: center; color: var(--text-muted); font-size: 14px; grid-column: 1/-1;">
+              <i class="fas fa-user-shield" style="font-size: 32px; margin-bottom: 12px; display: block; color: var(--border);"></i>
+              No roles configured yet. Click "Add Role" to create one.
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

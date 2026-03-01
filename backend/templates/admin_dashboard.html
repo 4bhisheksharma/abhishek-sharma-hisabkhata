@@ -202,6 +202,7 @@
       align-items: center;
       justify-content: center;
     }
+    .notification-dot { width: 10px; height: 10px; top: 6px; right: 6px; border: 2px solid var(--card-bg); }
 
     .admin-profile {
       display: flex;
@@ -521,79 +522,13 @@
 </head>
 <body>
 
-  <!-- ── SIDEBAR ── -->
-  <aside class="sidebar">
-    <div class="sidebar-brand">
-      <div class="brand-icon">H</div>
-      <div class="brand-text">
-        <h3>Admin Panel</h3>
-        <p>System Management</p>
-      </div>
-    </div>
-
-    <div class="sidebar-section">
-      <ul class="sidebar-nav">
-        <li><a href="{% url 'admin_dashboard' %}" class="active"><i class="fas fa-th-large"></i> Dashboard</a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">User Management</div>
-      <ul class="sidebar-nav">
-        <li><a href="{% url 'admin_user_management' %}"><i class="fas fa-store"></i> Business Owners</a></li>
-        <li><a href="{% url 'admin_user_management' %}?section=customers"><i class="fas fa-users"></i> Customers</a></li>
-        <li><a href="{% url 'admin_user_management' %}?section=roles"><i class="fas fa-user-shield"></i> Role Management</a></li>
-        <li><a href="{% url 'admin_user_management' %}?section=tickets"><i class="fas fa-headset"></i> Support Tickets</a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Analytics</div>
-      <ul class="sidebar-nav">
-        <li><a href="{% url 'admin_analytics' %}"><i class="fas fa-chart-line"></i> Platform Analytics</a></li>
-        <li><a href="{% url 'admin_analytics' %}#fraud"><i class="fas fa-shield-alt"></i> Fraud Detection</a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-section">
-      <div class="sidebar-section-label">Communication</div>
-      <ul class="sidebar-nav">
-        <li><a href="{% url 'admin_communication' %}"><i class="fas fa-bullhorn"></i> Notifications</a></li>
-      </ul>
-    </div>
-
-    <div class="sidebar-section" style="margin-top: auto; padding-bottom: 20px;">
-      <ul class="sidebar-nav">
-        <li><a href="{% url 'admin_logout' %}" style="color: #ef4444;" onclick="return confirm('Are you sure you want to logout?')"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-      </ul>
-    </div>
-  </aside>
+  {% with active_page='dashboard' %}
+  {% include 'includes/admin_sidebar.html' %}
+  {% endwith %}
   <div class="main-content">
-    <!-- Top Bar -->
-    <header class="topbar">
-      <div class="topbar-title">
-        <h1>Dashboard Overview</h1>
-        <p>Monitor platform statistics and system health</p>
-      </div>
-      <div class="topbar-right">
-        <button class="notification-btn" onclick="window.location.href='{% url "admin_communication" %}'">
-          <i class="fas fa-bell"></i>
-          {% if urgent_tickets > 0 %}
-          <span class="notification-badge">{{ urgent_tickets }}</span>
-          {% endif %}
-        </button>
-        <div class="admin-profile">
-          <div class="admin-avatar">
-            {% if admin_user.full_name %}
-              {{ admin_user.full_name|truncatechars:1 }}
-            {% else %}
-              A
-            {% endif %}
-          </div>
-          <span>{{ admin_user.full_name|default:"Admin User" }}</span>
-        </div>
-      </div>
-    </header>
+    {% with page_title='Dashboard Overview' page_subtitle='Monitor platform statistics and system health' %}
+    {% include 'includes/admin_topbar.html' %}
+    {% endwith %}
 
     <!-- Page Body -->
     <div class="page-body">

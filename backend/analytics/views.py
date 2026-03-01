@@ -213,6 +213,7 @@ def admin_dashboard_view(request):
 
         'activities': activities,
         'recent_tickets': recent_tickets,
+        'unread_notifications': Notification.objects.filter(receiver=request.user, is_read=False).count(),
         'admin_user': request.user,
     }
     return render(request, 'admin_dashboard.html', context)
@@ -400,6 +401,11 @@ def admin_user_management_view(request):
         status__in=['open', 'in_progress']
     ).count()
 
+    # Unread notification count for admin
+    unread_notifications = Notification.objects.filter(
+        receiver=request.user, is_read=False
+    ).count()
+
     context = {
         'total_business_owners': total_business_owners,
         'biz_growth': biz_growth,
@@ -418,9 +424,287 @@ def admin_user_management_view(request):
         'roles': roles,
         'recent_tickets': recent_tickets,
         'urgent_tickets': urgent_tickets,
+        'unread_notifications': unread_notifications,
         'admin_user': request.user,
     }
     return render(request, 'admin_user_management.html', context)
+
+
+@staff_member_required
+def admin_customers_view(request):
+    """Render the Customers management page."""
+    now = timezone.now()
+    last_month_start = (now - relativedelta(months=1)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+    this_month_start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    total_customers = Customer.objects.count()
+    cust_before = Customer.objects.filter(created_at__lt=this_month_start).count()
+    cust_new = Customer.objects.filter(created_at__gte=last_month_start, created_at__lt=this_month_start).count()
+    cust_growth = round((cust_new / max(cust_before - cust_new, 1)) * 100) if cust_before else 0
+
+    active_customers = Customer.objects.filter(status='active').count()
+    inactive_customers = Customer.objects.filter(status='inactive').count()
+    suspended_customers = Customer.objects.filter(status='suspended').count()
+
+    cust_search = request.GET.get('cust_search', '').strip()
+    cust_status_filter = request.GET.get('status', 'all')
+    customers_qs = Customer.objects.select_related('user').order_by('-created_at')
+    if cust_search:
+        customers_qs = customers_qs.filter(
+            Q(user__full_name__icontains=cust_search) |
+            Q(user__email__icontains=cust_search) |
+            Q(user__phone_number__icontains=cust_search)
+        )
+    if cust_status_filter == 'active':
+        customers_qs = customers_qs.filter(status='active')
+    elif cust_status_filter == 'inactive':
+        customers_qs = customers_qs.filter(status='inactive')
+    elif cust_status_filter == 'suspended':
+        customers_qs = customers_qs.filter(status='suspended')
+
+    customers = []
+    for cust in customers_qs[:20]:
+        relationships = CustomerBusinessRelationship.objects.filter(customer=cust)
+        total_spent = Transaction.objects.filter(
+            relationship__in=relationships, amount__gt=0
+        ).aggregate(total=Sum('amount'))['total'] or 0
+        customers.append({
+            'customer_id': cust.customer_id,
+            'full_name': cust.user.full_name,
+            'email': cust.user.email,
+            'phone': cust.user.phone_number,
+            'profile_picture': cust.user.profile_picture.url if cust.user.profile_picture else None,
+            'member_since': cust.created_at.strftime('%b %Y'),
+            'total_spent': float(total_spent),
+            'status': cust.status,
+            'business_count': relationships.count(),
+            'user_id': cust.user.user_id,
+        })
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+    unread_notifications = Notification.objects.filter(
+        receiver=request.user, is_read=False
+    ).count()
+
+    context = {
+        'total_customers': total_customers,
+        'cust_growth': cust_growth,
+        'active_customers': active_customers,
+        'inactive_customers': inactive_customers,
+        'suspended_customers': suspended_customers,
+        'customers': customers,
+        'cust_search': cust_search,
+        'cust_status_filter': cust_status_filter,
+        'urgent_tickets': urgent_tickets,
+        'unread_notifications': unread_notifications,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_customers.html', context)
+
+
+@staff_member_required
+def admin_role_management_view(request):
+    """Render the Role Management page."""
+    roles = []
+    for role in Role.objects.all():
+        user_count = UserRole.objects.filter(role=role).count()
+        if 'admin' in role.name.lower() or 'super' in role.name.lower():
+            description = 'Full system access'
+            icon_color = '#ef4444'
+            permissions = ['All Permissions']
+        elif 'manager' in role.name.lower():
+            description = 'Department management'
+            icon_color = '#f59e0b'
+            permissions = ['User Management', 'Reports']
+        elif 'support' in role.name.lower() or 'agent' in role.name.lower():
+            description = 'Customer support'
+            icon_color = '#3b82f6'
+            permissions = ['Ticket Management']
+        elif 'business' in role.name.lower():
+            description = 'Business account access'
+            icon_color = '#00d09e'
+            permissions = ['Business Dashboard']
+        elif 'customer' in role.name.lower():
+            description = 'Customer account access'
+            icon_color = '#8b5cf6'
+            permissions = ['Customer Dashboard']
+        else:
+            description = 'Custom role'
+            icon_color = '#6b7280'
+            permissions = [role.name]
+
+        roles.append({
+            'role_id': role.role_id,
+            'name': role.name,
+            'description': description,
+            'icon_color': icon_color,
+            'permissions': permissions,
+            'user_count': user_count,
+        })
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+    unread_notifications = Notification.objects.filter(
+        receiver=request.user, is_read=False
+    ).count()
+
+    context = {
+        'roles': roles,
+        'urgent_tickets': urgent_tickets,
+        'unread_notifications': unread_notifications,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_roles.html', context)
+
+
+@staff_member_required
+def admin_support_tickets_view(request):
+    """Render the Support Tickets page."""
+    now = timezone.now()
+    ticket_filter = request.GET.get('filter', 'all')
+    tickets_qs = SupportTicket.objects.select_related('user').order_by('-created_at')
+
+    if ticket_filter == 'open':
+        tickets_qs = tickets_qs.filter(status='open')
+    elif ticket_filter == 'in_progress':
+        tickets_qs = tickets_qs.filter(status='in_progress')
+    elif ticket_filter == 'resolved':
+        tickets_qs = tickets_qs.filter(status='resolved')
+    elif ticket_filter == 'closed':
+        tickets_qs = tickets_qs.filter(status='closed')
+    elif ticket_filter == 'urgent':
+        tickets_qs = tickets_qs.filter(priority__in=['urgent', 'high'])
+
+    tickets = []
+    for ticket in tickets_qs[:30]:
+        delta = now - ticket.created_at
+        if delta.days > 0:
+            time_ago = f"{delta.days} day{'s' if delta.days > 1 else ''} ago"
+        elif delta.seconds >= 3600:
+            hours = delta.seconds // 3600
+            time_ago = f"{hours} hour{'s' if hours > 1 else ''} ago"
+        elif delta.seconds >= 60:
+            minutes = delta.seconds // 60
+            time_ago = f"{minutes} minute{'s' if minutes > 1 else ''} ago"
+        else:
+            time_ago = "Just now"
+
+        tickets.append({
+            'id': ticket.id,
+            'subject': ticket.subject,
+            'category': ticket.get_category_display(),
+            'description': ticket.description[:80] + ('...' if len(ticket.description) > 80 else ''),
+            'full_description': ticket.description,
+            'priority': ticket.priority,
+            'priority_display': ticket.get_priority_display(),
+            'status': ticket.status,
+            'status_display': ticket.get_status_display(),
+            'user_name': ticket.user.full_name,
+            'user_email': ticket.user.email,
+            'user_initial': ticket.user.full_name[0].upper() if ticket.user.full_name else 'U',
+            'time_ago': time_ago,
+            'admin_response': ticket.admin_response or '',
+        })
+
+    total_tickets = SupportTicket.objects.count()
+    open_tickets = SupportTicket.objects.filter(status='open').count()
+    in_progress_tickets = SupportTicket.objects.filter(status='in_progress').count()
+    resolved_tickets = SupportTicket.objects.filter(status='resolved').count()
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+    unread_notifications = Notification.objects.filter(
+        receiver=request.user, is_read=False
+    ).count()
+
+    context = {
+        'tickets': tickets,
+        'ticket_filter': ticket_filter,
+        'total_tickets': total_tickets,
+        'open_tickets': open_tickets,
+        'in_progress_tickets': in_progress_tickets,
+        'resolved_tickets': resolved_tickets,
+        'urgent_tickets': urgent_tickets,
+        'unread_notifications': unread_notifications,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_support_tickets.html', context)
+
+
+@staff_member_required
+def admin_fraud_detection_view(request):
+    """Fraud detection page with alerts and suspicious activity."""
+    now = timezone.now()
+
+    # Fraud alerts
+    fraud_alerts = []
+    inactive_users = User.objects.filter(is_active=False).count()
+    if inactive_users:
+        fraud_alerts.append({
+            'icon': 'fa-user-slash', 'severity': 'medium',
+            'title': 'Inactive Accounts',
+            'desc': f'{inactive_users} deactivated user account{"s" if inactive_users > 1 else ""}',
+        })
+    suspended_custs = Customer.objects.filter(status='suspended').count()
+    if suspended_custs:
+        fraud_alerts.append({
+            'icon': 'fa-ban', 'severity': 'high',
+            'title': 'Suspended Customers',
+            'desc': f'{suspended_custs} customer account{"s" if suspended_custs > 1 else ""} suspended',
+        })
+    unverified_biz = Business.objects.filter(is_verified=False).count()
+    if unverified_biz:
+        fraud_alerts.append({
+            'icon': 'fa-shield-halved', 'severity': 'low',
+            'title': 'Unverified Businesses',
+            'desc': f'{unverified_biz} business{"es" if unverified_biz > 1 else ""} pending verification',
+        })
+    urgent_ticket_count = SupportTicket.objects.filter(priority='urgent', status__in=['open', 'in_progress']).count()
+    if urgent_ticket_count:
+        fraud_alerts.append({
+            'icon': 'fa-exclamation-triangle', 'severity': 'high',
+            'title': 'Urgent Support Tickets',
+            'desc': f'{urgent_ticket_count} urgent ticket{"s" if urgent_ticket_count > 1 else ""} unresolved',
+        })
+    if not fraud_alerts:
+        fraud_alerts.append({
+            'icon': 'fa-check-circle', 'severity': 'low',
+            'title': 'All Clear',
+            'desc': 'No alerts at this time',
+        })
+
+    # Stats
+    total_alerts = len([a for a in fraud_alerts if a['title'] != 'All Clear'])
+    high_alerts = len([a for a in fraud_alerts if a['severity'] == 'high'])
+    medium_alerts = len([a for a in fraud_alerts if a['severity'] == 'medium'])
+
+    urgent_tickets = SupportTicket.objects.filter(
+        Q(priority='urgent') | Q(priority='high'),
+        status__in=['open', 'in_progress']
+    ).count()
+    unread_notifications = Notification.objects.filter(
+        receiver=request.user, is_read=False
+    ).count()
+
+    context = {
+        'fraud_alerts': fraud_alerts,
+        'total_alerts': total_alerts,
+        'high_alerts': high_alerts,
+        'medium_alerts': medium_alerts,
+        'inactive_users': inactive_users,
+        'suspended_custs': suspended_custs,
+        'unverified_biz': unverified_biz,
+        'urgent_tickets': urgent_tickets,
+        'unread_notifications': unread_notifications,
+        'admin_user': request.user,
+    }
+    return render(request, 'admin_fraud_detection.html', context)
 
 
 class PaidVsToPayView(APIView):
@@ -1029,6 +1313,7 @@ def admin_all_businesses_view(request):
         'pending_count': pending_count,
         'unverified_count': total_count - verified_count,
         'urgent_tickets': urgent_tickets,
+        'unread_notifications': Notification.objects.filter(receiver=request.user, is_read=False).count(),
         'admin_user': request.user,
     }
 
@@ -1126,6 +1411,7 @@ def admin_all_customers_view(request):
         'inactive_count': inactive_count,
         'suspended_count': suspended_count,
         'urgent_tickets': urgent_tickets,
+        'unread_notifications': Notification.objects.filter(receiver=request.user, is_read=False).count(),
         'admin_user': request.user,
     }
     return render(request, 'admin_all_customers.html', context)
@@ -1260,6 +1546,7 @@ def admin_analytics_view(request):
         'activities': activities,
         'fraud_alerts': fraud_alerts,
         'urgent_tickets': all_urgent_tickets,
+        'unread_notifications': Notification.objects.filter(receiver=request.user, is_read=False).count(),
         'admin_user': request.user,
     }
     return render(request, 'admin_analytics.html', context)
@@ -1302,6 +1589,7 @@ def admin_communication_view(request):
         'total_read': total_read,
         'total_unread': total_unread,
         'urgent_tickets': urgent_tickets,
+        'unread_notifications': Notification.objects.filter(receiver=request.user, is_read=False).count(),
         'admin_user': request.user,
     }
     return render(request, 'admin_communication.html', context)

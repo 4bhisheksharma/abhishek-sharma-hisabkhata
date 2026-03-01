@@ -1,0 +1,18 @@
+<header class="topbar">
+  <div class="topbar-title">
+    <h1>{{ page_title|default:"Admin Panel" }}</h1>
+    <p>{{ page_subtitle|default:"Monitor platform statistics and system health" }}</p>
+  </div>
+  <div class="topbar-right">
+    <button class="notification-btn" onclick="window.location.href='{% url "admin_communication" %}'">
+      <i class="fas fa-bell"></i>
+      {% if unread_notifications > 0 %}
+      <span class="notification-badge notification-dot"></span>
+      {% endif %}
+    </button>
+    <div class="admin-profile">
+      <div class="admin-avatar">{{ admin_user.full_name|truncatechars:1 }}</div>
+      <span>{{ admin_user.full_name|default:"Admin User" }}</span>
+    </div>
+  </div>
+</header>

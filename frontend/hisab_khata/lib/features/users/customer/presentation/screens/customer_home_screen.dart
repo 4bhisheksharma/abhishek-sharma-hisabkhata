@@ -16,6 +16,9 @@ import 'package:hisab_khata/shared/providers/locale_provider.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/config/route/app_router.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
+import '../../../../notification/presentation/bloc/notification_bloc.dart';
+import '../../../../notification/presentation/bloc/notification_event.dart';
+import '../../../../notification/presentation/bloc/notification_state.dart';
 import '../../../../analytics/presentation/screens/customer_analytics_screen.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
@@ -37,6 +40,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
     WidgetsBinding.instance.addObserver(this);
     _loadDashboard();
     _loadProfileAndSetLanguage();
+    context.read<NotificationBloc>().add(const GetUnreadCountEvent());
   }
 
   @override
@@ -273,30 +277,43 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
         if (state is CustomerDashboardLoaded) {
           final d = state.dashboard;
 
-          return SharedDashboard(
-            userName: d.fullName,
-            profileImageUrl: ImageUtils.getFullImageUrl(d.profilePicture),
-            toGive: d.toGive,
-            toTake: d.toTake,
-            loyaltyPoints: d.loyaltyPoints.toDouble(),
-            showLoyaltyPoints: true,
-            currentNavIndex: _currentNavIndex,
-            onNavTap: _onNavTap,
-            onNotificationTap: () async {
-              final result = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NotificationScreen(),
-                ),
+          return BlocBuilder<NotificationBloc, NotificationState>(
+            builder: (context, notifState) {
+              final hasUnread =
+                  notifState is UnreadCountLoaded && notifState.count > 0;
+              return SharedDashboard(
+                userName: d.fullName,
+                profileImageUrl: ImageUtils.getFullImageUrl(d.profilePicture),
+                toGive: d.toGive,
+                toTake: d.toTake,
+                loyaltyPoints: d.loyaltyPoints.toDouble(),
+                showLoyaltyPoints: true,
+                currentNavIndex: _currentNavIndex,
+                onNavTap: _onNavTap,
+                hasUnreadNotifications: hasUnread,
+                onNotificationTap: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const NotificationScreen(),
+                    ),
+                  );
+                  // Refresh unread count after returning from notifications
+                  if (mounted) {
+                    context.read<NotificationBloc>().add(
+                      const GetUnreadCountEvent(),
+                    );
+                  }
+                  // If a tab index was returned, navigate to it
+                  if (result != null && result is int && mounted) {
+                    setState(() {
+                      _currentNavIndex = result;
+                    });
+                  }
+                },
+                body: _buildBodyContent(state),
               );
-              // If a tab index was returned, navigate to it
-              if (result != null && result is int && mounted) {
-                setState(() {
-                  _currentNavIndex = result;
-                });
-              }
             },
-            body: _buildBodyContent(state),
           );
         }
 

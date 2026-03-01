@@ -25,6 +25,8 @@ from analytics.views import (
     admin_all_businesses_view, admin_all_customers_view,
     admin_analytics_view, admin_communication_view,
     admin_logout_view, admin_index_redirect,
+    admin_customers_view, admin_role_management_view,
+    admin_support_tickets_view, admin_fraud_detection_view,
 )
 
 urlpatterns = [
@@ -33,7 +35,11 @@ urlpatterns = [
     path('admin/dashboard/users/', admin_user_management_view, name='admin_user_management'),
     path('admin/dashboard/businesses/', admin_all_businesses_view, name='admin_all_businesses'),
     path('admin/dashboard/customers/', admin_all_customers_view, name='admin_all_customers'),
+    path('admin/dashboard/customers-mgmt/', admin_customers_view, name='admin_customers'),
+    path('admin/dashboard/roles/', admin_role_management_view, name='admin_roles'),
+    path('admin/dashboard/tickets/', admin_support_tickets_view, name='admin_support_tickets'),
     path('admin/dashboard/analytics/', admin_analytics_view, name='admin_analytics'),
+    path('admin/dashboard/fraud-detection/', admin_fraud_detection_view, name='admin_fraud_detection'),
     path('admin/dashboard/communication/', admin_communication_view, name='admin_communication'),
     path('admin/dashboard/logout/', admin_logout_view, name='admin_logout'),
     path('admin/', admin.site.urls),

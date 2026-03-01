@@ -11,6 +11,7 @@ class SharedDashboard extends StatelessWidget {
   final bool showLoyaltyPoints;
   final VoidCallback? onProfileTap;
   final VoidCallback? onNotificationTap;
+  final bool hasUnreadNotifications;
   final Widget body;
   final int currentNavIndex;
   final Function(int)? onNavTap;
@@ -25,6 +26,7 @@ class SharedDashboard extends StatelessWidget {
     this.showLoyaltyPoints = false,
     this.onProfileTap,
     this.onNotificationTap,
+    this.hasUnreadNotifications = false,
     required this.body,
     this.currentNavIndex = 0,
     this.onNavTap,
@@ -42,6 +44,7 @@ class SharedDashboard extends StatelessWidget {
         showLoyaltyPoints: showLoyaltyPoints,
         onProfileTap: onProfileTap,
         onNotificationTap: onNotificationTap,
+        hasUnreadNotifications: hasUnreadNotifications,
       ),
       body: body,
       floatingActionButton: FloatingActionButton(
