@@ -175,10 +175,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                     decoration: BoxDecoration(
                       color: _getStatusColor(connectionStatus),
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: AppTheme.primaryBlue,
-                        width: 2,
-                      ),
+                      border: Border.all(color: AppTheme.primaryBlue, width: 2),
                     ),
                   ),
                 ),
