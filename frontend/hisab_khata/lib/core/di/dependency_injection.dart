@@ -2,9 +2,14 @@ import 'package:hisab_khata/features/notification/domain/usecases/get_all_notifi
 import 'package:http/http.dart' as http;
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/transaction/data/datasources/transaction_remote_data_source.dart';
+import '../../features/transaction/data/datasources/esewa_remote_data_source.dart';
 import '../../features/transaction/data/repositories_imp/transaction_repository_impl.dart';
+import '../../features/transaction/data/repositories_imp/esewa_repository_impl.dart';
 import '../../features/transaction/domain/repositories/transaction_repository.dart';
+import '../../features/transaction/domain/repositories/esewa_repository.dart';
 import '../../features/transaction/presentation/bloc/connected_user_details_bloc.dart';
+import '../../features/transaction/presentation/bloc/esewa_account_bloc.dart';
+import '../../features/transaction/presentation/bloc/esewa_payment_bloc.dart';
 import '../../features/auth/data/repositories_imp/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
@@ -90,6 +95,7 @@ class DependencyInjection {
   _connectionRequestRemoteDataSource;
   late final NotificationRemoteDataSource _notificationRemoteDataSource;
   late final TransactionRemoteDataSource _transactionRemoteDataSource;
+  late final EsewaRemoteDataSource _esewaRemoteDataSource;
   late final TicketRemoteDataSource _ticketRemoteDataSource;
   late final AnalyticsRemoteDataSource _analyticsRemoteDataSource;
 
@@ -100,6 +106,7 @@ class DependencyInjection {
   late final ConnectionRequestRepository _connectionRequestRepository;
   late final NotificationRepository _notificationRepository;
   late final TransactionRepository _transactionRepository;
+  late final EsewaRepository _esewaRepository;
   late final TicketRepository _ticketRepository;
   late final AnalyticsRepository _analyticsRepository;
 
@@ -206,6 +213,7 @@ class DependencyInjection {
     _transactionRemoteDataSource = TransactionRemoteDataSource(
       client: _httpClient,
     );
+    _esewaRemoteDataSource = EsewaRemoteDataSource(client: _httpClient);
     _ticketRemoteDataSource = TicketRemoteDataSourceImpl(client: _httpClient);
     _analyticsRemoteDataSource = AnalyticsRemoteDataSource(client: _httpClient);
 
@@ -227,6 +235,9 @@ class DependencyInjection {
     );
     _transactionRepository = TransactionRepositoryImpl(
       remoteDataSource: _transactionRemoteDataSource,
+    );
+    _esewaRepository = EsewaRepositoryImpl(
+      remoteDataSource: _esewaRemoteDataSource,
     );
     _ticketRepository = TicketRepositoryImpl(
       remoteDataSource: _ticketRemoteDataSource,
@@ -425,5 +436,15 @@ class DependencyInjection {
   /// Create a new ConnectedUserDetailsBloc instance
   ConnectedUserDetailsBloc createConnectedUserDetailsBloc() {
     return ConnectedUserDetailsBloc(repository: _transactionRepository);
+  }
+
+  /// Create a new EsewaAccountBloc instance (for business eSewa account management)
+  EsewaAccountBloc createEsewaAccountBloc() {
+    return EsewaAccountBloc(repository: _esewaRepository);
+  }
+
+  /// Create a new EsewaPaymentBloc instance (for customer eSewa payments)
+  EsewaPaymentBloc createEsewaPaymentBloc() {
+    return EsewaPaymentBloc(repository: _esewaRepository);
   }
 }

@@ -23,6 +23,9 @@ import 'package:hisab_khata/features/raise-ticket/presentation/screens/create_ti
 import 'package:hisab_khata/features/raise-ticket/presentation/screens/ticket_detail_screen.dart';
 import 'package:hisab_khata/features/request/presentation/screens/connection_requests_screen.dart';
 import 'package:hisab_khata/features/notification/presentation/screens/notification_screen.dart';
+import 'package:hisab_khata/features/transaction/presentation/bloc/esewa_account_bloc.dart';
+import 'package:hisab_khata/features/transaction/presentation/bloc/esewa_account_event.dart';
+import 'package:hisab_khata/features/transaction/presentation/screens/business_esewa_account_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Arguments for connected user details page navigation
@@ -123,6 +126,16 @@ class AppRouter {
 
       case AppRoutes.notifications:
         return MaterialPageRoute(builder: (_) => const NotificationScreen());
+
+      case AppRoutes.esewaAccount:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<EsewaAccountBloc>(
+            create: (_) =>
+                DependencyInjection().createEsewaAccountBloc()
+                  ..add(const LoadEsewaAccount()),
+            child: const BusinessEsewaAccountScreen(),
+          ),
+        );
 
       default:
         return MaterialPageRoute(

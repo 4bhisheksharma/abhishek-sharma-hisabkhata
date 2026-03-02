@@ -170,6 +170,16 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                         ),
                         const SizedBox(height: 12),
                         ProfileMenuItem(
+                          icon: Icons.account_balance_wallet_outlined,
+                          iconColor: const Color(0xFF60BB46),
+                          iconBgColor: const Color(0xFFE8F5E9),
+                          title: 'eSewa Account',
+                          onTap: () {
+                            Navigator.pushNamed(context, '/esewa-account');
+                          },
+                        ),
+                        const SizedBox(height: 12),
+                        ProfileMenuItem(
                           icon: Icons.security_outlined,
                           iconColor: const Color(0xFF00D9B5),
                           iconBgColor: const Color(0xFFE0F7F4),

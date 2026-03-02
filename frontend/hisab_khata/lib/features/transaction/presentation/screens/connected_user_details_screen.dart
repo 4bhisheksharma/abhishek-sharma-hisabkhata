@@ -8,15 +8,19 @@ import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
+import 'package:hisab_khata/core/di/dependency_injection.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
+import '../bloc/esewa_payment_bloc.dart';
+import '../bloc/esewa_payment_event.dart';
+import '../bloc/esewa_payment_state.dart';
 import '../widgets/profile_card_with_badge.dart';
 import '../widgets/financial_summary_card.dart';
 import '../widgets/payment_ratio_bar.dart';
 import '../widgets/transactions_list.dart';
+import '../widgets/pay_due_with_esewa_dialog.dart';
 import '../../domain/entities/connected_user_details.dart';
-import '../../domain/entities/transaction.dart';
 import 'add_transaction_screen.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -369,26 +373,37 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       return;
     }
 
-    // Show simple pay due dialog
+    final detailsBloc = context.read<ConnectedUserDetailsBloc>();
+
+    // Show eSewa-enabled pay due dialog
     showDialog(
       context: context,
-      builder: (dialogContext) => _PayDueDialog(
-        currentDue: userDetails!.toPay,
-        onPay: (amount, description) {
-          Navigator.pop(dialogContext);
-          context.read<ConnectedUserDetailsBloc>().add(
-            CreateTransaction(
+      builder: (dialogContext) => MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: detailsBloc),
+          BlocProvider<EsewaPaymentBloc>(
+            create: (_) =>
+                DependencyInjection().createEsewaPaymentBloc()
+                  ..add(CheckEsewaStatus(relationshipId)),
+          ),
+        ],
+        child: BlocBuilder<EsewaPaymentBloc, dynamic>(
+          builder: (ctx, esewaState) {
+            // Determine if business has eSewa linked
+            bool businessHasEsewa = false;
+            if (esewaState is EsewaStatusLoaded) {
+              businessHasEsewa =
+                  esewaState.esewaStatus.hasEsewa &&
+                  esewaState.esewaStatus.isActive;
+            }
+
+            return PayDueWithEsewaDialog(
+              currentDue: userDetails!.toPay,
               relationshipId: relationshipId,
-              amount: amount,
-              type: TransactionType.payment,
-              description: description,
-            ),
-          );
-          MySnackbar.showSuccess(
-            context,
-            'Payment of Rs. ${amount.toStringAsFixed(2)} recorded',
-          );
-        },
+              businessHasEsewa: businessHasEsewa,
+            );
+          },
+        ),
       ),
     );
   }

@@ -19,4 +19,5 @@ class AppRoutes {
   static const String chatbot = '/chatbot';
   static const String connectionRequests = '/connection-requests';
   static const String notifications = '/notifications';
+  static const String esewaAccount = '/esewa-account';
 }
