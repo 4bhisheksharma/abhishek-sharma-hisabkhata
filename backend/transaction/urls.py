@@ -1,6 +1,12 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import TransactionViewSet, ConnectedUserDetailsViewSet, FavoriteViewSet
+from .esewa_views import (
+    BusinessEsewaAccountView,
+    CheckBusinessEsewaStatusView,
+    InitiateEsewaPaymentView,
+    VerifyEsewaPaymentView,
+)
 
 router = DefaultRouter()
 router.register(r'transactions', TransactionViewSet, basename='transaction')
@@ -9,4 +15,10 @@ router.register(r'connection-details', ConnectedUserDetailsViewSet, basename='co
 
 urlpatterns = [
     path('', include(router.urls)),
+
+    # eSewa endpoints
+    path('esewa/account/', BusinessEsewaAccountView.as_view(), name='esewa-account'),
+    path('esewa/status/<int:relationship_id>/', CheckBusinessEsewaStatusView.as_view(), name='esewa-status'),
+    path('esewa/initiate/', InitiateEsewaPaymentView.as_view(), name='esewa-initiate'),
+    path('esewa/verify/', VerifyEsewaPaymentView.as_view(), name='esewa-verify'),
 ]

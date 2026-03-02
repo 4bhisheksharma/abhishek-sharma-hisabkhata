@@ -87,3 +87,7 @@ class Favorite(models.Model):
     
     def __str__(self):
         return f"{self.customer.user.full_name} favorites {self.business.business_name}"
+
+
+# Import eSewa models so they are discovered by Django
+from .esewa_models import BusinessEsewaAccount, EsewaPaymentRecord  # noqa: E402, F401
