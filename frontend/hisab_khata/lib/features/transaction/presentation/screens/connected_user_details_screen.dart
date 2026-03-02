@@ -14,13 +14,13 @@ import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
 import '../bloc/esewa_payment_bloc.dart';
 import '../bloc/esewa_payment_event.dart';
-import '../bloc/esewa_payment_state.dart';
 import '../widgets/profile_card_with_badge.dart';
 import '../widgets/financial_summary_card.dart';
 import '../widgets/payment_ratio_bar.dart';
 import '../widgets/transactions_list.dart';
 import '../widgets/pay_due_with_esewa_dialog.dart';
 import '../../domain/entities/connected_user_details.dart';
+import '../../domain/entities/transaction.dart';
 import 'add_transaction_screen.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -65,7 +65,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
             body: _buildBody(context, state),
             bottomNavigationBar: isCustomerView
                 ? _buildPayDueButton(context, state)
-                : null,
+                : _buildClearDueButton(context, state),
             floatingActionButton: !isCustomerView
                 ? _buildAddTransactionFab(context, state)
                 : null,
@@ -306,6 +306,325 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     );
   }
 
+  /// Bottom bar for business to clear a customer's due (cash payment)
+  Widget _buildClearDueButton(
+    BuildContext context,
+    ConnectedUserDetailsState state,
+  ) {
+    final isLoading = state is ConnectedUserDetailsTransactionCreating;
+
+    // Extract user details
+    ConnectedUserDetails? userDetails;
+    if (state is ConnectedUserDetailsLoaded) {
+      userDetails = state.userDetails;
+    } else if (state is ConnectedUserDetailsFavoriteToggling) {
+      userDetails = state.userDetails;
+    } else if (state is ConnectedUserDetailsTransactionCreating) {
+      userDetails = state.userDetails;
+    }
+
+    // Only show if there's pending due
+    final hasDue = userDetails != null && userDetails.toPay > 0;
+
+    if (!hasDue) return const SizedBox.shrink();
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: ElevatedButton.icon(
+            onPressed: isLoading
+                ? null
+                : () => _showClearDueDialog(context, state),
+            icon: isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : const Icon(Icons.payments_outlined, size: 20),
+            label: Text(
+              isLoading ? 'Processing...' : 'Clear Due (Cash)',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppTheme.primaryBlue,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(25),
+              ),
+              elevation: 0,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showClearDueDialog(
+    BuildContext context,
+    ConnectedUserDetailsState state,
+  ) {
+    ConnectedUserDetails? userDetails;
+
+    if (state is ConnectedUserDetailsLoaded) {
+      userDetails = state.userDetails;
+    } else if (state is ConnectedUserDetailsFavoriteToggling) {
+      userDetails = state.userDetails;
+    }
+
+    if (userDetails == null || userDetails.toPay <= 0) {
+      MySnackbar.showInfo(context, 'No pending dues to clear');
+      return;
+    }
+
+    final bloc = context.read<ConnectedUserDetailsBloc>();
+    final amountController = TextEditingController();
+    final noteController = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Form(
+              key: formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Header
+                  Row(
+                    children: [
+                      Container(
+                        width: 48,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: AppTheme.primaryBlue.withValues(alpha: 0.12),
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.payments_outlined,
+                          color: AppTheme.primaryBlue,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Clear Due (Cash)',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                              ),
+                            ),
+                            const SizedBox(height: 2),
+                            Text(
+                              'Pending: Rs. ${userDetails!.toPay.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: AppTheme.textSecondary,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Info pill
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppTheme.lightBlue,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          size: 18,
+                          color: AppTheme.primaryDark,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            'Record cash payment received from ${userDetails.displayName}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: AppTheme.textPrimary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // Amount field
+                  TextFormField(
+                    controller: amountController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(
+                        RegExp(r'^\d+\.?\d{0,2}'),
+                      ),
+                    ],
+                    decoration: InputDecoration(
+                      labelText: 'Amount Received',
+                      prefixText: 'Rs. ',
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      suffixIcon: TextButton(
+                        onPressed: () {
+                          amountController.text = userDetails!.toPay
+                              .toStringAsFixed(2);
+                        },
+                        child: const Text('Full'),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return AppLocalizations.of(context)!.pleaseEnterAmount;
+                      }
+                      final amount = double.tryParse(value);
+                      if (amount == null || amount <= 0) {
+                        return AppLocalizations.of(
+                          context,
+                        )!.pleaseEnterValidAmount;
+                      }
+                      if (amount > userDetails!.toPay) {
+                        return AppLocalizations.of(
+                          context,
+                        )!.amountCannotExceedDueAmount;
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 14),
+
+                  // Note field
+                  TextFormField(
+                    controller: noteController,
+                    decoration: InputDecoration(
+                      labelText: 'Note (optional)',
+                      hintText: 'e.g. Cash received',
+                      filled: true,
+                      fillColor: Colors.grey[50],
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey[300]!),
+                      ),
+                    ),
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Action buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(dialogContext),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Text(AppLocalizations.of(context)!.cancel),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            if (!formKey.currentState!.validate()) return;
+                            final amount = double.parse(amountController.text);
+                            final note = noteController.text.trim();
+
+                            bloc.add(
+                              CreateTransaction(
+                                relationshipId: relationshipId,
+                                amount: amount,
+                                type: TransactionType.payment,
+                                description: note.isEmpty
+                                    ? 'Cash payment received'
+                                    : note,
+                              ),
+                            );
+                            Navigator.pop(dialogContext);
+                          },
+                          icon: const Icon(
+                            Icons.check_circle_outline,
+                            size: 18,
+                          ),
+                          label: const Text(
+                            'Clear Due',
+                            style: TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppTheme.primaryBlue,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildAddTransactionFab(
     BuildContext context,
     ConnectedUserDetailsState state,
@@ -375,7 +694,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
 
     final detailsBloc = context.read<ConnectedUserDetailsBloc>();
 
-    // Show eSewa-enabled pay due dialog
+    // Show eSewa-enabled pay due dialog — status tracking is internal
     showDialog(
       context: context,
       builder: (dialogContext) => MultiBlocProvider(
@@ -387,22 +706,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   ..add(CheckEsewaStatus(relationshipId)),
           ),
         ],
-        child: BlocBuilder<EsewaPaymentBloc, dynamic>(
-          builder: (ctx, esewaState) {
-            // Determine if business has eSewa linked
-            bool businessHasEsewa = false;
-            if (esewaState is EsewaStatusLoaded) {
-              businessHasEsewa =
-                  esewaState.esewaStatus.hasEsewa &&
-                  esewaState.esewaStatus.isActive;
-            }
-
-            return PayDueWithEsewaDialog(
-              currentDue: userDetails!.toPay,
-              relationshipId: relationshipId,
-              businessHasEsewa: businessHasEsewa,
-            );
-          },
+        child: PayDueWithEsewaDialog(
+          currentDue: userDetails!.toPay,
+          relationshipId: relationshipId,
         ),
       ),
     );
@@ -600,187 +906,6 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-}
-
-/// Simple dialog for customer to pay dues
-class _PayDueDialog extends StatefulWidget {
-  final double currentDue;
-  final Function(double amount, String? description) onPay;
-
-  const _PayDueDialog({required this.currentDue, required this.onPay});
-
-  @override
-  State<_PayDueDialog> createState() => _PayDueDialogState();
-}
-
-class _PayDueDialogState extends State<_PayDueDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final _amountController = TextEditingController();
-  final _noteController = TextEditingController();
-
-  @override
-  void dispose() {
-    _amountController.dispose();
-    _noteController.dispose();
-    super.dispose();
-  }
-
-  void _payFullAmount() {
-    _amountController.text = widget.currentDue.toStringAsFixed(2);
-  }
-
-  void _submit() {
-    if (_formKey.currentState!.validate()) {
-      final amount = double.parse(_amountController.text);
-      final note = _noteController.text.trim();
-      widget.onPay(amount, note.isEmpty ? null : note);
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Header
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.primary.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      Icons.payment,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Pay Due',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Current due: Rs. ${widget.currentDue.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: AppTheme.textSecondary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Amount field
-              TextFormField(
-                controller: _amountController,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
-                ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-                ],
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                  prefixText: 'Rs. ',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  suffixIcon: TextButton(
-                    onPressed: _payFullAmount,
-                    child: Text(AppLocalizations.of(context)!.payFull),
-                  ),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return AppLocalizations.of(context)!.pleaseEnterAmount;
-                  }
-                  final amount = double.tryParse(value);
-                  if (amount == null || amount <= 0) {
-                    return AppLocalizations.of(context)!.pleaseEnterValidAmount;
-                  }
-                  if (amount > widget.currentDue) {
-                    return AppLocalizations.of(
-                      context,
-                    )!.amountCannotExceedDueAmount;
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-
-              // Note field (optional)
-              TextFormField(
-                controller: _noteController,
-                decoration: InputDecoration(
-                  labelText: 'Note (optional)',
-                  hintText: AppLocalizations.of(context)!.transactionNoteHint,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                maxLines: 2,
-              ),
-              const SizedBox(height: 24),
-
-              // Actions
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.cancel),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text(AppLocalizations.of(context)!.payNow),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

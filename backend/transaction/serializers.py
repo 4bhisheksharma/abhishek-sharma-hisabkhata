@@ -69,11 +69,8 @@ class CreateTransactionSerializer(serializers.Serializer):
                 'transaction_type': 'Customers can only create payment transactions'
             })
         
-        # Businesses cannot create payment transactions (customers pay)
-        if is_business and transaction_type == 'payment':
-            raise serializers.ValidationError({
-                'transaction_type': 'Businesses cannot create payment transactions. Customers make payments.'
-            })
+        # Businesses can create payment transactions to record cash payments received
+        # (This allows businesses to clear customer dues when they receive cash)
         
         # Combine item_title and description
         item_title = data.get('item_title', '')

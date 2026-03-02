@@ -12,17 +12,15 @@ import '../bloc/esewa_payment_state.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
 
-/// Dialog for paying dues via eSewa
+/// Dialog for paying dues via eSewa — responsive, tracks status internally
 class PayDueWithEsewaDialog extends StatefulWidget {
   final double currentDue;
   final int relationshipId;
-  final bool businessHasEsewa;
 
   const PayDueWithEsewaDialog({
     super.key,
     required this.currentDue,
     required this.relationshipId,
-    required this.businessHasEsewa,
   });
 
   @override
@@ -33,6 +31,10 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
+
+  // Track eSewa status internally so it survives subsequent bloc states
+  bool _businessHasEsewa = false;
+  bool _statusLoaded = false;
 
   @override
   void dispose() {
@@ -47,15 +49,23 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isSmallScreen = screenHeight < 640;
+
     return BlocListener<EsewaPaymentBloc, EsewaPaymentState>(
       listener: (context, state) {
-        if (state is EsewaPaymentInitiated) {
-          // SDK params ready — launch eSewa SDK
+        // Persist eSewa status once loaded
+        if (state is EsewaStatusLoaded) {
+          setState(() {
+            _businessHasEsewa =
+                state.esewaStatus.hasEsewa && state.esewaStatus.isActive;
+            _statusLoaded = true;
+          });
+        } else if (state is EsewaPaymentInitiated) {
           _launchEsewaSdk(context, state);
         } else if (state is EsewaPaymentVerified) {
           Navigator.pop(context);
           MySnackbar.showSuccess(context, state.message);
-          // Refresh the connected user details
           context.read<ConnectedUserDetailsBloc>().add(
             RefreshConnectedUserDetails(widget.relationshipId),
           );
@@ -64,68 +74,62 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         }
       },
       child: Dialog(
+        insetPadding: EdgeInsets.symmetric(
+          horizontal: isSmallScreen ? 16 : 24,
+          vertical: isSmallScreen ? 16 : 24,
+        ),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         child: BlocBuilder<EsewaPaymentBloc, EsewaPaymentState>(
           builder: (context, esewaState) {
             final isProcessing =
                 esewaState is EsewaPaymentInitiating ||
                 esewaState is EsewaPaymentVerifying;
+            final isCheckingStatus = esewaState is EsewaStatusChecking;
 
-            return Padding(
-              padding: const EdgeInsets.all(24),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    // Header
-                    _buildHeader(context),
-                    const SizedBox(height: 24),
+            return ConstrainedBox(
+              constraints: BoxConstraints(
+                maxHeight: screenHeight * 0.85,
+                maxWidth: 400,
+              ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(isSmallScreen ? 18 : 24),
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildHeader(context),
+                        SizedBox(height: isSmallScreen ? 16 : 24),
+                        _buildAmountField(context),
+                        const SizedBox(height: 14),
+                        _buildNoteField(context),
+                        const SizedBox(height: 18),
 
-                    // Amount field
-                    _buildAmountField(context),
-                    const SizedBox(height: 16),
-
-                    // Note field
-                    _buildNoteField(context),
-                    const SizedBox(height: 20),
-
-                    // Show warning if business has no eSewa
-                    if (!widget.businessHasEsewa) ...[
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: Colors.orange[50],
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.orange[200]!),
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(
-                              Icons.info_outline,
-                              color: Colors.orange[700],
-                              size: 20,
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: Text(
-                                'This business has not linked their eSewa account yet. Please ask them to set it up.',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.orange[900],
+                        // Status / warning section
+                        if (isCheckingStatus)
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 18),
+                            child: Center(
+                              child: SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
+                          )
+                        else if (_statusLoaded && !_businessHasEsewa) ...[
+                          _buildWarningBanner(),
+                          const SizedBox(height: 18),
+                        ],
 
-                    // Action buttons
-                    _buildActions(context, isProcessing),
-                  ],
+                        _buildActions(context, isProcessing, isCheckingStatus),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             );
@@ -139,28 +143,48 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(12),
+          width: 48,
+          height: 48,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(12),
+            color: const Color(0xFF60BB46).withValues(alpha: 0.12),
+            borderRadius: BorderRadius.circular(14),
           ),
-          child: Icon(
-            Icons.payment,
-            color: Theme.of(context).colorScheme.primary,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(14),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Image.asset(
+                'assets/icons/esewa-icon.png',
+                fit: BoxFit.contain,
+                errorBuilder: (_, __, ___) => const Icon(
+                  Icons.account_balance_wallet,
+                  color: Color(0xFF60BB46),
+                ),
+              ),
+            ),
           ),
         ),
-        const SizedBox(width: 16),
+        const SizedBox(width: 14),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Pay Due',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                'Pay Due via eSewa',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  letterSpacing: -0.3,
+                ),
               ),
+              const SizedBox(height: 2),
               Text(
-                'Current due: Rs. ${widget.currentDue.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
+                'Due: Rs. ${widget.currentDue.toStringAsFixed(2)}',
+                style: TextStyle(
+                  fontSize: 13,
+                  color: AppTheme.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),
@@ -179,7 +203,13 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
       decoration: InputDecoration(
         labelText: 'Amount',
         prefixText: 'Rs. ',
+        filled: true,
+        fillColor: Colors.grey[50],
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
         suffixIcon: TextButton(
           onPressed: _payFullAmount,
           child: Text(AppLocalizations.of(context)!.payFull),
@@ -207,13 +237,48 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
       decoration: InputDecoration(
         labelText: 'Note (optional)',
         hintText: AppLocalizations.of(context)!.transactionNoteHint,
+        filled: true,
+        fillColor: Colors.grey[50],
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(color: Colors.grey[300]!),
+        ),
       ),
       maxLines: 2,
     );
   }
 
-  Widget _buildActions(BuildContext context, bool isProcessing) {
+  Widget _buildWarningBanner() {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.orange[50],
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.orange[200]!),
+      ),
+      child: Row(
+        children: [
+          Icon(Icons.info_outline, color: Colors.orange[700], size: 20),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Text(
+              'This business has not linked their eSewa account yet. Please ask them to set it up.',
+              style: TextStyle(fontSize: 12, color: Colors.orange[900]),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActions(
+    BuildContext context,
+    bool isProcessing,
+    bool isCheckingStatus,
+  ) {
+    final canPay = _statusLoaded && _businessHasEsewa && !isProcessing;
+
     return Row(
       children: [
         Expanded(
@@ -230,10 +295,30 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         ),
         const SizedBox(width: 12),
         Expanded(
-          child: ElevatedButton(
-            onPressed: (isProcessing || !widget.businessHasEsewa)
-                ? null
-                : _submit,
+          flex: 2,
+          child: ElevatedButton.icon(
+            onPressed: canPay ? _submit : null,
+            icon: isProcessing
+                ? const SizedBox(
+                    width: 18,
+                    height: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
+                  )
+                : SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: Image.asset(
+                      'assets/images/esewa-icon.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+            label: Text(
+              isProcessing ? 'Processing...' : 'Pay with eSewa',
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF60BB46),
               foregroundColor: Colors.white,
@@ -243,16 +328,6 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               ),
               disabledBackgroundColor: Colors.grey[300],
             ),
-            child: isProcessing
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Text('Pay with eSewa'),
           ),
         ),
       ],
@@ -265,7 +340,6 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     final amount = double.parse(_amountController.text);
     final note = _noteController.text.trim();
 
-    // Initiate eSewa payment via BLoC
     context.read<EsewaPaymentBloc>().add(
       InitiateEsewaPayment(
         relationshipId: widget.relationshipId,
@@ -284,7 +358,6 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
       productName: paymentData.productName,
       amount: paymentData.amount,
       onSuccess: (EsewaPaymentSuccessResult result) {
-        // Verify with backend
         context.read<EsewaPaymentBloc>().add(
           VerifyEsewaPayment(
             paymentRecordId: paymentData.paymentRecordId,

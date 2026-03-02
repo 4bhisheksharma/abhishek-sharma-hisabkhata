@@ -348,6 +348,7 @@ class VerifyEsewaPaymentView(APIView):
                         business_user=business_user,
                         amount=-abs(payment_record.amount),
                         relationship_id=relationship.relationship_id,
+                        via_esewa=True,
                     )
                 except Exception as e:
                     logger.error(f"eSewa payment notification error: {e}")
