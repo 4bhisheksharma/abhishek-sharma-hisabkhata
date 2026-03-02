@@ -10,17 +10,17 @@ plugins {
 
 android {
     namespace = "com.example.hisab_khata"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 35
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -28,8 +28,8 @@ android {
         applicationId = "com.example.hisab_khata"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23  // Updated from flutter.minSdkVersion to 23 for Firebase compatibility
-        targetSdk = flutter.targetSdkVersion
+        minSdk = 26  // Updated from flutter.minSdkVersion to 23 for Firebase compatibility
+        targetSdk = 35
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
