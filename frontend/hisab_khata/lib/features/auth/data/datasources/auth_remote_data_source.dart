@@ -36,6 +36,9 @@ abstract class AuthRemoteDataSource {
     required String newPassword,
     required String confirmPassword,
   });
+
+  /// Logout - blacklist refresh token on server
+  Future<void> logout({required String refreshToken});
 }
 
 /// Implementation of AuthRemoteDataSource using BaseRemoteDataSource
@@ -136,5 +139,14 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
     );
 
     return response as Map<String, dynamic>;
+  }
+
+  @override
+  Future<void> logout({required String refreshToken}) async {
+    await post(
+      'auth/${ApiEndpoints.logout}',
+      body: {'refresh': refreshToken},
+      includeAuth: true,
+    );
   }
 }

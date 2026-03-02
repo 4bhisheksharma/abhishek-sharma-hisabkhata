@@ -97,6 +97,14 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<bool> logout() async {
+    try {
+      final refreshToken = await StorageService.getRefreshToken();
+      if (refreshToken != null && refreshToken.isNotEmpty) {
+        await remoteDataSource.logout(refreshToken: refreshToken);
+      }
+    } catch (_) {
+      // Even if the API call fails, we still clear local session
+    }
     await StorageService.clearSession();
     return true;
   }

@@ -154,7 +154,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
             child: Padding(
               padding: const EdgeInsets.all(8),
               child: Image.asset(
-                'assets/icons/esewa-icon.png',
+                'assets/images/esewa-icon.png',
                 fit: BoxFit.contain,
               ),
             ),

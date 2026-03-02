@@ -210,6 +210,45 @@ class ChangePasswordView(APIView):
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
+class LogoutView(APIView):
+    """API endpoint for logging out a user by blacklisting their refresh token."""
+    permission_classes = [IsAuthenticated]
+    
+    def post(self, request):
+        try:
+            refresh_token = request.data.get('refresh')
+            if not refresh_token:
+                return Response({
+                    'status': 400,
+                    'message': 'Refresh token is required',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+            
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            
+            # Clear FCM token
+            user = request.user
+            user.fcm_token = None
+            user.save()
+            
+            logger.info(f"User {user.email} logged out successfully")
+            
+            return Response({
+                'status': 200,
+                'message': 'Logout successful',
+                'data': None
+            }, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            logger.error(f"Logout error: {str(e)}")
+            return Response({
+                'status': 400,
+                'message': 'Invalid token or already blacklisted',
+                'data': None
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+
 class FCMTokenView(APIView):
     """
     Handle FCM token operations for push notifications

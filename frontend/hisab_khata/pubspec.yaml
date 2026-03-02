@@ -36,6 +36,7 @@ dependencies:
   flutter_map: ^8.2.2
   latlong2: ^0.9.1
   url_launcher: ^6.2.5
+  geolocator: ^13.0.2
   esewa_flutter_sdk:
     path: ./esewa_flutter_sdk
 
@@ -54,7 +55,6 @@ flutter:
 
   assets:
     - assets/images/
-    - assets/icons/
     - .env
 
   # fonts:

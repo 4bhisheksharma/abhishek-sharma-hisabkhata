@@ -115,13 +115,20 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             iconBgColor: const Color(0xFFFFEBEE),
                             title: 'Businesses Near Me',
                             subtitle: 'View businesses on map',
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const NearbyBusinessesMapScreen(),
-                              ),
-                            ),
+                            onTap: () async {
+                              await Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      const NearbyBusinessesMapScreen(),
+                                ),
+                              );
+                              if (mounted) {
+                                context.read<CustomerBloc>().add(
+                                  const LoadCustomerProfile(),
+                                );
+                              }
+                            },
                           ),
                         ],
                       ),

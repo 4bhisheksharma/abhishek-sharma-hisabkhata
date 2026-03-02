@@ -43,6 +43,23 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          TextButton(
+            onPressed: () {
+              context.read<NotificationBloc>().add(
+                const MarkAllNotificationsAsReadEvent(),
+              );
+            },
+            child: const Text(
+              'Mark all seen',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
       body: Container(
         width: double.infinity,

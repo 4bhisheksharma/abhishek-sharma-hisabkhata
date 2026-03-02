@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/bloc/chat_provider.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/screens/chat_detail_screen.dart';
@@ -10,6 +9,7 @@ import 'package:hisab_khata/features/request/presentation/bloc/connection_reques
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
 import 'package:hisab_khata/core/di/dependency_injection.dart';
+import 'package:hisab_khata/shared/screens/directions_map_screen.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
@@ -727,21 +727,22 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     return IconButton(
       icon: const Icon(Icons.directions),
       tooltip: 'Get Directions',
-      onPressed: () async {
+      onPressed: () {
         final lat = userDetails.latitude;
         final lng = userDetails.longitude;
         if (lat == null || lng == null) return;
 
-        final uri = Uri.parse(
-          'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng',
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => DirectionsMapScreen(
+              destinationLat: lat,
+              destinationLng: lng,
+              destinationName: userDetails.displayName,
+              destinationAddress: userDetails.address,
+            ),
+          ),
         );
-        if (await canLaunchUrl(uri)) {
-          await launchUrl(uri, mode: LaunchMode.externalApplication);
-        } else {
-          if (context.mounted) {
-            MySnackbar.showError(context, 'Could not open Maps');
-          }
-        }
       },
     );
   }

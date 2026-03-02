@@ -6,6 +6,7 @@ class ApiEndpoints {
   static const String resendOtp = "resend-otp/";
   static const String refreshToken = "token/refresh/";
   static const String changePassword = "change-password/";
+  static const String logout = "logout/";
 
   // Customer endpoints
   static const String customerDashboard = "customer/dashboard/";

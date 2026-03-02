@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from hisabauth.views import RegisterView, LoginView, ChangePasswordView, FCMTokenView, FCMTestView
+from hisabauth.views import RegisterView, LoginView, ChangePasswordView, FCMTokenView, FCMTestView, LogoutView
 from otp_verification.views import VerifyOTPView, ResendOTPView
 from analytics.views import (
     admin_dashboard_view, admin_user_management_view,
@@ -50,6 +50,7 @@ urlpatterns = [
         path('auth/verify-otp/', VerifyOTPView.as_view(), name='verify-otp'),
         path('auth/resend-otp/', ResendOTPView.as_view(), name='resend-otp'),
         path('auth/login/', LoginView.as_view(), name='login'),
+        path('auth/logout/', LogoutView.as_view(), name='logout'),
         path('auth/change-password/', ChangePasswordView.as_view(), name='change-password'),
         path('auth/fcm-token/', FCMTokenView.as_view(), name='fcm-token'),
         path('auth/fcm-test/', FCMTestView.as_view(), name='fcm-test'),
