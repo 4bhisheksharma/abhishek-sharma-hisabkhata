@@ -11,6 +11,18 @@ class Business(models.Model):
         related_name='business_profile'
     )
     business_name = models.CharField(max_length=255)
+    latitude = models.DecimalField(
+        max_digits=10, decimal_places=7, null=True, blank=True,
+        help_text='Latitude of business location'
+    )
+    longitude = models.DecimalField(
+        max_digits=10, decimal_places=7, null=True, blank=True,
+        help_text='Longitude of business location'
+    )
+    address = models.CharField(
+        max_length=500, null=True, blank=True,
+        help_text='Physical address of the business'
+    )
     is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
