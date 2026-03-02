@@ -3,6 +3,7 @@ import 'package:hisab_khata/features/users/customer/domain/usecases/get_customer
 import 'package:hisab_khata/features/users/customer/domain/usecases/get_customer_profile.dart';
 import 'package:hisab_khata/features/users/customer/domain/usecases/update_customer_profile.dart';
 import 'package:hisab_khata/features/users/customer/domain/usecases/get_recent_businesses.dart';
+import 'package:hisab_khata/features/users/customer/domain/usecases/get_nearby_businesses.dart';
 import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
 import 'customer_event.dart';
 import 'customer_state.dart';
@@ -13,17 +14,20 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
   final GetCustomerProfile getCustomerProfile;
   final UpdateCustomerProfile updateCustomerProfile;
   final GetRecentBusinesses getRecentBusinesses;
+  final GetNearbyBusinesses getNearbyBusinesses;
 
   CustomerBloc({
     required this.getCustomerDashboard,
     required this.getCustomerProfile,
     required this.updateCustomerProfile,
     required this.getRecentBusinesses,
+    required this.getNearbyBusinesses,
   }) : super(const CustomerInitial()) {
     on<LoadCustomerDashboard>(_onLoadDashboard);
     on<LoadCustomerProfile>(_onLoadProfile);
     on<UpdateCustomerProfileEvent>(_onUpdateProfile);
     on<LoadRecentBusinesses>(_onLoadRecentBusinesses);
+    on<LoadNearbyBusinesses>(_onLoadNearbyBusinesses);
   }
 
   Future<void> _onLoadDashboard(
@@ -104,5 +108,18 @@ class CustomerBloc extends Bloc<CustomerEvent, CustomerState> {
         ),
       );
     }
+  }
+
+  Future<void> _onLoadNearbyBusinesses(
+    LoadNearbyBusinesses event,
+    Emitter<CustomerState> emit,
+  ) async {
+    emit(const CustomerLoading());
+    final result = await getNearbyBusinesses();
+
+    result.fold(
+      (error) => emit(CustomerError(error)),
+      (businesses) => emit(NearbyBusinessesLoaded(businesses)),
+    );
   }
 }

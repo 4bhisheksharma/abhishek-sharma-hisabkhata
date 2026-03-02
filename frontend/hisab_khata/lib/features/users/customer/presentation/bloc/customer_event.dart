@@ -48,3 +48,8 @@ class LoadRecentBusinesses extends CustomerEvent {
   @override
   List<Object?> get props => [limit];
 }
+
+/// Event to load nearby businesses (with location)
+class LoadNearbyBusinesses extends CustomerEvent {
+  const LoadNearbyBusinesses();
+}

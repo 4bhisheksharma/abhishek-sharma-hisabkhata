@@ -4,6 +4,7 @@ import 'package:hisab_khata/features/users/customer/domain/entities/customer_das
 import 'package:hisab_khata/features/users/customer/domain/entities/customer_profile_entity.dart';
 import 'package:hisab_khata/features/users/customer/domain/repositories/customer_repository.dart';
 import 'package:hisab_khata/features/users/customer/data/datasources/customer_remote_data_source.dart';
+import 'package:hisab_khata/features/users/customer/data/models/nearby_business_model.dart';
 import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
 import 'package:hisab_khata/core/errors/exceptions.dart';
 
@@ -78,6 +79,19 @@ class CustomerRepositoryImpl implements CustomerRepository {
       return Left(e.exceptionMessage);
     } catch (e) {
       return Left('Failed to fetch recent businesses: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, List<NearbyBusinessModel>>>
+  getNearbyBusinesses() async {
+    try {
+      final businesses = await remoteDataSource.getNearbyBusinesses();
+      return Right(businesses);
+    } on ServerException catch (e) {
+      return Left(e.exceptionMessage);
+    } catch (e) {
+      return Left('Failed to fetch nearby businesses: ${e.toString()}');
     }
   }
 }

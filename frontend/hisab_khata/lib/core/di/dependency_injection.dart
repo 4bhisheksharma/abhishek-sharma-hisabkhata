@@ -28,6 +28,7 @@ import '../../features/users/customer/domain/usecases/get_customer_dashboard.dar
 import '../../features/users/customer/domain/usecases/get_customer_profile.dart';
 import '../../features/users/customer/domain/usecases/update_customer_profile.dart';
 import '../../features/users/customer/domain/usecases/get_recent_businesses.dart';
+import '../../features/users/customer/domain/usecases/get_nearby_businesses.dart';
 import '../../features/users/customer/presentation/bloc/customer_bloc.dart';
 import '../../features/users/business/data/datasources/business_remote_data_source.dart';
 import '../../features/users/business/data/repositories_impl/business_repository_impl.dart';
@@ -35,6 +36,7 @@ import '../../features/users/business/domain/repositories/business_repository.da
 import '../../features/users/business/domain/usecases/get_business_dashboard.dart';
 import '../../features/users/business/domain/usecases/get_business_profile.dart';
 import '../../features/users/business/domain/usecases/update_business_profile.dart';
+import '../../features/users/business/domain/usecases/update_business_location.dart';
 import '../../features/users/business/domain/usecases/get_recent_customers.dart';
 import '../../features/users/business/domain/usecases/submit_verification_request.dart';
 import '../../features/users/business/domain/usecases/get_verification_status.dart';
@@ -125,11 +127,13 @@ class DependencyInjection {
   late final GetCustomerProfile _getCustomerProfile;
   late final UpdateCustomerProfile _updateCustomerProfile;
   late final GetRecentBusinesses _getRecentBusinesses;
+  late final GetNearbyBusinesses _getNearbyBusinesses;
 
   // Use Cases - Business
   late final GetBusinessDashboard _getBusinessDashboard;
   late final GetBusinessProfile _getBusinessProfile;
   late final UpdateBusinessProfile _updateBusinessProfile;
+  late final UpdateBusinessLocation _updateBusinessLocation;
   late final GetRecentCustomers _getRecentCustomers;
   late final SubmitVerificationRequest _submitVerificationRequest;
   late final GetVerificationStatus _getVerificationStatus;
@@ -261,11 +265,13 @@ class DependencyInjection {
     _getCustomerProfile = GetCustomerProfile(_customerRepository);
     _updateCustomerProfile = UpdateCustomerProfile(_customerRepository);
     _getRecentBusinesses = GetRecentBusinesses(_customerRepository);
+    _getNearbyBusinesses = GetNearbyBusinesses(_customerRepository);
 
     // Use Cases - Business
     _getBusinessDashboard = GetBusinessDashboard(_businessRepository);
     _getBusinessProfile = GetBusinessProfile(_businessRepository);
     _updateBusinessProfile = UpdateBusinessProfile(_businessRepository);
+    _updateBusinessLocation = UpdateBusinessLocation(_businessRepository);
     _getRecentCustomers = GetRecentCustomers(_businessRepository);
     _submitVerificationRequest = SubmitVerificationRequest(_businessRepository);
     _getVerificationStatus = GetVerificationStatus(_businessRepository);
@@ -357,11 +363,13 @@ class DependencyInjection {
       getCustomerProfile: _getCustomerProfile,
       updateCustomerProfile: _updateCustomerProfile,
       getRecentBusinesses: _getRecentBusinesses,
+      getNearbyBusinesses: _getNearbyBusinesses,
     );
     _businessBloc = BusinessBloc(
       getBusinessDashboard: _getBusinessDashboard,
       getBusinessProfile: _getBusinessProfile,
       updateBusinessProfile: _updateBusinessProfile,
+      updateBusinessLocation: _updateBusinessLocation,
       getRecentCustomers: _getRecentCustomers,
       submitVerificationRequest: _submitVerificationRequest,
       getVerificationStatus: _getVerificationStatus,

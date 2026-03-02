@@ -34,9 +34,10 @@ dependencies:
   web_socket_channel: ^3.0.0
   shimmer_animation: ^2.2.2+1
   flutter_map: ^8.2.2
+  latlong2: ^0.9.1
+  url_launcher: ^6.2.5
   esewa_flutter_sdk:
-    path: ./esewa_flutter_sdk 
-
+    path: ./esewa_flutter_sdk
 
   flutter_localizations:
     sdk: flutter

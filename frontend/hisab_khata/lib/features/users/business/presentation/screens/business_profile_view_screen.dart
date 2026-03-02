@@ -5,6 +5,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_b
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
 import 'package:hisab_khata/features/users/business/presentation/screens/business_verification_screen.dart';
+import 'package:hisab_khata/features/users/business/presentation/screens/business_location_picker_screen.dart';
 import 'package:hisab_khata/shared/utils/auth_utils.dart';
 import 'package:hisab_khata/shared/widgets/profile/profile_picture_avatar.dart';
 import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
@@ -118,6 +119,26 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             onTap: () => showDialog(
                               context: context,
                               builder: (_) => const ChangePasswordDialog(),
+                            ),
+                          ),
+                          _divider(),
+                          _buildMenuItem(
+                            icon: Icons.location_on_outlined,
+                            iconColor: const Color(0xFFE53935),
+                            iconBgColor: const Color(0xFFFFEBEE),
+                            title: 'Shop Location',
+                            subtitle: profile.latitude != null
+                                ? 'Location set'
+                                : 'Pin your shop',
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => BusinessLocationPickerScreen(
+                                  initialLatitude: profile.latitude,
+                                  initialLongitude: profile.longitude,
+                                  initialAddress: profile.address,
+                                ),
+                              ),
                             ),
                           ),
                         ],

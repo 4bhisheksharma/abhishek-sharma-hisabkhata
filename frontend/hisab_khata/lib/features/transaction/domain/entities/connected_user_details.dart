@@ -27,6 +27,11 @@ class ConnectedUserDetails extends Equatable {
   // Favorite (only for customers viewing businesses)
   final bool isFavorite;
 
+  // Location (for businesses)
+  final double? latitude;
+  final double? longitude;
+  final String? address;
+
   // Transaction history
   final List<Transaction> transactions;
 
@@ -45,6 +50,9 @@ class ConnectedUserDetails extends Equatable {
     required this.toPay,
     required this.totalPaid,
     this.isFavorite = false,
+    this.latitude,
+    this.longitude,
+    this.address,
     this.transactions = const [],
   });
 
@@ -94,6 +102,9 @@ class ConnectedUserDetails extends Equatable {
       toPay: toPay ?? this.toPay,
       totalPaid: totalPaid ?? this.totalPaid,
       isFavorite: isFavorite ?? this.isFavorite,
+      latitude: latitude,
+      longitude: longitude,
+      address: address,
       transactions: transactions ?? this.transactions,
     );
   }
@@ -114,6 +125,9 @@ class ConnectedUserDetails extends Equatable {
     toPay,
     totalPaid,
     isFavorite,
+    latitude,
+    longitude,
+    address,
     transactions,
   ];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/bloc/chat_provider.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/screens/chat_detail_screen.dart';
@@ -107,6 +108,11 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       centerTitle: true,
       actions: userDetails != null
           ? [
+              if (isCustomerView &&
+                  userDetails.isBusiness &&
+                  userDetails.latitude != null &&
+                  userDetails.longitude != null)
+                _buildDirectionsButton(context, userDetails),
               _buildChatButton(context, userDetails),
               _buildDeleteButton(context, userDetails),
             ]
@@ -711,6 +717,32 @@ class ConnectedUserDetailsPage extends StatelessWidget {
           relationshipId: relationshipId,
         ),
       ),
+    );
+  }
+
+  Widget _buildDirectionsButton(
+    BuildContext context,
+    ConnectedUserDetails userDetails,
+  ) {
+    return IconButton(
+      icon: const Icon(Icons.directions),
+      tooltip: 'Get Directions',
+      onPressed: () async {
+        final lat = userDetails.latitude;
+        final lng = userDetails.longitude;
+        if (lat == null || lng == null) return;
+
+        final uri = Uri.parse(
+          'https://www.google.com/maps/dir/?api=1&destination=$lat,$lng',
+        );
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        } else {
+          if (context.mounted) {
+            MySnackbar.showError(context, 'Could not open Maps');
+          }
+        }
+      },
     );
   }
 

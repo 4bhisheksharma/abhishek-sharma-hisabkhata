@@ -18,6 +18,9 @@ class ConnectedUserDetailsModel extends ConnectedUserDetails {
     required super.toPay,
     required super.totalPaid,
     super.isFavorite = false,
+    super.latitude,
+    super.longitude,
+    super.address,
     super.transactions = const [],
   });
 
@@ -44,6 +47,13 @@ class ConnectedUserDetailsModel extends ConnectedUserDetails {
       toPay: double.parse(json['to_pay'].toString()),
       totalPaid: double.parse(json['total_paid'].toString()),
       isFavorite: json['is_favorite'] as bool? ?? false,
+      latitude: json['latitude'] != null
+          ? double.tryParse(json['latitude'].toString())
+          : null,
+      longitude: json['longitude'] != null
+          ? double.tryParse(json['longitude'].toString())
+          : null,
+      address: json['address'] as String?,
       transactions: transactionsList,
     );
   }
@@ -64,6 +74,9 @@ class ConnectedUserDetailsModel extends ConnectedUserDetails {
       'to_pay': toPay.toString(),
       'total_paid': totalPaid.toString(),
       'is_favorite': isFavorite,
+      'latitude': latitude?.toString(),
+      'longitude': longitude?.toString(),
+      'address': address,
       'transactions': transactions
           .map((t) => TransactionModel.fromEntity(t).toJson())
           .toList(),
@@ -87,6 +100,9 @@ class ConnectedUserDetailsModel extends ConnectedUserDetails {
       toPay: entity.toPay,
       totalPaid: entity.totalPaid,
       isFavorite: entity.isFavorite,
+      latitude: entity.latitude,
+      longitude: entity.longitude,
+      address: entity.address,
       transactions: entity.transactions,
     );
   }

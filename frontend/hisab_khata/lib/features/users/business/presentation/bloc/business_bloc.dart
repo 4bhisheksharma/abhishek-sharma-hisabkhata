@@ -2,6 +2,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/get_business_dashboard.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/get_business_profile.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/update_business_profile.dart';
+import 'package:hisab_khata/features/users/business/domain/usecases/update_business_location.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/get_recent_customers.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/submit_verification_request.dart';
 import 'package:hisab_khata/features/users/business/domain/usecases/get_verification_status.dart';
@@ -14,6 +15,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
   final GetBusinessDashboard getBusinessDashboard;
   final GetBusinessProfile getBusinessProfile;
   final UpdateBusinessProfile updateBusinessProfile;
+  final UpdateBusinessLocation updateBusinessLocation;
   final GetRecentCustomers getRecentCustomers;
   final SubmitVerificationRequest submitVerificationRequest;
   final GetVerificationStatus getVerificationStatus;
@@ -22,6 +24,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     required this.getBusinessDashboard,
     required this.getBusinessProfile,
     required this.updateBusinessProfile,
+    required this.updateBusinessLocation,
     required this.getRecentCustomers,
     required this.submitVerificationRequest,
     required this.getVerificationStatus,
@@ -29,6 +32,7 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
     on<LoadBusinessDashboard>(_onLoadDashboard);
     on<LoadBusinessProfile>(_onLoadProfile);
     on<UpdateBusinessProfileEvent>(_onUpdateProfile);
+    on<UpdateBusinessLocationEvent>(_onUpdateLocation);
     on<LoadRecentCustomers>(_onLoadRecentCustomers);
     on<SubmitVerificationRequestEvent>(_onSubmitVerification);
     on<LoadVerificationStatus>(_onLoadVerificationStatus);
@@ -89,6 +93,26 @@ class BusinessBloc extends Bloc<BusinessEvent, BusinessState> {
       (error) => emit(BusinessError(error)),
       (profile) =>
           emit(BusinessProfileUpdated(profile, 'Profile updated successfully')),
+    );
+  }
+
+  Future<void> _onUpdateLocation(
+    UpdateBusinessLocationEvent event,
+    Emitter<BusinessState> emit,
+  ) async {
+    emit(const BusinessLoading());
+
+    final result = await updateBusinessLocation(
+      latitude: event.latitude,
+      longitude: event.longitude,
+      address: event.address,
+    );
+
+    result.fold(
+      (error) => emit(BusinessError(error)),
+      (profile) => emit(
+        BusinessProfileUpdated(profile, 'Location updated successfully'),
+      ),
     );
   }
 

@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:hisab_khata/features/users/customer/domain/entities/customer_dashboard_entity.dart';
 import 'package:hisab_khata/features/users/customer/domain/entities/customer_profile_entity.dart';
+import 'package:hisab_khata/features/users/customer/data/models/nearby_business_model.dart';
 import 'package:hisab_khata/features/users/shared/domain/entities/recent_connection_entity.dart';
 
 /// Base class for all customer states
@@ -59,4 +60,13 @@ class CustomerError extends CustomerState {
 
   @override
   List<Object?> get props => [message];
+}
+
+/// Nearby businesses loaded successfully
+class NearbyBusinessesLoaded extends CustomerState {
+  final List<NearbyBusinessModel> businesses;
+  const NearbyBusinessesLoaded(this.businesses);
+
+  @override
+  List<Object?> get props => [businesses];
 }

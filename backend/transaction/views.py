@@ -240,6 +240,9 @@ class ConnectedUserDetailsViewSet(viewsets.ViewSet):
                 'to_pay': relationship.pending_due,  # What customer owes to business
                 'total_paid': relationship.get_total_paid(),
                 'is_favorite': is_favorite,
+                'latitude': other_business.latitude,
+                'longitude': other_business.longitude,
+                'address': other_business.address,
             }
         else:
             # Current user is business, return customer details
@@ -261,6 +264,9 @@ class ConnectedUserDetailsViewSet(viewsets.ViewSet):
                 'to_pay': relationship.pending_due,  # What customer owes
                 'total_paid': relationship.get_total_paid(),
                 'is_favorite': False,  # Businesses don't have favorites
+                'latitude': None,
+                'longitude': None,
+                'address': None,
             }
         
         # Get transactions for this relationship

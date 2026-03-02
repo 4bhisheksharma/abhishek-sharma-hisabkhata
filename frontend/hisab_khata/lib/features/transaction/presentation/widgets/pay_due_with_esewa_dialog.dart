@@ -156,10 +156,6 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               child: Image.asset(
                 'assets/icons/esewa-icon.png',
                 fit: BoxFit.contain,
-                errorBuilder: (_, __, ___) => const Icon(
-                  Icons.account_balance_wallet,
-                  color: Color(0xFF60BB46),
-                ),
               ),
             ),
           ),
@@ -320,8 +316,8 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF60BB46),
-              foregroundColor: Colors.white,
+              backgroundColor: Colors.white,
+              foregroundColor: const Color(0xFF60BB46),
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),

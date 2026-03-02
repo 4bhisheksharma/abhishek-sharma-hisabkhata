@@ -111,6 +111,11 @@ class ConnectedUserDetailsSerializer(serializers.Serializer):
     # For customers viewing businesses
     is_favorite = serializers.BooleanField(default=False)
     
+    # Location (for businesses)
+    latitude = serializers.DecimalField(max_digits=10, decimal_places=7, allow_null=True, required=False)
+    longitude = serializers.DecimalField(max_digits=10, decimal_places=7, allow_null=True, required=False)
+    address = serializers.CharField(allow_null=True, required=False, allow_blank=True)
+    
     # Transactions
     transactions = TransactionSerializer(many=True)
 

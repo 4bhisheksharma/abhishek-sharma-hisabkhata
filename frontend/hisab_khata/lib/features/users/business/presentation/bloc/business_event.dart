@@ -72,3 +72,19 @@ class SubmitVerificationRequestEvent extends BusinessEvent {
 class LoadVerificationStatus extends BusinessEvent {
   const LoadVerificationStatus();
 }
+
+/// Event to update business location
+class UpdateBusinessLocationEvent extends BusinessEvent {
+  final double latitude;
+  final double longitude;
+  final String? address;
+
+  const UpdateBusinessLocationEvent({
+    required this.latitude,
+    required this.longitude,
+    this.address,
+  });
+
+  @override
+  List<Object?> get props => [latitude, longitude, address];
+}

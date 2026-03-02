@@ -4,6 +4,7 @@ import 'package:hisab_khata/core/constants/api_endpoints.dart';
 import 'package:hisab_khata/features/users/shared/data/models/recent_connection_model.dart';
 import '../models/customer_dashboard_model.dart';
 import '../models/customer_profile_model.dart';
+import '../models/nearby_business_model.dart';
 
 /// Abstract class defining customer remote data source contract
 abstract class CustomerRemoteDataSource {
@@ -23,6 +24,9 @@ abstract class CustomerRemoteDataSource {
 
   /// Get recently added businesses for this customer
   Future<List<RecentConnectionModel>> getRecentBusinesses({int limit = 10});
+
+  /// Get nearby businesses with location
+  Future<List<NearbyBusinessModel>> getNearbyBusinesses();
 }
 
 /// Implementation of CustomerRemoteDataSource using BaseRemoteDataSource
@@ -106,5 +110,16 @@ class CustomerRemoteDataSourceImpl extends BaseRemoteDataSource
     return data
         .map((json) => RecentConnectionModel.fromBusinessJson(json))
         .toList();
+  }
+
+  @override
+  Future<List<NearbyBusinessModel>> getNearbyBusinesses() async {
+    final response = await get(
+      ApiEndpoints.nearbyBusinesses,
+      includeAuth: true,
+    );
+
+    final List<dynamic> data = response['data'] ?? [];
+    return data.map((json) => NearbyBusinessModel.fromJson(json)).toList();
   }
 }
