@@ -8,9 +8,9 @@ from .models import Business, BusinessVerificationRequest
 from .serializers import (
     BusinessDashboardSerializer, BusinessProfileSerializer,
     RecentCustomerSerializer, BusinessVerificationRequestSerializer,
-    BusinessVerificationStatusSerializer
+    BusinessVerificationStatusSerializer, NearbyBusinessSerializer
 )
-from customer_dashboard.models import CustomerBusinessRelationship
+from customer_dashboard.models import Customer, CustomerBusinessRelationship
 from request.models import BusinessCustomerRequest
 
 
@@ -312,5 +312,116 @@ class BusinessVerificationStatusView(APIView):
             return Response({
                 'status': 500,
                 'message': f'Error retrieving verification status: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class BusinessLocationUpdateView(APIView):
+    """Update business location (latitude, longitude, address)"""
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        try:
+            business = Business.objects.get(user=request.user)
+            latitude = request.data.get('latitude')
+            longitude = request.data.get('longitude')
+            address = request.data.get('address', '')
+
+            if latitude is None or longitude is None:
+                return Response({
+                    'status': 400,
+                    'message': 'Both latitude and longitude are required',
+                    'data': None
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            business.latitude = latitude
+            business.longitude = longitude
+            if address:
+                business.address = address
+            business.save(update_fields=['latitude', 'longitude', 'address', 'updated_at'])
+
+            serializer = BusinessProfileSerializer(business)
+            return Response({
+                'status': 200,
+                'message': 'Business location updated successfully',
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
+
+        except Business.DoesNotExist:
+            return Response({
+                'status': 404,
+                'message': 'Business profile not found',
+                'data': None
+            }, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error updating location: {str(e)}',
+                'data': None
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class NearbyBusinessesView(APIView):
+    """Get all businesses that have set their location, with connection status for the current customer"""
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            # Get all businesses that have location set
+            businesses = Business.objects.filter(
+                latitude__isnull=False,
+                longitude__isnull=False
+            ).select_related('user')
+
+            # Check if current user is a customer
+            customer = None
+            try:
+                customer = Customer.objects.get(user=request.user)
+            except Customer.DoesNotExist:
+                pass
+
+            results = []
+            for biz in businesses:
+                data = NearbyBusinessSerializer(biz).data
+
+                if customer:
+                    # Check connection status
+                    relationship = CustomerBusinessRelationship.objects.filter(
+                        customer=customer, business=biz
+                    ).first()
+
+                    if relationship:
+                        data['is_connected'] = True
+                        data['relationship_id'] = relationship.relationship_id
+                        data['connection_status'] = 'connected'
+                    else:
+                        # Check for pending request
+                        pending_request = BusinessCustomerRequest.objects.filter(
+                            Q(sender=request.user, receiver=biz.user) |
+                            Q(sender=biz.user, receiver=request.user),
+                            status='pending'
+                        ).first()
+
+                        if pending_request:
+                            data['is_connected'] = False
+                            data['relationship_id'] = None
+                            data['connection_status'] = 'pending'
+                        else:
+                            data['is_connected'] = False
+                            data['relationship_id'] = None
+                            data['connection_status'] = None
+
+                results.append(data)
+
+            return Response({
+                'status': 200,
+                'message': 'Nearby businesses retrieved successfully',
+                'data': results
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({
+                'status': 500,
+                'message': f'Error retrieving nearby businesses: {str(e)}',
                 'data': None
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -20,6 +20,8 @@ class ApiEndpoints {
       "business/verification/request/";
   static const String businessVerificationStatus =
       "business/verification/status/";
+  static const String businessLocation = "business/location/";
+  static const String nearbyBusinesses = "business/nearby/";
 
   // Connection Request endpoints
   static const String searchUsers = "request/connections/search-users/";

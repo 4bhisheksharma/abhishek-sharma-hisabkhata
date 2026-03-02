@@ -5,6 +5,8 @@ from .views import (
     RecentCustomersView,
     BusinessVerificationRequestView,
     BusinessVerificationStatusView,
+    BusinessLocationUpdateView,
+    NearbyBusinessesView,
 )
 
 urlpatterns = [
@@ -13,6 +15,12 @@ urlpatterns = [
     
     # Profile - GET, PATCH
     path('profile/', BusinessProfileView.as_view(), name='business-profile'),
+    
+    # Location - PATCH
+    path('location/', BusinessLocationUpdateView.as_view(), name='business-location'),
+    
+    # Nearby Businesses - GET (for customers to see businesses on map)
+    path('nearby/', NearbyBusinessesView.as_view(), name='nearby-businesses'),
     
     # Recent Customers - GET (with optional ?limit=N query param)
     path('recent-customers/', RecentCustomersView.as_view(), name='business-recent-customers'),

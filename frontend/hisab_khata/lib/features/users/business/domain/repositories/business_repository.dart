@@ -14,6 +14,11 @@ abstract class BusinessRepository {
     String? profilePicturePath,
     String? preferredLanguage,
   });
+  Future<Either<String, BusinessProfile>> updateLocation({
+    required double latitude,
+    required double longitude,
+    String? address,
+  });
   Future<Either<String, List<RecentConnectionEntity>>> getRecentCustomers({
     int limit = 10,
   });

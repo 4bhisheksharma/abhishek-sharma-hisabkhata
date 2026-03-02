@@ -11,6 +11,9 @@ class BusinessProfileModel extends BusinessProfile {
     required super.email,
     required super.isVerified,
     super.preferredLanguage,
+    super.latitude,
+    super.longitude,
+    super.address,
   });
 
   factory BusinessProfileModel.fromJson(Map<String, dynamic> json) {
@@ -22,6 +25,13 @@ class BusinessProfileModel extends BusinessProfile {
       email: json['email'] ?? '',
       isVerified: json['is_verified'] ?? false,
       preferredLanguage: json['preferred_language'],
+      latitude: json['latitude'] != null
+          ? double.tryParse(json['latitude'].toString())
+          : null,
+      longitude: json['longitude'] != null
+          ? double.tryParse(json['longitude'].toString())
+          : null,
+      address: json['address'],
     );
   }
 
@@ -34,6 +44,9 @@ class BusinessProfileModel extends BusinessProfile {
       'email': email,
       'is_verified': isVerified,
       'preferred_language': preferredLanguage,
+      'latitude': latitude,
+      'longitude': longitude,
+      'address': address,
     };
   }
 }

@@ -23,6 +23,13 @@ abstract class BusinessRemoteDataSource {
     String? preferredLanguage,
   });
 
+  /// Update business location
+  Future<BusinessProfileModel> updateLocation({
+    required double latitude,
+    required double longitude,
+    String? address,
+  });
+
   /// Get recently added customers for this business
   Future<List<RecentConnectionModel>> getRecentCustomers({int limit = 10});
 
@@ -109,6 +116,27 @@ class BusinessRemoteDataSourceImpl extends BaseRemoteDataSource
 
       return BusinessProfileModel.fromJson(response['data']);
     }
+  }
+
+  @override
+  Future<BusinessProfileModel> updateLocation({
+    required double latitude,
+    required double longitude,
+    String? address,
+  }) async {
+    final body = <String, dynamic>{
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+    if (address != null) body['address'] = address;
+
+    final response = await patch(
+      ApiEndpoints.businessLocation,
+      body: body,
+      includeAuth: true,
+    );
+
+    return BusinessProfileModel.fromJson(response['data']);
   }
 
   @override

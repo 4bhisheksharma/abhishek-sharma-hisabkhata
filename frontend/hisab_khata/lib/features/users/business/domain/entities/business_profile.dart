@@ -6,6 +6,9 @@ class BusinessProfile {
   final String email;
   final bool isVerified;
   final String? preferredLanguage;
+  final double? latitude;
+  final double? longitude;
+  final String? address;
 
   const BusinessProfile({
     required this.businessName,
@@ -15,5 +18,8 @@ class BusinessProfile {
     required this.email,
     required this.isVerified,
     this.preferredLanguage,
+    this.latitude,
+    this.longitude,
+    this.address,
   });
 }

@@ -29,12 +29,16 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
     business_name = serializers.CharField(required=False)
     is_verified = serializers.BooleanField(read_only=True)
     preferred_language = serializers.CharField(source='user.preferred_language', required=False)
+    latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
+    longitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
+    address = serializers.CharField(required=False, allow_null=True, allow_blank=True)
     
     class Meta:
         model = Business
         fields = [
             'business_name', 'full_name', 'phone_number', 
-            'profile_picture', 'email', 'is_verified', 'preferred_language'
+            'profile_picture', 'email', 'is_verified', 'preferred_language',
+            'latitude', 'longitude', 'address'
         ]
     
     def update(self, instance, validated_data):
@@ -45,6 +49,12 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
         # Update Business fields
         if 'business_name' in validated_data:
             instance.business_name = validated_data['business_name']
+        if 'latitude' in validated_data:
+            instance.latitude = validated_data['latitude']
+        if 'longitude' in validated_data:
+            instance.longitude = validated_data['longitude']
+        if 'address' in validated_data:
+            instance.address = validated_data['address']
         
         # Update User fields
         if user_data:
@@ -121,3 +131,28 @@ class BusinessVerificationStatusSerializer(serializers.Serializer):
     is_verified = serializers.BooleanField()
     has_pending_request = serializers.BooleanField()
     latest_request = BusinessVerificationRequestSerializer(allow_null=True)
+
+
+class NearbyBusinessSerializer(serializers.ModelSerializer):
+    """Serializer for nearby businesses shown on the map"""
+    user_id = serializers.IntegerField(source='user.user_id', read_only=True)
+    full_name = serializers.CharField(source='user.full_name', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    phone_number = serializers.CharField(source='user.phone_number', read_only=True)
+    profile_picture = serializers.SerializerMethodField()
+    is_connected = serializers.BooleanField(read_only=True, default=False)
+    relationship_id = serializers.IntegerField(read_only=True, default=None, allow_null=True)
+    connection_status = serializers.CharField(read_only=True, default=None, allow_null=True)
+
+    class Meta:
+        model = Business
+        fields = [
+            'business_id', 'business_name', 'latitude', 'longitude', 'address',
+            'is_verified', 'user_id', 'full_name', 'email', 'phone_number',
+            'profile_picture', 'is_connected', 'relationship_id', 'connection_status'
+        ]
+
+    def get_profile_picture(self, obj):
+        if obj.user.profile_picture:
+            return f"/media/{obj.user.profile_picture}"
+        return None

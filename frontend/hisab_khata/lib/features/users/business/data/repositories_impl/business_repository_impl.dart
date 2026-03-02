@@ -69,6 +69,26 @@ class BusinessRepositoryImpl implements BusinessRepository {
   }
 
   @override
+  Future<Either<String, BusinessProfile>> updateLocation({
+    required double latitude,
+    required double longitude,
+    String? address,
+  }) async {
+    try {
+      final profile = await remoteDataSource.updateLocation(
+        latitude: latitude,
+        longitude: longitude,
+        address: address,
+      );
+      return Right(profile);
+    } on ServerException catch (e) {
+      return Left(e.exceptionMessage);
+    } catch (e) {
+      return Left('Failed to update location: ${e.toString()}');
+    }
+  }
+
+  @override
   Future<Either<String, List<RecentConnectionEntity>>> getRecentCustomers({
     int limit = 10,
   }) async {
