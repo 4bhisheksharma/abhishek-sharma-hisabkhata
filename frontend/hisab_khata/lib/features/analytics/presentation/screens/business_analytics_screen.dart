@@ -8,6 +8,8 @@ import 'package:hisab_khata/features/analytics/presentation/widgets/paid_vs_to_p
 import 'package:hisab_khata/features/analytics/presentation/widgets/analytics_stat_card.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
+import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
+import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';
 
 class BusinessAnalyticsScreen extends StatefulWidget {
   const BusinessAnalyticsScreen({super.key});
@@ -66,6 +68,14 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
 
                       // Favorite Customers
                       _buildFavoriteCustomers(state),
+                      const SizedBox(height: 24),
+
+                      // Transaction Activity
+                      const TransactionActivitySection(isCustomerView: false),
+                      const SizedBox(height: 24),
+
+                      // Transaction Calendar
+                      const TransactionCalendarWidget(isCustomerView: false),
                     ],
                   ),
                 );

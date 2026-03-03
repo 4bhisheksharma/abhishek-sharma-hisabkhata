@@ -14,8 +14,6 @@ import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
-import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
-import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -217,16 +215,6 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                           ),
                         ],
                       ),
-
-                      const SizedBox(height: 20),
-
-                      // ── Transaction Activity ──
-                      const TransactionActivitySection(isCustomerView: false),
-
-                      const SizedBox(height: 20),
-
-                      // ── Transaction Calendar ──
-                      const TransactionCalendarWidget(isCustomerView: false),
 
                       const SizedBox(height: 20),
 
