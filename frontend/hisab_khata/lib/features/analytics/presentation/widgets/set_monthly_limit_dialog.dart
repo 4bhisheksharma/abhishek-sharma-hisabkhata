@@ -110,9 +110,9 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Set Monthly Limit',
+                          AppLocalizations.of(context)!.setMonthlyLimitTitle,
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
@@ -124,7 +124,7 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
 
                   const SizedBox(height: 8),
                   Text(
-                    'Set a monthly spending limit to track your budget',
+                    AppLocalizations.of(context)!.setMonthlyLimitDescription,
                     style: TextStyle(fontSize: 14, color: Colors.grey.shade600),
                   ),
                   const SizedBox(height: 24),
@@ -139,8 +139,8 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                       ),
                     ],
                     decoration: InputDecoration(
-                      labelText: 'Monthly Limit',
-                      prefixText: 'Rs. ',
+                      labelText: AppLocalizations.of(context)!.monthlyLimit,
+                      prefixText: AppLocalizations.of(context)!.rsPrefix,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -151,15 +151,17 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                           width: 2,
                         ),
                       ),
-                      hintText: 'Enter amount',
+                      hintText: AppLocalizations.of(context)!.enterAmountHint,
                     ),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Please enter an amount';
+                        return AppLocalizations.of(context)!.pleaseEnterAmount;
                       }
                       final amount = double.tryParse(value.trim());
                       if (amount == null || amount <= 0) {
-                        return 'Please enter a valid amount';
+                        return AppLocalizations.of(
+                          context,
+                        )!.pleaseEnterValidAmount;
                       }
                       return null;
                     },
@@ -212,7 +214,9 @@ class _SetMonthlyLimitDialogState extends State<SetMonthlyLimitDialog> {
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.red,
                                 ),
-                                child: const Text('Remove Limit'),
+                                child: Text(
+                                  AppLocalizations.of(context)!.removeLimit,
+                                ),
                               ),
                           ],
                         )

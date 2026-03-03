@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// In-app map screen that shows directions from user's current location
 /// to a destination business location.
@@ -53,7 +54,9 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
       if (!serviceEnabled) {
         setState(() {
           _isLoadingLocation = false;
-          _locationError = 'Location services are disabled';
+          _locationError = AppLocalizations.of(
+            context,
+          )!.locationServicesDisabled;
         });
         return;
       }
@@ -64,7 +67,9 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
         if (permission == LocationPermission.denied) {
           setState(() {
             _isLoadingLocation = false;
-            _locationError = 'Location permission denied';
+            _locationError = AppLocalizations.of(
+              context,
+            )!.locationPermissionDenied;
           });
           return;
         }
@@ -73,7 +78,9 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
       if (permission == LocationPermission.deniedForever) {
         setState(() {
           _isLoadingLocation = false;
-          _locationError = 'Location permissions are permanently denied';
+          _locationError = AppLocalizations.of(
+            context,
+          )!.locationPermissionsPermanentlyDenied;
         });
         return;
       }
@@ -94,7 +101,9 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
     } catch (e) {
       setState(() {
         _isLoadingLocation = false;
-        _locationError = 'Failed to get current location';
+        _locationError = AppLocalizations.of(
+          context,
+        )!.failedToGetCurrentLocation;
       });
     }
   }
@@ -140,7 +149,7 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
         title: Text(
-          widget.destinationName ?? 'Directions',
+          widget.destinationName ?? AppLocalizations.of(context)!.directions,
           style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         ),
         centerTitle: true,
@@ -239,15 +248,15 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
                     ),
                   ],
                 ),
-                child: const Row(
+                child: Row(
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 20,
                       height: 20,
                       child: CircularProgressIndicator(strokeWidth: 2),
                     ),
-                    SizedBox(width: 12),
-                    Text('Getting your location...'),
+                    const SizedBox(width: 12),
+                    Text(AppLocalizations.of(context)!.gettingYourLocation),
                   ],
                 ),
               ),
@@ -281,7 +290,7 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
                     ),
                     TextButton(
                       onPressed: _getCurrentLocation,
-                      child: const Text('Retry'),
+                      child: Text(AppLocalizations.of(context)!.retry),
                     ),
                   ],
                 ),
@@ -345,7 +354,8 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.destinationName ?? 'Business',
+                                widget.destinationName ??
+                                    AppLocalizations.of(context)!.business,
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w700,
@@ -387,7 +397,9 @@ class _DirectionsMapScreenState extends State<DirectionsMapScreen> {
                             ),
                             const SizedBox(width: 8),
                             Text(
-                              'Distance: ${_calculateDistance().toStringAsFixed(1)} km',
+                              AppLocalizations.of(context)!.distanceKm(
+                                _calculateDistance().toStringAsFixed(1),
+                              ),
                               style: const TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w600,

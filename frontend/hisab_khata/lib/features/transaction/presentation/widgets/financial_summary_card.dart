@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Reusable financial summary widget showing amounts based on user view
 /// For Customer: Shows "Your Due" (what they owe) and "You Paid"
@@ -29,7 +30,9 @@ class FinancialSummaryCard extends StatelessWidget {
           icon: isCustomerView
               ? Icons.account_balance_wallet_outlined
               : Icons.account_balance_outlined,
-          label: isCustomerView ? 'Your Due' : 'To Receive',
+          label: isCustomerView
+              ? AppLocalizations.of(context)!.yourDue
+              : AppLocalizations.of(context)!.toReceive,
           amount: toPay,
           color: toPay > 0
               ? (isCustomerView ? AppTheme.errorRed : AppTheme.successGreen)
@@ -41,7 +44,9 @@ class FinancialSummaryCard extends StatelessWidget {
         _buildAmountRow(
           context,
           icon: Icons.check_circle_outline,
-          label: isCustomerView ? 'You Paid' : 'Received',
+          label: isCustomerView
+              ? AppLocalizations.of(context)!.youPaid
+              : AppLocalizations.of(context)!.received,
           amount: totalPaid,
           color: AppTheme.textSecondary,
           isLarge: false,

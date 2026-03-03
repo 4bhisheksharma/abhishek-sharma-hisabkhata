@@ -13,6 +13,8 @@ import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
+import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
+import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';
 
 class CustomerProfileViewScreen extends StatefulWidget {
   const CustomerProfileViewScreen({super.key});
@@ -66,10 +68,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                     delegate: SliverChildListDelegate([
                       // ── Account ──
                       _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'Account'
-                            : 'खाता',
+                        AppLocalizations.of(context)!.account,
                       ),
                       _buildMenuCard(
                         children: [
@@ -89,7 +88,9 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             iconColor: const Color(0xFF00D9B5),
                             iconBgColor: const Color(0xFFE0F7F4),
                             title: AppLocalizations.of(context)!.security,
-                            subtitle: 'Change password',
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.changePassword,
                             onTap: () => showDialog(
                               context: context,
                               builder: (_) => const ChangePasswordDialog(),
@@ -102,10 +103,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
 
                       // ── Location ──
                       _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'Location'
-                            : 'स्थान',
+                        AppLocalizations.of(context)!.location,
                       ),
                       _buildMenuCard(
                         children: [
@@ -113,8 +111,12 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             icon: Icons.map_outlined,
                             iconColor: const Color(0xFFE53935),
                             iconBgColor: const Color(0xFFFFEBEE),
-                            title: 'Businesses Near Me',
-                            subtitle: 'View businesses on map',
+                            title: AppLocalizations.of(
+                              context,
+                            )!.businessesNearMe,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.viewBusinessesOnMap,
                             onTap: () async {
                               await Navigator.push(
                                 context,
@@ -136,12 +138,7 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                       const SizedBox(height: 20),
 
                       // ── App ──
-                      _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'App'
-                            : 'एप',
-                      ),
+                      _buildSectionHeader(AppLocalizations.of(context)!.app),
                       _buildMenuCard(
                         children: [
                           _buildMenuItem(
@@ -175,8 +172,8 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             icon: Icons.smart_toy_outlined,
                             iconColor: const Color(0xFF6200EA),
                             iconBgColor: const Color(0xFFEDE7F6),
-                            title: 'Talk to Byapar d-AI',
-                            subtitle: 'AI assistant',
+                            title: AppLocalizations.of(context)!.talkToByaparAI,
+                            subtitle: AppLocalizations.of(context)!.aiAssistant,
                             onTap: () =>
                                 Navigator.pushNamed(context, '/chatbot'),
                           ),
@@ -185,12 +182,19 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
 
                       const SizedBox(height: 20),
 
+                      // ── Transaction Activity ──
+                      const TransactionActivitySection(isCustomerView: true),
+
+                      const SizedBox(height: 20),
+
+                      // ── Transaction Calendar ──
+                      const TransactionCalendarWidget(isCustomerView: true),
+
+                      const SizedBox(height: 20),
+
                       // ── Support ──
                       _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'Support'
-                            : 'सहयोग',
+                        AppLocalizations.of(context)!.support,
                       ),
                       _buildMenuCard(
                         children: [

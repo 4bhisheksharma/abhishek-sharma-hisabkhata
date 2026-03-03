@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../data/datasources/chat_websocket_service.dart';
@@ -118,7 +119,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(ChatState state) {
-    String displayName = widget.otherUserName ?? 'User';
+    String displayName =
+        widget.otherUserName ?? AppLocalizations.of(context)!.user;
     String? subtitle;
     int? currentUserId = context.read<ChatBloc>().currentUserId;
     WebSocketStatus connectionStatus = WebSocketStatus.disconnected;
@@ -128,15 +130,15 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
       connectionStatus = state.connectionStatus;
 
       if (state.isOtherUserTyping) {
-        subtitle = 'typing...';
+        subtitle = AppLocalizations.of(context)!.typing;
       } else if (state.connectionStatus == WebSocketStatus.connected) {
-        subtitle = 'Online';
+        subtitle = AppLocalizations.of(context)!.online;
       } else {
-        subtitle = _getConnectionStatusText(state.connectionStatus);
+        subtitle = _getConnectionStatusText(context, state.connectionStatus);
       }
     } else if (state is MessagesLoading) {
       displayName = state.chatRoom.getDisplayName(currentUserId ?? 0);
-      subtitle = 'Loading...';
+      subtitle = AppLocalizations.of(context)!.loading;
     }
 
     return AppBar(
@@ -233,16 +235,20 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
     return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
   }
 
-  String _getConnectionStatusText(WebSocketStatus status) {
+  String _getConnectionStatusText(
+    BuildContext context,
+    WebSocketStatus status,
+  ) {
+    final l10n = AppLocalizations.of(context)!;
     switch (status) {
       case WebSocketStatus.connecting:
-        return 'Connecting...';
+        return l10n.connecting;
       case WebSocketStatus.reconnecting:
-        return 'Reconnecting...';
+        return l10n.reconnecting;
       case WebSocketStatus.error:
-        return 'Connection error';
+        return l10n.connectionError;
       case WebSocketStatus.disconnected:
-        return 'Disconnected';
+        return l10n.disconnected;
       default:
         return '';
     }
@@ -326,8 +332,8 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Unable to load chat',
+            Text(
+              AppLocalizations.of(context)!.unableToLoadChat,
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -347,7 +353,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
             OutlinedButton.icon(
               onPressed: () => Navigator.of(context).pop(),
               icon: const Icon(Icons.arrow_back_rounded, size: 18),
-              label: const Text('Go Back'),
+              label: Text(AppLocalizations.of(context)!.goBack),
               style: OutlinedButton.styleFrom(
                 foregroundColor: AppTheme.textSecondary,
                 side: const BorderSide(color: AppTheme.dividerColor),

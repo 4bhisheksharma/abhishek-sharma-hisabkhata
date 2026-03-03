@@ -37,6 +37,7 @@ dependencies:
   latlong2: ^0.9.1
   url_launcher: ^6.2.5
   geolocator: ^13.0.2
+  nepali_date_picker: ^7.0.1
   esewa_flutter_sdk:
     path: ./esewa_flutter_sdk
 

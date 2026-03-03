@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Reusable payment ratio progress bar
 class PaymentRatioBar extends StatelessWidget {
@@ -22,28 +23,27 @@ class PaymentRatioBar extends StatelessWidget {
     return (totalPaid / total * 100).clamp(0, 100);
   }
 
-  String get _ratioMessage {
+  String _ratioMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (isCustomerView) {
-      // Customer view - focus on payment status
       if (toPay <= 0) {
-        return 'All dues cleared!';
+        return l10n.allDuesCleared;
       } else if (_paidPercentage >= 80) {
-        return 'Great! Almost all dues paid';
+        return l10n.almostAllDuesPaid;
       } else if (_paidPercentage >= 50) {
-        return 'Consider clearing pending dues';
+        return l10n.considerClearingDues;
       } else {
-        return 'Outstanding balance pending';
+        return l10n.outstandingBalance;
       }
     } else {
-      // Business view - focus on collection status
       if (toPay <= 0) {
-        return 'All payments collected';
+        return l10n.allPaymentsCollected;
       } else if (_paidPercentage >= 80) {
-        return 'Good collection rate';
+        return l10n.goodCollectionRate;
       } else if (_paidPercentage >= 50) {
-        return 'Moderate collection';
+        return l10n.moderateCollection;
       } else {
-        return 'Pending collection';
+        return l10n.pendingCollection;
       }
     }
   }
@@ -107,7 +107,7 @@ class PaymentRatioBar extends StatelessWidget {
         const SizedBox(height: 8),
         // Ratio message
         Text(
-          _ratioMessage,
+          _ratioMessage(context),
           style: const TextStyle(fontSize: 13, color: AppTheme.textSecondary),
         ),
       ],

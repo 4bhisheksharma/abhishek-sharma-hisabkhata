@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../domain/entities/chat_room_entity.dart';
@@ -82,7 +83,7 @@ class ChatRoomListItem extends StatelessWidget {
                       ),
                       if (chatRoom.lastMessage != null)
                         Text(
-                          _formatTime(chatRoom.lastMessage!.createdAt),
+                          _formatTime(context, chatRoom.lastMessage!.createdAt),
                           style: TextStyle(
                             fontSize: 12,
                             color: hasUnread
@@ -102,7 +103,7 @@ class ChatRoomListItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          _getLastMessagePreview(),
+                          _getLastMessagePreview(context),
                           style: TextStyle(
                             fontSize: 14,
                             color: hasUnread
@@ -157,15 +158,18 @@ class ChatRoomListItem extends StatelessWidget {
     return '${parts[0][0]}${parts[1][0]}'.toUpperCase();
   }
 
-  String _getLastMessagePreview() {
-    if (chatRoom.lastMessage == null) return 'No messages yet';
+  String _getLastMessagePreview(BuildContext context) {
+    if (chatRoom.lastMessage == null)
+      return AppLocalizations.of(context)!.noMessagesYet;
 
     final isFromCurrentUser = chatRoom.lastMessage!.senderId == currentUserId;
-    final prefix = isFromCurrentUser ? 'You: ' : '';
+    final prefix = isFromCurrentUser
+        ? AppLocalizations.of(context)!.youPrefix
+        : '';
     return '$prefix${chatRoom.lastMessage!.content}';
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(BuildContext context, DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
@@ -173,7 +177,7 @@ class ChatRoomListItem extends StatelessWidget {
     if (messageDate == today) {
       return DateFormat.jm().format(dateTime);
     } else if (messageDate == today.subtract(const Duration(days: 1))) {
-      return 'Yesterday';
+      return AppLocalizations.of(context)!.yesterday;
     } else if (now.difference(dateTime).inDays < 7) {
       return DateFormat('EEE').format(dateTime);
     } else {

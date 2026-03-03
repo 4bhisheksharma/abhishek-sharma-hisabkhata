@@ -45,22 +45,22 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
     super.dispose();
   }
 
-  String get _appBarTitle {
+  String _getAppBarTitle(BuildContext context) {
     if (_userRole.toLowerCase() == 'business') {
-      return 'Add Customer';
+      return AppLocalizations.of(context)!.addCustomer;
     } else if (_userRole.toLowerCase() == 'customer') {
-      return 'Add Business';
+      return AppLocalizations.of(context)!.addBusiness;
     }
-    return 'Add Connection';
+    return AppLocalizations.of(context)!.addConnection;
   }
 
-  String get _buttonText {
+  String _getButtonText(BuildContext context) {
     if (_userRole.toLowerCase() == 'business') {
-      return 'Add Customer';
+      return AppLocalizations.of(context)!.addCustomer;
     } else if (_userRole.toLowerCase() == 'customer') {
-      return 'Add Business';
+      return AppLocalizations.of(context)!.addBusiness;
     }
-    return 'Add Connection';
+    return AppLocalizations.of(context)!.addConnection;
   }
 
   void _handleAddConnection() {
@@ -92,7 +92,7 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-            _appBarTitle,
+            _getAppBarTitle(context),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -103,7 +103,9 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
           actions: [
             IconButton(
               icon: const Icon(Icons.group_add_rounded, color: Colors.white),
-              tooltip: 'Add Multiple Connections',
+              tooltip: AppLocalizations.of(
+                context,
+              )!.addMultipleConnectionsTooltip,
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.bulkAddConnection);
               },
@@ -159,7 +161,7 @@ class _AddConnectionScreenState extends State<AddConnectionScreen> {
                     builder: (context, state) {
                       return Center(
                         child: MyButton(
-                          text: _buttonText,
+                          text: _getButtonText(context),
                           onPressed: _handleAddConnection,
                           isLoading: state is ConnectionRequestLoading,
                           width: 200,

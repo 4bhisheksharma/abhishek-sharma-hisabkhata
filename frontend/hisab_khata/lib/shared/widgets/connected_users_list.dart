@@ -87,14 +87,14 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
 
   Widget _buildEmptyState() {
     final emptyMessage = widget.filterBusinesses
-        ? 'No connected businesses yet'
-        : 'No connected customers yet';
+        ? AppLocalizations.of(context)!.noConnectedBusinesses
+        : AppLocalizations.of(context)!.noConnectedCustomers;
     final emptyIcon = widget.filterBusinesses
         ? Icons.store_mall_directory_outlined
         : Icons.people_alt_outlined;
     final emptySubtitle = widget.filterBusinesses
-        ? 'Connect with businesses to start tracking your transactions'
-        : 'Connect with customers to manage their accounts';
+        ? AppLocalizations.of(context)!.connectWithBusinesses
+        : AppLocalizations.of(context)!.connectWithCustomers;
 
     return Center(
       child: Padding(
@@ -180,8 +180,8 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'Failed to load connections',
+            Text(
+              AppLocalizations.of(context)!.failedToLoadConnections,
               style: TextStyle(
                 fontSize: 18,
                 color: AppTheme.textPrimary,
@@ -246,8 +246,8 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                 const SizedBox(width: 8),
                 Text(
                   widget.filterBusinesses
-                      ? 'Connected Businesses'
-                      : 'Connected Customers',
+                      ? AppLocalizations.of(context)!.connectedBusinesses
+                      : AppLocalizations.of(context)!.connectedCustomers,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -393,7 +393,7 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'Business',
+                                  AppLocalizations.of(context)!.business,
                                   style: TextStyle(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w600,

@@ -158,15 +158,17 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Voice Transaction',
+                      Text(
+                        AppLocalizations.of(context)!.voiceTransaction,
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        _isListening ? 'Listening...' : 'Tap mic to speak',
+                        _isListening
+                            ? AppLocalizations.of(context)!.listening
+                            : AppLocalizations.of(context)!.tapMicToSpeak,
                         style: TextStyle(
                           fontSize: 13,
                           color: Colors.grey.shade600,
@@ -224,7 +226,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
-                  'Try saying: "Add 200 rs for chocolate"',
+                  AppLocalizations.of(context)!.trySaying,
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.grey.shade600,
@@ -247,7 +249,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'You said:',
+                      AppLocalizations.of(context)!.youSaid,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey.shade600,
@@ -290,7 +292,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Transaction Details',
+                          AppLocalizations.of(context)!.transactionDetails,
                           style: TextStyle(
                             fontSize: 13,
                             color: AppTheme.primaryBlue,
@@ -307,14 +309,14 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Amount',
+                                AppLocalizations.of(context)!.amount,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade600,
                                 ),
                               ),
                               Text(
-                                'Rs. ${_parsedTransaction!.amount.toStringAsFixed(2)}',
+                                '${AppLocalizations.of(context)!.rsPrefix}${_parsedTransaction!.amount.toStringAsFixed(2)}',
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -335,7 +337,7 @@ class _VoiceTransactionDialogState extends State<VoiceTransactionDialog>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Description',
+                                AppLocalizations.of(context)!.description,
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey.shade600,

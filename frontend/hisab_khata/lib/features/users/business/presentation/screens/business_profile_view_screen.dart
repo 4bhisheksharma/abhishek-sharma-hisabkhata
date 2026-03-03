@@ -14,6 +14,8 @@ import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
+import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
+import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';
 
 class BusinessProfileViewScreen extends StatefulWidget {
   const BusinessProfileViewScreen({super.key});
@@ -67,10 +69,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                     delegate: SliverChildListDelegate([
                       // ── Account ──
                       _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'Account'
-                            : 'खाता',
+                        AppLocalizations.of(context)!.account,
                       ),
                       _buildMenuCard(
                         children: [
@@ -96,11 +95,15 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                                 ? const Color(0xFFE8F5E9)
                                 : const Color(0xFFFFF3E0),
                             title: profile.isVerified
-                                ? 'Verification Status'
-                                : 'Request Verification',
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.verificationStatus
+                                : AppLocalizations.of(
+                                    context,
+                                  )!.requestVerification,
                             subtitle: profile.isVerified
-                                ? 'Verified'
-                                : 'Pending',
+                                ? AppLocalizations.of(context)!.verified
+                                : AppLocalizations.of(context)!.pending,
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -115,7 +118,9 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             iconColor: const Color(0xFF00D9B5),
                             iconBgColor: const Color(0xFFE0F7F4),
                             title: AppLocalizations.of(context)!.security,
-                            subtitle: 'Change password',
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.changePassword,
                             onTap: () => showDialog(
                               context: context,
                               builder: (_) => const ChangePasswordDialog(),
@@ -126,10 +131,10 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             icon: Icons.location_on_outlined,
                             iconColor: const Color(0xFFE53935),
                             iconBgColor: const Color(0xFFFFEBEE),
-                            title: 'Shop Location',
+                            title: AppLocalizations.of(context)!.shopLocation,
                             subtitle: profile.latitude != null
-                                ? 'Location set'
-                                : 'Pin your shop',
+                                ? AppLocalizations.of(context)!.locationSet
+                                : AppLocalizations.of(context)!.pinYourShop,
                             onTap: () => Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -148,10 +153,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
 
                       // ── Payments ──
                       _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'Payments'
-                            : 'भुक्तानी',
+                        AppLocalizations.of(context)!.payments,
                       ),
                       _buildMenuCard(
                         children: [
@@ -159,8 +161,10 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             icon: Icons.account_balance_wallet_outlined,
                             iconColor: const Color(0xFF60BB46),
                             iconBgColor: const Color(0xFFE8F5E9),
-                            title: 'eSewa Account',
-                            subtitle: 'Manage linked eSewa',
+                            title: AppLocalizations.of(context)!.esewaAccount,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.manageLinkedEsewa,
                             onTap: () =>
                                 Navigator.pushNamed(context, '/esewa-account'),
                           ),
@@ -170,12 +174,7 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                       const SizedBox(height: 20),
 
                       // ── App ──
-                      _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'App'
-                            : 'एप',
-                      ),
+                      _buildSectionHeader(AppLocalizations.of(context)!.app),
                       _buildMenuCard(
                         children: [
                           _buildMenuItem(
@@ -209,8 +208,10 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             icon: Icons.smart_toy_outlined,
                             iconColor: const Color(0xFF6200EA),
                             iconBgColor: const Color(0xFFEDE7F6),
-                            title: 'Talk to Byapar d-AI',
-                            subtitle: 'AI business assistant',
+                            title: AppLocalizations.of(context)!.talkToByaparAI,
+                            subtitle: AppLocalizations.of(
+                              context,
+                            )!.aiBusinessAssistant,
                             onTap: () =>
                                 Navigator.pushNamed(context, '/chatbot'),
                           ),
@@ -219,12 +220,19 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
 
                       const SizedBox(height: 20),
 
+                      // ── Transaction Activity ──
+                      const TransactionActivitySection(isCustomerView: false),
+
+                      const SizedBox(height: 20),
+
+                      // ── Transaction Calendar ──
+                      const TransactionCalendarWidget(isCustomerView: false),
+
+                      const SizedBox(height: 20),
+
                       // ── Support ──
                       _buildSectionHeader(
-                        AppLocalizations.of(context)!.editProfile ==
-                                'Edit Profile'
-                            ? 'Support'
-                            : 'सहयोग',
+                        AppLocalizations.of(context)!.support,
                       ),
                       _buildMenuCard(
                         children: [

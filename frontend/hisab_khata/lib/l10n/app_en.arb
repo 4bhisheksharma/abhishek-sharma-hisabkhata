@@ -194,6 +194,369 @@
   "pleaseEnterDescription": "Please enter a description",
   "descriptionMinLength": "Description must be at least 20 characters",
   "typeMessage": "Type a message...",
+  "account": "Account",
+  "location": "Location",
+  "app": "App",
+  "support": "Support",
+  "payments": "Payments",
+  "changePassword": "Change password",
+  "businessesNearMe": "Businesses Near Me",
+  "viewBusinessesOnMap": "View businesses on map",
+  "talkToByaparAI": "Talk to Byapar d-AI",
+  "aiAssistant": "AI assistant",
+  "aiBusinessAssistant": "AI business assistant",
+  "shopLocation": "Shop Location",
+  "locationSet": "Location set",
+  "pinYourShop": "Pin your shop",
+  "esewaAccount": "eSewa Account",
+  "manageLinkedEsewa": "Manage linked eSewa",
+  "verificationStatus": "Verification Status",
+  "requestVerification": "Request Verification",
+  "verified": "Verified",
+  "pending": "Pending",
+  "transactionActivity": "Transaction Activity",
+  "noTransactionActivity": "No transaction activity yet",
+  "noTransactionActivitySubtitle": "Your recent transactions will appear here",
+  "transactionSingular": "transaction",
+  "goToLogin": "Go to Login",
+
+  "asBusiness": "As Business",
+  "asCustomer": "As Customer",
+  "pleaseWaitBeforeResending": "Please wait {time} before resending",
+  "failedToResendOtp": "Failed to resend OTP",
+
+  "userDetails": "User Details",
+  "clearDueCash": "Clear Due (Cash)",
+  "processing": "Processing...",
+  "noPendingDuesToClear": "No pending dues to clear",
+  "pendingRs": "Pending: Rs. {amount}",
+  "recordCashPayment": "Record cash payment received from {name}",
+  "amountReceived": "Amount Received",
+  "full": "Full",
+  "noteOptional": "Note (optional)",
+  "noteHintCashReceived": "e.g. Cash received",
+  "cashPaymentReceived": "Cash payment received",
+  "clearDue": "Clear Due",
+  "getDirections": "Get Directions",
+  "chat": "Chat",
+  "unableToOpenChat": "Unable to open chat. Please try again.",
+
+  "updateEsewaAccount": "Update eSewa Account",
+  "linkEsewaAccount": "Link eSewa Account",
+  "esewaIdLabel": "eSewa ID (Phone Number)",
+  "esewaIdHint": "98XXXXXXXX",
+  "pleaseEnterEsewaId": "Please enter your eSewa ID",
+  "accountHolderName": "Account Holder Name",
+  "accountHolderHint": "Name on your eSewa account",
+  "pleaseEnterAccountHolderName": "Please enter the account holder name",
+  "update": "Update",
+  "linkAccount": "Link Account",
+  "unlink": "Unlink",
+  "unlinkEsewa": "Unlink eSewa",
+  "unlinkEsewaConfirmation": "Are you sure you want to unlink your eSewa account? Customers will no longer be able to pay via eSewa.",
+  "esewaPayment": "eSewa Payment",
+  "accountLinked": "Your account is linked",
+  "esewaLinkedDescription": "Customers can now pay their dues via eSewa directly to your account.",
+  "esewaUnlinkedDescription": "Link your eSewa account so customers can pay their dues digitally.",
+  "enterEsewaDetails": "Enter your eSewa account details",
+  "esewaIdMustBe10Digits": "eSewa ID must be 10 digits",
+  "esewaIdMustStartWith9": "eSewa ID must start with 9",
+  "active": "Active",
+  "inactive": "Inactive",
+  "linkedAccount": "Linked Account",
+
+  "voiceInputAdded": "Voice input added: Rs. {amount}",
+  "imageProcessed": "Image processed: Rs. {amount}",
+  "rsPrefix": "Rs. ",
+  "pleaseEnterItemTitle": "Please enter item title",
+
+  "speechRecognitionNotAvailable": "Speech recognition not available on this device",
+  "failedToInitialize": "Failed to initialize: {error}",
+  "voiceTransaction": "Voice Transaction",
+  "listening": "Listening...",
+  "tapMicToSpeak": "Tap mic to speak",
+  "trySaying": "Try saying: \"Add 200 rs for chocolate\"",
+  "youSaid": "You said:",
+  "transactionDetails": "Transaction Details",
+
+  "noTextFoundInImage": "No text found in image. Please try another image.",
+  "couldNotExtractDetails": "Could not extract transaction details. Please edit manually.",
+  "errorProcessingImage": "Error processing image: {error}",
+  "imageTransaction": "Image Transaction",
+  "extractDetailsFromReceipt": "Extract details from receipt",
+  "extractingText": "Extracting text from image...",
+  "extractedText": "Extracted Text:",
+
+  "filterTransactions": "Filter transactions",
+  "noTransactionsYet": "No transactions yet",
+  "transactionsWillAppearHere": "Your transactions will appear here",
+  "addTransactionsForCustomer": "Add transactions for this customer",
+
+  "purchaseFromBusiness": "Purchase from business",
+  "paymentMade": "Payment made",
+  "creditReceived": "Credit received",
+  "refundReceived": "Refund received",
+  "adjustment": "Adjustment",
+  "saleToCustomer": "Sale to customer",
+  "paymentReceived": "Payment received",
+  "creditGiven": "Credit given",
+  "refundGiven": "Refund given",
+
+  "allDuesCleared": "All dues cleared!",
+  "almostAllDuesPaid": "Great! Almost all dues paid",
+  "considerClearingDues": "Consider clearing pending dues",
+  "outstandingBalance": "Outstanding balance pending",
+  "allPaymentsCollected": "All payments collected",
+  "goodCollectionRate": "Good collection rate",
+  "moderateCollection": "Moderate collection",
+  "pendingCollection": "Pending collection",
+
+  "payDueViaEsewa": "Pay Due via eSewa",
+  "dueRs": "Due: Rs. {amount}",
+  "businessNotLinkedEsewa": "This business has not linked their eSewa account yet. Please use cash payment instead.",
+  "payWithEsewa": "Pay with eSewa",
+  "esewaPaymentFailed": "eSewa payment failed: {error}",
+  "paymentCancelled": "Payment was cancelled",
+
+  "cancelRequest": "Cancel Request",
+  "cancelRequestConfirmation": "Are you sure you want to cancel this connection request?",
+  "no": "No",
+  "yesCancel": "Yes, Cancel",
+  "noReceivedRequests": "No Received Requests",
+  "whenSomeoneSendsRequest": "When someone sends you a connection request, it will appear here.",
+  "pendingRequests": "Pending Requests",
+  "pastRequests": "Past Requests",
+  "awaitingResponse": "Awaiting Response",
+  "noSentRequests": "No Sent Requests",
+  "sentRequestsWillAppear": "Connection requests you send will appear here.",
+  "received": "Received",
+  "sent": "Sent",
+  "accepted": "Accepted",
+  "rejected": "Rejected",
+  "connected": "Connected",
+  "justNow": "Just now",
+  "addMultipleCustomers": "Add Multiple Customers",
+  "addMultipleBusinesses": "Add Multiple Businesses",
+  "addMultipleConnections": "Add Multiple Connections",
+  "pleaseSelectAtLeastOneUser": "Please select at least one user to send connection requests.",
+  "searchByNameEmailPhone": "Search by name, email, or phone...",
+  "usersSelected": "{count} user(s) selected",
+  "usersAvailable": "{count} user(s) available",
+  "noUsersFoundFor": "No users found for \"{query}\"",
+  "noUsersAvailable": "No users available",
+  "sendRequests": "Send Requests ({count})",
+  "addCustomer": "Add Customer",
+  "addBusiness": "Add Business",
+  "addMultipleConnectionsTooltip": "Add Multiple Connections",
+  "failedToLoadConnectionRequests": "Failed to load connection requests",
+
+  "messagesTitle": "Messages",
+  "noConversationsYet": "No conversations yet",
+  "startConversation": "Start a conversation with your\nconnected users",
+  "somethingWentWrong": "Something went wrong",
+  "connectionError": "Connection error",
+  "unableToLoadChat": "Unable to load chat",
+  "goBack": "Go Back",
+  "noMessagesYet": "No messages yet",
+  "startTheConversation": "Start the conversation!",
+  "typeAMessage": "Type a message...",
+  "youPrefix": "You: ",
+  "typing": "typing...",
+  "online": "Online",
+  "connecting": "Connecting...",
+  "reconnecting": "Reconnecting...",
+  "disconnected": "Disconnected",
+  "user": "User",
+  "failedToSendMessage": "Failed to send message",
+
+  "overview": "Overview",
+  "totalTransactions": "Total Transactions",
+  "totalSpent": "Total Spent",
+  "favoriteBusinesses": "Favorite Businesses ({count})",
+  "favoritedOn": "Favorited on {date}",
+  "businessOverview": "Business Overview",
+  "totalRevenue": "Total Revenue",
+  "revenueAnalytics": "Revenue Analytics",
+  "noFavoriteCustomersYet": "No Favorite Customers Yet",
+  "customersWhoFavorite": "Customers who favorite your business will appear here",
+  "favoriteCustomers": "Favorite Customers",
+  "setMonthlyLimitTitle": "Set Monthly Limit",
+  "setMonthlyLimitDescription": "Set a monthly spending limit to track your budget",
+  "monthlyLimit": "Monthly Limit",
+  "enterAmountHint": "Enter amount",
+  "paidVsToPay": "Paid vs To Pay",
+  "monthlySpending": "Monthly Spending - {month}",
+  "setMonthlyLimitTooltip": "Set Monthly Limit",
+  "totalSpentLabel": "Total Spent",
+  "monthlyLimitLabel": "Monthly Limit",
+  "overBudgetBy": "Over budget by Rs. {amount}",
+  "remainingBudget": "Remaining: Rs. {amount}",
+  "monthlyTransactionTrend": "Monthly Transaction Trend",
+  "daysLeft": "{count} days left",
+  "transactionsCount": "{count} transactions",
+  "rsAmount": "Rs. {amount}",
+
+  "markAllSeen": "Mark all seen",
+  "notificationMarkedAsRead": "Notification marked as read",
+  "allNotificationsMarkedAsRead": "All notifications marked as read",
+  "notificationDeletedSuccessfully": "Notification deleted successfully",
+  "allReadNotificationsDeleted": "All read notifications deleted",
+
+  "status": "Status",
+  "adminResponse": "Admin Response",
+  "admin": "Admin",
+  "created": "Created",
+  "lastUpdated": "Last Updated",
+  "resolved": "Resolved",
+  "noTicketsYet": "No tickets yet",
+  "createFirstTicket": "Create your first support ticket",
+
+  "connectionRequestSent": "Connection request sent!",
+  "sendConnectionRequest": "Send Connection Request",
+  "updateProfile": "Update Profile",
+  "submitVerificationRequest": "Submit Verification Request",
+  "pleaseSelectDocumentImage": "Please select a document image",
+  "submitBusinessDocuments": "Submit your business documents to get verified. This helps build trust with your customers.",
+  "change": "Change",
+  "additionalNoteOptional": "Additional Note (Optional)",
+  "addAdditionalInfo": "Add any additional information about your business...",
+  "submitted": "Submitted",
+  "submitNewRequest": "Submit New Request",
+
+  "locationServicesDisabled": "Location services are disabled",
+  "locationPermissionDenied": "Location permission denied",
+  "locationPermissionsPermanentlyDenied": "Location permissions are permanently denied",
+  "failedToGetCurrentLocation": "Failed to get current location",
+  "pleaseSelectLocationOnMap": "Please tap on the map to select a location",
+  "searchLocationHint": "Search location...",
+  "enterShopAddress": "Enter shop address (optional)",
+  "saving": "Saving...",
+  "saveLocation": "Save Location",
+
+  "changePasswordTitle": "Change Password",
+  "updateAccountPassword": "Update your account password",
+  "currentPassword": "Current Password",
+  "currentPasswordHint": "Enter your current password",
+  "pleaseEnterCurrentPassword": "Please enter your current password",
+  "newPassword": "New Password",
+  "newPasswordHint": "Enter your new password",
+  "pleaseEnterNewPassword": "Please enter a new password",
+  "newPasswordMustBeDifferent": "New password must be different from current",
+  "confirmNewPassword": "Confirm New Password",
+  "pleaseConfirmNewPassword": "Please confirm your new password",
+  "differentFromCurrentPassword": "Different from current password",
+
+  "goodMorning": "Good Morning",
+  "goodAfternoon": "Good Afternoon",
+  "goodEvening": "Good Evening",
+  "giveToTakeRatioGood": "Your Give is to Take Ratio Looks Good",
+  "needToGiveMore": "You Need to Give More Than Take",
+  "giveAndTakeBalanced": "Your Give and Take is Balanced",
+  "toGive": "To Give",
+  "toTake": "To Take",
+
+  "noConnectedBusinesses": "No connected businesses yet",
+  "noConnectedCustomers": "No connected customers yet",
+  "connectWithBusinesses": "Connect with businesses to start tracking your transactions",
+  "connectWithCustomers": "Connect with customers to manage their accounts",
+  "failedToLoadConnections": "Failed to load connections",
+  "connectedBusinesses": "Connected Businesses",
+  "connectedCustomers": "Connected Customers",
+  "business": "Business",
+
+  "gettingYourLocation": "Getting your location...",
+  "noBusinessesWithLocation": "No businesses with location found",
+
+  "@pleaseWaitBeforeResending": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "@pendingRs": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@recordCashPayment": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "@voiceInputAdded": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@imageProcessed": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@failedToInitialize": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "@errorProcessingImage": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "@dueRs": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@esewaPaymentFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "@noUsersFoundFor": {
+    "placeholders": {
+      "query": { "type": "String" }
+    }
+  },
+  "@usersSelected": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "@usersAvailable": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "@sendRequests": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "@favoriteBusinesses": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "@favoritedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "@monthlySpending": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "@overBudgetBy": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@remainingBudget": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
   "@deleteConnectionMessage": {
     "placeholders": {
       "name": {
@@ -206,6 +569,90 @@
       "amount": {
         "type": "String"
       }
+    }
+  },
+  "@daysLeft": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@transactionsCount": {
+    "placeholders": {
+      "count": {
+        "type": "String"
+      }
+    }
+  },
+  "@rsAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+
+  "businessVerification": "Business Verification",
+  "businessRegistration": "Business Registration",
+  "panCard": "PAN Card",
+  "vatCertificate": "VAT Certificate",
+  "tradeLicense": "Trade License",
+  "documentSelected": "Document selected",
+  "tapToUploadDocument": "Tap to upload document image",
+  "takePhotoOrChooseFromGallery": "Take a photo or choose from gallery",
+  "pendingReview": "Pending Review",
+  "verificationBeingReviewed": "Your verification request is being reviewed by our admin team.",
+  "notVerifiedTitle": "Not Verified",
+  "businessVerifiedSuccessfully": "Your business has been verified successfully.",
+  "documentType": "Document Type",
+  "uploadDocument": "Upload Document",
+  "latestRequest": "Latest Request",
+  "adminRemarks": "Admin Remarks",
+
+  "setShopLocation": "Set Shop Location",
+  "tapOnMapToPinLocation": "Tap on the map to pin your shop location",
+  "locationCoordinates": "Location: {lat}, {lng}",
+  "@locationCoordinates": {
+    "placeholders": {
+      "lat": { "type": "String" },
+      "lng": { "type": "String" }
+    }
+  },
+
+  "requestPending": "Request Pending",
+  "notConnected": "Not Connected",
+  "viewDetails": "View Details",
+
+  "directions": "Directions",
+  "distanceKm": "Distance: {distance} km",
+  "@distanceKm": {
+    "placeholders": {
+      "distance": { "type": "String" }
+    }
+  },
+
+  "yourDue": "Your Due",
+  "toReceive": "To Receive",
+  "youPaid": "You Paid",
+
+  "isTyping": "{userName} is typing...",
+  "@isTyping": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+
+  "asBusiness": "As Business",
+  "asCustomer": "As Customer",
+
+  "transactionCalendar": "Transaction Calendar",
+  "noTransactionsOnDate": "No transactions on this date",
+  "daysWithTransactions": "days with transactions",
+  "transactionsOnDate": "Transactions on {date}",
+  "@transactionsOnDate": {
+    "placeholders": {
+      "date": { "type": "String" }
     }
   }
 }

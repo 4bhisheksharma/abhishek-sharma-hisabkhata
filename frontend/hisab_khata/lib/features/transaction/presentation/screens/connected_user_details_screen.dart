@@ -4,11 +4,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/bloc/chat_provider.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/screens/chat_detail_screen.dart';
-import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
 import 'package:hisab_khata/core/di/dependency_injection.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/screens/directions_map_screen.dart';
 import '../bloc/connected_user_details_bloc.dart';
 import '../bloc/connected_user_details_event.dart';
@@ -80,7 +80,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     BuildContext context,
     ConnectedUserDetailsState state,
   ) {
-    String title = 'User Details';
+    String title = AppLocalizations.of(context)!.userDetails;
     ConnectedUserDetails? userDetails;
     if (state is ConnectedUserDetailsLoaded) {
       title = state.userDetails.displayName;
@@ -302,8 +302,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                       color: Colors.white,
                     ),
                   )
-                : const Text(
-                    'Pay Due',
+                : Text(
+                    AppLocalizations.of(context)!.payDue,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
           ),
@@ -365,7 +365,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   )
                 : const Icon(Icons.payments_outlined, size: 20),
             label: Text(
-              isLoading ? 'Processing...' : 'Clear Due (Cash)',
+              isLoading
+                  ? AppLocalizations.of(context)!.processing
+                  : AppLocalizations.of(context)!.clearDueCash,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
@@ -395,7 +397,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     }
 
     if (userDetails == null || userDetails.toPay <= 0) {
-      MySnackbar.showInfo(context, 'No pending dues to clear');
+      MySnackbar.showInfo(
+        context,
+        AppLocalizations.of(context)!.noPendingDuesToClear,
+      );
       return;
     }
 
@@ -439,8 +444,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Clear Due (Cash)',
+                            Text(
+                              AppLocalizations.of(context)!.clearDueCash,
                               style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -449,7 +454,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                             ),
                             const SizedBox(height: 2),
                             Text(
-                              'Pending: Rs. ${userDetails!.toPay.toStringAsFixed(2)}',
+                              AppLocalizations.of(context)!.pendingRs(
+                                userDetails!.toPay.toStringAsFixed(2),
+                              ),
                               style: TextStyle(
                                 fontSize: 13,
                                 color: AppTheme.textSecondary,
@@ -483,7 +490,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            'Record cash payment received from ${userDetails.displayName}',
+                            AppLocalizations.of(
+                              context,
+                            )!.recordCashPayment(userDetails.displayName),
                             style: TextStyle(
                               fontSize: 12,
                               color: AppTheme.textPrimary,
@@ -507,8 +516,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                       ),
                     ],
                     decoration: InputDecoration(
-                      labelText: 'Amount Received',
-                      prefixText: 'Rs. ',
+                      labelText: AppLocalizations.of(context)!.amountReceived,
+                      prefixText: AppLocalizations.of(context)!.rsPrefix,
                       filled: true,
                       fillColor: Colors.grey[50],
                       border: OutlineInputBorder(
@@ -523,7 +532,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                           amountController.text = userDetails!.toPay
                               .toStringAsFixed(2);
                         },
-                        child: const Text('Full'),
+                        child: Text(AppLocalizations.of(context)!.full),
                       ),
                     ),
                     validator: (value) {
@@ -550,8 +559,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   TextFormField(
                     controller: noteController,
                     decoration: InputDecoration(
-                      labelText: 'Note (optional)',
-                      hintText: 'e.g. Cash received',
+                      labelText: AppLocalizations.of(context)!.noteOptional,
+                      hintText: AppLocalizations.of(
+                        context,
+                      )!.noteHintCashReceived,
                       filled: true,
                       fillColor: Colors.grey[50],
                       border: OutlineInputBorder(
@@ -596,7 +607,9 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                                 amount: amount,
                                 type: TransactionType.payment,
                                 description: note.isEmpty
-                                    ? 'Cash payment received'
+                                    ? AppLocalizations.of(
+                                        context,
+                                      )!.cashPaymentReceived
                                     : note,
                               ),
                             );
@@ -606,8 +619,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                             Icons.check_circle_outline,
                             size: 18,
                           ),
-                          label: const Text(
-                            'Clear Due',
+                          label: Text(
+                            AppLocalizations.of(context)!.clearDue,
                             style: TextStyle(fontWeight: FontWeight.w600),
                           ),
                           style: ElevatedButton.styleFrom(
@@ -726,7 +739,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
   ) {
     return IconButton(
       icon: const Icon(Icons.directions),
-      tooltip: 'Get Directions',
+      tooltip: AppLocalizations.of(context)!.getDirections,
       onPressed: () {
         final lat = userDetails.latitude;
         final lng = userDetails.longitude;
@@ -753,7 +766,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
   ) {
     return IconButton(
       icon: const Icon(Icons.chat_bubble_outline),
-      tooltip: 'Chat',
+      tooltip: AppLocalizations.of(context)!.chat,
       onPressed: () => _navigateToChat(context),
     );
   }
@@ -764,7 +777,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
   ) {
     return IconButton(
       icon: const Icon(Icons.delete_outline),
-      tooltip: 'Delete Connection',
+      tooltip: AppLocalizations.of(context)!.deleteConnection,
       onPressed: () => _showDeleteConfirmation(context, userDetails),
     );
   }
@@ -790,7 +803,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     }
 
     if (otherUserId == null) {
-      MySnackbar.showError(context, 'Unable to open chat. Please try again.');
+      MySnackbar.showError(
+        context,
+        AppLocalizations.of(context)!.unableToOpenChat,
+      );
       return;
     }
 
@@ -933,8 +949,8 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
-                'Delete',
+              child: Text(
+                AppLocalizations.of(context)!.delete,
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),

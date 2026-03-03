@@ -62,7 +62,7 @@ class MonthlyTrendLineChart extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Monthly Transaction Trend',
+                AppLocalizations.of(context)!.monthlyTransactionTrend,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -204,14 +204,17 @@ class MonthlyTrendLineChart extends StatelessWidget {
                               ),
                               children: [
                                 TextSpan(
-                                  text: 'Rs. ${amount.toStringAsFixed(2)}\n',
+                                  text:
+                                      '${AppLocalizations.of(context)!.rsAmount(amount.toStringAsFixed(2))}\n',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
                                   ),
                                 ),
                                 TextSpan(
-                                  text: '$count transactions',
+                                  text: AppLocalizations.of(
+                                    context,
+                                  )!.transactionsCount('$count'),
                                   style: const TextStyle(
                                     color: Colors.white70,
                                     fontSize: 10,

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_event.dart';
 import 'package:hisab_khata/features/auth/presentation/bloc/auth_state.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 
 class ChangePasswordDialog extends StatefulWidget {
@@ -93,7 +95,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Change Password',
+                              AppLocalizations.of(context)!.changePasswordTitle,
                               style: TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -102,7 +104,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Update your account password',
+                              AppLocalizations.of(
+                                context,
+                              )!.updateAccountPassword,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: AppTheme.textSecondary,
@@ -123,8 +127,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                   // Old Password Field
                   _buildPasswordField(
                     controller: _oldPasswordController,
-                    label: 'Current Password',
-                    hint: 'Enter your current password',
+                    label: AppLocalizations.of(context)!.currentPassword,
+                    hint: AppLocalizations.of(context)!.currentPasswordHint,
                     obscure: _obscureOldPassword,
                     onToggleVisibility: () {
                       setState(
@@ -133,7 +137,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter your current password';
+                        return AppLocalizations.of(
+                          context,
+                        )!.pleaseEnterCurrentPassword;
                       }
                       return null;
                     },
@@ -143,8 +149,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                   // New Password Field
                   _buildPasswordField(
                     controller: _newPasswordController,
-                    label: 'New Password',
-                    hint: 'Enter your new password',
+                    label: AppLocalizations.of(context)!.newPassword,
+                    hint: AppLocalizations.of(context)!.newPasswordHint,
                     obscure: _obscureNewPassword,
                     onToggleVisibility: () {
                       setState(
@@ -153,13 +159,17 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please enter a new password';
+                        return AppLocalizations.of(
+                          context,
+                        )!.pleaseEnterNewPassword;
                       }
                       if (value.length < 8) {
                         return 'Password must be at least 8 characters';
                       }
                       if (value == _oldPasswordController.text) {
-                        return 'New password must be different from current';
+                        return AppLocalizations.of(
+                          context,
+                        )!.newPasswordMustBeDifferent;
                       }
                       return null;
                     },
@@ -169,7 +179,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                   // Confirm Password Field
                   _buildPasswordField(
                     controller: _confirmPasswordController,
-                    label: 'Confirm New Password',
+                    label: AppLocalizations.of(context)!.confirmNewPassword,
                     hint: 'Re-enter your new password',
                     obscure: _obscureConfirmPassword,
                     onToggleVisibility: () {
@@ -180,7 +190,9 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                     },
                     validator: (value) {
                       if (value == null || value.isEmpty) {
-                        return 'Please confirm your new password';
+                        return AppLocalizations.of(
+                          context,
+                        )!.pleaseConfirmNewPassword;
                       }
                       if (value != _newPasswordController.text) {
                         return 'Passwords do not match';
@@ -210,8 +222,14 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        _buildRequirement('At least 8 characters long'),
-                        _buildRequirement('Different from current password'),
+                        _buildRequirement(
+                          AppLocalizations.of(context)!.passwordMinLength,
+                        ),
+                        _buildRequirement(
+                          AppLocalizations.of(
+                            context,
+                          )!.differentFromCurrentPassword,
+                        ),
                       ],
                     ),
                   ),
@@ -231,7 +249,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                             side: BorderSide(color: AppTheme.dividerColor),
                           ),
                           child: Text(
-                            'Cancel',
+                            AppLocalizations.of(context)!.cancel,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
@@ -253,8 +271,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
-                            'Update',
+                          child: Text(
+                            AppLocalizations.of(context)!.update,
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,

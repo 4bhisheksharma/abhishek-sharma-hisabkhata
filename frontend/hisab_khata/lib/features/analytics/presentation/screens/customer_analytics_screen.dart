@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_event.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_state.dart';
@@ -101,7 +102,7 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Overview',
+                AppLocalizations.of(context)!.overview,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -111,15 +112,19 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
                   ? Column(
                       children: [
                         AnalyticsStatCard(
-                          title: 'Total Transactions',
+                          title: AppLocalizations.of(
+                            context,
+                          )!.totalTransactions,
                           value: '$totalTransactions',
                           icon: Icons.receipt_long_rounded,
                           iconColor: AppTheme.primaryBlue,
                         ),
                         const SizedBox(height: 12),
                         AnalyticsStatCard(
-                          title: 'Total Spent',
-                          value: 'Rs. ${totalAmount.toStringAsFixed(0)}',
+                          title: AppLocalizations.of(context)!.totalSpent,
+                          value: AppLocalizations.of(
+                            context,
+                          )!.rsAmount(totalAmount.toStringAsFixed(0)),
                           icon: Icons.account_balance_wallet_rounded,
                           iconColor: Colors.orange,
                         ),
@@ -129,7 +134,9 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
                       children: [
                         Expanded(
                           child: AnalyticsStatCard(
-                            title: 'Total Transactions',
+                            title: AppLocalizations.of(
+                              context,
+                            )!.totalTransactions,
                             value: '$totalTransactions',
                             icon: Icons.receipt_long_rounded,
                             iconColor: AppTheme.primaryBlue,
@@ -138,8 +145,10 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: AnalyticsStatCard(
-                            title: 'Total Spent',
-                            value: 'Rs. ${totalAmount.toStringAsFixed(0)}',
+                            title: AppLocalizations.of(context)!.totalSpent,
+                            value: AppLocalizations.of(
+                              context,
+                            )!.rsAmount(totalAmount.toStringAsFixed(0)),
                             icon: Icons.account_balance_wallet_rounded,
                             iconColor: Colors.orange,
                           ),
@@ -237,7 +246,9 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Favorite Businesses (${state.totalFavorites ?? 0})',
+              AppLocalizations.of(
+                context,
+              )!.favoriteBusinesses('${state.totalFavorites ?? 0}'),
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -269,7 +280,11 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text(
-                    'Favorited on ${DateTime.parse(business['favoritedAt']).toLocal().toString().split(' ')[0]}',
+                    AppLocalizations.of(context)!.favoritedOn(
+                      DateTime.parse(
+                        business['favoritedAt'],
+                      ).toLocal().toString().split(' ')[0],
+                    ),
                     style: const TextStyle(fontSize: 12),
                   ),
                   trailing: const Icon(Icons.favorite, color: Colors.red),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Widget to show typing indicator when other user is typing.
 class TypingIndicator extends StatefulWidget {
@@ -63,7 +64,7 @@ class _TypingIndicatorState extends State<TypingIndicator>
           if (widget.userName != null) ...[
             const SizedBox(width: 8),
             Text(
-              '${widget.userName} is typing...',
+              AppLocalizations.of(context)!.isTyping(widget.userName!),
               style: TextStyle(
                 color: AppTheme.textSecondary,
                 fontSize: 12,

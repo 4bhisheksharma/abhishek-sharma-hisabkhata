@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../domain/entities/message_entity.dart';
@@ -69,12 +70,12 @@ class _MessageListState extends State<MessageList> {
             ),
             const SizedBox(height: 16),
             Text(
-              'No messages yet',
+              AppLocalizations.of(context)!.noMessagesYet,
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
             ),
             const SizedBox(height: 8),
             Text(
-              'Start the conversation!',
+              AppLocalizations.of(context)!.startTheConversation,
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
             ),
           ],
@@ -193,9 +194,9 @@ class _MessageListState extends State<MessageList> {
 
     String label;
     if (messageDate == today) {
-      label = 'Today';
+      label = AppLocalizations.of(context)!.today;
     } else if (messageDate == yesterday) {
-      label = 'Yesterday';
+      label = AppLocalizations.of(context)!.yesterday;
     } else if (now.difference(date).inDays < 7) {
       label = DateFormat('EEEE').format(date);
     } else {

@@ -219,7 +219,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pinEmptyErrorText => 'Pin is required';
 
   @override
-  String get confirmPasswordNotMatchErrorText => 'Confirm password does not match';
+  String get confirmPasswordNotMatchErrorText =>
+      'Confirm password does not match';
 
   @override
   String get invalidEmailErrorText => 'Please enter a valid email';
@@ -252,10 +253,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get transactionHistory => 'Transaction History';
 
   @override
-  String get viewAllPastTransactions => 'View all your past transactions and payments.';
+  String get viewAllPastTransactions =>
+      'View all your past transactions and payments.';
 
   @override
-  String get viewAllPastTransactionsBusiness => 'View all your past transactions and received payments.';
+  String get viewAllPastTransactionsBusiness =>
+      'View all your past transactions and received payments.';
 
   @override
   String get totalShops => 'Total Shops';
@@ -420,16 +423,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get connectionPlaceholder => 'Connection Placeholder';
 
   @override
-  String get connectionPlaceholderDescription => 'Manage your pending and accepted connection requests.';
+  String get connectionPlaceholderDescription =>
+      'Manage your pending and accepted connection requests.';
 
   @override
   String get analyticsPlaceholder => 'Analytics';
 
   @override
-  String get analyticsPlaceholderDescriptionBusiness => 'Track your sales patterns and business insights.';
+  String get analyticsPlaceholderDescriptionBusiness =>
+      'Track your sales patterns and business insights.';
 
   @override
-  String get analyticsPlaceholderDescriptionCustomer => 'Track your spending patterns and financial insights.';
+  String get analyticsPlaceholderDescriptionCustomer =>
+      'Track your spending patterns and financial insights.';
 
   @override
   String get date => 'Date';
@@ -523,7 +529,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get settleBeforeDelete => 'Please settle all pending dues before deleting this connection.';
+  String get settleBeforeDelete =>
+      'Please settle all pending dues before deleting this connection.';
 
   @override
   String get noPendingDues => 'No pending dues';
@@ -562,7 +569,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noTransactionData => 'No transaction data available';
 
   @override
-  String get setMonthlyLimitMessage => 'Set a monthly limit to track your budget';
+  String get setMonthlyLimitMessage =>
+      'Set a monthly limit to track your budget';
 
   @override
   String get subject => 'Subject';
@@ -580,7 +588,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get description => 'Description';
 
   @override
-  String get ticketDescriptionHint => 'Provide detailed information about your issue';
+  String get ticketDescriptionHint =>
+      'Provide detailed information about your issue';
 
   @override
   String get pleaseEnterSubject => 'Please enter a subject';
@@ -592,8 +601,934 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pleaseEnterDescription => 'Please enter a description';
 
   @override
-  String get descriptionMinLength => 'Description must be at least 20 characters';
+  String get descriptionMinLength =>
+      'Description must be at least 20 characters';
 
   @override
   String get typeMessage => 'Type a message...';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get location => 'Location';
+
+  @override
+  String get app => 'App';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get payments => 'Payments';
+
+  @override
+  String get changePassword => 'Change password';
+
+  @override
+  String get businessesNearMe => 'Businesses Near Me';
+
+  @override
+  String get viewBusinessesOnMap => 'View businesses on map';
+
+  @override
+  String get talkToByaparAI => 'Talk to Byapar d-AI';
+
+  @override
+  String get aiAssistant => 'AI assistant';
+
+  @override
+  String get aiBusinessAssistant => 'AI business assistant';
+
+  @override
+  String get shopLocation => 'Shop Location';
+
+  @override
+  String get locationSet => 'Location set';
+
+  @override
+  String get pinYourShop => 'Pin your shop';
+
+  @override
+  String get esewaAccount => 'eSewa Account';
+
+  @override
+  String get manageLinkedEsewa => 'Manage linked eSewa';
+
+  @override
+  String get verificationStatus => 'Verification Status';
+
+  @override
+  String get requestVerification => 'Request Verification';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get pending => 'Pending';
+
+  @override
+  String get transactionActivity => 'Transaction Activity';
+
+  @override
+  String get noTransactionActivity => 'No transaction activity yet';
+
+  @override
+  String get noTransactionActivitySubtitle =>
+      'Your recent transactions will appear here';
+
+  @override
+  String get transactionSingular => 'transaction';
+
+  @override
+  String get goToLogin => 'Go to Login';
+
+  @override
+  String get asBusiness => 'As Business';
+
+  @override
+  String get asCustomer => 'As Customer';
+
+  @override
+  String pleaseWaitBeforeResending(String time) {
+    return 'Please wait $time before resending';
+  }
+
+  @override
+  String get failedToResendOtp => 'Failed to resend OTP';
+
+  @override
+  String get userDetails => 'User Details';
+
+  @override
+  String get clearDueCash => 'Clear Due (Cash)';
+
+  @override
+  String get processing => 'Processing...';
+
+  @override
+  String get noPendingDuesToClear => 'No pending dues to clear';
+
+  @override
+  String pendingRs(String amount) {
+    return 'Pending: Rs. $amount';
+  }
+
+  @override
+  String recordCashPayment(String name) {
+    return 'Record cash payment received from $name';
+  }
+
+  @override
+  String get amountReceived => 'Amount Received';
+
+  @override
+  String get full => 'Full';
+
+  @override
+  String get noteOptional => 'Note (optional)';
+
+  @override
+  String get noteHintCashReceived => 'e.g. Cash received';
+
+  @override
+  String get cashPaymentReceived => 'Cash payment received';
+
+  @override
+  String get clearDue => 'Clear Due';
+
+  @override
+  String get getDirections => 'Get Directions';
+
+  @override
+  String get chat => 'Chat';
+
+  @override
+  String get unableToOpenChat => 'Unable to open chat. Please try again.';
+
+  @override
+  String get updateEsewaAccount => 'Update eSewa Account';
+
+  @override
+  String get linkEsewaAccount => 'Link eSewa Account';
+
+  @override
+  String get esewaIdLabel => 'eSewa ID (Phone Number)';
+
+  @override
+  String get esewaIdHint => '98XXXXXXXX';
+
+  @override
+  String get pleaseEnterEsewaId => 'Please enter your eSewa ID';
+
+  @override
+  String get accountHolderName => 'Account Holder Name';
+
+  @override
+  String get accountHolderHint => 'Name on your eSewa account';
+
+  @override
+  String get pleaseEnterAccountHolderName =>
+      'Please enter the account holder name';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get linkAccount => 'Link Account';
+
+  @override
+  String get unlink => 'Unlink';
+
+  @override
+  String get unlinkEsewa => 'Unlink eSewa';
+
+  @override
+  String get unlinkEsewaConfirmation =>
+      'Are you sure you want to unlink your eSewa account? Customers will no longer be able to pay via eSewa.';
+
+  @override
+  String get esewaPayment => 'eSewa Payment';
+
+  @override
+  String get accountLinked => 'Your account is linked';
+
+  @override
+  String get esewaLinkedDescription =>
+      'Customers can now pay their dues via eSewa directly to your account.';
+
+  @override
+  String get esewaUnlinkedDescription =>
+      'Link your eSewa account so customers can pay their dues digitally.';
+
+  @override
+  String get enterEsewaDetails => 'Enter your eSewa account details';
+
+  @override
+  String get esewaIdMustBe10Digits => 'eSewa ID must be 10 digits';
+
+  @override
+  String get esewaIdMustStartWith9 => 'eSewa ID must start with 9';
+
+  @override
+  String get active => 'Active';
+
+  @override
+  String get inactive => 'Inactive';
+
+  @override
+  String get linkedAccount => 'Linked Account';
+
+  @override
+  String voiceInputAdded(String amount) {
+    return 'Voice input added: Rs. $amount';
+  }
+
+  @override
+  String imageProcessed(String amount) {
+    return 'Image processed: Rs. $amount';
+  }
+
+  @override
+  String get rsPrefix => 'Rs. ';
+
+  @override
+  String get pleaseEnterItemTitle => 'Please enter item title';
+
+  @override
+  String get speechRecognitionNotAvailable =>
+      'Speech recognition not available on this device';
+
+  @override
+  String failedToInitialize(String error) {
+    return 'Failed to initialize: $error';
+  }
+
+  @override
+  String get voiceTransaction => 'Voice Transaction';
+
+  @override
+  String get listening => 'Listening...';
+
+  @override
+  String get tapMicToSpeak => 'Tap mic to speak';
+
+  @override
+  String get trySaying => 'Try saying: \"Add 200 rs for chocolate\"';
+
+  @override
+  String get youSaid => 'You said:';
+
+  @override
+  String get transactionDetails => 'Transaction Details';
+
+  @override
+  String get noTextFoundInImage =>
+      'No text found in image. Please try another image.';
+
+  @override
+  String get couldNotExtractDetails =>
+      'Could not extract transaction details. Please edit manually.';
+
+  @override
+  String errorProcessingImage(String error) {
+    return 'Error processing image: $error';
+  }
+
+  @override
+  String get imageTransaction => 'Image Transaction';
+
+  @override
+  String get extractDetailsFromReceipt => 'Extract details from receipt';
+
+  @override
+  String get extractingText => 'Extracting text from image...';
+
+  @override
+  String get extractedText => 'Extracted Text:';
+
+  @override
+  String get filterTransactions => 'Filter transactions';
+
+  @override
+  String get noTransactionsYet => 'No transactions yet';
+
+  @override
+  String get transactionsWillAppearHere => 'Your transactions will appear here';
+
+  @override
+  String get addTransactionsForCustomer => 'Add transactions for this customer';
+
+  @override
+  String get purchaseFromBusiness => 'Purchase from business';
+
+  @override
+  String get paymentMade => 'Payment made';
+
+  @override
+  String get creditReceived => 'Credit received';
+
+  @override
+  String get refundReceived => 'Refund received';
+
+  @override
+  String get adjustment => 'Adjustment';
+
+  @override
+  String get saleToCustomer => 'Sale to customer';
+
+  @override
+  String get paymentReceived => 'Payment received';
+
+  @override
+  String get creditGiven => 'Credit given';
+
+  @override
+  String get refundGiven => 'Refund given';
+
+  @override
+  String get allDuesCleared => 'All dues cleared!';
+
+  @override
+  String get almostAllDuesPaid => 'Great! Almost all dues paid';
+
+  @override
+  String get considerClearingDues => 'Consider clearing pending dues';
+
+  @override
+  String get outstandingBalance => 'Outstanding balance pending';
+
+  @override
+  String get allPaymentsCollected => 'All payments collected';
+
+  @override
+  String get goodCollectionRate => 'Good collection rate';
+
+  @override
+  String get moderateCollection => 'Moderate collection';
+
+  @override
+  String get pendingCollection => 'Pending collection';
+
+  @override
+  String get payDueViaEsewa => 'Pay Due via eSewa';
+
+  @override
+  String dueRs(String amount) {
+    return 'Due: Rs. $amount';
+  }
+
+  @override
+  String get businessNotLinkedEsewa =>
+      'This business has not linked their eSewa account yet. Please use cash payment instead.';
+
+  @override
+  String get payWithEsewa => 'Pay with eSewa';
+
+  @override
+  String esewaPaymentFailed(String error) {
+    return 'eSewa payment failed: $error';
+  }
+
+  @override
+  String get paymentCancelled => 'Payment was cancelled';
+
+  @override
+  String get cancelRequest => 'Cancel Request';
+
+  @override
+  String get cancelRequestConfirmation =>
+      'Are you sure you want to cancel this connection request?';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String get yesCancel => 'Yes, Cancel';
+
+  @override
+  String get noReceivedRequests => 'No Received Requests';
+
+  @override
+  String get whenSomeoneSendsRequest =>
+      'When someone sends you a connection request, it will appear here.';
+
+  @override
+  String get pendingRequests => 'Pending Requests';
+
+  @override
+  String get pastRequests => 'Past Requests';
+
+  @override
+  String get awaitingResponse => 'Awaiting Response';
+
+  @override
+  String get noSentRequests => 'No Sent Requests';
+
+  @override
+  String get sentRequestsWillAppear =>
+      'Connection requests you send will appear here.';
+
+  @override
+  String get received => 'Received';
+
+  @override
+  String get sent => 'Sent';
+
+  @override
+  String get accepted => 'Accepted';
+
+  @override
+  String get rejected => 'Rejected';
+
+  @override
+  String get connected => 'Connected';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String get addMultipleCustomers => 'Add Multiple Customers';
+
+  @override
+  String get addMultipleBusinesses => 'Add Multiple Businesses';
+
+  @override
+  String get addMultipleConnections => 'Add Multiple Connections';
+
+  @override
+  String get pleaseSelectAtLeastOneUser =>
+      'Please select at least one user to send connection requests.';
+
+  @override
+  String get searchByNameEmailPhone => 'Search by name, email, or phone...';
+
+  @override
+  String usersSelected(String count) {
+    return '$count user(s) selected';
+  }
+
+  @override
+  String usersAvailable(String count) {
+    return '$count user(s) available';
+  }
+
+  @override
+  String noUsersFoundFor(String query) {
+    return 'No users found for \"$query\"';
+  }
+
+  @override
+  String get noUsersAvailable => 'No users available';
+
+  @override
+  String sendRequests(String count) {
+    return 'Send Requests ($count)';
+  }
+
+  @override
+  String get addCustomer => 'Add Customer';
+
+  @override
+  String get addBusiness => 'Add Business';
+
+  @override
+  String get addMultipleConnectionsTooltip => 'Add Multiple Connections';
+
+  @override
+  String get failedToLoadConnectionRequests =>
+      'Failed to load connection requests';
+
+  @override
+  String get messagesTitle => 'Messages';
+
+  @override
+  String get noConversationsYet => 'No conversations yet';
+
+  @override
+  String get startConversation =>
+      'Start a conversation with your\nconnected users';
+
+  @override
+  String get connectionError => 'Connection error';
+
+  @override
+  String get unableToLoadChat => 'Unable to load chat';
+
+  @override
+  String get goBack => 'Go Back';
+
+  @override
+  String get noMessagesYet => 'No messages yet';
+
+  @override
+  String get startTheConversation => 'Start the conversation!';
+
+  @override
+  String get typeAMessage => 'Type a message...';
+
+  @override
+  String get youPrefix => 'You: ';
+
+  @override
+  String get typing => 'typing...';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get connecting => 'Connecting...';
+
+  @override
+  String get reconnecting => 'Reconnecting...';
+
+  @override
+  String get disconnected => 'Disconnected';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get failedToSendMessage => 'Failed to send message';
+
+  @override
+  String get overview => 'Overview';
+
+  @override
+  String get totalTransactions => 'Total Transactions';
+
+  @override
+  String get totalSpent => 'Total Spent';
+
+  @override
+  String favoriteBusinesses(String count) {
+    return 'Favorite Businesses ($count)';
+  }
+
+  @override
+  String favoritedOn(String date) {
+    return 'Favorited on $date';
+  }
+
+  @override
+  String get businessOverview => 'Business Overview';
+
+  @override
+  String get totalRevenue => 'Total Revenue';
+
+  @override
+  String get revenueAnalytics => 'Revenue Analytics';
+
+  @override
+  String get noFavoriteCustomersYet => 'No Favorite Customers Yet';
+
+  @override
+  String get customersWhoFavorite =>
+      'Customers who favorite your business will appear here';
+
+  @override
+  String get favoriteCustomers => 'Favorite Customers';
+
+  @override
+  String get setMonthlyLimitTitle => 'Set Monthly Limit';
+
+  @override
+  String get setMonthlyLimitDescription =>
+      'Set a monthly spending limit to track your budget';
+
+  @override
+  String get monthlyLimit => 'Monthly Limit';
+
+  @override
+  String get enterAmountHint => 'Enter amount';
+
+  @override
+  String get paidVsToPay => 'Paid vs To Pay';
+
+  @override
+  String monthlySpending(String month) {
+    return 'Monthly Spending - $month';
+  }
+
+  @override
+  String get setMonthlyLimitTooltip => 'Set Monthly Limit';
+
+  @override
+  String get totalSpentLabel => 'Total Spent';
+
+  @override
+  String get monthlyLimitLabel => 'Monthly Limit';
+
+  @override
+  String overBudgetBy(String amount) {
+    return 'Over budget by Rs. $amount';
+  }
+
+  @override
+  String remainingBudget(String amount) {
+    return 'Remaining: Rs. $amount';
+  }
+
+  @override
+  String get monthlyTransactionTrend => 'Monthly Transaction Trend';
+
+  @override
+  String daysLeft(String count) {
+    return '$count days left';
+  }
+
+  @override
+  String transactionsCount(String count) {
+    return '$count transactions';
+  }
+
+  @override
+  String rsAmount(String amount) {
+    return 'Rs. $amount';
+  }
+
+  @override
+  String get markAllSeen => 'Mark all seen';
+
+  @override
+  String get notificationMarkedAsRead => 'Notification marked as read';
+
+  @override
+  String get allNotificationsMarkedAsRead => 'All notifications marked as read';
+
+  @override
+  String get notificationDeletedSuccessfully =>
+      'Notification deleted successfully';
+
+  @override
+  String get allReadNotificationsDeleted => 'All read notifications deleted';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get adminResponse => 'Admin Response';
+
+  @override
+  String get admin => 'Admin';
+
+  @override
+  String get created => 'Created';
+
+  @override
+  String get lastUpdated => 'Last Updated';
+
+  @override
+  String get resolved => 'Resolved';
+
+  @override
+  String get noTicketsYet => 'No tickets yet';
+
+  @override
+  String get createFirstTicket => 'Create your first support ticket';
+
+  @override
+  String get connectionRequestSent => 'Connection request sent!';
+
+  @override
+  String get sendConnectionRequest => 'Send Connection Request';
+
+  @override
+  String get updateProfile => 'Update Profile';
+
+  @override
+  String get submitVerificationRequest => 'Submit Verification Request';
+
+  @override
+  String get pleaseSelectDocumentImage => 'Please select a document image';
+
+  @override
+  String get submitBusinessDocuments =>
+      'Submit your business documents to get verified. This helps build trust with your customers.';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get additionalNoteOptional => 'Additional Note (Optional)';
+
+  @override
+  String get addAdditionalInfo =>
+      'Add any additional information about your business...';
+
+  @override
+  String get submitted => 'Submitted';
+
+  @override
+  String get submitNewRequest => 'Submit New Request';
+
+  @override
+  String get locationServicesDisabled => 'Location services are disabled';
+
+  @override
+  String get locationPermissionDenied => 'Location permission denied';
+
+  @override
+  String get locationPermissionsPermanentlyDenied =>
+      'Location permissions are permanently denied';
+
+  @override
+  String get failedToGetCurrentLocation => 'Failed to get current location';
+
+  @override
+  String get pleaseSelectLocationOnMap =>
+      'Please tap on the map to select a location';
+
+  @override
+  String get searchLocationHint => 'Search location...';
+
+  @override
+  String get enterShopAddress => 'Enter shop address (optional)';
+
+  @override
+  String get saving => 'Saving...';
+
+  @override
+  String get saveLocation => 'Save Location';
+
+  @override
+  String get changePasswordTitle => 'Change Password';
+
+  @override
+  String get updateAccountPassword => 'Update your account password';
+
+  @override
+  String get currentPassword => 'Current Password';
+
+  @override
+  String get currentPasswordHint => 'Enter your current password';
+
+  @override
+  String get pleaseEnterCurrentPassword => 'Please enter your current password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get newPasswordHint => 'Enter your new password';
+
+  @override
+  String get pleaseEnterNewPassword => 'Please enter a new password';
+
+  @override
+  String get newPasswordMustBeDifferent =>
+      'New password must be different from current';
+
+  @override
+  String get confirmNewPassword => 'Confirm New Password';
+
+  @override
+  String get pleaseConfirmNewPassword => 'Please confirm your new password';
+
+  @override
+  String get differentFromCurrentPassword => 'Different from current password';
+
+  @override
+  String get goodMorning => 'Good Morning';
+
+  @override
+  String get goodAfternoon => 'Good Afternoon';
+
+  @override
+  String get goodEvening => 'Good Evening';
+
+  @override
+  String get giveToTakeRatioGood => 'Your Give is to Take Ratio Looks Good';
+
+  @override
+  String get needToGiveMore => 'You Need to Give More Than Take';
+
+  @override
+  String get giveAndTakeBalanced => 'Your Give and Take is Balanced';
+
+  @override
+  String get toGive => 'To Give';
+
+  @override
+  String get toTake => 'To Take';
+
+  @override
+  String get noConnectedBusinesses => 'No connected businesses yet';
+
+  @override
+  String get noConnectedCustomers => 'No connected customers yet';
+
+  @override
+  String get connectWithBusinesses =>
+      'Connect with businesses to start tracking your transactions';
+
+  @override
+  String get connectWithCustomers =>
+      'Connect with customers to manage their accounts';
+
+  @override
+  String get failedToLoadConnections => 'Failed to load connections';
+
+  @override
+  String get connectedBusinesses => 'Connected Businesses';
+
+  @override
+  String get connectedCustomers => 'Connected Customers';
+
+  @override
+  String get business => 'Business';
+
+  @override
+  String get gettingYourLocation => 'Getting your location...';
+
+  @override
+  String get noBusinessesWithLocation => 'No businesses with location found';
+
+  @override
+  String get businessVerification => 'Business Verification';
+
+  @override
+  String get businessRegistration => 'Business Registration';
+
+  @override
+  String get panCard => 'PAN Card';
+
+  @override
+  String get vatCertificate => 'VAT Certificate';
+
+  @override
+  String get tradeLicense => 'Trade License';
+
+  @override
+  String get documentSelected => 'Document selected';
+
+  @override
+  String get tapToUploadDocument => 'Tap to upload document image';
+
+  @override
+  String get takePhotoOrChooseFromGallery =>
+      'Take a photo or choose from gallery';
+
+  @override
+  String get pendingReview => 'Pending Review';
+
+  @override
+  String get verificationBeingReviewed =>
+      'Your verification request is being reviewed by our admin team.';
+
+  @override
+  String get notVerifiedTitle => 'Not Verified';
+
+  @override
+  String get businessVerifiedSuccessfully =>
+      'Your business has been verified successfully.';
+
+  @override
+  String get documentType => 'Document Type';
+
+  @override
+  String get uploadDocument => 'Upload Document';
+
+  @override
+  String get latestRequest => 'Latest Request';
+
+  @override
+  String get adminRemarks => 'Admin Remarks';
+
+  @override
+  String get setShopLocation => 'Set Shop Location';
+
+  @override
+  String get tapOnMapToPinLocation =>
+      'Tap on the map to pin your shop location';
+
+  @override
+  String locationCoordinates(String lat, String lng) {
+    return 'Location: $lat, $lng';
+  }
+
+  @override
+  String get requestPending => 'Request Pending';
+
+  @override
+  String get notConnected => 'Not Connected';
+
+  @override
+  String get viewDetails => 'View Details';
+
+  @override
+  String get directions => 'Directions';
+
+  @override
+  String distanceKm(String distance) {
+    return 'Distance: $distance km';
+  }
+
+  @override
+  String get yourDue => 'Your Due';
+
+  @override
+  String get toReceive => 'To Receive';
+
+  @override
+  String get youPaid => 'You Paid';
+
+  @override
+  String isTyping(String userName) {
+    return '$userName is typing...';
+  }
+
+  @override
+  String get transactionCalendar => 'Transaction Calendar';
+
+  @override
+  String get noTransactionsOnDate => 'No transactions on this date';
+
+  @override
+  String get daysWithTransactions => 'days with transactions';
+
+  @override
+  String transactionsOnDate(String date) {
+    return 'Transactions on $date';
+  }
 }

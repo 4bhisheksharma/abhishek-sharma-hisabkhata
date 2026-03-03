@@ -14,6 +14,7 @@ import 'package:hisab_khata/features/request/presentation/bloc/connection_reques
 import 'package:hisab_khata/features/transaction/presentation/bloc/connected_user_details_event.dart';
 import 'package:hisab_khata/features/transaction/presentation/screens/connected_user_details_screen.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Full-screen map showing nearby businesses.
 /// Tapping a marker shows a bottom sheet:
@@ -41,9 +42,9 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
       appBar: AppBar(
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
-        title: const Text(
-          'Businesses Near Me',
-          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        title: Text(
+          AppLocalizations.of(context)!.businessesNearMe,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
         ),
         centerTitle: true,
         elevation: 0,
@@ -70,7 +71,7 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
                     onPressed: () => context.read<CustomerBloc>().add(
                       const LoadNearbyBusinesses(),
                     ),
-                    child: const Text('Retry'),
+                    child: Text(AppLocalizations.of(context)!.retry),
                   ),
                 ],
               ),
@@ -91,7 +92,7 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'No businesses with location found',
+                      AppLocalizations.of(context)!.noBusinessesWithLocation,
                       style: TextStyle(
                         fontSize: 16,
                         color: AppTheme.textSecondary,
@@ -255,9 +256,9 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
     if (biz.isConnected) {
       return Chip(
         avatar: const Icon(Icons.link, size: 16, color: Colors.white),
-        label: const Text(
-          'Connected',
-          style: TextStyle(color: Colors.white, fontSize: 12),
+        label: Text(
+          AppLocalizations.of(context)!.connected,
+          style: const TextStyle(color: Colors.white, fontSize: 12),
         ),
         backgroundColor: Colors.green,
         padding: EdgeInsets.zero,
@@ -270,9 +271,9 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
           size: 16,
           color: Colors.white,
         ),
-        label: const Text(
-          'Request Pending',
-          style: TextStyle(color: Colors.white, fontSize: 12),
+        label: Text(
+          AppLocalizations.of(context)!.requestPending,
+          style: const TextStyle(color: Colors.white, fontSize: 12),
         ),
         backgroundColor: Colors.orange,
         padding: EdgeInsets.zero,
@@ -286,7 +287,7 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
         color: Colors.grey[700],
       ),
       label: Text(
-        'Not Connected',
+        AppLocalizations.of(context)!.notConnected,
         style: TextStyle(color: Colors.grey[700], fontSize: 12),
       ),
       backgroundColor: Colors.grey[200],
@@ -327,9 +328,9 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
           );
         },
         icon: const Icon(Icons.visibility, size: 18),
-        label: const Text(
-          'View Details',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        label: Text(
+          AppLocalizations.of(context)!.viewDetails,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.primaryBlue,
@@ -344,9 +345,9 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
       return ElevatedButton.icon(
         onPressed: null,
         icon: const Icon(Icons.hourglass_empty, size: 18),
-        label: const Text(
-          'Request Pending',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        label: Text(
+          AppLocalizations.of(context)!.requestPending,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
@@ -363,7 +364,10 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
       return BlocListener<ConnectionRequestBloc, ConnectionRequestState>(
         listener: (context, state) {
           if (state is ConnectionRequestSentSuccess) {
-            MySnackbar.showSuccess(context, 'Connection request sent!');
+            MySnackbar.showSuccess(
+              context,
+              AppLocalizations.of(context)!.connectionRequestSent,
+            );
             Navigator.pop(sheetCtx);
             // Reload businesses to refresh status
             context.read<CustomerBloc>().add(const LoadNearbyBusinesses());
@@ -378,9 +382,9 @@ class _NearbyBusinessesMapScreenState extends State<NearbyBusinessesMapScreen> {
             );
           },
           icon: const Icon(Icons.person_add, size: 18),
-          label: const Text(
-            'Send Connection Request',
-            style: TextStyle(fontWeight: FontWeight.w600),
+          label: Text(
+            AppLocalizations.of(context)!.sendConnectionRequest,
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.green,

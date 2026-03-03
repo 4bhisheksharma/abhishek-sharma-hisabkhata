@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../bloc/chat_bloc.dart';
@@ -33,9 +34,9 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          'Messages',
-          style: TextStyle(fontWeight: FontWeight.w600),
+        title: Text(
+          AppLocalizations.of(context)!.messagesTitle,
+          style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         actions: [
           IconButton(
@@ -95,19 +96,22 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
-              'No conversations yet',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.noConversationsYet,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
               ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Start a conversation with your\nconnected users',
+            Text(
+              AppLocalizations.of(context)!.startConversation,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 14, color: AppTheme.textSecondary),
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppTheme.textSecondary,
+              ),
             ),
           ],
         ),
@@ -159,9 +163,9 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Something went wrong',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.somethingWentWrong,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
@@ -185,7 +189,7 @@ class _ChatRoomsScreenState extends State<ChatRoomsScreen> {
                 context.read<ChatBloc>().add(const LoadChatRoomsEvent());
               },
               icon: const Icon(Icons.refresh_rounded, size: 18),
-              label: const Text('Retry'),
+              label: Text(AppLocalizations.of(context)!.retry),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
                 foregroundColor: Colors.white,

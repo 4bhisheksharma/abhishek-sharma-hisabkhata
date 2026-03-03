@@ -8,6 +8,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_e
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class BusinessVerificationScreen extends StatefulWidget {
   const BusinessVerificationScreen({super.key});
@@ -25,13 +26,16 @@ class _BusinessVerificationScreenState
   File? _selectedDocument;
   bool _isSubmitting = false;
 
-  final List<Map<String, String>> _documentTypes = [
-    {'value': 'business_registration', 'label': 'Business Registration'},
-    {'value': 'pan_card', 'label': 'PAN Card'},
-    {'value': 'vat_certificate', 'label': 'VAT Certificate'},
-    {'value': 'trade_license', 'label': 'Trade License'},
-    {'value': 'other', 'label': 'Other'},
-  ];
+  List<Map<String, String>> _getDocumentTypes(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      {'value': 'business_registration', 'label': l10n.businessRegistration},
+      {'value': 'pan_card', 'label': l10n.panCard},
+      {'value': 'vat_certificate', 'label': l10n.vatCertificate},
+      {'value': 'trade_license', 'label': l10n.tradeLicense},
+      {'value': 'other', 'label': l10n.other},
+    ];
+  }
 
   @override
   void initState() {
@@ -58,8 +62,10 @@ class _BusinessVerificationScreenState
     if (_formKey.currentState!.validate()) {
       if (_selectedDocument == null) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Please select a document image'),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.pleaseSelectDocumentImage,
+            ),
             backgroundColor: AppTheme.errorRed,
           ),
         );
@@ -85,9 +91,12 @@ class _BusinessVerificationScreenState
         backgroundColor: AppTheme.primaryBlue,
         foregroundColor: Colors.white,
         centerTitle: true,
-        title: const Text(
-          'Business Verification',
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        title: Text(
+          AppLocalizations.of(context)!.businessVerification,
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
       ),
       body: BlocConsumer<BusinessBloc, BusinessState>(
@@ -140,9 +149,9 @@ class _BusinessVerificationScreenState
 
           // Show form if not verified and no pending request
           if (!status.isVerified && !status.hasPendingRequest) ...[
-            const Text(
-              'Submit Verification Request',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.submitVerificationRequest,
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
@@ -171,20 +180,18 @@ class _BusinessVerificationScreenState
     if (status.isVerified) {
       icon = Icons.verified;
       color = AppTheme.successGreen;
-      title = 'Verified';
-      subtitle = 'Your business has been verified successfully.';
+      title = AppLocalizations.of(context)!.verified;
+      subtitle = AppLocalizations.of(context)!.businessVerifiedSuccessfully;
     } else if (status.hasPendingRequest) {
       icon = Icons.hourglass_top_rounded;
       color = AppTheme.warningOrange;
-      title = 'Pending Review';
-      subtitle =
-          'Your verification request is being reviewed by our admin team.';
+      title = AppLocalizations.of(context)!.pendingReview;
+      subtitle = AppLocalizations.of(context)!.verificationBeingReviewed;
     } else {
       icon = Icons.info_outline;
       color = AppTheme.infoBlue;
-      title = 'Not Verified';
-      subtitle =
-          'Submit your business documents to get verified and build trust with customers.';
+      title = AppLocalizations.of(context)!.notVerifiedTitle;
+      subtitle = AppLocalizations.of(context)!.submitBusinessDocuments;
     }
 
     return Container(
@@ -255,9 +262,9 @@ class _BusinessVerificationScreenState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Document Type Dropdown
-            const Text(
-              'Document Type',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.documentType,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
@@ -286,7 +293,7 @@ class _BusinessVerificationScreenState
                   ),
                 ),
               ),
-              items: _documentTypes.map((type) {
+              items: _getDocumentTypes(context).map((type) {
                 return DropdownMenuItem<String>(
                   value: type['value'],
                   child: Text(type['label']!),
@@ -301,9 +308,9 @@ class _BusinessVerificationScreenState
             const SizedBox(height: 20),
 
             // Document Upload
-            const Text(
-              'Upload Document',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.uploadDocument,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
@@ -351,9 +358,9 @@ class _BusinessVerificationScreenState
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
-                              const Text(
-                                'Document selected',
-                                style: TextStyle(
+                              Text(
+                                AppLocalizations.of(context)!.documentSelected,
+                                style: const TextStyle(
                                   color: AppTheme.successGreen,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -361,7 +368,9 @@ class _BusinessVerificationScreenState
                               const SizedBox(width: 12),
                               TextButton(
                                 onPressed: _pickDocument,
-                                child: const Text('Change'),
+                                child: Text(
+                                  AppLocalizations.of(context)!.change,
+                                ),
                               ),
                             ],
                           ),
@@ -376,9 +385,9 @@ class _BusinessVerificationScreenState
                             color: AppTheme.primaryBlue.withValues(alpha: 0.7),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Tap to upload document image',
-                            style: TextStyle(
+                          Text(
+                            AppLocalizations.of(context)!.tapToUploadDocument,
+                            style: const TextStyle(
                               color: AppTheme.textSecondary,
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
@@ -386,7 +395,9 @@ class _BusinessVerificationScreenState
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Take a photo or choose from gallery',
+                            AppLocalizations.of(
+                              context,
+                            )!.takePhotoOrChooseFromGallery,
                             style: TextStyle(
                               color: AppTheme.textSecondary.withValues(
                                 alpha: 0.7,
@@ -401,9 +412,9 @@ class _BusinessVerificationScreenState
             const SizedBox(height: 20),
 
             // Note Field
-            const Text(
-              'Additional Note (Optional)',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.additionalNoteOptional,
+              style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
@@ -464,9 +475,9 @@ class _BusinessVerificationScreenState
                           strokeWidth: 2.5,
                         ),
                       )
-                    : const Text(
-                        'Submit Verification Request',
-                        style: TextStyle(
+                    : Text(
+                        AppLocalizations.of(context)!.submitVerificationRequest,
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
@@ -514,9 +525,9 @@ class _BusinessVerificationScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Latest Request',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.latestRequest,
+            style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
@@ -524,27 +535,30 @@ class _BusinessVerificationScreenState
           ),
           const SizedBox(height: 16),
           _buildDetailRow(
-            'Status',
+            AppLocalizations.of(context)!.status,
             request.status.toUpperCase(),
             icon: statusIcon,
             valueColor: statusColor,
           ),
           const Divider(height: 24),
           _buildDetailRow(
-            'Document Type',
+            AppLocalizations.of(context)!.documentType,
             _getDocumentTypeLabel(request.documentType),
           ),
           const Divider(height: 24),
-          _buildDetailRow('Submitted', request.createdAt),
+          _buildDetailRow(
+            AppLocalizations.of(context)!.submitted,
+            request.createdAt,
+          ),
           if (request.note != null && request.note!.isNotEmpty) ...[
             const Divider(height: 24),
-            _buildDetailRow('Note', request.note!),
+            _buildDetailRow(AppLocalizations.of(context)!.note, request.note!),
           ],
           if (request.adminRemarks != null &&
               request.adminRemarks!.isNotEmpty) ...[
             const Divider(height: 24),
             _buildDetailRow(
-              'Admin Remarks',
+              AppLocalizations.of(context)!.adminRemarks,
               request.adminRemarks!,
               valueColor: statusColor,
             ),
@@ -566,7 +580,7 @@ class _BusinessVerificationScreenState
                   );
                 },
                 icon: const Icon(Icons.refresh),
-                label: const Text('Submit New Request'),
+                label: Text(AppLocalizations.of(context)!.submitNewRequest),
                 style: OutlinedButton.styleFrom(
                   foregroundColor: AppTheme.primaryBlue,
                   side: const BorderSide(color: AppTheme.primaryBlue),
@@ -622,7 +636,9 @@ class _BusinessVerificationScreenState
   }
 
   String _getDocumentTypeLabel(String? type) {
-    final match = _documentTypes.where((t) => t['value'] == type).toList();
+    final match = _getDocumentTypes(
+      context,
+    ).where((t) => t['value'] == type).toList();
     return match.isNotEmpty ? match.first['label']! : type ?? 'N/A';
   }
 }

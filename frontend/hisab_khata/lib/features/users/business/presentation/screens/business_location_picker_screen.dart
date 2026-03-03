@@ -10,6 +10,7 @@ import 'package:hisab_khata/features/users/business/presentation/bloc/business_b
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_state.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Screen where the business owner can pick/update their shop location on a map.
 /// Includes search, tap-to-pin, and locate-me functionality.
@@ -133,7 +134,10 @@ class _BusinessLocationPickerScreenState
       bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
         if (mounted) {
-          MySnackbar.showError(context, 'Location services are disabled');
+          MySnackbar.showError(
+            context,
+            AppLocalizations.of(context)!.locationServicesDisabled,
+          );
         }
         return;
       }
@@ -143,7 +147,10 @@ class _BusinessLocationPickerScreenState
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
           if (mounted) {
-            MySnackbar.showError(context, 'Location permission denied');
+            MySnackbar.showError(
+              context,
+              AppLocalizations.of(context)!.locationPermissionDenied,
+            );
           }
           return;
         }
@@ -153,7 +160,7 @@ class _BusinessLocationPickerScreenState
         if (mounted) {
           MySnackbar.showError(
             context,
-            'Location permissions are permanently denied',
+            AppLocalizations.of(context)!.locationPermissionsPermanentlyDenied,
           );
         }
         return;
@@ -173,7 +180,10 @@ class _BusinessLocationPickerScreenState
       _mapController.move(point, 16.0);
     } catch (e) {
       if (mounted) {
-        MySnackbar.showError(context, 'Failed to get current location');
+        MySnackbar.showError(
+          context,
+          AppLocalizations.of(context)!.failedToGetCurrentLocation,
+        );
       }
     } finally {
       if (mounted) setState(() => _isLocating = false);
@@ -184,7 +194,7 @@ class _BusinessLocationPickerScreenState
     if (!_hasSelected) {
       MySnackbar.showError(
         context,
-        'Please tap on the map to select a location',
+        AppLocalizations.of(context)!.pleaseSelectLocationOnMap,
       );
       return;
     }
@@ -215,9 +225,9 @@ class _BusinessLocationPickerScreenState
         appBar: AppBar(
           backgroundColor: AppTheme.primaryBlue,
           foregroundColor: Colors.white,
-          title: const Text(
-            'Set Shop Location',
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+          title: Text(
+            AppLocalizations.of(context)!.setShopLocation,
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
           centerTitle: true,
           elevation: 0,
@@ -233,7 +243,7 @@ class _BusinessLocationPickerScreenState
                 focusNode: _searchFocus,
                 onChanged: _searchLocation,
                 decoration: InputDecoration(
-                  hintText: 'Search location...',
+                  hintText: AppLocalizations.of(context)!.searchLocationHint,
                   prefixIcon: const Icon(
                     Icons.search,
                     color: AppTheme.primaryBlue,
@@ -330,7 +340,7 @@ class _BusinessLocationPickerScreenState
               child: TextField(
                 controller: _addressController,
                 decoration: InputDecoration(
-                  hintText: 'Enter shop address (optional)',
+                  hintText: AppLocalizations.of(context)!.enterShopAddress,
                   prefixIcon: const Icon(
                     Icons.location_on_outlined,
                     color: AppTheme.primaryBlue,
@@ -369,8 +379,11 @@ class _BusinessLocationPickerScreenState
                   Expanded(
                     child: Text(
                       _hasSelected
-                          ? 'Location: ${_selectedLocation.latitude.toStringAsFixed(5)}, ${_selectedLocation.longitude.toStringAsFixed(5)}'
-                          : 'Tap on the map to pin your shop location',
+                          ? AppLocalizations.of(context)!.locationCoordinates(
+                              _selectedLocation.latitude.toStringAsFixed(5),
+                              _selectedLocation.longitude.toStringAsFixed(5),
+                            )
+                          : AppLocalizations.of(context)!.tapOnMapToPinLocation,
                       style: TextStyle(
                         fontSize: 13,
                         color: AppTheme.textPrimary,
@@ -475,7 +488,9 @@ class _BusinessLocationPickerScreenState
                               )
                             : const Icon(Icons.save_rounded, size: 20),
                         label: Text(
-                          isLoading ? 'Saving...' : 'Save Location',
+                          isLoading
+                              ? AppLocalizations.of(context)!.saving
+                              : AppLocalizations.of(context)!.saveLocation,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,

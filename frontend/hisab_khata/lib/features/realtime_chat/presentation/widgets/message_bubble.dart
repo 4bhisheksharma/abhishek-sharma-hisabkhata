@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../domain/entities/message_entity.dart';
@@ -81,7 +82,7 @@ class MessageBubble extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        _formatTime(message.createdAt),
+                        _formatTime(context, message.createdAt),
                         style: TextStyle(
                           color: isFromCurrentUser
                               ? AppTheme.white.withValues(alpha: 0.7)
@@ -110,7 +111,7 @@ class MessageBubble extends StatelessWidget {
     );
   }
 
-  String _formatTime(DateTime dateTime) {
+  String _formatTime(BuildContext context, DateTime dateTime) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
     final messageDate = DateTime(dateTime.year, dateTime.month, dateTime.day);
@@ -118,7 +119,7 @@ class MessageBubble extends StatelessWidget {
     if (messageDate == today) {
       return DateFormat.jm().format(dateTime);
     } else if (messageDate == today.subtract(const Duration(days: 1))) {
-      return 'Yesterday ${DateFormat.jm().format(dateTime)}';
+      return '${AppLocalizations.of(context)!.yesterday} ${DateFormat.jm().format(dateTime)}';
     } else {
       return DateFormat('MMM d, h:mm a').format(dateTime);
     }

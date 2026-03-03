@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import '../../domain/entities/transaction.dart';
@@ -49,37 +50,36 @@ class TransactionListItem extends StatelessWidget {
   }
 
   /// Get display text based on transaction type and view
-  String get _displayText {
+  String _displayText(BuildContext context) {
     if (transaction.description.isNotEmpty) {
       return transaction.description;
     }
-    // Provide contextual labels
+    final l10n = AppLocalizations.of(context)!;
     if (isCustomerView) {
       switch (transaction.transactionType) {
         case TransactionType.purchase:
-          return 'Purchase from business';
+          return l10n.purchaseFromBusiness;
         case TransactionType.payment:
-          return 'Payment made';
+          return l10n.paymentMade;
         case TransactionType.credit:
-          return 'Credit received';
+          return l10n.creditReceived;
         case TransactionType.refund:
-          return 'Refund received';
+          return l10n.refundReceived;
         case TransactionType.adjustment:
-          return 'Adjustment';
+          return l10n.adjustment;
       }
     } else {
-      // Business view
       switch (transaction.transactionType) {
         case TransactionType.purchase:
-          return 'Sale to customer';
+          return l10n.saleToCustomer;
         case TransactionType.payment:
-          return 'Payment received';
+          return l10n.paymentReceived;
         case TransactionType.credit:
-          return 'Credit given';
+          return l10n.creditGiven;
         case TransactionType.refund:
-          return 'Refund given';
+          return l10n.refundGiven;
         case TransactionType.adjustment:
-          return 'Adjustment';
+          return l10n.adjustment;
       }
     }
   }
@@ -133,7 +133,7 @@ class TransactionListItem extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    _displayText,
+                    _displayText(context),
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,

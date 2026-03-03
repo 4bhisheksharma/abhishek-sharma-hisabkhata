@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/theme/app_theme.dart';
 import '../../../../shared/utils/image_utils.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
@@ -59,14 +60,12 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Cancel Request'),
-        content: const Text(
-          'Are you sure you want to cancel this connection request?',
-        ),
+        title: Text(AppLocalizations.of(ctx)!.cancelRequest),
+        content: Text(AppLocalizations.of(ctx)!.cancelRequestConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('No'),
+            child: Text(AppLocalizations.of(ctx)!.no),
           ),
           TextButton(
             onPressed: () {
@@ -75,7 +74,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                 CancelConnectionRequestEvent(requestId: requestId),
               );
             },
-            child: const Text('Yes, Cancel'),
+            child: Text(AppLocalizations.of(ctx)!.yesCancel),
           ),
         ],
       ),
@@ -91,7 +90,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
     if (diff.inDays > 0) return '${diff.inDays}d ago';
     if (diff.inHours > 0) return '${diff.inHours}h ago';
     if (diff.inMinutes > 0) return '${diff.inMinutes}m ago';
-    return 'Just now';
+    return AppLocalizations.of(context)!.justNow;
   }
 
   Widget _buildAvatar(String? profilePicture, String name) {
@@ -120,17 +119,17 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
     switch (status) {
       case 'pending':
         color = Colors.orange;
-        label = 'Pending';
+        label = AppLocalizations.of(context)!.pending;
         icon = Icons.hourglass_empty;
         break;
       case 'accepted':
         color = Colors.green;
-        label = 'Accepted';
+        label = AppLocalizations.of(context)!.accepted;
         icon = Icons.check_circle_outline;
         break;
       case 'rejected': // Should not occur as rejected requests are deleted
         color = Colors.red;
-        label = 'Rejected';
+        label = AppLocalizations.of(context)!.rejected;
         icon = Icons.cancel_outlined;
         break;
       default:
@@ -250,9 +249,8 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
     if (requests.isEmpty) {
       return _buildEmptyState(
         icon: Icons.inbox_outlined,
-        title: 'No Received Requests',
-        subtitle:
-            'When someone sends you a connection request, it will appear here.',
+        title: AppLocalizations.of(context)!.noReceivedRequests,
+        subtitle: AppLocalizations.of(context)!.whenSomeoneSendsRequest,
       );
     }
 
@@ -269,7 +267,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         children: [
           if (pending.isNotEmpty) ...[
             _buildSectionHeader(
-              'Pending Requests',
+              AppLocalizations.of(context)!.pendingRequests,
               pending.length,
               Colors.orange,
             ),
@@ -278,7 +276,11 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
             const SizedBox(height: 16),
           ],
           if (others.isNotEmpty) ...[
-            _buildSectionHeader('Past Requests', others.length, Colors.grey),
+            _buildSectionHeader(
+              AppLocalizations.of(context)!.pastRequests,
+              others.length,
+              Colors.grey,
+            ),
             const SizedBox(height: 8),
             ...others.map(_buildReceivedCard),
           ],
@@ -358,7 +360,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                       onPressed: () =>
                           _rejectRequest(request.businessCustomerRequestId),
                       icon: const Icon(Icons.close, size: 18),
-                      label: const Text('Reject'),
+                      label: Text(AppLocalizations.of(context)!.reject),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: Colors.red,
                         side: const BorderSide(color: Colors.red),
@@ -375,7 +377,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                       onPressed: () =>
                           _acceptRequest(request.businessCustomerRequestId),
                       icon: const Icon(Icons.check, size: 18),
-                      label: const Text('Accept'),
+                      label: Text(AppLocalizations.of(context)!.accept),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppTheme.primaryBlue,
                         foregroundColor: Colors.white,
@@ -404,8 +406,8 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
     if (requests.isEmpty) {
       return _buildEmptyState(
         icon: Icons.send_outlined,
-        title: 'No Sent Requests',
-        subtitle: 'Connection requests you send will appear here.',
+        title: AppLocalizations.of(context)!.noSentRequests,
+        subtitle: AppLocalizations.of(context)!.sentRequestsWillAppear,
       );
     }
 
@@ -422,7 +424,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         children: [
           if (pending.isNotEmpty) ...[
             _buildSectionHeader(
-              'Awaiting Response',
+              AppLocalizations.of(context)!.awaitingResponse,
               pending.length,
               Colors.orange,
             ),
@@ -431,7 +433,11 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
             const SizedBox(height: 16),
           ],
           if (others.isNotEmpty) ...[
-            _buildSectionHeader('Past Requests', others.length, Colors.grey),
+            _buildSectionHeader(
+              AppLocalizations.of(context)!.pastRequests,
+              others.length,
+              Colors.grey,
+            ),
             const SizedBox(height: 8),
             ...others.map(_buildSentCard),
           ],
@@ -513,7 +519,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                   onPressed: () =>
                       _cancelRequest(request.businessCustomerRequestId),
                   icon: const Icon(Icons.cancel_outlined, size: 18),
-                  label: const Text('Cancel Request'),
+                  label: Text(AppLocalizations.of(context)!.cancelRequest),
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.red,
                     side: const BorderSide(color: Colors.red),
@@ -575,14 +581,14 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
               ),
               dividerColor: Colors.transparent,
               padding: const EdgeInsets.all(4),
-              tabs: const [
+              tabs: [
                 Tab(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.inbox, size: 18),
                       SizedBox(width: 6),
-                      Text('Received'),
+                      Text(AppLocalizations.of(context)!.received),
                     ],
                   ),
                 ),
@@ -592,7 +598,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                     children: [
                       Icon(Icons.send, size: 18),
                       SizedBox(width: 6),
-                      Text('Sent'),
+                      Text(AppLocalizations.of(context)!.sent),
                     ],
                   ),
                 ),
@@ -631,7 +637,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                         const SizedBox(height: 16),
                         ElevatedButton(
                           onPressed: _loadRequests,
-                          child: const Text('Retry'),
+                          child: Text(AppLocalizations.of(context)!.retry),
                         ),
                       ],
                     ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import '../bloc/esewa_account_bloc.dart';
 import '../bloc/esewa_account_event.dart';
@@ -41,7 +43,7 @@ class _BusinessEsewaAccountScreenState
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: const Text('eSewa Account'),
+        title: Text(AppLocalizations.of(context)!.esewaAccount),
         backgroundColor: Theme.of(context).colorScheme.primary,
         foregroundColor: Colors.white,
         elevation: 0,
@@ -138,9 +140,9 @@ class _BusinessEsewaAccountScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'eSewa Payment',
-                      style: TextStyle(
+                    Text(
+                      AppLocalizations.of(context)!.esewaPayment,
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.bold,
@@ -149,8 +151,8 @@ class _BusinessEsewaAccountScreenState
                     const SizedBox(height: 4),
                     Text(
                       isLinked
-                          ? 'Your account is linked'
-                          : 'Link your eSewa account',
+                          ? AppLocalizations.of(context)!.accountLinked
+                          : AppLocalizations.of(context)!.linkEsewaAccount,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 14,
@@ -169,8 +171,8 @@ class _BusinessEsewaAccountScreenState
           const SizedBox(height: 16),
           Text(
             isLinked
-                ? 'Customers can now pay their dues via eSewa directly to your account.'
-                : 'Link your eSewa account so customers can pay their dues digitally.',
+                ? AppLocalizations.of(context)!.esewaLinkedDescription
+                : AppLocalizations.of(context)!.esewaUnlinkedDescription,
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.85),
               fontSize: 13,
@@ -196,7 +198,9 @@ class _BusinessEsewaAccountScreenState
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                isUpdate ? 'Update eSewa Account' : 'Link eSewa Account',
+                isUpdate
+                    ? AppLocalizations.of(context)!.updateEsewaAccount
+                    : AppLocalizations.of(context)!.linkEsewaAccount,
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -204,7 +208,7 @@ class _BusinessEsewaAccountScreenState
               ),
               const SizedBox(height: 8),
               Text(
-                'Enter your eSewa account details',
+                AppLocalizations.of(context)!.enterEsewaDetails,
                 style: TextStyle(color: AppTheme.textSecondary, fontSize: 14),
               ),
               const SizedBox(height: 24),
@@ -218,7 +222,7 @@ class _BusinessEsewaAccountScreenState
                   LengthLimitingTextInputFormatter(10),
                 ],
                 decoration: InputDecoration(
-                  labelText: 'eSewa ID (Phone Number)',
+                  labelText: AppLocalizations.of(context)!.esewaIdLabel,
                   hintText: '98XXXXXXXX',
                   prefixIcon: const Icon(Icons.phone_android),
                   border: OutlineInputBorder(
@@ -227,13 +231,13 @@ class _BusinessEsewaAccountScreenState
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter your eSewa ID';
+                    return AppLocalizations.of(context)!.pleaseEnterEsewaId;
                   }
                   if (value.length != 10) {
-                    return 'eSewa ID must be 10 digits';
+                    return AppLocalizations.of(context)!.esewaIdMustBe10Digits;
                   }
                   if (!value.startsWith('9')) {
-                    return 'eSewa ID must start with 9';
+                    return AppLocalizations.of(context)!.esewaIdMustStartWith9;
                   }
                   return null;
                 },
@@ -245,8 +249,8 @@ class _BusinessEsewaAccountScreenState
                 controller: _accountNameController,
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
-                  labelText: 'Account Holder Name',
-                  hintText: 'Name on your eSewa account',
+                  labelText: AppLocalizations.of(context)!.accountHolderName,
+                  hintText: AppLocalizations.of(context)!.accountHolderHint,
                   prefixIcon: const Icon(Icons.person_outline),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -254,7 +258,9 @@ class _BusinessEsewaAccountScreenState
                 ),
                 validator: (value) {
                   if (value == null || value.trim().isEmpty) {
-                    return 'Please enter the account holder name';
+                    return AppLocalizations.of(
+                      context,
+                    )!.pleaseEnterAccountHolderName;
                   }
                   return null;
                 },
@@ -276,7 +282,7 @@ class _BusinessEsewaAccountScreenState
                             borderRadius: BorderRadius.circular(12),
                           ),
                         ),
-                        child: const Text('Cancel'),
+                        child: Text(AppLocalizations.of(context)!.cancel),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -301,7 +307,11 @@ class _BusinessEsewaAccountScreenState
                                 color: Colors.white,
                               ),
                             )
-                          : Text(isUpdate ? 'Update' : 'Link Account'),
+                          : Text(
+                              isUpdate
+                                  ? AppLocalizations.of(context)!.update
+                                  : AppLocalizations.of(context)!.linkAccount,
+                            ),
                     ),
                   ),
                 ],
@@ -336,13 +346,17 @@ class _BusinessEsewaAccountScreenState
             const SizedBox(height: 20),
 
             // eSewa ID
-            _buildDetailRow(Icons.phone_android, 'eSewa ID', account.esewaId),
+            _buildDetailRow(
+              Icons.phone_android,
+              AppLocalizations.of(context)!.esewaIdLabel,
+              account.esewaId,
+            ),
             const Divider(height: 24),
 
             // Account Name
             _buildDetailRow(
               Icons.person_outline,
-              'Account Name',
+              AppLocalizations.of(context)!.accountHolderName,
               account.accountName,
             ),
             const Divider(height: 24),
@@ -350,8 +364,10 @@ class _BusinessEsewaAccountScreenState
             // Status
             _buildDetailRow(
               Icons.verified,
-              'Status',
-              account.isActive ? 'Active' : 'Inactive',
+              AppLocalizations.of(context)!.status,
+              account.isActive
+                  ? AppLocalizations.of(context)!.active
+                  : AppLocalizations.of(context)!.inactive,
               valueColor: account.isActive ? Colors.green : Colors.red,
             ),
             const SizedBox(height: 24),
@@ -365,7 +381,7 @@ class _BusinessEsewaAccountScreenState
                         ? null
                         : () => setState(() => _isEditing = true),
                     icon: const Icon(Icons.edit_outlined, size: 18),
-                    label: const Text('Edit'),
+                    label: Text(AppLocalizations.of(context)!.edit),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       shape: RoundedRectangleBorder(
@@ -381,7 +397,7 @@ class _BusinessEsewaAccountScreenState
                         ? null
                         : () => _showUnlinkConfirmation(context),
                     icon: const Icon(Icons.link_off, size: 18),
-                    label: const Text('Unlink'),
+                    label: Text(AppLocalizations.of(context)!.unlink),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
@@ -454,21 +470,18 @@ class _BusinessEsewaAccountScreenState
       context: context,
       builder: (dialogContext) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Row(
+        title: Row(
           children: [
             Icon(Icons.warning_amber_rounded, color: Colors.orange, size: 28),
             SizedBox(width: 12),
-            Text('Unlink eSewa'),
+            Text(AppLocalizations.of(context)!.unlinkEsewa),
           ],
         ),
-        content: const Text(
-          'Are you sure you want to unlink your eSewa account? '
-          'Customers will no longer be able to pay via eSewa.',
-        ),
+        content: Text(AppLocalizations.of(context)!.unlinkEsewaConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           ElevatedButton(
             onPressed: () {
@@ -479,7 +492,7 @@ class _BusinessEsewaAccountScreenState
               backgroundColor: Colors.red,
               foregroundColor: Colors.white,
             ),
-            child: const Text('Unlink'),
+            child: Text(AppLocalizations.of(context)!.unlink),
           ),
         ],
       ),

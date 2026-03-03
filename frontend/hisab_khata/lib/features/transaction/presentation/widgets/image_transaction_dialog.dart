@@ -144,21 +144,23 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Expanded(
+                  Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Image Transaction',
-                          style: TextStyle(
+                          AppLocalizations.of(context)!.imageTransaction,
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: AppTheme.primaryBlue,
                           ),
                         ),
                         Text(
-                          'Extract details from receipt',
-                          style: TextStyle(
+                          AppLocalizations.of(
+                            context,
+                          )!.extractDetailsFromReceipt,
+                          style: const TextStyle(
                             fontSize: 13,
                             color: AppTheme.primaryBlue,
                           ),
@@ -217,7 +219,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'Extracting text from image...',
+                              AppLocalizations.of(context)!.extractingText,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade700,
@@ -232,7 +234,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                     // Extracted text
                     if (_extractedText.isNotEmpty && !_isProcessing) ...[
                       Text(
-                        'Extracted Text:',
+                        AppLocalizations.of(context)!.extractedText,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w600,
@@ -287,7 +289,9 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Transaction Details',
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.transactionDetails,
                                   style: TextStyle(
                                     fontSize: 14,
                                     color: AppTheme.primaryBlue,
@@ -343,7 +347,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Amount',
+                                        AppLocalizations.of(context)!.amount,
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey.shade600,
@@ -351,7 +355,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                                       ),
                                       const SizedBox(height: 4),
                                       Text(
-                                        'Rs. ${_parsedTransaction!.amount.toStringAsFixed(2)}',
+                                        '${AppLocalizations.of(context)!.rsPrefix}${_parsedTransaction!.amount.toStringAsFixed(2)}',
                                         style: const TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.bold,
@@ -374,7 +378,9 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        'Description',
+                                        AppLocalizations.of(
+                                          context,
+                                        )!.description,
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: Colors.grey.shade600,

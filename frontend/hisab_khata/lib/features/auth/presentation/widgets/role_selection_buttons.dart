@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 //role selection buttons ko lagi widget
 class RoleSelectionButtons extends StatelessWidget {
@@ -14,11 +15,12 @@ class RoleSelectionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Row(
       children: [
-        Expanded(child: _buildRoleButton('business', 'As Business')),
+        Expanded(child: _buildRoleButton('business', l10n.asBusiness)),
         const SizedBox(width: 12),
-        Expanded(child: _buildRoleButton('customer', 'As Customer')),
+        Expanded(child: _buildRoleButton('customer', l10n.asCustomer)),
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class PaidVsToPayBarChart extends StatelessWidget {
   final double paid;
@@ -36,7 +37,7 @@ class PaidVsToPayBarChart extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Paid vs To Pay',
+                AppLocalizations.of(context)!.paidVsToPay,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -54,7 +55,9 @@ class PaidVsToPayBarChart extends StatelessWidget {
                         tooltipPadding: const EdgeInsets.all(8),
                         tooltipMargin: 8,
                         getTooltipItem: (group, groupIndex, rod, rodIndex) {
-                          String label = group.x == 0 ? 'Paid' : 'To Pay';
+                          String label = group.x == 0
+                              ? AppLocalizations.of(context)!.paid
+                              : AppLocalizations.of(context)!.toPay;
                           return BarTooltipItem(
                             '$label\n',
                             const TextStyle(
@@ -94,10 +97,16 @@ class PaidVsToPayBarChart extends StatelessWidget {
                             Widget text;
                             switch (value.toInt()) {
                               case 0:
-                                text = const Text('Paid', style: style);
+                                text = Text(
+                                  AppLocalizations.of(context)!.paid,
+                                  style: style,
+                                );
                                 break;
                               case 1:
-                                text = const Text('To Pay', style: style);
+                                text = Text(
+                                  AppLocalizations.of(context)!.toPay,
+                                  style: style,
+                                );
                                 break;
                               default:
                                 text = const Text('', style: style);
@@ -193,12 +202,12 @@ class PaidVsToPayBarChart extends StatelessWidget {
                 children: [
                   _buildLegendItem(
                     color: Colors.green.shade600,
-                    label: 'Paid',
+                    label: AppLocalizations.of(context)!.paid,
                     value: 'Rs. ${paid.toStringAsFixed(2)}',
                   ),
                   _buildLegendItem(
                     color: Colors.orange.shade600,
-                    label: 'To Pay',
+                    label: AppLocalizations.of(context)!.toPay,
                     value: 'Rs. ${toPay.toStringAsFixed(2)}',
                   ),
                 ],

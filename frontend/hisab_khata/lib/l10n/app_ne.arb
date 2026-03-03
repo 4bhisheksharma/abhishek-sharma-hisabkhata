@@ -1,4 +1,5 @@
 {
+  "@@locale": "ne",
   "appName": "हिसाब खाता",
   "home": "गृह",
   "connections": "जडानहरू",
@@ -194,6 +195,359 @@
   "pleaseEnterDescription": "कृपया विवरण प्रविष्ट गर्नुहोस्",
   "descriptionMinLength": "विवरण कम्तीमा २० वर्णको हुनुपर्छ",
   "typeMessage": "सन्देश टाइप गर्नुहोस्...",
+  "account": "खाता",
+  "location": "स्थान",
+  "app": "एप",
+  "support": "सहयोग",
+  "payments": "भुक्तानी",
+  "changePassword": "पासवर्ड परिवर्तन गर्नुहोस्",
+  "businessesNearMe": "नजिकका व्यवसायहरू",
+  "viewBusinessesOnMap": "नक्सामा व्यवसायहरू हेर्नुहोस्",
+  "talkToByaparAI": "व्यापार द-एआई सँग कुरा गर्नुहोस्",
+  "aiAssistant": "एआई सहायक",
+  "aiBusinessAssistant": "एआई व्यापार सहायक",
+  "shopLocation": "पसलको स्थान",
+  "locationSet": "स्थान सेट गरियो",
+  "pinYourShop": "आफ्नो पसल पिन गर्नुहोस्",
+  "esewaAccount": "eSewa खाता",
+  "manageLinkedEsewa": "लिंक गरिएको eSewa व्यवस्थापन गर्नुहोस्",
+  "verificationStatus": "प्रमाणीकरण स्थिति",
+  "requestVerification": "प्रमाणीकरण अनुरोध",
+  "verified": "प्रमाणित",
+  "pending": "बाँकी",
+  "transactionActivity": "लेनदेन गतिविधि",
+  "noTransactionActivity": "अहिलेसम्म कुनै लेनदेन गतिविधि छैन",
+  "noTransactionActivitySubtitle": "तपाईका हालका लेनदेनहरू यहाँ देखिनेछन्",
+  "transactionSingular": "लेनदेन",
+  "goToLogin": "लगइनमा जानुहोस्",
+
+  "asBusiness": "व्यवसायको रूपमा",
+  "asCustomer": "ग्राहकको रूपमा",
+  "pleaseWaitBeforeResending": "कृपया पुन: पठाउनु अघि {time} पर्खनुहोस्",
+  "failedToResendOtp": "OTP पुन: पठाउन असफल",
+
+  "userDetails": "प्रयोगकर्ता विवरण",
+  "clearDueCash": "बक्यौता तिर्नुहोस् (नगद)",
+  "processing": "प्रशोधन हुँदैछ...",
+  "noPendingDuesToClear": "तिर्न बाँकी कुनै रकम छैन",
+  "pendingRs": "बाँकी: रु. {amount}",
+  "recordCashPayment": "{name} बाट प्राप्त नगद भुक्तानी रेकर्ड गर्नुहोस्",
+  "amountReceived": "प्राप्त रकम",
+  "full": "पूर्ण",
+  "noteOptional": "नोट (ऐच्छिक)",
+  "noteHintCashReceived": "जस्तै नगद प्राप्त",
+  "cashPaymentReceived": "नगद भुक्तानी प्राप्त भयो",
+  "clearDue": "बक्यौता तिर्नुहोस्",
+  "getDirections": "दिशा प्राप्त गर्नुहोस्",
+  "chat": "च्याट",
+  "unableToOpenChat": "च्याट खोल्न असमर्थ। कृपया पुन: प्रयास गर्नुहोस्।",
+
+  "updateEsewaAccount": "eSewa खाता अपडेट गर्नुहोस्",
+  "linkEsewaAccount": "eSewa खाता लिंक गर्नुहोस्",
+  "esewaIdLabel": "eSewa आईडी (फोन नम्बर)",
+  "esewaIdHint": "98XXXXXXXX",
+  "pleaseEnterEsewaId": "कृपया आफ्नो eSewa आईडी प्रविष्ट गर्नुहोस्",
+  "accountHolderName": "खाता धारकको नाम",
+  "accountHolderHint": "तपाईको eSewa खातामा रहेको नाम",
+  "pleaseEnterAccountHolderName": "कृपया खाता धारकको नाम प्रविष्ट गर्नुहोस्",
+  "update": "अपडेट",
+  "linkAccount": "खाता लिंक गर्नुहोस्",
+  "unlink": "अनलिंक",
+  "unlinkEsewa": "eSewa अनलिंक गर्नुहोस्",
+  "unlinkEsewaConfirmation": "के तपाई आफ्नो eSewa खाता अनलिंक गर्न निश्चित हुनुहुन्छ? ग्राहकहरूले अब eSewa मार्फत भुक्तानी गर्न सक्ने छैनन्।",
+  "esewaPayment": "eSewa भुक्तानी",
+  "accountLinked": "तपाईको खाता लिंक गरिएको छ",
+  "esewaLinkedDescription": "ग्राहकहरूले अब तपाईको खातामा सिधै eSewa मार्फत बाँकी भुक्तानी गर्न सक्छन्।",
+  "esewaUnlinkedDescription": "तपाईको eSewa खाता लिंक गर्नुहोस् ताकि ग्राहकहरूले डिजिटल रूपमा भुक्तानी गर्न सकून्।",
+  "enterEsewaDetails": "तपाईको eSewa खाताको विवरण प्रविष्ट गर्नुहोस्",
+  "esewaIdMustBe10Digits": "eSewa ID १० अंकको हुनुपर्छ",
+  "esewaIdMustStartWith9": "eSewa ID ९ बाट सुरु हुनुपर्छ",
+  "active": "सक्रिय",
+  "inactive": "निष्क्रिय",
+  "linkedAccount": "लिंक गरिएको खाता",
+
+  "voiceInputAdded": "भ्वाइस इनपुट थपियो: रु. {amount}",
+  "imageProcessed": "तस्विर प्रशोधन गरियो: रु. {amount}",
+  "rsPrefix": "रु. ",
+  "pleaseEnterItemTitle": "कृपया वस्तुको शीर्षक प्रविष्ट गर्नुहोस्",
+
+  "speechRecognitionNotAvailable": "यो उपकरणमा वाक् पहिचान उपलब्ध छैन",
+  "failedToInitialize": "प्रारम्भ गर्न असफल: {error}",
+  "voiceTransaction": "भ्वाइस लेनदेन",
+  "listening": "सुन्दैछ...",
+  "tapMicToSpeak": "बोल्न माइक ट्याप गर्नुहोस्",
+  "trySaying": "भन्ने प्रयास गर्नुहोस्: \"२०० रुपैयाँ चकलेटको लागि थप्नुहोस्\"",
+  "youSaid": "तपाईले भन्नुभयो:",
+  "transactionDetails": "लेनदेन विवरण",
+
+  "noTextFoundInImage": "तस्विरमा कुनै पाठ फेला परेन। कृपया अर्को तस्विर प्रयास गर्नुहोस्।",
+  "couldNotExtractDetails": "लेनदेन विवरण निकाल्न सकिएन। कृपया म्यानुअल रूपमा सम्पादन गर्नुहोस्।",
+  "errorProcessingImage": "तस्विर प्रशोधन त्रुटि: {error}",
+  "imageTransaction": "तस्विर लेनदेन",
+  "extractDetailsFromReceipt": "रसिदबाट विवरण निकाल्नुहोस्",
+  "extractingText": "तस्विरबाट पाठ निकाल्दै...",
+  "extractedText": "निकालिएको पाठ:",
+
+  "filterTransactions": "लेनदेन फिल्टर गर्नुहोस्",
+  "noTransactionsYet": "अहिलेसम्म कुनै लेनदेन छैन",
+  "transactionsWillAppearHere": "तपाईका लेनदेनहरू यहाँ देखिनेछन्",
+  "addTransactionsForCustomer": "यो ग्राहकको लागि लेनदेन थप्नुहोस्",
+
+  "purchaseFromBusiness": "व्यवसायबाट खरिद",
+  "paymentMade": "भुक्तानी गरियो",
+  "creditReceived": "क्रेडिट प्राप्त",
+  "refundReceived": "फिर्ता प्राप्त",
+  "adjustment": "समायोजन",
+  "saleToCustomer": "ग्राहकलाई बिक्री",
+  "paymentReceived": "भुक्तानी प्राप्त",
+  "creditGiven": "क्रेडिट दिइयो",
+  "refundGiven": "फिर्ता दिइयो",
+
+  "allDuesCleared": "सबै बक्यौता तिरिएको छ!",
+  "almostAllDuesPaid": "राम्रो! लगभग सबै बक्यौता तिरियो",
+  "considerClearingDues": "बाँकी बक्यौता तिर्ने विचार गर्नुहोस्",
+  "outstandingBalance": "बाँकी रकम बक्यौता छ",
+  "allPaymentsCollected": "सबै भुक्तानी सङ्कलन गरियो",
+  "goodCollectionRate": "राम्रो सङ्कलन दर",
+  "moderateCollection": "मध्यम सङ्कलन",
+  "pendingCollection": "बक्यौता सङ्कलन",
+
+  "payDueViaEsewa": "eSewa मार्फत बक्यौता तिर्नुहोस्",
+  "dueRs": "बक्यौता: रु. {amount}",
+  "businessNotLinkedEsewa": "यो व्यवसायले अझै आफ्नो eSewa खाता लिंक गरेको छैन। कृपया नगद भुक्तानी प्रयोग गर्नुहोस्।",
+  "payWithEsewa": "eSewa मार्फत भुक्तानी गर्नुहोस्",
+  "esewaPaymentFailed": "eSewa भुक्तानी असफल: {error}",
+  "paymentCancelled": "भुक्तानी रद्द गरियो",
+
+  "cancelRequest": "अनुरोध रद्द गर्नुहोस्",
+  "cancelRequestConfirmation": "के तपाई यो जडान अनुरोध रद्द गर्न निश्चित हुनुहुन्छ?",
+  "no": "होइन",
+  "yesCancel": "हो, रद्द गर्नुहोस्",
+  "noReceivedRequests": "कुनै प्राप्त अनुरोधहरू छैनन्",
+  "whenSomeoneSendsRequest": "कसैले तपाईलाई जडान अनुरोध पठाउँदा, यो यहाँ देखिनेछ।",
+  "pendingRequests": "पेन्डिङ अनुरोधहरू",
+  "pastRequests": "विगतका अनुरोधहरू",
+  "awaitingResponse": "प्रतिक्रियाको प्रतीक्षामा",
+  "noSentRequests": "कुनै पठाइएका अनुरोधहरू छैनन्",
+  "sentRequestsWillAppear": "तपाईले पठाउनुभएका जडान अनुरोधहरू यहाँ देखिनेछन्।",
+  "received": "प्राप्त",
+  "sent": "पठाइएको",
+  "accepted": "स्वीकृत",
+  "rejected": "अस्वीकृत",
+  "connected": "जडित",
+  "justNow": "अहिले भर्खरै",
+  "addMultipleCustomers": "धेरै ग्राहकहरू थप्नुहोस्",
+  "addMultipleBusinesses": "धेरै व्यवसायहरू थप्नुहोस्",
+  "addMultipleConnections": "धेरै जडानहरू थप्नुहोस्",
+  "pleaseSelectAtLeastOneUser": "कृपया जडान अनुरोध पठाउन कम्तीमा एक प्रयोगकर्ता चयन गर्नुहोस्।",
+  "searchByNameEmailPhone": "नाम, इमेल, वा फोनद्वारा खोज्नुहोस्...",
+  "usersSelected": "{count} प्रयोगकर्ता(हरू) चयन गरियो",
+  "usersAvailable": "{count} प्रयोगकर्ता(हरू) उपलब्ध",
+  "noUsersFoundFor": "\"{query}\" का लागि कुनै प्रयोगकर्ता फेला परेनन्",
+  "noUsersAvailable": "कुनै प्रयोगकर्ता उपलब्ध छैनन्",
+  "sendRequests": "अनुरोधहरू पठाउनुहोस् ({count})",
+  "addCustomer": "ग्राहक थप्नुहोस्",
+  "addBusiness": "व्यवसाय थप्नुहोस्",
+  "addMultipleConnectionsTooltip": "धेरै जडानहरू थप्नुहोस्",
+  "failedToLoadConnectionRequests": "जडान अनुरोधहरू लोड गर्न असफल",
+
+  "messagesTitle": "सन्देशहरू",
+  "noConversationsYet": "अहिलेसम्म कुनै कुराकानी छैन",
+  "startConversation": "तपाईका जडित प्रयोगकर्ताहरूसँग\nकुराकानी सुरु गर्नुहोस्",
+  "somethingWentWrong": "केही गलत भयो",
+  "connectionError": "जडान त्रुटि",
+  "unableToLoadChat": "च्याट लोड गर्न असमर्थ",
+  "goBack": "फिर्ता जानुहोस्",
+  "noMessagesYet": "अहिलेसम्म कुनै सन्देश छैन",
+  "startTheConversation": "कुराकानी सुरु गर्नुहोस्!",
+  "typeAMessage": "सन्देश टाइप गर्नुहोस्...",
+  "youPrefix": "तपाई: ",
+  "typing": "टाइप गर्दै...",
+  "online": "अनलाइन",
+  "connecting": "जडान हुँदै...",
+  "reconnecting": "पुन: जडान हुँदै...",
+  "disconnected": "विच्छेद भयो",
+  "user": "प्रयोगकर्ता",
+  "failedToSendMessage": "सन्देश पठाउन असफल",
+
+  "overview": "अवलोकन",
+  "totalTransactions": "कुल लेनदेन",
+  "totalSpent": "कुल खर्च",
+  "favoriteBusinesses": "मनपर्ने व्यवसायहरू ({count})",
+  "favoritedOn": "{date} मा मनपर्ने बनाइयो",
+  "businessOverview": "व्यापार अवलोकन",
+  "totalRevenue": "कुल आम्दानी",
+  "revenueAnalytics": "आम्दानी विश्लेषण",
+  "noFavoriteCustomersYet": "अहिलेसम्म कुनै मनपर्ने ग्राहक छैन",
+  "customersWhoFavorite": "तपाईको व्यवसायलाई मनपराउने ग्राहकहरू यहाँ देखिनेछन्",
+  "favoriteCustomers": "मनपर्ने ग्राहकहरू",
+  "setMonthlyLimitTitle": "मासिक सीमा सेट गर्नुहोस्",
+  "setMonthlyLimitDescription": "आफ्नो बजेट ट्र्याक गर्न मासिक खर्च सीमा सेट गर्नुहोस्",
+  "monthlyLimit": "मासिक सीमा",
+  "enterAmountHint": "रकम प्रविष्ट गर्नुहोस्",
+  "paidVsToPay": "तिरेको बनाम तिर्नुपर्ने",
+  "monthlySpending": "मासिक खर्च - {month}",
+  "setMonthlyLimitTooltip": "मासिक सीमा सेट गर्नुहोस्",
+  "totalSpentLabel": "कुल खर्च",
+  "monthlyLimitLabel": "मासिक सीमा",
+  "overBudgetBy": "बजेट भन्दा रु. {amount} बढी",
+  "remainingBudget": "बाँकी: रु. {amount}",
+  "monthlyTransactionTrend": "मासिक लेनदेन प्रवृत्ति",
+  "daysLeft": "{count} दिन बाँकी",
+  "transactionsCount": "{count} लेनदेनहरू",
+  "rsAmount": "रु. {amount}",
+
+  "markAllSeen": "सबै हेरिएको चिन्ह लगाउनुहोस्",
+  "notificationMarkedAsRead": "सूचना पढिएको चिन्ह लगाइयो",
+  "allNotificationsMarkedAsRead": "सबै सूचनाहरू पढिएको चिन्ह लगाइयो",
+  "notificationDeletedSuccessfully": "सूचना सफलतापूर्वक मेटाइयो",
+  "allReadNotificationsDeleted": "सबै पढिएका सूचनाहरू मेटाइयो",
+
+  "status": "स्थिति",
+  "adminResponse": "प्रशासक प्रतिक्रिया",
+  "admin": "प्रशासक",
+  "created": "सिर्जना गरियो",
+  "lastUpdated": "अन्तिम अपडेट",
+  "resolved": "समाधान गरियो",
+  "noTicketsYet": "अहिलेसम्म कुनै टिकट छैन",
+  "createFirstTicket": "आफ्नो पहिलो सहायता टिकट सिर्जना गर्नुहोस्",
+
+  "connectionRequestSent": "जडान अनुरोध पठाइयो!",
+  "sendConnectionRequest": "जडान अनुरोध पठाउनुहोस्",
+  "updateProfile": "प्रोफाइल अपडेट गर्नुहोस्",
+  "submitVerificationRequest": "प्रमाणीकरण अनुरोध पेश गर्नुहोस्",
+  "pleaseSelectDocumentImage": "कृपया कागजातको तस्विर चयन गर्नुहोस्",
+  "submitBusinessDocuments": "प्रमाणित हुन आफ्ना व्यापार कागजातहरू पेश गर्नुहोस्। यसले तपाईका ग्राहकहरूसँग विश्वास निर्माण गर्न मद्दत गर्छ।",
+  "change": "परिवर्तन",
+  "additionalNoteOptional": "थप नोट (ऐच्छिक)",
+  "addAdditionalInfo": "आफ्नो व्यवसायको बारेमा कुनै पनि थप जानकारी थप्नुहोस्...",
+  "submitted": "पेश गरिएको",
+  "submitNewRequest": "नयाँ अनुरोध पेश गर्नुहोस्",
+
+  "locationServicesDisabled": "स्थान सेवाहरू अक्षम छन्",
+  "locationPermissionDenied": "स्थान अनुमति अस्वीकृत",
+  "locationPermissionsPermanentlyDenied": "स्थान अनुमतिहरू स्थायी रूपमा अस्वीकार गरिएको छ",
+  "failedToGetCurrentLocation": "हालको स्थान प्राप्त गर्न असफल",
+  "pleaseSelectLocationOnMap": "कृपया स्थान चयन गर्न नक्सामा ट्याप गर्नुहोस्",
+  "searchLocationHint": "स्थान खोज्नुहोस्...",
+  "enterShopAddress": "पसलको ठेगाना प्रविष्ट गर्नुहोस् (ऐच्छिक)",
+  "saving": "सुरक्षित गर्दै...",
+  "saveLocation": "स्थान सुरक्षित गर्नुहोस्",
+
+  "changePasswordTitle": "पासवर्ड परिवर्तन गर्नुहोस्",
+  "updateAccountPassword": "आफ्नो खाताको पासवर्ड अपडेट गर्नुहोस्",
+  "currentPassword": "हालको पासवर्ड",
+  "currentPasswordHint": "आफ्नो हालको पासवर्ड प्रविष्ट गर्नुहोस्",
+  "pleaseEnterCurrentPassword": "कृपया आफ्नो हालको पासवर्ड प्रविष्ट गर्नुहोस्",
+  "newPassword": "नयाँ पासवर्ड",
+  "newPasswordHint": "आफ्नो नयाँ पासवर्ड प्रविष्ट गर्नुहोस्",
+  "pleaseEnterNewPassword": "कृपया नयाँ पासवर्ड प्रविष्ट गर्नुहोस्",
+  "newPasswordMustBeDifferent": "नयाँ पासवर्ड हालकोभन्दा फरक हुनुपर्छ",
+  "confirmNewPassword": "नयाँ पासवर्ड पुष्टि गर्नुहोस्",
+  "pleaseConfirmNewPassword": "कृपया आफ्नो नयाँ पासवर्ड पुष्टि गर्नुहोस्",
+  "differentFromCurrentPassword": "हालको पासवर्डभन्दा फरक",
+
+  "goodMorning": "शुभ प्रभात",
+  "goodAfternoon": "शुभ दिउँसो",
+  "goodEvening": "शुभ साँझ",
+  "giveToTakeRatioGood": "तपाईको दिने लिने अनुपात राम्रो छ",
+  "needToGiveMore": "तपाईले लिनेभन्दा बढी दिनुपर्छ",
+  "giveAndTakeBalanced": "तपाईको दिने र लिने सन्तुलित छ",
+  "toGive": "दिनुपर्ने",
+  "toTake": "लिनुपर्ने",
+
+  "noConnectedBusinesses": "अहिलेसम्म कुनै जडान गरिएको व्यवसाय छैन",
+  "noConnectedCustomers": "अहिलेसम्म कुनै जडान गरिएको ग्राहक छैन",
+  "connectWithBusinesses": "आफ्ना लेनदेनहरू ट्र्याक गर्न व्यवसायहरूसँग जडान गर्नुहोस्",
+  "connectWithCustomers": "तिनीहरूको खाता व्यवस्थापन गर्न ग्राहकहरूसँग जडान गर्नुहोस्",
+  "failedToLoadConnections": "जडानहरू लोड गर्न असफल",
+  "connectedBusinesses": "जडान गरिएका व्यवसायहरू",
+  "connectedCustomers": "जडान गरिएका ग्राहकहरू",
+  "business": "व्यवसाय",
+
+  "gettingYourLocation": "तपाईको स्थान प्राप्त गर्दै...",
+  "noBusinessesWithLocation": "स्थान भएका कुनै व्यवसाय फेला परेनन्",
+
+  "@pleaseWaitBeforeResending": {
+    "placeholders": {
+      "time": { "type": "String" }
+    }
+  },
+  "@pendingRs": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@recordCashPayment": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+  "@voiceInputAdded": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@imageProcessed": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@failedToInitialize": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "@errorProcessingImage": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "@dueRs": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@esewaPaymentFailed": {
+    "placeholders": {
+      "error": { "type": "String" }
+    }
+  },
+  "@noUsersFoundFor": {
+    "placeholders": {
+      "query": { "type": "String" }
+    }
+  },
+  "@sendRequests": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "@favoriteBusinesses": {
+    "placeholders": {
+      "count": { "type": "String" }
+    }
+  },
+  "@favoritedOn": {
+    "placeholders": {
+      "date": { "type": "String" }
+    }
+  },
+  "@monthlySpending": {
+    "placeholders": {
+      "month": { "type": "String" }
+    }
+  },
+  "@overBudgetBy": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "@remainingBudget": {
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
   "@deleteConnectionMessage": {
     "placeholders": {
       "name": {
@@ -206,6 +560,69 @@
       "amount": {
         "type": "String"
       }
+    }
+  },
+
+  "businessVerification": "व्यवसाय प्रमाणीकरण",
+  "businessRegistration": "व्यवसाय दर्ता",
+  "panCard": "प्यान कार्ड",
+  "vatCertificate": "भ्याट प्रमाणपत्र",
+  "tradeLicense": "व्यापार इजाजतपत्र",
+  "documentSelected": "कागजात चयन गरिएको",
+  "tapToUploadDocument": "कागजात तस्बिर अपलोड गर्न ट्याप गर्नुहोस्",
+  "takePhotoOrChooseFromGallery": "फोटो खिच्नुहोस् वा ग्यालेरीबाट छान्नुहोस्",
+  "pendingReview": "समीक्षा बाँकी",
+  "verificationBeingReviewed": "तपाईंको प्रमाणीकरण अनुरोध हाम्रो प्रशासक टोलीले समीक्षा गरिरहेको छ।",
+  "notVerifiedTitle": "प्रमाणीकृत छैन",
+  "businessVerifiedSuccessfully": "तपाईंको व्यवसाय सफलतापूर्वक प्रमाणीकृत भएको छ।",
+  "documentType": "कागजात प्रकार",
+  "uploadDocument": "कागजात अपलोड",
+  "latestRequest": "नवीनतम अनुरोध",
+  "adminRemarks": "प्रशासक टिप्पणी",
+
+  "setShopLocation": "पसलको स्थान सेट गर्नुहोस्",
+  "tapOnMapToPinLocation": "आफ्नो पसलको स्थान पिन गर्न नक्सामा ट्याप गर्नुहोस्",
+  "locationCoordinates": "स्थान: {lat}, {lng}",
+  "@locationCoordinates": {
+    "placeholders": {
+      "lat": { "type": "String" },
+      "lng": { "type": "String" }
+    }
+  },
+
+  "requestPending": "अनुरोध बाँकी",
+  "notConnected": "जडान भएको छैन",
+  "viewDetails": "विवरण हेर्नुहोस्",
+
+  "directions": "दिशानिर्देश",
+  "distanceKm": "दूरी: {distance} कि.मि.",
+  "@distanceKm": {
+    "placeholders": {
+      "distance": { "type": "String" }
+    }
+  },
+
+  "yourDue": "तपाईंको बाँकी",
+  "toReceive": "प्राप्त गर्ने",
+  "youPaid": "तपाईंले तिरेको",
+
+  "isTyping": "{userName} टाइप गर्दै...",
+  "@isTyping": {
+    "placeholders": {
+      "userName": { "type": "String" }
+    }
+  },
+
+  "asBusiness": "व्यवसायको रूपमा",
+  "asCustomer": "ग्राहकको रूपमा",
+
+  "transactionCalendar": "लेनदेन क्यालेन्डर",
+  "noTransactionsOnDate": "यो मितिमा कुनै लेनदेन छैन",
+  "daysWithTransactions": "दिन लेनदेन भएका",
+  "transactionsOnDate": "{date} का लेनदेनहरू",
+  "@transactionsOnDate": {
+    "placeholders": {
+      "date": { "type": "String" }
     }
   }
 }

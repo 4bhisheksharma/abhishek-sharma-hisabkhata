@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../domain/entities/transaction.dart';
 import 'transaction_list_item.dart';
 
@@ -27,21 +28,21 @@ class TransactionsList extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
-              'Transactions',
+            Text(
+              AppLocalizations.of(context)!.transactions,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             IconButton(
               onPressed: onFilterTap,
               icon: const Icon(Icons.filter_list),
-              tooltip: 'Filter transactions',
+              tooltip: AppLocalizations.of(context)!.filterTransactions,
             ),
           ],
         ),
         const SizedBox(height: 8),
         // Transaction list
         if (transactions.isEmpty)
-          _buildEmptyState()
+          _buildEmptyState(context)
         else
           ListView.separated(
             shrinkWrap: true,
@@ -61,7 +62,7 @@ class TransactionsList extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 40),
       alignment: Alignment.center,
@@ -73,15 +74,15 @@ class TransactionsList extends StatelessWidget {
             color: AppTheme.dividerColor,
           ),
           const SizedBox(height: 16),
-          const Text(
-            'No transactions yet',
+          Text(
+            AppLocalizations.of(context)!.noTransactionsYet,
             style: TextStyle(fontSize: 16, color: AppTheme.textSecondary),
           ),
           const SizedBox(height: 8),
           Text(
             isCustomerView
-                ? 'Your transactions will appear here'
-                : 'Add transactions for this customer',
+                ? AppLocalizations.of(context)!.transactionsWillAppearHere
+                : AppLocalizations.of(context)!.addTransactionsForCustomer,
             style: const TextStyle(fontSize: 13, color: AppTheme.textHint),
           ),
         ],

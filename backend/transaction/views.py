@@ -1,9 +1,13 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from django.db import transaction as db_transaction
+from django.db.models import Sum, Count
+from django.db.models.functions import TruncDate
+from collections import defaultdict
 
 from .models import Transaction, Favorite
 from .serializers import (
@@ -388,3 +392,136 @@ class FavoriteViewSet(viewsets.ModelViewSet):
         ).exists()
         
         return Response({"is_favorite": is_favorite})
+
+
+class TransactionActivityView(APIView):
+    """
+    Returns transaction activity grouped by date, showing which users
+    the current user transacted with on each day.
+    
+    GET /transaction/activity/?days=30
+    
+    Response:
+    [
+        {
+            "date": "2026-03-03",
+            "total_amount": 1500.00,
+            "transaction_count": 3,
+            "users": [
+                {
+                    "relationship_id": 1,
+                    "user_id": 5,
+                    "display_name": "Ram's Shop",
+                    "profile_picture": "/media/profile_pictures/...",
+                    "is_business": true,
+                    "amount_total": 1000.00,
+                    "transaction_count": 2
+                },
+                ...
+            ]
+        },
+        ...
+    ]
+    """
+    permission_classes = [IsAuthenticated]
+    
+    def get(self, request):
+        user = request.user
+        days = int(request.query_params.get('days', 30))
+        
+        # Get all relationship IDs where the user is involved
+        relationship_ids = []
+        is_customer = hasattr(user, 'customer_profile')
+        is_business = hasattr(user, 'business_profile')
+        
+        if is_customer:
+            customer_rels = CustomerBusinessRelationship.objects.filter(
+                customer=user.customer_profile
+            ).values_list('relationship_id', flat=True)
+            relationship_ids.extend(customer_rels)
+        
+        if is_business:
+            business_rels = CustomerBusinessRelationship.objects.filter(
+                business=user.business_profile
+            ).values_list('relationship_id', flat=True)
+            relationship_ids.extend(business_rels)
+        
+        if not relationship_ids:
+            return Response([])
+        
+        # Get transactions within the specified days range
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        cutoff_date = timezone.now() - timedelta(days=days)
+        
+        transactions = Transaction.objects.filter(
+            relationship_id__in=relationship_ids,
+            transaction_date__gte=cutoff_date
+        ).select_related(
+            'relationship__customer__user',
+            'relationship__business__user',
+            'relationship__business',
+        ).order_by('-transaction_date')
+        
+        # Group by date, then by relationship
+        date_groups = defaultdict(lambda: defaultdict(list))
+        
+        for txn in transactions:
+            date_key = txn.transaction_date.date().isoformat()
+            rel_id = txn.relationship_id
+            date_groups[date_key][rel_id].append(txn)
+        
+        # Build response
+        result = []
+        for date_key in sorted(date_groups.keys(), reverse=True):
+            rel_groups = date_groups[date_key]
+            day_total = 0
+            day_count = 0
+            users_list = []
+            
+            for rel_id, txns in rel_groups.items():
+                rel = txns[0].relationship
+                
+                # Determine the "other" user in the relationship
+                if is_customer and rel.customer.user_id == user.id:
+                    other_user = rel.business.user
+                    display_name = rel.business.business_name
+                    other_is_business = True
+                    other_user_id = other_user.id
+                elif is_business and rel.business.user_id == user.id:
+                    other_user = rel.customer.user
+                    display_name = other_user.full_name
+                    other_is_business = False
+                    other_user_id = other_user.id
+                else:
+                    continue
+                
+                profile_pic = None
+                if other_user.profile_picture:
+                    profile_pic = f"/media/{other_user.profile_picture}"
+                
+                amount_total = sum(abs(float(t.amount)) for t in txns)
+                txn_count = len(txns)
+                
+                day_total += amount_total
+                day_count += txn_count
+                
+                users_list.append({
+                    'relationship_id': rel_id,
+                    'user_id': other_user_id,
+                    'display_name': display_name,
+                    'profile_picture': profile_pic,
+                    'is_business': other_is_business,
+                    'amount_total': round(amount_total, 2),
+                    'transaction_count': txn_count,
+                })
+            
+            result.append({
+                'date': date_key,
+                'total_amount': round(day_total, 2),
+                'transaction_count': day_count,
+                'users': users_list,
+            })
+        
+        return Response(result)

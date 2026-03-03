@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String userName;
@@ -31,11 +32,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Size get preferredSize => const Size.fromHeight(220); //can tuik adjust height as needed
 
-  String _getGreeting() {
+  String _getGreeting(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final hour = DateTime.now().hour;
-    if (hour < 12) return 'Good Morning';
-    if (hour < 17) return 'Good Afternoon';
-    return 'Good Evening';
+    if (hour < 12) return l10n.goodMorning;
+    if (hour < 17) return l10n.goodAfternoon;
+    return l10n.goodEvening;
   }
 
   String _calculateRatio() {
@@ -49,13 +51,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
   }
 
-  String _getRatioMessage() {
+  String _getRatioMessage(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (toGive > toTake) {
-      return 'Your Give is to Take Ratio Looks Good';
+      return l10n.giveToTakeRatioGood;
     } else if (toTake > toGive) {
-      return 'You Need to Give More Than Take';
+      return l10n.needToGiveMore;
     } else {
-      return 'Your Give and Take is Balanced';
+      return l10n.giveAndTakeBalanced;
     }
   }
 
@@ -135,7 +138,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            _getGreeting(),
+                            _getGreeting(context),
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.8),
                               fontSize: 13,
@@ -263,7 +266,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      'To Give',
+                                      AppLocalizations.of(context)!.toGive,
                                       style: TextStyle(
                                         color: Colors.white.withValues(
                                           alpha: 0.8,
@@ -314,7 +317,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      'To Take',
+                                      AppLocalizations.of(context)!.toTake,
                                       style: TextStyle(
                                         color: Colors.white.withValues(
                                           alpha: 0.8,
@@ -365,7 +368,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             const SizedBox(width: 6),
                             Flexible(
                               child: Text(
-                                '${_calculateRatio()} | ${_getRatioMessage()}',
+                                '${_calculateRatio()} | ${_getRatioMessage(context)}',
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.9),
                                   fontSize: 12,

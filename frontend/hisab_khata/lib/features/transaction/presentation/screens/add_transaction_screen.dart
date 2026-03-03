@@ -115,7 +115,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Voice input added: Rs. ${result.amount.toStringAsFixed(2)} for ${result.description}',
+              '${AppLocalizations.of(context)!.voiceInputAdded(result.amount.toStringAsFixed(2))} for ${result.description}',
             ),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 2),
@@ -144,7 +144,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'Image processed: Rs. ${result.amount.toStringAsFixed(2)} for ${result.description} ($confidencePercent% confidence)',
+              '${AppLocalizations.of(context)!.imageProcessed(result.amount.toStringAsFixed(2))} for ${result.description} ($confidencePercent% confidence)',
             ),
             backgroundColor: Colors.green,
             duration: const Duration(seconds: 3),
@@ -313,7 +313,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'))],
       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
       decoration: InputDecoration(
-        prefixText: 'Rs. ',
+        prefixText: AppLocalizations.of(context)!.rsPrefix,
         prefixStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         hintText: AppLocalizations.of(context)!.amountHint,
         border: OutlineInputBorder(
@@ -338,11 +338,11 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       ),
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Please enter amount';
+          return AppLocalizations.of(context)!.pleaseEnterAmount;
         }
         final amount = double.tryParse(value.replaceAll(',', ''));
         if (amount == null || amount <= 0) {
-          return 'Please enter a valid amount';
+          return AppLocalizations.of(context)!.pleaseEnterValidAmount;
         }
         return null;
       },
@@ -378,7 +378,7 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
       ),
       validator: (value) {
         if (value == null || value.trim().isEmpty) {
-          return 'Please enter item title';
+          return AppLocalizations.of(context)!.pleaseEnterItemTitle;
         }
         return null;
       },

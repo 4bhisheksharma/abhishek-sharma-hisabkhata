@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_bloc.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_event.dart';
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_state.dart';
@@ -89,7 +90,7 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Business Overview',
+                AppLocalizations.of(context)!.businessOverview,
                 style: Theme.of(
                   context,
                 ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -99,15 +100,19 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
                   ? Column(
                       children: [
                         AnalyticsStatCard(
-                          title: 'Total Transactions',
+                          title: AppLocalizations.of(
+                            context,
+                          )!.totalTransactions,
                           value: '$totalTransactions',
                           icon: Icons.receipt_long_rounded,
                           iconColor: AppTheme.primaryBlue,
                         ),
                         const SizedBox(height: 12),
                         AnalyticsStatCard(
-                          title: 'Total Revenue',
-                          value: 'Rs. ${totalRevenue.toStringAsFixed(0)}',
+                          title: AppLocalizations.of(context)!.totalRevenue,
+                          value: AppLocalizations.of(
+                            context,
+                          )!.rsAmount(totalRevenue.toStringAsFixed(0)),
                           icon: Icons.trending_up_rounded,
                           iconColor: Colors.green,
                         ),
@@ -117,7 +122,9 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
                       children: [
                         Expanded(
                           child: AnalyticsStatCard(
-                            title: 'Total Transactions',
+                            title: AppLocalizations.of(
+                              context,
+                            )!.totalTransactions,
                             value: '$totalTransactions',
                             icon: Icons.receipt_long_rounded,
                             iconColor: AppTheme.primaryBlue,
@@ -126,8 +133,10 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: AnalyticsStatCard(
-                            title: 'Total Revenue',
-                            value: 'Rs. ${totalRevenue.toStringAsFixed(0)}',
+                            title: AppLocalizations.of(context)!.totalRevenue,
+                            value: AppLocalizations.of(
+                              context,
+                            )!.rsAmount(totalRevenue.toStringAsFixed(0)),
                             icon: Icons.trending_up_rounded,
                             iconColor: Colors.green,
                           ),
@@ -151,7 +160,7 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Revenue Analytics',
+            AppLocalizations.of(context)!.revenueAnalytics,
             style: Theme.of(
               context,
             ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -198,7 +207,7 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
               ),
               const SizedBox(height: 12),
               Text(
-                'No Favorite Customers Yet',
+                AppLocalizations.of(context)!.noFavoriteCustomersYet,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -207,7 +216,7 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Customers who favorite your business will appear here',
+                AppLocalizations.of(context)!.customersWhoFavorite,
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
               ),
@@ -236,7 +245,7 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Favorite Customers',
+                  AppLocalizations.of(context)!.favoriteCustomers,
                   style: Theme.of(
                     context,
                   ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
@@ -298,7 +307,11 @@ class _BusinessAnalyticsScreenState extends State<BusinessAnalyticsScreen> {
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
                   subtitle: Text(
-                    'Favorited on ${DateTime.parse(customer['favoritedAt']).toLocal().toString().split(' ')[0]}',
+                    AppLocalizations.of(context)!.favoritedOn(
+                      DateTime.parse(
+                        customer['favoritedAt'],
+                      ).toLocal().toString().split(' ')[0],
+                    ),
                     style: const TextStyle(fontSize: 12),
                   ),
                   trailing: const Icon(Icons.star_rounded, color: Colors.amber),

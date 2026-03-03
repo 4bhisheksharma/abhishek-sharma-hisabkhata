@@ -55,7 +55,7 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Monthly Spending - $month',
+                          AppLocalizations.of(context)!.monthlySpending(month),
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
@@ -73,7 +73,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                '$daysRemaining days left',
+                                AppLocalizations.of(
+                                  context,
+                                )!.daysLeft('$daysRemaining'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -93,7 +95,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                               icon: const Icon(Icons.edit_outlined),
                               iconSize: 20,
                               color: AppTheme.primaryBlue,
-                              tooltip: 'Set Monthly Limit',
+                              tooltip: AppLocalizations.of(
+                                context,
+                              )!.setMonthlyLimitTooltip,
                               padding: EdgeInsets.zero,
                               constraints: const BoxConstraints(),
                             ),
@@ -106,7 +110,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                       children: [
                         Flexible(
                           child: Text(
-                            'Monthly Spending - $month',
+                            AppLocalizations.of(
+                              context,
+                            )!.monthlySpending(month),
                             style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.bold),
                           ),
@@ -123,7 +129,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
-                                '$daysRemaining days left',
+                                AppLocalizations.of(
+                                  context,
+                                )!.daysLeft('$daysRemaining'),
                                 style: const TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,
@@ -144,7 +152,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                               icon: const Icon(Icons.edit_outlined),
                               iconSize: 20,
                               color: AppTheme.primaryBlue,
-                              tooltip: 'Set Monthly Limit',
+                              tooltip: AppLocalizations.of(
+                                context,
+                              )!.setMonthlyLimitTooltip,
                             ),
                           ],
                         ),
@@ -176,8 +186,8 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Total Spent',
+                            Text(
+                              AppLocalizations.of(context)!.totalSpentLabel,
                               style: TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey,
@@ -185,7 +195,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Rs. ${totalSpent.toStringAsFixed(2)}',
+                              AppLocalizations.of(
+                                context,
+                              )!.rsAmount(totalSpent.toStringAsFixed(2)),
                               style: const TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
@@ -199,8 +211,8 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text(
-                                'Monthly Limit',
+                              Text(
+                                AppLocalizations.of(context)!.monthlyLimitLabel,
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: Colors.grey,
@@ -208,7 +220,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Rs. ${monthlyLimit!.toStringAsFixed(2)}',
+                                AppLocalizations.of(
+                                  context,
+                                )!.rsAmount(monthlyLimit!.toStringAsFixed(2)),
                                 style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
@@ -225,8 +239,8 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Total Spent',
+                            Text(
+                              AppLocalizations.of(context)!.totalSpentLabel,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey,
@@ -234,7 +248,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              'Rs. ${totalSpent.toStringAsFixed(2)}',
+                              AppLocalizations.of(
+                                context,
+                              )!.rsAmount(totalSpent.toStringAsFixed(2)),
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -247,8 +263,8 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              const Text(
-                                'Monthly Limit',
+                              Text(
+                                AppLocalizations.of(context)!.monthlyLimitLabel,
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey,
@@ -256,7 +272,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Rs. ${monthlyLimit!.toStringAsFixed(2)}',
+                                AppLocalizations.of(
+                                  context,
+                                )!.rsAmount(monthlyLimit!.toStringAsFixed(2)),
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -290,8 +308,12 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                       Expanded(
                         child: Text(
                           isOverBudget
-                              ? 'Over budget by Rs. ${(-remainingBudget!).toStringAsFixed(2)}'
-                              : 'Remaining: Rs. ${remainingBudget!.toStringAsFixed(2)}',
+                              ? AppLocalizations.of(context)!.overBudgetBy(
+                                  (-remainingBudget!).toStringAsFixed(2),
+                                )
+                              : AppLocalizations.of(context)!.remainingBudget(
+                                  remainingBudget!.toStringAsFixed(2),
+                                ),
                           style: TextStyle(
                             fontSize: isSmallScreen ? 13 : 14,
                             fontWeight: FontWeight.w600,
@@ -324,9 +346,11 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                                   size: 20,
                                 ),
                                 const SizedBox(width: 8),
-                                const Expanded(
+                                Expanded(
                                   child: Text(
-                                    'Set a monthly limit to track your budget',
+                                    AppLocalizations.of(
+                                      context,
+                                    )!.setMonthlyLimitMessage,
                                     style: TextStyle(
                                       fontSize: 13,
                                       color: AppTheme.primaryBlue,
@@ -356,7 +380,9 @@ class MonthlySpendingProgressWidget extends StatelessWidget {
                                     vertical: 8,
                                   ),
                                 ),
-                                child: const Text('Set Limit'),
+                                child: Text(
+                                  AppLocalizations.of(context)!.setLimit,
+                                ),
                               ),
                             ),
                           ],

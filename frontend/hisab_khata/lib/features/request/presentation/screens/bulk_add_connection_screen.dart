@@ -53,13 +53,13 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     super.dispose();
   }
 
-  String get _appBarTitle {
+  String _getAppBarTitle(BuildContext context) {
     if (_userRole.toLowerCase() == 'business') {
-      return 'Add Multiple Customers';
+      return AppLocalizations.of(context)!.addMultipleCustomers;
     } else if (_userRole.toLowerCase() == 'customer') {
-      return 'Add Multiple Businesses';
+      return AppLocalizations.of(context)!.addMultipleBusinesses;
     }
-    return 'Add Multiple Connections';
+    return AppLocalizations.of(context)!.addMultipleConnections;
   }
 
   /// Triggers loading the next page when scrolled near the bottom
@@ -102,7 +102,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     if (_selectedUserIds.isEmpty) {
       MySnackbar.showError(
         context,
-        'Please select at least one user to send connection requests.',
+        AppLocalizations.of(context)!.pleaseSelectAtLeastOneUser,
       );
       return;
     }
@@ -341,15 +341,15 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
     switch (status) {
       case 'pending':
         color = Colors.orange;
-        label = 'Pending';
+        label = AppLocalizations.of(context)!.pending;
         break;
       case 'accepted':
         color = Colors.green;
-        label = 'Connected';
+        label = AppLocalizations.of(context)!.connected;
         break;
       case 'rejected': // Should not occur as rejected requests are deleted
         color = Colors.red;
-        label = 'Rejected';
+        label = AppLocalizations.of(context)!.rejected;
         break;
       default:
         color = Colors.grey;
@@ -393,7 +393,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
             onPressed: () => Navigator.of(context).pop(),
           ),
           title: Text(
-            _appBarTitle,
+            _getAppBarTitle(context),
             style: const TextStyle(
               color: Colors.white,
               fontSize: 18,
@@ -423,7 +423,9 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                     return TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
-                        hintText: 'Search by name, email, or phone...',
+                        hintText: AppLocalizations.of(
+                          context,
+                        )!.searchByNameEmailPhone,
                         prefixIcon: const Icon(Icons.search),
                         suffixIcon: value.text.isNotEmpty
                             ? IconButton(
@@ -459,7 +461,9 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${_selectedUserIds.length} user(s) selected',
+                        AppLocalizations.of(
+                          context,
+                        )!.usersSelected('${_selectedUserIds.length}'),
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       TextButton(
@@ -468,7 +472,7 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                             _selectedUserIds.clear();
                           });
                         },
-                        child: const Text('Clear All'),
+                        child: Text(AppLocalizations.of(context)!.clearAll),
                       ),
                     ],
                   ),
@@ -476,122 +480,129 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
 
               // User list with infinite scroll
               Expanded(
-                child: BlocBuilder<ConnectionRequestBloc, ConnectionRequestState>(
-                  buildWhen: (previous, current) =>
-                      current is PaginatedUsersLoaded ||
-                      current is ConnectionRequestLoading ||
-                      current is ConnectionRequestError,
-                  builder: (context, state) {
-                    // Initial loading
-                    if (state is ConnectionRequestLoading) {
-                      return const BulkAddConnectionShimmer();
-                    }
+                child:
+                    BlocBuilder<ConnectionRequestBloc, ConnectionRequestState>(
+                      buildWhen: (previous, current) =>
+                          current is PaginatedUsersLoaded ||
+                          current is ConnectionRequestLoading ||
+                          current is ConnectionRequestError,
+                      builder: (context, state) {
+                        // Initial loading
+                        if (state is ConnectionRequestLoading) {
+                          return const BulkAddConnectionShimmer();
+                        }
 
-                    // Error state
-                    if (state is ConnectionRequestError) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.error_outline,
-                              size: 64,
-                              color: Colors.red[300],
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              state.message,
-                              style: TextStyle(color: Colors.red[400]),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              onPressed: () {
-                                context.read<ConnectionRequestBloc>().add(
-                                  const FetchPaginatedUsersEvent(),
-                                );
-                              },
-                              child: const Text('Retry'),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    // Loaded state
-                    if (state is PaginatedUsersLoaded) {
-                      if (state.users.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                state.searchQuery != null
-                                    ? Icons.search_off
-                                    : Icons.people_outline,
-                                size: 64,
-                                color: Colors.grey[400],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                state.searchQuery != null
-                                    ? 'No users found for "${state.searchQuery}"'
-                                    : 'No users available',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.grey[600],
-                                  fontWeight: FontWeight.w500,
+                        // Error state
+                        if (state is ConnectionRequestError) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  size: 64,
+                                  color: Colors.red[300],
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        );
-                      }
-
-                      return RefreshIndicator(
-                        onRefresh: () async {
-                          final search = _searchController.text.trim();
-                          context.read<ConnectionRequestBloc>().add(
-                            FetchPaginatedUsersEvent(
-                              search: search.isEmpty ? null : search,
+                                const SizedBox(height: 16),
+                                Text(
+                                  state.message,
+                                  style: TextStyle(color: Colors.red[400]),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 16),
+                                ElevatedButton(
+                                  onPressed: () {
+                                    context.read<ConnectionRequestBloc>().add(
+                                      const FetchPaginatedUsersEvent(),
+                                    );
+                                  },
+                                  child: const Text('Retry'),
+                                ),
+                              ],
                             ),
                           );
-                          await context
-                              .read<ConnectionRequestBloc>()
-                              .stream
-                              .firstWhere(
-                                (s) =>
-                                    s is PaginatedUsersLoaded ||
-                                    s is ConnectionRequestError,
-                              );
-                        },
-                        child: ListView.builder(
-                          controller: _scrollController,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          itemCount:
-                              state.users.length + (state.hasMore ? 1 : 0),
-                          itemBuilder: (context, index) {
-                            // Loading indicator at the bottom
-                            if (index == state.users.length) {
-                              return const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: Center(
-                                  child: CircularProgressIndicator(),
+                        }
+
+                        // Loaded state
+                        if (state is PaginatedUsersLoaded) {
+                          if (state.users.isEmpty) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    state.searchQuery != null
+                                        ? Icons.search_off
+                                        : Icons.people_outline,
+                                    size: 64,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    state.searchQuery != null
+                                        ? AppLocalizations.of(
+                                            context,
+                                          )!.noUsersFoundFor(state.searchQuery!)
+                                        : AppLocalizations.of(
+                                            context,
+                                          )!.noUsersAvailable,
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.grey[600],
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          return RefreshIndicator(
+                            onRefresh: () async {
+                              final search = _searchController.text.trim();
+                              context.read<ConnectionRequestBloc>().add(
+                                FetchPaginatedUsersEvent(
+                                  search: search.isEmpty ? null : search,
                                 ),
                               );
-                            }
+                              await context
+                                  .read<ConnectionRequestBloc>()
+                                  .stream
+                                  .firstWhere(
+                                    (s) =>
+                                        s is PaginatedUsersLoaded ||
+                                        s is ConnectionRequestError,
+                                  );
+                            },
+                            child: ListView.builder(
+                              controller: _scrollController,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                              ),
+                              itemCount:
+                                  state.users.length + (state.hasMore ? 1 : 0),
+                              itemBuilder: (context, index) {
+                                // Loading indicator at the bottom
+                                if (index == state.users.length) {
+                                  return const Padding(
+                                    padding: EdgeInsets.all(16),
+                                    child: Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                                  );
+                                }
 
-                            return _buildUserTile(state.users[index]);
-                          },
-                        ),
-                      );
-                    }
+                                return _buildUserTile(state.users[index]);
+                              },
+                            ),
+                          );
+                        }
 
-                    // Default — show loading
-                    return const BulkAddConnectionShimmer();
-                  },
-                ),
+                        // Default — show loading
+                        return const BulkAddConnectionShimmer();
+                      },
+                    ),
               ),
 
               // Total count + Send button
@@ -623,7 +634,9 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                             return Padding(
                               padding: const EdgeInsets.only(bottom: 8),
                               child: Text(
-                                '${state.totalCount} user(s) available',
+                                AppLocalizations.of(
+                                  context,
+                                )!.usersAvailable('${state.totalCount}'),
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: Colors.grey[600],
@@ -644,7 +657,9 @@ class _BulkAddConnectionScreenState extends State<BulkAddConnectionScreen> {
                               _selectedUserIds.isNotEmpty && !isLoading;
 
                           return MyButton(
-                            text: 'Send Requests (${_selectedUserIds.length})',
+                            text: AppLocalizations.of(
+                              context,
+                            )!.sendRequests('${_selectedUserIds.length}'),
                             onPressed: canSend
                                 ? _handleSendBulkRequests
                                 : () {},

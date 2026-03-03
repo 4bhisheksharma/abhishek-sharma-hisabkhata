@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 import '../../../../config/theme/app_theme.dart';
 
 /// Widget for chat message input with send button.
@@ -107,8 +108,8 @@ class _ChatInputState extends State<ChatInput> {
                         maxLines: 4,
                         minLines: 1,
                         textCapitalization: TextCapitalization.sentences,
-                        decoration: const InputDecoration(
-                          hintText: 'Type a message...',
+                        decoration: InputDecoration(
+                          hintText: AppLocalizations.of(context)!.typeAMessage,
                           hintStyle: TextStyle(color: AppTheme.textSecondary),
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.symmetric(vertical: 12),

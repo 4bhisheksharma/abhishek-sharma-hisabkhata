@@ -156,7 +156,7 @@ class AppRouter {
                         context,
                       ).pushReplacementNamed(AppRoutes.login);
                     },
-                    child: const Text('Go to Login'),
+                    child: Text(AppLocalizations.of(context)!.goToLogin),
                   ),
                 ],
               ),

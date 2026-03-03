@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../config/theme/app_theme.dart';
+import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class MessageInputArea extends StatefulWidget {
   final Function(String) onSendMessage;
   final bool isLoading;
-  final String hintText;
+  final String? hintText;
   final TextEditingController? controller;
 
   const MessageInputArea({
     super.key,
     required this.onSendMessage,
     this.isLoading = false,
-    this.hintText = 'Type a message...',
+    this.hintText,
     this.controller,
   });
 
@@ -58,7 +59,9 @@ class _MessageInputAreaState extends State<MessageInputArea> {
             child: TextField(
               controller: _controller,
               decoration: InputDecoration(
-                hintText: widget.hintText,
+                hintText:
+                    widget.hintText ??
+                    AppLocalizations.of(context)!.typeAMessage,
                 hintStyle: const TextStyle(color: AppTheme.textHint),
                 filled: true,
                 fillColor: AppTheme.backgroundGrey,

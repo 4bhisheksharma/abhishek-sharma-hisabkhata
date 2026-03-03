@@ -165,9 +165,9 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Pay Due via eSewa',
-                style: TextStyle(
+              Text(
+                AppLocalizations.of(context)!.payDueViaEsewa,
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
                   letterSpacing: -0.3,
@@ -175,7 +175,9 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               ),
               const SizedBox(height: 2),
               Text(
-                'Due: Rs. ${widget.currentDue.toStringAsFixed(2)}',
+                AppLocalizations.of(
+                  context,
+                )!.dueRs(widget.currentDue.toStringAsFixed(2)),
                 style: TextStyle(
                   fontSize: 13,
                   color: AppTheme.textSecondary,
@@ -197,8 +199,8 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
       ],
       decoration: InputDecoration(
-        labelText: 'Amount',
-        prefixText: 'Rs. ',
+        labelText: AppLocalizations.of(context)!.amount,
+        prefixText: AppLocalizations.of(context)!.rsPrefix,
         filled: true,
         fillColor: Colors.grey[50],
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
@@ -231,7 +233,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     return TextFormField(
       controller: _noteController,
       decoration: InputDecoration(
-        labelText: 'Note (optional)',
+        labelText: AppLocalizations.of(context)!.noteOptional,
         hintText: AppLocalizations.of(context)!.transactionNoteHint,
         filled: true,
         fillColor: Colors.grey[50],
@@ -259,7 +261,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              'This business has not linked their eSewa account yet. Please ask them to set it up.',
+              AppLocalizations.of(context)!.businessNotLinkedEsewa,
               style: TextStyle(fontSize: 12, color: Colors.orange[900]),
             ),
           ),
@@ -312,7 +314,9 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
                     ),
                   ),
             label: Text(
-              isProcessing ? 'Processing...' : 'Pay with eSewa',
+              isProcessing
+                  ? AppLocalizations.of(context)!.processing
+                  : AppLocalizations.of(context)!.payWithEsewa,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
@@ -377,11 +381,17 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         );
       },
       onFailure: (data) {
-        MySnackbar.showError(context, 'eSewa payment failed: $data');
+        MySnackbar.showError(
+          context,
+          AppLocalizations.of(context)!.esewaPaymentFailed('$data'),
+        );
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
       onCancellation: (data) {
-        MySnackbar.showInfo(context, 'Payment was cancelled');
+        MySnackbar.showInfo(
+          context,
+          AppLocalizations.of(context)!.paymentCancelled,
+        );
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
     );
