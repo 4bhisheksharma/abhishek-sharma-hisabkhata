@@ -40,6 +40,7 @@ dependencies:
   nepali_date_picker: ^7.0.1
   esewa_flutter_sdk:
     path: ./esewa_flutter_sdk
+  khalti_checkout_flutter: ^1.0.0-dev.9
 
   flutter_localizations:
     sdk: flutter
