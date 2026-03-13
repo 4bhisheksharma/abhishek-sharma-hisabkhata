@@ -45,6 +45,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
   bool _khaltiStatusLoaded = false;
 
   _GatewayOption _selectedGateway = _GatewayOption.esewa;
+  final Set<String> _processedKhaltiVerifyKeys = <String>{};
 
   @override
   void dispose() {
@@ -590,6 +591,13 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
           final statusText =
               (payload?.status ?? paymentResult?.status ?? 'Completed')
                   .toString();
+
+          final verifyKey =
+              '${paymentData.paymentRecordId}-${paymentData.pidx}-${transactionId.isEmpty ? 'na' : transactionId}';
+          if (_processedKhaltiVerifyKeys.contains(verifyKey)) {
+            return;
+          }
+          _processedKhaltiVerifyKeys.add(verifyKey);
 
           context.read<KhaltiPaymentBloc>().add(
             VerifyKhaltiPayment(

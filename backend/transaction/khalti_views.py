@@ -57,6 +57,18 @@ def _khalti_base_url():
     return "https://dev.khalti.com" if _is_test_env() else "https://khalti.com"
 
 
+def _resolve_website_url():
+    return os.getenv("KHALTI_WEBSITE_URL", "").strip() or "https://example.com"
+
+
+def _resolve_return_url():
+    # Use explicit return URL when provided; otherwise fallback to website URL.
+    explicit = os.getenv("KHALTI_RETURN_URL", "").strip()
+    if explicit:
+        return explicit
+    return _resolve_website_url()
+
+
 def _is_sample_or_placeholder_key(value):
     normalized = (value or "").strip().lower()
     if not normalized:
@@ -421,8 +433,8 @@ class InitiateKhaltiPaymentView(APIView):
             amount_paisa = int((Decimal(data["amount"]) * Decimal("100")).quantize(Decimal("1")))
 
             payload = {
-                "return_url": os.getenv("KHALTI_RETURN_URL", "https://example.com"),
-                "website_url": os.getenv("KHALTI_WEBSITE_URL", "https://example.com"),
+                "return_url": _resolve_return_url(),
+                "website_url": _resolve_website_url(),
                 "amount": amount_paisa,
                 "purchase_order_id": purchase_order_id,
                 "purchase_order_name": (
@@ -549,19 +561,22 @@ class VerifyKhaltiPaymentView(APIView):
         data = serializer.validated_data
 
         try:
-            payment_record = KhaltiPaymentRecord.objects.get(id=data["payment_record_id"])
-
-            if payment_record.status in ["verified", "success"]:
-                return Response(
-                    {
-                        "status": 400,
-                        "message": "Payment already verified",
-                        "data": KhaltiPaymentRecordSerializer(payment_record).data,
-                    },
-                    status=status.HTTP_400_BAD_REQUEST,
+            with db_transaction.atomic():
+                payment_record = KhaltiPaymentRecord.objects.select_for_update().get(
+                    id=data["payment_record_id"]
                 )
 
-            relationship = payment_record.relationship
+                if payment_record.status in ["verified", "success"] or payment_record.transaction_id:
+                    return Response(
+                        {
+                            "status": 200,
+                            "message": "Payment already verified",
+                            "data": KhaltiPaymentRecordSerializer(payment_record).data,
+                        },
+                        status=status.HTTP_200_OK,
+                    )
+
+                relationship = payment_record.relationship
             user = request.user
             if not (
                 hasattr(user, "customer_profile")
@@ -601,6 +616,20 @@ class VerifyKhaltiPaymentView(APIView):
 
             if is_success:
                 with db_transaction.atomic():
+                    payment_record = KhaltiPaymentRecord.objects.select_for_update().get(
+                        id=payment_record.id
+                    )
+
+                    if payment_record.status in ["verified", "success"] or payment_record.transaction_id:
+                        return Response(
+                            {
+                                "status": 200,
+                                "message": "Payment already verified",
+                                "data": KhaltiPaymentRecordSerializer(payment_record).data,
+                            },
+                            status=status.HTTP_200_OK,
+                        )
+
                     transaction_id = data.get("transaction_id") or lookup_payload.get(
                         "transaction_id",
                         "",

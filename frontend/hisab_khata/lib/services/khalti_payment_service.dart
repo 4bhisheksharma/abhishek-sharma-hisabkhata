@@ -58,6 +58,8 @@ class KhaltiPaymentService {
       payConfig: payConfig,
       onPaymentResult: (paymentResult, khaltiInstance) {
         onPaymentResult(paymentResult);
+        // Close the in-app Khalti page immediately after success callback.
+        khaltiInstance.close(context);
       },
       onMessage:
           (
