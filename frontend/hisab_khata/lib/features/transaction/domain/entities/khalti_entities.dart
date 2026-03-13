@@ -73,7 +73,7 @@ class BusinessKhaltiStatus extends Equatable {
 class KhaltiPaymentInitiation extends Equatable {
   final int paymentRecordId;
   final String pidx;
-  final String publicKey;
+  final String? publicKey;
   final String environment;
   final String amount;
   final String purchaseOrderId;
@@ -82,7 +82,7 @@ class KhaltiPaymentInitiation extends Equatable {
   const KhaltiPaymentInitiation({
     required this.paymentRecordId,
     required this.pidx,
-    required this.publicKey,
+    this.publicKey,
     required this.environment,
     required this.amount,
     required this.purchaseOrderId,
@@ -93,7 +93,7 @@ class KhaltiPaymentInitiation extends Equatable {
     return KhaltiPaymentInitiation(
       paymentRecordId: json['payment_record_id'] as int,
       pidx: json['pidx'] as String,
-      publicKey: json['public_key'] as String,
+      publicKey: json['public_key'] as String?,
       environment: json['environment'] as String,
       amount: json['amount'] as String,
       purchaseOrderId: json['purchase_order_id'] as String,

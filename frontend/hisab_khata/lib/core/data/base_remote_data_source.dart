@@ -66,7 +66,7 @@ abstract class BaseRemoteDataSource {
     } else if (statusCode >= 400 && statusCode < 500) {
       throw ServerException(errorMessage);
     } else if (statusCode >= 500) {
-      throw ServerException('Server error: $errorMessage');
+      throw ServerException(errorMessage);
     } else {
       throw ServerException(errorMessage);
     }

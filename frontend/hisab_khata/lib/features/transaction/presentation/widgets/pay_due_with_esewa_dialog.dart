@@ -81,8 +81,8 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               Navigator.pop(context);
               MySnackbar.showSuccess(context, state.message);
               context.read<ConnectedUserDetailsBloc>().add(
-                    RefreshConnectedUserDetails(widget.relationshipId),
-                  );
+                RefreshConnectedUserDetails(widget.relationshipId),
+              );
             } else if (state is EsewaPaymentFailed) {
               MySnackbar.showError(context, state.message);
             }
@@ -105,8 +105,8 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               Navigator.pop(context);
               MySnackbar.showSuccess(context, state.message);
               context.read<ConnectedUserDetailsBloc>().add(
-                    RefreshConnectedUserDetails(widget.relationshipId),
-                  );
+                RefreshConnectedUserDetails(widget.relationshipId),
+              );
             } else if (state is KhaltiPaymentFailed) {
               MySnackbar.showError(context, state.message);
             }
@@ -120,15 +120,15 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
 
           final isProcessing =
               esewaState is EsewaPaymentInitiating ||
-                  esewaState is EsewaPaymentVerifying ||
-                  khaltiState is KhaltiPaymentInitiating ||
-                  khaltiState is KhaltiPaymentVerifying;
+              esewaState is EsewaPaymentVerifying ||
+              khaltiState is KhaltiPaymentInitiating ||
+              khaltiState is KhaltiPaymentVerifying;
 
           final isCheckingStatus =
               esewaState is EsewaStatusChecking ||
-                  khaltiState is KhaltiStatusChecking ||
-                  !_esewaStatusLoaded ||
-                  !_khaltiStatusLoaded;
+              khaltiState is KhaltiStatusChecking ||
+              !_esewaStatusLoaded ||
+              !_khaltiStatusLoaded;
 
           final hasAnyGateway = _businessHasEsewa || _businessHasKhalti;
 
@@ -137,9 +137,14 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               horizontal: isSmallScreen ? 16 : 24,
               vertical: isSmallScreen ? 16 : 24,
             ),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
             child: ConstrainedBox(
-              constraints: BoxConstraints(maxHeight: screenHeight * 0.88, maxWidth: 430),
+              constraints: BoxConstraints(
+                maxHeight: screenHeight * 0.88,
+                maxWidth: 430,
+              ),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(isSmallScreen ? 18 : 24),
@@ -188,7 +193,10 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
             color: AppTheme.primaryBlue.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: const Icon(Icons.payments_outlined, color: AppTheme.primaryBlue),
+          child: const Icon(
+            Icons.payments_outlined,
+            color: AppTheme.primaryBlue,
+          ),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -205,7 +213,9 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               ),
               const SizedBox(height: 2),
               Text(
-                AppLocalizations.of(context)!.dueRs(widget.currentDue.toStringAsFixed(2)),
+                AppLocalizations.of(
+                  context,
+                )!.dueRs(widget.currentDue.toStringAsFixed(2)),
                 style: TextStyle(
                   fontSize: 13,
                   color: AppTheme.textSecondary,
@@ -293,7 +303,8 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
                 isAvailable: _businessHasEsewa,
                 isSelected: _selectedGateway == _GatewayOption.esewa,
                 isCheckingStatus: isCheckingStatus,
-                onTap: () => setState(() => _selectedGateway = _GatewayOption.esewa),
+                onTap: () =>
+                    setState(() => _selectedGateway = _GatewayOption.esewa),
               ),
             ),
             const SizedBox(width: 10),
@@ -304,7 +315,8 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
                 isAvailable: _businessHasKhalti,
                 isSelected: _selectedGateway == _GatewayOption.khalti,
                 isCheckingStatus: isCheckingStatus,
-                onTap: () => setState(() => _selectedGateway = _GatewayOption.khalti),
+                onTap: () =>
+                    setState(() => _selectedGateway = _GatewayOption.khalti),
               ),
             ),
           ],
@@ -335,7 +347,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
           border: Border.all(
             color: isSelected
                 ? AppTheme.primaryBlue
-                : (isAvailable ? Colors.grey[300]! : Colors.grey[250]!),
+                : (isAvailable ? Colors.grey[300]! : Colors.grey[200]!),
             width: isSelected ? 1.5 : 1,
           ),
         ),
@@ -406,7 +418,11 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         ? _businessHasEsewa
         : _businessHasKhalti;
 
-    final canPay = hasAnyGateway && isGatewayAvailable && !isProcessing && !isCheckingStatus;
+    final canPay =
+        hasAnyGateway &&
+        isGatewayAvailable &&
+        !isProcessing &&
+        !isCheckingStatus;
 
     final buttonLabel = _selectedGateway == _GatewayOption.esewa
         ? 'Pay with eSewa'
@@ -454,7 +470,9 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
                     child: Image.asset(logoPath, fit: BoxFit.contain),
                   ),
             label: Text(
-              isProcessing ? AppLocalizations.of(context)!.processing : buttonLabel,
+              isProcessing
+                  ? AppLocalizations.of(context)!.processing
+                  : buttonLabel,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
@@ -480,22 +498,22 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
 
     if (_selectedGateway == _GatewayOption.esewa) {
       context.read<EsewaPaymentBloc>().add(
-            InitiateEsewaPayment(
-              relationshipId: widget.relationshipId,
-              amount: amount,
-              description: note.isEmpty ? null : note,
-            ),
-          );
+        InitiateEsewaPayment(
+          relationshipId: widget.relationshipId,
+          amount: amount,
+          description: note.isEmpty ? null : note,
+        ),
+      );
       return;
     }
 
     context.read<KhaltiPaymentBloc>().add(
-          InitiateKhaltiPayment(
-            relationshipId: widget.relationshipId,
-            amount: amount,
-            description: note.isEmpty ? null : note,
-          ),
-        );
+      InitiateKhaltiPayment(
+        relationshipId: widget.relationshipId,
+        amount: amount,
+        description: note.isEmpty ? null : note,
+      ),
+    );
   }
 
   void _launchEsewaSdk(BuildContext context, EsewaPaymentInitiated state) {
@@ -508,26 +526,26 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
       amount: paymentData.amount,
       onSuccess: (EsewaPaymentSuccessResult result) {
         context.read<EsewaPaymentBloc>().add(
-              VerifyEsewaPayment(
-                paymentRecordId: paymentData.paymentRecordId,
-                esewaRefId: result.refId,
-                esewaProductId: result.productId,
-                totalAmount: result.totalAmount,
-                status: result.status,
-                esewaResponse: {
-                  'productId': result.productId,
-                  'productName': result.productName,
-                  'totalAmount': result.totalAmount,
-                  'environment': result.environment,
-                  'code': result.code,
-                  'merchantName': result.merchantName,
-                  'message': result.message,
-                  'date': result.date,
-                  'status': result.status,
-                  'refId': result.refId,
-                },
-              ),
-            );
+          VerifyEsewaPayment(
+            paymentRecordId: paymentData.paymentRecordId,
+            esewaRefId: result.refId,
+            esewaProductId: result.productId,
+            totalAmount: result.totalAmount,
+            status: result.status,
+            esewaResponse: {
+              'productId': result.productId,
+              'productName': result.productName,
+              'totalAmount': result.totalAmount,
+              'environment': result.environment,
+              'code': result.code,
+              'merchantName': result.merchantName,
+              'message': result.message,
+              'date': result.date,
+              'status': result.status,
+              'refId': result.refId,
+            },
+          ),
+        );
       },
       onFailure: (data) {
         MySnackbar.showError(
@@ -537,7 +555,10 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
       onCancellation: (data) {
-        MySnackbar.showInfo(context, AppLocalizations.of(context)!.paymentCancelled);
+        MySnackbar.showInfo(
+          context,
+          AppLocalizations.of(context)!.paymentCancelled,
+        );
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
     );
@@ -550,50 +571,59 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     final paymentData = state.paymentData;
     final khaltiService = KhaltiPaymentService();
 
-    await khaltiService.initiatePayment(
-      context: context,
-      publicKey: paymentData.publicKey,
-      pidx: paymentData.pidx,
-      isTestEnvironment: paymentData.isTest,
-      onPaymentResult: (paymentResult) {
-        final dynamic payload = paymentResult?.payload;
-        final transactionId =
-            (payload?.transactionId ?? paymentResult?.transactionId ?? '').toString();
-        final totalAmount =
-            (payload?.totalAmount ?? paymentResult?.totalAmount ?? paymentData.amount)
-                .toString();
-        final statusText =
-            (payload?.status ?? paymentResult?.status ?? 'Completed').toString();
+    try {
+      await khaltiService.initiatePayment(
+        context: context,
+        publicKey: paymentData.publicKey,
+        pidx: paymentData.pidx,
+        isTestEnvironment: paymentData.isTest,
+        onPaymentResult: (paymentResult) {
+          final dynamic payload = paymentResult?.payload;
+          final transactionId =
+              (payload?.transactionId ?? paymentResult?.transactionId ?? '')
+                  .toString();
+          final totalAmount =
+              (payload?.totalAmount ??
+                      paymentResult?.totalAmount ??
+                      paymentData.amount)
+                  .toString();
+          final statusText =
+              (payload?.status ?? paymentResult?.status ?? 'Completed')
+                  .toString();
 
-        context.read<KhaltiPaymentBloc>().add(
-              VerifyKhaltiPayment(
-                paymentRecordId: paymentData.paymentRecordId,
-                pidx: paymentData.pidx,
-                transactionId: transactionId,
-                totalAmount: totalAmount,
-                status: statusText,
-                khaltiResponse: {
-                  'payment_result': paymentResult.toString(),
-                  'transaction_id': transactionId,
-                  'total_amount': totalAmount,
-                  'status': statusText,
-                },
-              ),
-            );
-      },
-      onMessage: (message, {needsPaymentConfirmation = false, khalti}) async {
-        if (needsPaymentConfirmation && khalti != null) {
-          try {
-            await khalti.verify();
-          } catch (_) {}
-        }
-        if (message.toLowerCase().contains('failure') ||
-            message.toLowerCase().contains('error')) {
-          MySnackbar.showError(context, message);
-          context.read<KhaltiPaymentBloc>().add(const ResetKhaltiPayment());
-        }
-      },
-      onReturn: () {},
-    );
+          context.read<KhaltiPaymentBloc>().add(
+            VerifyKhaltiPayment(
+              paymentRecordId: paymentData.paymentRecordId,
+              pidx: paymentData.pidx,
+              transactionId: transactionId,
+              totalAmount: totalAmount,
+              status: statusText,
+              khaltiResponse: {
+                'payment_result': paymentResult.toString(),
+                'transaction_id': transactionId,
+                'total_amount': totalAmount,
+                'status': statusText,
+              },
+            ),
+          );
+        },
+        onMessage: (message, {needsPaymentConfirmation = false, khalti}) async {
+          if (needsPaymentConfirmation && khalti != null) {
+            try {
+              await khalti.verify();
+            } catch (_) {}
+          }
+          if (message.toLowerCase().contains('failure') ||
+              message.toLowerCase().contains('error')) {
+            MySnackbar.showError(context, message);
+            context.read<KhaltiPaymentBloc>().add(const ResetKhaltiPayment());
+          }
+        },
+        onReturn: () {},
+      );
+    } catch (e) {
+      MySnackbar.showError(context, e.toString());
+      context.read<KhaltiPaymentBloc>().add(const ResetKhaltiPayment());
+    }
   }
 }

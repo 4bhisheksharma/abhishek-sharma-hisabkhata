@@ -38,7 +38,9 @@ class KhaltiRemoteDataSource extends BaseRemoteDataSource {
   }
 
   // Customer Khalti payment
-  Future<Map<String, dynamic>> checkBusinessKhaltiStatus(int relationshipId) async {
+  Future<Map<String, dynamic>> checkBusinessKhaltiStatus(
+    int relationshipId,
+  ) async {
     final response = await get('transaction/khalti/status/$relationshipId/');
     return (response as Map<String, dynamic>)['data'] as Map<String, dynamic>;
   }

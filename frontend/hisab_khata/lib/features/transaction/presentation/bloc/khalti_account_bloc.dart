@@ -7,8 +7,8 @@ class KhaltiAccountBloc extends Bloc<KhaltiAccountEvent, KhaltiAccountState> {
   final KhaltiRepository _repository;
 
   KhaltiAccountBloc({required KhaltiRepository repository})
-      : _repository = repository,
-        super(const KhaltiAccountInitial()) {
+    : _repository = repository,
+      super(const KhaltiAccountInitial()) {
     on<LoadKhaltiAccount>(_onLoad);
     on<LinkKhaltiAccount>(_onLink);
     on<UpdateKhaltiAccount>(_onUpdate);
@@ -38,7 +38,12 @@ class KhaltiAccountBloc extends Bloc<KhaltiAccountEvent, KhaltiAccountState> {
         khaltiId: event.khaltiId,
         accountName: event.accountName,
       );
-      emit(KhaltiAccountActionSuccess('Khalti account linked successfully', account: account));
+      emit(
+        KhaltiAccountActionSuccess(
+          'Khalti account linked successfully',
+          account: account,
+        ),
+      );
       emit(KhaltiAccountLoaded(account));
     } catch (e) {
       emit(KhaltiAccountError(e.toString()));
@@ -58,7 +63,12 @@ class KhaltiAccountBloc extends Bloc<KhaltiAccountEvent, KhaltiAccountState> {
         khaltiId: event.khaltiId,
         accountName: event.accountName,
       );
-      emit(KhaltiAccountActionSuccess('Khalti account updated successfully', account: account));
+      emit(
+        KhaltiAccountActionSuccess(
+          'Khalti account updated successfully',
+          account: account,
+        ),
+      );
       emit(KhaltiAccountLoaded(account));
     } catch (e) {
       emit(KhaltiAccountError(e.toString(), currentAccount: currentAccount));
@@ -75,7 +85,11 @@ class KhaltiAccountBloc extends Bloc<KhaltiAccountEvent, KhaltiAccountState> {
     emit(KhaltiAccountActionLoading(currentAccount));
     try {
       await _repository.unlinkKhaltiAccount();
-      emit(const KhaltiAccountActionSuccess('Khalti account unlinked successfully'));
+      emit(
+        const KhaltiAccountActionSuccess(
+          'Khalti account unlinked successfully',
+        ),
+      );
       emit(const KhaltiAccountLoaded(null));
     } catch (e) {
       emit(KhaltiAccountError(e.toString(), currentAccount: currentAccount));

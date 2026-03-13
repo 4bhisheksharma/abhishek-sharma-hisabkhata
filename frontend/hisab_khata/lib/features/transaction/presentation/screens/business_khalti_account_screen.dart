@@ -17,7 +17,8 @@ class BusinessKhaltiAccountScreen extends StatefulWidget {
       _BusinessKhaltiAccountScreenState();
 }
 
-class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScreen> {
+class _BusinessKhaltiAccountScreenState
+    extends State<BusinessKhaltiAccountScreen> {
   final _formKey = GlobalKey<FormState>();
   final _khaltiIdController = TextEditingController();
   final _accountNameController = TextEditingController();
@@ -190,7 +191,10 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
             children: [
               Text(
                 isUpdate ? 'Update Khalti Account' : 'Link Khalti Account',
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -214,9 +218,11 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
                   ),
                 ),
                 validator: (value) {
-                  if (value == null || value.isEmpty) return 'Please enter Khalti ID';
+                  if (value == null || value.isEmpty)
+                    return 'Please enter Khalti ID';
                   if (value.length != 10) return 'Khalti ID must be 10 digits';
-                  if (!value.startsWith('9')) return 'Khalti ID must start with 9';
+                  if (!value.startsWith('9'))
+                    return 'Khalti ID must start with 9';
                   return null;
                 },
               ),
@@ -291,7 +297,11 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
     );
   }
 
-  Widget _buildAccountDetails(BuildContext context, dynamic account, bool isLoading) {
+  Widget _buildAccountDetails(
+    BuildContext context,
+    dynamic account,
+    bool isLoading,
+  ) {
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -303,11 +313,18 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Linked Account', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const Text(
+              'Linked Account',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 20),
             _buildDetailRow(Icons.phone_android, 'Khalti ID', account.khaltiId),
             const Divider(height: 24),
-            _buildDetailRow(Icons.person_outline, 'Account Holder Name', account.accountName),
+            _buildDetailRow(
+              Icons.person_outline,
+              'Account Holder Name',
+              account.accountName,
+            ),
             const Divider(height: 24),
             _buildDetailRow(
               Icons.verified,
@@ -320,26 +337,34 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
               children: [
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: isLoading ? null : () => setState(() => _isEditing = true),
+                    onPressed: isLoading
+                        ? null
+                        : () => setState(() => _isEditing = true),
                     icon: const Icon(Icons.edit_outlined, size: 18),
                     label: const Text('Edit'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton.icon(
-                    onPressed: isLoading ? null : () => _showUnlinkConfirmation(context),
+                    onPressed: isLoading
+                        ? null
+                        : () => _showUnlinkConfirmation(context),
                     icon: const Icon(Icons.link_off, size: 18),
                     label: const Text('Unlink'),
                     style: OutlinedButton.styleFrom(
                       foregroundColor: Colors.red,
                       side: const BorderSide(color: Colors.red),
                       padding: const EdgeInsets.symmetric(vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
@@ -351,7 +376,12 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
     );
   }
 
-  Widget _buildDetailRow(IconData icon, String label, String value, {Color? valueColor}) {
+  Widget _buildDetailRow(
+    IconData icon,
+    String label,
+    String value, {
+    Color? valueColor,
+  }) {
     return Row(
       children: [
         Icon(icon, size: 20, color: AppTheme.textSecondary),
@@ -359,11 +389,18 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label, style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+            Text(
+              label,
+              style: TextStyle(fontSize: 12, color: AppTheme.textSecondary),
+            ),
             const SizedBox(height: 2),
             Text(
               value,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: valueColor),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: valueColor,
+              ),
             ),
           ],
         ),
@@ -379,12 +416,12 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
 
     if (isUpdate) {
       context.read<KhaltiAccountBloc>().add(
-            UpdateKhaltiAccount(khaltiId: khaltiId, accountName: accountName),
-          );
+        UpdateKhaltiAccount(khaltiId: khaltiId, accountName: accountName),
+      );
     } else {
       context.read<KhaltiAccountBloc>().add(
-            LinkKhaltiAccount(khaltiId: khaltiId, accountName: accountName),
-          );
+        LinkKhaltiAccount(khaltiId: khaltiId, accountName: accountName),
+      );
     }
   }
 
@@ -400,7 +437,9 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
             Text('Unlink Khalti'),
           ],
         ),
-        content: const Text('Are you sure you want to unlink your Khalti account?'),
+        content: const Text(
+          'Are you sure you want to unlink your Khalti account?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
@@ -409,9 +448,14 @@ class _BusinessKhaltiAccountScreenState extends State<BusinessKhaltiAccountScree
           ElevatedButton(
             onPressed: () {
               Navigator.pop(dialogContext);
-              context.read<KhaltiAccountBloc>().add(const UnlinkKhaltiAccount());
+              context.read<KhaltiAccountBloc>().add(
+                const UnlinkKhaltiAccount(),
+              );
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
             child: const Text('Unlink'),
           ),
         ],

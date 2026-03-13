@@ -7,8 +7,8 @@ class KhaltiPaymentBloc extends Bloc<KhaltiPaymentEvent, KhaltiPaymentState> {
   final KhaltiRepository _repository;
 
   KhaltiPaymentBloc({required KhaltiRepository repository})
-      : _repository = repository,
-        super(const KhaltiPaymentInitial()) {
+    : _repository = repository,
+      super(const KhaltiPaymentInitial()) {
     on<CheckKhaltiStatus>(_onCheckStatus);
     on<InitiateKhaltiPayment>(_onInitiate);
     on<VerifyKhaltiPayment>(_onVerify);
@@ -21,7 +21,9 @@ class KhaltiPaymentBloc extends Bloc<KhaltiPaymentEvent, KhaltiPaymentState> {
   ) async {
     emit(const KhaltiStatusChecking());
     try {
-      final status = await _repository.checkBusinessKhaltiStatus(event.relationshipId);
+      final status = await _repository.checkBusinessKhaltiStatus(
+        event.relationshipId,
+      );
       emit(KhaltiStatusLoaded(status));
     } catch (e) {
       emit(KhaltiPaymentFailed(e.toString()));
@@ -60,7 +62,11 @@ class KhaltiPaymentBloc extends Bloc<KhaltiPaymentEvent, KhaltiPaymentState> {
         khaltiResponse: event.khaltiResponse,
       );
       if (success) {
-        emit(const KhaltiPaymentVerified('Payment verified and recorded successfully!'));
+        emit(
+          const KhaltiPaymentVerified(
+            'Payment verified and recorded successfully!',
+          ),
+        );
       } else {
         emit(const KhaltiPaymentFailed('Payment verification failed'));
       }
