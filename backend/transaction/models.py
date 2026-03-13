@@ -89,5 +89,6 @@ class Favorite(models.Model):
         return f"{self.customer.user.full_name} favorites {self.business.business_name}"
 
 
-# Import eSewa models so they are discovered by Django
+# Import payment gateway models so they are discovered by Django
 from .esewa_models import BusinessEsewaAccount, EsewaPaymentRecord  # noqa: E402, F401
+from .khalti_models import BusinessKhaltiAccount, KhaltiPaymentRecord  # noqa: E402, F401

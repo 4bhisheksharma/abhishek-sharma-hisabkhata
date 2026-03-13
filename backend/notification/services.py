@@ -153,12 +153,21 @@ def notify_transaction_added(sender_user, receiver_user, amount, transaction_typ
     _push(receiver_user, title, message, data)
 
 
-def notify_payment_received(payer_user, business_user, amount, relationship_id, via_esewa=False):
+def notify_payment_received(
+    payer_user,
+    business_user,
+    amount,
+    relationship_id,
+    via_esewa=False,
+    via_khalti=False,
+):
     """Notify business when a customer records a payment."""
     abs_amount = abs(amount)
     title = "Payment Received"
     if via_esewa:
         message = f"{payer_user.full_name} paid Rs. {abs_amount:.2f} via eSewa"
+    elif via_khalti:
+        message = f"{payer_user.full_name} paid Rs. {abs_amount:.2f} via Khalti"
     else:
         message = f"{payer_user.full_name} recorded a payment of Rs. {abs_amount:.2f}"
     n_type = NotificationType.PAYMENT_RECEIVED
