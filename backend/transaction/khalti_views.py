@@ -3,8 +3,8 @@ import logging
 import os
 import uuid
 from decimal import Decimal
-from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+
+import requests
 
 from django.db import transaction as db_transaction
 from rest_framework import status
@@ -28,6 +28,11 @@ from .models import Transaction
 
 logger = logging.getLogger(__name__)
 
+_KNOWN_SAMPLE_KEYS = {
+    "test_secret_key_dc74e0fd57cb46cd93832aee0a390234",
+    "test_public_key_dc74e0fd57cb46cd93832aee0a390234",
+}
+
 
 def _is_test_env():
     return os.getenv("KHALTI_ENV", "test").lower() == "test"
@@ -46,15 +51,98 @@ def _khalti_public_key():
 
 
 def _khalti_base_url():
-    return "https://a.khalti.com" if _is_test_env() else "https://khalti.com"
+    override = os.getenv("KHALTI_BASE_URL", "").strip().rstrip("/")
+    if override:
+        return override
+    return "https://dev.khalti.com" if _is_test_env() else "https://khalti.com"
+
+
+def _is_sample_or_placeholder_key(value):
+    normalized = (value or "").strip().lower()
+    if not normalized:
+        return True
+    return normalized in _KNOWN_SAMPLE_KEYS or normalized in {
+        "replace_me",
+        "your_test_secret_key",
+        "your_test_public_key",
+        "your_live_secret_key",
+        "your_live_public_key",
+    }
+
+
+def _validate_khalti_config():
+    secret_key = _khalti_secret_key().strip()
+
+    if not secret_key:
+        return False, "Khalti secret key is not configured on the server"
+
+    if _is_sample_or_placeholder_key(secret_key):
+        env_label = "test" if _is_test_env() else "live"
+        return (
+            False,
+            f"Khalti {env_label} secret key is using a sample/placeholder value. Update backend .env with a real merchant secret key.",
+        )
+
+    return True, ""
+
+
+def _sanitize_customer_phone(raw_phone):
+    cleaned = "".join(ch for ch in str(raw_phone or "") if ch.isdigit())
+    if len(cleaned) == 10 and cleaned.startswith("9"):
+        return cleaned
+    return "9800000001"
 
 
 def _post_json(url, payload, headers):
-    data = json.dumps(payload).encode("utf-8")
-    request = Request(url, data=data, headers=headers, method="POST")
-    with urlopen(request, timeout=20) as response:
-        body = response.read().decode("utf-8")
-        return json.loads(body)
+    response = requests.post(url, json=payload, headers=headers, timeout=20)
+    response.raise_for_status()
+    if not response.text:
+        return {}
+    return response.json()
+
+
+def _extract_http_error_details(exc):
+    response_body = ""
+    parsed_body = {}
+    message = "Khalti request failed"
+    status_code = 502
+
+    response = getattr(exc, "response", None)
+    if response is not None:
+        status_code = response.status_code
+        response_body = response.text or ""
+        try:
+            parsed_body = response.json() if response_body else {}
+        except ValueError:
+            parsed_body = {}
+    else:
+        try:
+            response_body = exc.read().decode("utf-8") if hasattr(exc, "read") else ""
+        except Exception:  # noqa: BLE001
+            response_body = ""
+        status_code = getattr(exc, "code", 502)
+
+    if response_body:
+        try:
+            parsed_body = parsed_body or json.loads(response_body)
+            message = (
+                parsed_body.get("detail")
+                or parsed_body.get("message")
+                or parsed_body.get("error_key")
+                or message
+            )
+            if str(message).strip().lower() == "invalid token.":
+                message = "Invalid Khalti secret key configured on server"
+        except Exception:  # noqa: BLE001
+            message = response_body
+    else:
+        message = str(exc)
+
+    return {
+        "status": status_code,
+        "message": message,
+        "payload": parsed_body or {"raw": response_body or str(exc)},
+    }
 
 
 class BusinessKhaltiAccountView(APIView):
@@ -305,17 +393,19 @@ class InitiateKhaltiPaymentView(APIView):
                     status=status.HTTP_400_BAD_REQUEST,
                 )
 
-            secret_key = _khalti_secret_key()
-            public_key = _khalti_public_key()
-            if not secret_key or not public_key:
+            is_config_valid, config_error = _validate_khalti_config()
+            if not is_config_valid:
                 return Response(
                     {
                         "status": 500,
-                        "message": "Khalti keys are not configured on the server",
+                        "message": config_error,
                         "data": None,
                     },
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 )
+
+            secret_key = _khalti_secret_key().strip()
+            public_key = _khalti_public_key().strip()
 
             purchase_order_id = (
                 f"HISAB-KHALTI-{relationship.relationship_id}-{uuid.uuid4().hex[:10]}"
@@ -340,9 +430,9 @@ class InitiateKhaltiPaymentView(APIView):
                     or f"Payment to {relationship.business.business_name}"
                 )[:100],
                 "customer_info": {
-                    "name": request.user.full_name,
-                    "email": request.user.email,
-                    "phone": request.user.phone_number or "9800000001",
+                    "name": (request.user.full_name or request.user.username or "Customer").strip(),
+                    "email": (request.user.email or "customer@example.com").strip(),
+                    "phone": _sanitize_customer_phone(request.user.phone_number),
                 },
             }
 
@@ -357,17 +447,52 @@ class InitiateKhaltiPaymentView(APIView):
                     payload,
                     headers,
                 )
-            except (HTTPError, URLError, TimeoutError) as exc:
+            except requests.HTTPError as exc:
+                details = _extract_http_error_details(exc)
+                response_status = details["status"]
+                if response_status in [401, 403]:
+                    response_status = 400
+                logger.error(
+                    "Khalti initiate failed with HTTP %s: %s",
+                    details["status"],
+                    details["message"],
+                )
+                payment_record.status = "failed"
+                payment_record.khalti_response_data = {
+                    "error": details["message"],
+                    "http_status": details["status"],
+                    "khalti_payload": details["payload"],
+                    "phase": "initiate",
+                    "request_payload": payload,
+                }
+                payment_record.save()
+                return Response(
+                    {
+                        "status": response_status,
+                        "message": f"Khalti initiate failed: {details['message']}",
+                        "data": None,
+                    },
+                    status=(
+                        response_status
+                        if isinstance(response_status, int)
+                        and response_status >= 400
+                        and response_status < 600
+                        else status.HTTP_502_BAD_GATEWAY
+                    ),
+                )
+            except (requests.Timeout, requests.ConnectionError, requests.RequestException) as exc:
+                logger.error("Khalti initiate network failure: %s", exc)
                 payment_record.status = "failed"
                 payment_record.khalti_response_data = {
                     "error": str(exc),
                     "phase": "initiate",
+                    "request_payload": payload,
                 }
                 payment_record.save()
                 return Response(
                     {
                         "status": 502,
-                        "message": "Unable to initiate Khalti payment",
+                        "message": "Unable to reach Khalti gateway. Please try again.",
                         "data": None,
                     },
                     status=status.HTTP_502_BAD_GATEWAY,
