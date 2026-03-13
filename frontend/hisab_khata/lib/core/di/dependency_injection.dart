@@ -3,13 +3,18 @@ import 'package:http/http.dart' as http;
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
 import '../../features/transaction/data/datasources/transaction_remote_data_source.dart';
 import '../../features/transaction/data/datasources/esewa_remote_data_source.dart';
+import '../../features/transaction/data/datasources/khalti_remote_data_source.dart';
 import '../../features/transaction/data/repositories_imp/transaction_repository_impl.dart';
 import '../../features/transaction/data/repositories_imp/esewa_repository_impl.dart';
+import '../../features/transaction/data/repositories_imp/khalti_repository_impl.dart';
 import '../../features/transaction/domain/repositories/transaction_repository.dart';
 import '../../features/transaction/domain/repositories/esewa_repository.dart';
+import '../../features/transaction/domain/repositories/khalti_repository.dart';
 import '../../features/transaction/presentation/bloc/connected_user_details_bloc.dart';
 import '../../features/transaction/presentation/bloc/esewa_account_bloc.dart';
 import '../../features/transaction/presentation/bloc/esewa_payment_bloc.dart';
+import '../../features/transaction/presentation/bloc/khalti_account_bloc.dart';
+import '../../features/transaction/presentation/bloc/khalti_payment_bloc.dart';
 import '../../features/auth/data/repositories_imp/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
@@ -98,6 +103,7 @@ class DependencyInjection {
   late final NotificationRemoteDataSource _notificationRemoteDataSource;
   late final TransactionRemoteDataSource _transactionRemoteDataSource;
   late final EsewaRemoteDataSource _esewaRemoteDataSource;
+  late final KhaltiRemoteDataSource _khaltiRemoteDataSource;
   late final TicketRemoteDataSource _ticketRemoteDataSource;
   late final AnalyticsRemoteDataSource _analyticsRemoteDataSource;
 
@@ -109,6 +115,7 @@ class DependencyInjection {
   late final NotificationRepository _notificationRepository;
   late final TransactionRepository _transactionRepository;
   late final EsewaRepository _esewaRepository;
+  late final KhaltiRepository _khaltiRepository;
   late final TicketRepository _ticketRepository;
   late final AnalyticsRepository _analyticsRepository;
 
@@ -218,6 +225,7 @@ class DependencyInjection {
       client: _httpClient,
     );
     _esewaRemoteDataSource = EsewaRemoteDataSource(client: _httpClient);
+    _khaltiRemoteDataSource = KhaltiRemoteDataSource(client: _httpClient);
     _ticketRemoteDataSource = TicketRemoteDataSourceImpl(client: _httpClient);
     _analyticsRemoteDataSource = AnalyticsRemoteDataSource(client: _httpClient);
 
@@ -242,6 +250,9 @@ class DependencyInjection {
     );
     _esewaRepository = EsewaRepositoryImpl(
       remoteDataSource: _esewaRemoteDataSource,
+    );
+    _khaltiRepository = KhaltiRepositoryImpl(
+      remoteDataSource: _khaltiRemoteDataSource,
     );
     _ticketRepository = TicketRepositoryImpl(
       remoteDataSource: _ticketRemoteDataSource,
@@ -454,5 +465,15 @@ class DependencyInjection {
   /// Create a new EsewaPaymentBloc instance (for customer eSewa payments)
   EsewaPaymentBloc createEsewaPaymentBloc() {
     return EsewaPaymentBloc(repository: _esewaRepository);
+  }
+
+  /// Create a new KhaltiAccountBloc instance (for business Khalti account management)
+  KhaltiAccountBloc createKhaltiAccountBloc() {
+    return KhaltiAccountBloc(repository: _khaltiRepository);
+  }
+
+  /// Create a new KhaltiPaymentBloc instance (for customer Khalti payments)
+  KhaltiPaymentBloc createKhaltiPaymentBloc() {
+    return KhaltiPaymentBloc(repository: _khaltiRepository);
   }
 }

@@ -25,7 +25,10 @@ import 'package:hisab_khata/features/request/presentation/screens/connection_req
 import 'package:hisab_khata/features/notification/presentation/screens/notification_screen.dart';
 import 'package:hisab_khata/features/transaction/presentation/bloc/esewa_account_bloc.dart';
 import 'package:hisab_khata/features/transaction/presentation/bloc/esewa_account_event.dart';
+import 'package:hisab_khata/features/transaction/presentation/bloc/khalti_account_bloc.dart';
+import 'package:hisab_khata/features/transaction/presentation/bloc/khalti_account_event.dart';
 import 'package:hisab_khata/features/transaction/presentation/screens/business_esewa_account_screen.dart';
+import 'package:hisab_khata/features/transaction/presentation/screens/business_khalti_account_screen.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Arguments for connected user details page navigation
@@ -134,6 +137,16 @@ class AppRouter {
                 DependencyInjection().createEsewaAccountBloc()
                   ..add(const LoadEsewaAccount()),
             child: const BusinessEsewaAccountScreen(),
+          ),
+        );
+
+      case AppRoutes.khaltiAccount:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider<KhaltiAccountBloc>(
+            create: (_) =>
+                DependencyInjection().createKhaltiAccountBloc()
+                  ..add(const LoadKhaltiAccount()),
+            child: const BusinessKhaltiAccountScreen(),
           ),
         );
 

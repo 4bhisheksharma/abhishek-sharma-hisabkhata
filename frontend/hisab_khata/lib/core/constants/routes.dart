@@ -20,4 +20,5 @@ class AppRoutes {
   static const String connectionRequests = '/connection-requests';
   static const String notifications = '/notifications';
   static const String esewaAccount = '/esewa-account';
+  static const String khaltiAccount = '/khalti-account';
 }

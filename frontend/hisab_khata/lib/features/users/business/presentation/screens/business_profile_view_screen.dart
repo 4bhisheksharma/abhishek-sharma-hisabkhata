@@ -166,6 +166,16 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             onTap: () =>
                                 Navigator.pushNamed(context, '/esewa-account'),
                           ),
+                          _divider(),
+                          _buildMenuItem(
+                            icon: Icons.account_balance_wallet,
+                            iconColor: const Color(0xFF7D1E8A),
+                            iconBgColor: const Color(0xFFF3E5F5),
+                            title: 'Khalti Account',
+                            subtitle: 'Manage linked Khalti',
+                            onTap: () =>
+                                Navigator.pushNamed(context, '/khalti-account'),
+                          ),
                         ],
                       ),
 

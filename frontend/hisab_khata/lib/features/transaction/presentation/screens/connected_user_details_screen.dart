@@ -15,6 +15,8 @@ import '../bloc/connected_user_details_event.dart';
 import '../bloc/connected_user_details_state.dart';
 import '../bloc/esewa_payment_bloc.dart';
 import '../bloc/esewa_payment_event.dart';
+import '../bloc/khalti_payment_bloc.dart';
+import '../bloc/khalti_payment_event.dart';
 import '../widgets/profile_card_with_badge.dart';
 import '../widgets/financial_summary_card.dart';
 import '../widgets/payment_ratio_bar.dart';
@@ -723,6 +725,11 @@ class ConnectedUserDetailsPage extends StatelessWidget {
             create: (_) =>
                 DependencyInjection().createEsewaPaymentBloc()
                   ..add(CheckEsewaStatus(relationshipId)),
+          ),
+          BlocProvider<KhaltiPaymentBloc>(
+            create: (_) =>
+                DependencyInjection().createKhaltiPaymentBloc()
+                  ..add(CheckKhaltiStatus(relationshipId)),
           ),
         ],
         child: PayDueWithEsewaDialog(

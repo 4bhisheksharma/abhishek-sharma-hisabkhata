@@ -1,18 +1,25 @@
+﻿import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:esewa_flutter_sdk/esewa_payment_success_result.dart';
 import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
-import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/services/esewa_payment_service.dart';
+import 'package:hisab_khata/services/khalti_payment_service.dart';
+import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
+
+import '../bloc/connected_user_details_bloc.dart';
+import '../bloc/connected_user_details_event.dart';
 import '../bloc/esewa_payment_bloc.dart';
 import '../bloc/esewa_payment_event.dart';
 import '../bloc/esewa_payment_state.dart';
-import '../bloc/connected_user_details_bloc.dart';
-import '../bloc/connected_user_details_event.dart';
+import '../bloc/khalti_payment_bloc.dart';
+import '../bloc/khalti_payment_event.dart';
+import '../bloc/khalti_payment_state.dart';
 
-/// Dialog for paying dues via eSewa — responsive, tracks status internally
+enum _GatewayOption { esewa, khalti }
+
+/// Dialog for paying dues online via eSewa or Khalti
 class PayDueWithEsewaDialog extends StatefulWidget {
   final double currentDue;
   final int relationshipId;
@@ -32,9 +39,12 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
   final _amountController = TextEditingController();
   final _noteController = TextEditingController();
 
-  // Track eSewa status internally so it survives subsequent bloc states
   bool _businessHasEsewa = false;
-  bool _statusLoaded = false;
+  bool _businessHasKhalti = false;
+  bool _esewaStatusLoaded = false;
+  bool _khaltiStatusLoaded = false;
+
+  _GatewayOption _selectedGateway = _GatewayOption.esewa;
 
   @override
   void dispose() {
@@ -52,89 +62,118 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     final screenHeight = MediaQuery.of(context).size.height;
     final isSmallScreen = screenHeight < 640;
 
-    return BlocListener<EsewaPaymentBloc, EsewaPaymentState>(
-      listener: (context, state) {
-        // Persist eSewa status once loaded
-        if (state is EsewaStatusLoaded) {
-          setState(() {
-            _businessHasEsewa =
-                state.esewaStatus.hasEsewa && state.esewaStatus.isActive;
-            _statusLoaded = true;
-          });
-        } else if (state is EsewaPaymentInitiated) {
-          _launchEsewaSdk(context, state);
-        } else if (state is EsewaPaymentVerified) {
-          Navigator.pop(context);
-          MySnackbar.showSuccess(context, state.message);
-          context.read<ConnectedUserDetailsBloc>().add(
-            RefreshConnectedUserDetails(widget.relationshipId),
-          );
-        } else if (state is EsewaPaymentFailed) {
-          MySnackbar.showError(context, state.message);
-        }
-      },
-      child: Dialog(
-        insetPadding: EdgeInsets.symmetric(
-          horizontal: isSmallScreen ? 16 : 24,
-          vertical: isSmallScreen ? 16 : 24,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<EsewaPaymentBloc, EsewaPaymentState>(
+          listener: (context, state) {
+            if (state is EsewaStatusLoaded) {
+              setState(() {
+                _businessHasEsewa =
+                    state.esewaStatus.hasEsewa && state.esewaStatus.isActive;
+                _esewaStatusLoaded = true;
+                if (_businessHasEsewa && !_businessHasKhalti) {
+                  _selectedGateway = _GatewayOption.esewa;
+                }
+              });
+            } else if (state is EsewaPaymentInitiated) {
+              _launchEsewaSdk(context, state);
+            } else if (state is EsewaPaymentVerified) {
+              Navigator.pop(context);
+              MySnackbar.showSuccess(context, state.message);
+              context.read<ConnectedUserDetailsBloc>().add(
+                    RefreshConnectedUserDetails(widget.relationshipId),
+                  );
+            } else if (state is EsewaPaymentFailed) {
+              MySnackbar.showError(context, state.message);
+            }
+          },
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: BlocBuilder<EsewaPaymentBloc, EsewaPaymentState>(
-          builder: (context, esewaState) {
-            final isProcessing =
-                esewaState is EsewaPaymentInitiating ||
-                esewaState is EsewaPaymentVerifying;
-            final isCheckingStatus = esewaState is EsewaStatusChecking;
+        BlocListener<KhaltiPaymentBloc, KhaltiPaymentState>(
+          listener: (context, state) {
+            if (state is KhaltiStatusLoaded) {
+              setState(() {
+                _businessHasKhalti =
+                    state.khaltiStatus.hasKhalti && state.khaltiStatus.isActive;
+                _khaltiStatusLoaded = true;
+                if (_businessHasKhalti && !_businessHasEsewa) {
+                  _selectedGateway = _GatewayOption.khalti;
+                }
+              });
+            } else if (state is KhaltiPaymentInitiated) {
+              _launchKhaltiSdk(context, state);
+            } else if (state is KhaltiPaymentVerified) {
+              Navigator.pop(context);
+              MySnackbar.showSuccess(context, state.message);
+              context.read<ConnectedUserDetailsBloc>().add(
+                    RefreshConnectedUserDetails(widget.relationshipId),
+                  );
+            } else if (state is KhaltiPaymentFailed) {
+              MySnackbar.showError(context, state.message);
+            }
+          },
+        ),
+      ],
+      child: Builder(
+        builder: (context) {
+          final esewaState = context.watch<EsewaPaymentBloc>().state;
+          final khaltiState = context.watch<KhaltiPaymentBloc>().state;
 
-            return ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: screenHeight * 0.85,
-                maxWidth: 400,
-              ),
+          final isProcessing =
+              esewaState is EsewaPaymentInitiating ||
+                  esewaState is EsewaPaymentVerifying ||
+                  khaltiState is KhaltiPaymentInitiating ||
+                  khaltiState is KhaltiPaymentVerifying;
+
+          final isCheckingStatus =
+              esewaState is EsewaStatusChecking ||
+                  khaltiState is KhaltiStatusChecking ||
+                  !_esewaStatusLoaded ||
+                  !_khaltiStatusLoaded;
+
+          final hasAnyGateway = _businessHasEsewa || _businessHasKhalti;
+
+          return Dialog(
+            insetPadding: EdgeInsets.symmetric(
+              horizontal: isSmallScreen ? 16 : 24,
+              vertical: isSmallScreen ? 16 : 24,
+            ),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: screenHeight * 0.88, maxWidth: 430),
               child: SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.all(isSmallScreen ? 18 : 24),
                   child: Form(
                     key: _formKey,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _buildHeader(context),
-                        SizedBox(height: isSmallScreen ? 16 : 24),
+                        SizedBox(height: isSmallScreen ? 16 : 22),
                         _buildAmountField(context),
                         const SizedBox(height: 14),
                         _buildNoteField(context),
-                        const SizedBox(height: 18),
-
-                        // Status / warning section
-                        if (isCheckingStatus)
-                          const Padding(
-                            padding: EdgeInsets.only(bottom: 18),
-                            child: Center(
-                              child: SizedBox(
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              ),
-                            ),
-                          )
-                        else if (_statusLoaded && !_businessHasEsewa) ...[
+                        const SizedBox(height: 14),
+                        _buildGatewaySelector(context, isCheckingStatus),
+                        const SizedBox(height: 16),
+                        if (!hasAnyGateway && !isCheckingStatus) ...[
                           _buildWarningBanner(),
-                          const SizedBox(height: 18),
+                          const SizedBox(height: 16),
                         ],
-
-                        _buildActions(context, isProcessing, isCheckingStatus),
+                        _buildActions(
+                          context,
+                          isProcessing: isProcessing,
+                          isCheckingStatus: isCheckingStatus,
+                          hasAnyGateway: hasAnyGateway,
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -146,19 +185,10 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
           width: 48,
           height: 48,
           decoration: BoxDecoration(
-            color: const Color(0xFF60BB46).withValues(alpha: 0.12),
+            color: AppTheme.primaryBlue.withValues(alpha: 0.14),
             borderRadius: BorderRadius.circular(14),
           ),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(14),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.asset(
-                'assets/images/esewa-icon.png',
-                fit: BoxFit.contain,
-              ),
-            ),
-          ),
+          child: const Icon(Icons.payments_outlined, color: AppTheme.primaryBlue),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -166,7 +196,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppLocalizations.of(context)!.payDueViaEsewa,
+                'Pay Due Online',
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w700,
@@ -175,9 +205,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
               ),
               const SizedBox(height: 2),
               Text(
-                AppLocalizations.of(
-                  context,
-                )!.dueRs(widget.currentDue.toStringAsFixed(2)),
+                AppLocalizations.of(context)!.dueRs(widget.currentDue.toStringAsFixed(2)),
                 style: TextStyle(
                   fontSize: 13,
                   color: AppTheme.textSecondary,
@@ -247,6 +275,104 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     );
   }
 
+  Widget _buildGatewaySelector(BuildContext context, bool isCheckingStatus) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Payment Method',
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+        ),
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: _buildGatewayTile(
+                label: 'eSewa',
+                logoPath: 'assets/images/esewa-icon.png',
+                isAvailable: _businessHasEsewa,
+                isSelected: _selectedGateway == _GatewayOption.esewa,
+                isCheckingStatus: isCheckingStatus,
+                onTap: () => setState(() => _selectedGateway = _GatewayOption.esewa),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _buildGatewayTile(
+                label: 'Khalti',
+                logoPath: 'assets/images/khalti-icon.png',
+                isAvailable: _businessHasKhalti,
+                isSelected: _selectedGateway == _GatewayOption.khalti,
+                isCheckingStatus: isCheckingStatus,
+                onTap: () => setState(() => _selectedGateway = _GatewayOption.khalti),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildGatewayTile({
+    required String label,
+    required String logoPath,
+    required bool isAvailable,
+    required bool isSelected,
+    required bool isCheckingStatus,
+    required VoidCallback onTap,
+  }) {
+    final canTap = !isCheckingStatus && isAvailable;
+
+    return InkWell(
+      onTap: canTap ? onTap : null,
+      borderRadius: BorderRadius.circular(12),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: isSelected ? AppTheme.lightBlue : Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? AppTheme.primaryBlue
+                : (isAvailable ? Colors.grey[300]! : Colors.grey[250]!),
+            width: isSelected ? 1.5 : 1,
+          ),
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              width: 28,
+              height: 28,
+              child: Image.asset(logoPath, fit: BoxFit.contain),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              label,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 4),
+            if (isCheckingStatus)
+              const SizedBox(
+                width: 12,
+                height: 12,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            else
+              Text(
+                isAvailable ? 'Linked' : 'Not linked',
+                style: TextStyle(
+                  fontSize: 11,
+                  color: isAvailable ? Colors.green[700] : Colors.red[400],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildWarningBanner() {
     return Container(
       padding: const EdgeInsets.all(12),
@@ -261,7 +387,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
           const SizedBox(width: 10),
           Expanded(
             child: Text(
-              AppLocalizations.of(context)!.businessNotLinkedEsewa,
+              'This business has not linked eSewa or Khalti yet. Ask them to link at least one account.',
               style: TextStyle(fontSize: 12, color: Colors.orange[900]),
             ),
           ),
@@ -271,11 +397,28 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
   }
 
   Widget _buildActions(
-    BuildContext context,
-    bool isProcessing,
-    bool isCheckingStatus,
-  ) {
-    final canPay = _statusLoaded && _businessHasEsewa && !isProcessing;
+    BuildContext context, {
+    required bool isProcessing,
+    required bool isCheckingStatus,
+    required bool hasAnyGateway,
+  }) {
+    final isGatewayAvailable = _selectedGateway == _GatewayOption.esewa
+        ? _businessHasEsewa
+        : _businessHasKhalti;
+
+    final canPay = hasAnyGateway && isGatewayAvailable && !isProcessing && !isCheckingStatus;
+
+    final buttonLabel = _selectedGateway == _GatewayOption.esewa
+        ? 'Pay with eSewa'
+        : 'Pay with Khalti';
+
+    final buttonColor = _selectedGateway == _GatewayOption.esewa
+        ? const Color(0xFF60BB46)
+        : const Color(0xFF7D1E8A);
+
+    final logoPath = _selectedGateway == _GatewayOption.esewa
+        ? 'assets/images/esewa-icon.png'
+        : 'assets/images/khalti-icon.png';
 
     return Row(
       children: [
@@ -308,20 +451,15 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
                 : SizedBox(
                     width: 22,
                     height: 22,
-                    child: Image.asset(
-                      'assets/images/esewa-icon.png',
-                      fit: BoxFit.contain,
-                    ),
+                    child: Image.asset(logoPath, fit: BoxFit.contain),
                   ),
             label: Text(
-              isProcessing
-                  ? AppLocalizations.of(context)!.processing
-                  : AppLocalizations.of(context)!.payWithEsewa,
+              isProcessing ? AppLocalizations.of(context)!.processing : buttonLabel,
               style: const TextStyle(fontWeight: FontWeight.w600),
             ),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: const Color(0xFF60BB46),
+              backgroundColor: buttonColor,
+              foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
@@ -340,13 +478,24 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
     final amount = double.parse(_amountController.text);
     final note = _noteController.text.trim();
 
-    context.read<EsewaPaymentBloc>().add(
-      InitiateEsewaPayment(
-        relationshipId: widget.relationshipId,
-        amount: amount,
-        description: note.isEmpty ? null : note,
-      ),
-    );
+    if (_selectedGateway == _GatewayOption.esewa) {
+      context.read<EsewaPaymentBloc>().add(
+            InitiateEsewaPayment(
+              relationshipId: widget.relationshipId,
+              amount: amount,
+              description: note.isEmpty ? null : note,
+            ),
+          );
+      return;
+    }
+
+    context.read<KhaltiPaymentBloc>().add(
+          InitiateKhaltiPayment(
+            relationshipId: widget.relationshipId,
+            amount: amount,
+            description: note.isEmpty ? null : note,
+          ),
+        );
   }
 
   void _launchEsewaSdk(BuildContext context, EsewaPaymentInitiated state) {
@@ -359,26 +508,26 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
       amount: paymentData.amount,
       onSuccess: (EsewaPaymentSuccessResult result) {
         context.read<EsewaPaymentBloc>().add(
-          VerifyEsewaPayment(
-            paymentRecordId: paymentData.paymentRecordId,
-            esewaRefId: result.refId,
-            esewaProductId: result.productId,
-            totalAmount: result.totalAmount,
-            status: result.status,
-            esewaResponse: {
-              'productId': result.productId,
-              'productName': result.productName,
-              'totalAmount': result.totalAmount,
-              'environment': result.environment,
-              'code': result.code,
-              'merchantName': result.merchantName,
-              'message': result.message,
-              'date': result.date,
-              'status': result.status,
-              'refId': result.refId,
-            },
-          ),
-        );
+              VerifyEsewaPayment(
+                paymentRecordId: paymentData.paymentRecordId,
+                esewaRefId: result.refId,
+                esewaProductId: result.productId,
+                totalAmount: result.totalAmount,
+                status: result.status,
+                esewaResponse: {
+                  'productId': result.productId,
+                  'productName': result.productName,
+                  'totalAmount': result.totalAmount,
+                  'environment': result.environment,
+                  'code': result.code,
+                  'merchantName': result.merchantName,
+                  'message': result.message,
+                  'date': result.date,
+                  'status': result.status,
+                  'refId': result.refId,
+                },
+              ),
+            );
       },
       onFailure: (data) {
         MySnackbar.showError(
@@ -388,12 +537,63 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
       onCancellation: (data) {
-        MySnackbar.showInfo(
-          context,
-          AppLocalizations.of(context)!.paymentCancelled,
-        );
+        MySnackbar.showInfo(context, AppLocalizations.of(context)!.paymentCancelled);
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
+    );
+  }
+
+  Future<void> _launchKhaltiSdk(
+    BuildContext context,
+    KhaltiPaymentInitiated state,
+  ) async {
+    final paymentData = state.paymentData;
+    final khaltiService = KhaltiPaymentService();
+
+    await khaltiService.initiatePayment(
+      context: context,
+      publicKey: paymentData.publicKey,
+      pidx: paymentData.pidx,
+      isTestEnvironment: paymentData.isTest,
+      onPaymentResult: (paymentResult) {
+        final dynamic payload = paymentResult?.payload;
+        final transactionId =
+            (payload?.transactionId ?? paymentResult?.transactionId ?? '').toString();
+        final totalAmount =
+            (payload?.totalAmount ?? paymentResult?.totalAmount ?? paymentData.amount)
+                .toString();
+        final statusText =
+            (payload?.status ?? paymentResult?.status ?? 'Completed').toString();
+
+        context.read<KhaltiPaymentBloc>().add(
+              VerifyKhaltiPayment(
+                paymentRecordId: paymentData.paymentRecordId,
+                pidx: paymentData.pidx,
+                transactionId: transactionId,
+                totalAmount: totalAmount,
+                status: statusText,
+                khaltiResponse: {
+                  'payment_result': paymentResult.toString(),
+                  'transaction_id': transactionId,
+                  'total_amount': totalAmount,
+                  'status': statusText,
+                },
+              ),
+            );
+      },
+      onMessage: (message, {needsPaymentConfirmation = false, khalti}) async {
+        if (needsPaymentConfirmation && khalti != null) {
+          try {
+            await khalti.verify();
+          } catch (_) {}
+        }
+        if (message.toLowerCase().contains('failure') ||
+            message.toLowerCase().contains('error')) {
+          MySnackbar.showError(context, message);
+          context.read<KhaltiPaymentBloc>().add(const ResetKhaltiPayment());
+        }
+      },
+      onReturn: () {},
     );
   }
 }
