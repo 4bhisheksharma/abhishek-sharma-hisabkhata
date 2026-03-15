@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/core/di/dependency_injection.dart';
 import 'package:hisab_khata/features/users/customer/data/models/nearby_business_model.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';

@@ -14,7 +14,7 @@ import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/providers/locale_provider.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
-import 'package:hisab_khata/config/route/app_router.dart';
+import 'package:hisab_khata/core/route/app_router.dart';
 import '../../../../notification/presentation/screens/notification_screen.dart';
 import '../../../../notification/presentation/bloc/notification_bloc.dart';
 import '../../../../notification/presentation/bloc/notification_event.dart';

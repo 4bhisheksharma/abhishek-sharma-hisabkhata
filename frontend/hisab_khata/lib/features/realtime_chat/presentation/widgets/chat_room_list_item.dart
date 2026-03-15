@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import '../../../../config/theme/app_theme.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../domain/entities/chat_room_entity.dart';
 
 /// Widget to display a chat room item in the chat list.

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/set_monthly_limit_dialog.dart';
 

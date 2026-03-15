@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import '../../../config/theme/app_theme.dart';
+import '../../../core/theme/app_theme.dart';
 
 class ChatLoadingIndicator extends StatelessWidget {
   final Color? color;

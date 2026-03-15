@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// In-app map screen that shows directions from user's current location

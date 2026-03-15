@@ -5,8 +5,8 @@ import 'package:hisab_khata/features/request/presentation/bloc/connection_reques
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_event.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_state.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
-import '../../../../config/storage/storage_service.dart';
-import '../../../../config/theme/app_theme.dart';
+import '../../../../core/storage/storage_service.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/widgets/my_button.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
 import '../../../../shared/widgets/my_text_field.dart';

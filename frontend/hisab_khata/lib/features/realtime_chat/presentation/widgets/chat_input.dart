@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
-import '../../../../config/theme/app_theme.dart';
+import '../../../../core/theme/app_theme.dart';
 
 /// Widget for chat message input with send button.
 class ChatInput extends StatefulWidget {

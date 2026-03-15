@@ -8,7 +8,7 @@ import '../../domain/usecases/check_auth_status_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/change_password_usecase.dart';
 import 'package:hisab_khata/services/fcm_service.dart';
-import 'package:hisab_khata/config/storage/storage_service.dart';
+import 'package:hisab_khata/core/storage/storage_service.dart';
 import 'auth_event.dart';
 import 'auth_state.dart';
 

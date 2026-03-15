@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
-import 'package:hisab_khata/config/route/app_router.dart';
+import 'package:hisab_khata/core/route/app_router.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';

@@ -4,7 +4,7 @@ import '../../domain/entities/login_result_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_remote_data_source.dart';
 import '../models/login_response.dart';
-import '../../../../config/storage/storage_service.dart';
+import '../../../../core/storage/storage_service.dart';
 import '../../../../core/errors/exceptions.dart';
 
 /// Implementation of AuthRepository

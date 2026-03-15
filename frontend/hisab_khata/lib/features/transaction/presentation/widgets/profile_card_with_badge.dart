@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../config/theme/app_theme.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/image_utils.dart';
 
 /// Reusable profile card with favorite star badge

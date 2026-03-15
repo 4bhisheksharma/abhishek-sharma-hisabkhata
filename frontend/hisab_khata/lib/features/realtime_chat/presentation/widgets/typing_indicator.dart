@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../config/theme/app_theme.dart';
+import '../../../../core/theme/app_theme.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 /// Widget to show typing indicator when other user is typing.

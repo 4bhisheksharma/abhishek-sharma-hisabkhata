@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 
 class AnalyticsStatCard extends StatelessWidget {
   final String title;

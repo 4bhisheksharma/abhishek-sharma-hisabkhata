@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import '../constants/api_base_url.dart';
 import '../errors/exceptions.dart';
-import '../../config/storage/storage_service.dart';
+import '../storage/storage_service.dart';
 
 /// Base class for all remote data sources
 /// Handles common HTTP operations with error handling and authentication

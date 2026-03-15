@@ -8,7 +8,7 @@ import 'package:hisab_khata/features/analytics/presentation/widgets/paid_vs_to_p
 import 'package:hisab_khata/features/analytics/presentation/widgets/monthly_trend_line_chart.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/monthly_spending_progress_widget.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/analytics_stat_card.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';

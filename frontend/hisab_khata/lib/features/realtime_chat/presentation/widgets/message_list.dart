@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import '../../../../config/theme/app_theme.dart';
+import '../../../../core/theme/app_theme.dart';
 import '../../domain/entities/message_entity.dart';
 import 'message_bubble.dart';
 

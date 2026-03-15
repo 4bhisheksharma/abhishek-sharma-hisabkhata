@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../config/storage/storage_service.dart';
+import '../../../../core/storage/storage_service.dart';
 import '../../../../core/constants/api_base_url.dart';
 import '../../data/datasources/chat_websocket_service.dart';
 import '../../data/models/message_model.dart';

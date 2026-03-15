@@ -6,7 +6,7 @@ import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_event
 import 'package:hisab_khata/features/analytics/presentation/bloc/analytics_state.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/paid_vs_to_pay_bar_chart.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/analytics_stat_card.dart';
-import 'package:hisab_khata/config/theme/app_theme.dart';
+import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';
