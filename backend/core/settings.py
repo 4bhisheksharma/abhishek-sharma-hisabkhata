@@ -171,6 +171,10 @@ REST_FRAMEWORK = {
     ),
 }
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.trycloudflare.com",
+]
+
 # JWT Settings
 from datetime import timedelta
 

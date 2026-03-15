@@ -1,24 +1,16 @@
-import 'dart:io';
-
 class ApiBaseUrl {
+  //for creating tunnel with cloudflare
+  // cloudflared tunnel --url http://localhost:8000
+
   // Emulator URL (Android emulator uses 10.0.2.2 to reach host machine)
-  static const String _emulatorUrl = "http://10.0.2.2:8000/api/";
 
-  // Real device URL (Your local network IP)
-  static const String _realDeviceUrl = "http://192.168.1.67:8000/api/";
+  //emulator URL
+  // static const String baseUrl = "http://10.0.2.2:8000/api/";
 
-  static String get baseUrl {
-    if (Platform.isAndroid) {
-      return _isEmulator ? _emulatorUrl : _realDeviceUrl;
-    }
-    return _realDeviceUrl;
-  }
+  // Real device URL (use your machine's local IP address)
+  // static const String baseUrl = "http://192.168.1.69:8000/api/";
 
-  static bool get _isEmulator {
-    return true;
-  }
-
-  static String getUrl({bool forceEmulator = false}) {
-    return forceEmulator ? _emulatorUrl : _realDeviceUrl;
-  }
+  // for Cloudflare Tunnel
+  static const String baseUrl =
+      "https://chuck-recommendation-demonstrated-gerald.trycloudflare.com/api/";
 }

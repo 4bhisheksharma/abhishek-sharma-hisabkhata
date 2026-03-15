@@ -1,5 +1,12 @@
 class ImageUtils {
-  static const String _mediaBaseUrl = "http://10.0.2.2:8000";
+  //for emulator
+  // static const String _mediaBaseUrl = "http://10.0.2.2:8000";
+
+  //for real device
+  // static const String _mediaBaseUrl = "http://192.168.1.69:8000";
+
+  static const String _mediaBaseUrl =
+      "https://chuck-recommendation-demonstrated-gerald.trycloudflare.com";
 
   /// Converts relative/file URLs to complete media URLs.
   /// Returns null for empty/null inputs.
