@@ -5,6 +5,7 @@ import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
 import '../../domain/services/ocr_service.dart';
 import '../../domain/services/image_transaction_parser.dart';
+import '../../domain/services/ocr_ai_refiner_service.dart';
 
 /// Dialog for adding transaction via image OCR
 class ImageTransactionDialog extends StatefulWidget {
@@ -18,6 +19,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
   File? _selectedImage;
   bool _isProcessing = false;
   String _extractedText = '';
+  String _statusMessage = '';
   ParsedImageTransaction? _parsedTransaction;
   String _errorMessage = '';
 
@@ -53,12 +55,17 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
 
   Future<void> _processImage(File imageFile) async {
     try {
-      // Extract text using OCR
+      // Step 1: Extract text using OCR
+      setState(() {
+        _statusMessage = 'Extracting text from image...';
+      });
+
       final extractedText = await OcrService.extractTextFromImage(imageFile);
 
       if (extractedText == null || extractedText.isEmpty) {
         setState(() {
           _isProcessing = false;
+          _statusMessage = '';
           _errorMessage = 'No text found in image. Please try another image.';
         });
         return;
@@ -66,13 +73,33 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
 
       setState(() {
         _extractedText = extractedText;
+        _statusMessage = 'Refining with AI...';
       });
 
-      // Parse the extracted text
+      // Step 2: Send to AI model for refinement
+      final refined = await OcrAiRefinerService.refine(extractedText);
+
+      if (refined != null) {
+        // AI refinement succeeded — use its output
+        setState(() {
+          _isProcessing = false;
+          _statusMessage = '';
+          _parsedTransaction = ParsedImageTransaction(
+            amount: refined.amount,
+            description: refined.description,
+            originalText: extractedText,
+            confidence: 0.9,
+          );
+        });
+        return;
+      }
+
+      // Step 3: Fallback — use regex-based parser if AI fails
       final parsed = ImageTransactionParser.parse(extractedText);
 
       setState(() {
         _isProcessing = false;
+        _statusMessage = '';
         _parsedTransaction = parsed;
         if (parsed == null) {
           _errorMessage =
@@ -82,6 +109,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
     } catch (e) {
       setState(() {
         _isProcessing = false;
+        _statusMessage = '';
         _errorMessage = 'Error processing image: $e';
       });
     }
@@ -97,6 +125,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
     setState(() {
       _selectedImage = null;
       _extractedText = '';
+      _statusMessage = '';
       _parsedTransaction = null;
       _errorMessage = '';
     });
@@ -219,7 +248,11 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              AppLocalizations.of(context)!.extractingText,
+                              _statusMessage.isNotEmpty
+                                  ? _statusMessage
+                                  : AppLocalizations.of(
+                                      context,
+                                    )!.extractingText,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade700,
