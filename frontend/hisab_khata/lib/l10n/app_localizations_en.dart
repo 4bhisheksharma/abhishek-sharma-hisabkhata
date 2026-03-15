@@ -885,6 +885,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get extractingText => 'Extracting text from image...';
 
   @override
+  String get analyzingWithAI => 'Analyzing transaction with AI...';
+
+  @override
   String get extractedText => 'Extracted Text:';
 
   @override

@@ -4,6 +4,7 @@ import 'package:hisab_khata/config/theme/app_theme.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 import 'package:hisab_khata/shared/utils/helper_functions.dart';
 import '../../domain/services/ocr_service.dart';
+import '../../domain/services/ai_transaction_parser.dart';
 import '../../domain/services/image_transaction_parser.dart';
 
 /// Dialog for adding transaction via image OCR
@@ -17,6 +18,7 @@ class ImageTransactionDialog extends StatefulWidget {
 class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
   File? _selectedImage;
   bool _isProcessing = false;
+  bool _isAiRefining = false;
   String _extractedText = '';
   ParsedImageTransaction? _parsedTransaction;
   String _errorMessage = '';
@@ -53,7 +55,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
 
   Future<void> _processImage(File imageFile) async {
     try {
-      // Extract text using OCR
+      // Step 1: Extract text using OCR
       final extractedText = await OcrService.extractTextFromImage(imageFile);
 
       if (extractedText == null || extractedText.isEmpty) {
@@ -66,13 +68,20 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
 
       setState(() {
         _extractedText = extractedText;
+        _isAiRefining = true;
       });
 
-      // Parse the extracted text
-      final parsed = ImageTransactionParser.parse(extractedText);
+      // Step 2: Refine the extracted text using AI to identify the exact transaction
+      ParsedImageTransaction? parsed = await AiTransactionParser.parse(
+        extractedText,
+      );
+
+      // Step 3: Fall back to the regex-based parser if AI is unavailable or fails
+      parsed ??= ImageTransactionParser.parse(extractedText);
 
       setState(() {
         _isProcessing = false;
+        _isAiRefining = false;
         _parsedTransaction = parsed;
         if (parsed == null) {
           _errorMessage =
@@ -82,6 +91,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
     } catch (e) {
       setState(() {
         _isProcessing = false;
+        _isAiRefining = false;
         _errorMessage = 'Error processing image: $e';
       });
     }
@@ -99,6 +109,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
       _extractedText = '';
       _parsedTransaction = null;
       _errorMessage = '';
+      _isAiRefining = false;
     });
     _pickImage();
   }
@@ -204,7 +215,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                     ],
 
                     // Processing indicator
-                    if (_isProcessing) ...[
+                    if (_isProcessing || _isAiRefining) ...[
                       Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(20),
@@ -219,7 +230,13 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              AppLocalizations.of(context)!.extractingText,
+                              _isAiRefining
+                                  ? AppLocalizations.of(
+                                      context,
+                                    )!.analyzingWithAI
+                                  : AppLocalizations.of(
+                                      context,
+                                    )!.extractingText,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.grey.shade700,
@@ -456,7 +473,7 @@ class _ImageTransactionDialogState extends State<ImageTransactionDialog> {
               ),
               child: Row(
                 children: [
-                  if (!_isProcessing) ...[
+                  if (!_isProcessing && !_isAiRefining) ...[
                     Expanded(
                       child: OutlinedButton.icon(
                         onPressed: _retryWithNewImage,

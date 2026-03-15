@@ -888,6 +888,9 @@ class AppLocalizationsNe extends AppLocalizations {
   String get extractingText => 'तस्विरबाट पाठ निकाल्दै...';
 
   @override
+  String get analyzingWithAI => 'AI ले लेनदेन विश्लेषण गर्दै...';
+
+  @override
   String get extractedText => 'निकालिएको पाठ:';
 
   @override

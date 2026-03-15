@@ -285,6 +285,7 @@
   "imageTransaction": "Image Transaction",
   "extractDetailsFromReceipt": "Extract details from receipt",
   "extractingText": "Extracting text from image...",
+  "analyzingWithAI": "Analyzing transaction with AI...",
   "extractedText": "Extracted Text:",
 
   "filterTransactions": "Filter transactions",

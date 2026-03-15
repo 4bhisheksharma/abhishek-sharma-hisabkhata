@@ -286,6 +286,7 @@
   "imageTransaction": "तस्विर लेनदेन",
   "extractDetailsFromReceipt": "रसिदबाट विवरण निकाल्नुहोस्",
   "extractingText": "तस्विरबाट पाठ निकाल्दै...",
+  "analyzingWithAI": "AI ले लेनदेन विश्लेषण गर्दै...",
   "extractedText": "निकालिएको पाठ:",
 
   "filterTransactions": "लेनदेन फिल्टर गर्नुहोस्",

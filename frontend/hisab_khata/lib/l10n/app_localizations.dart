@@ -1778,6 +1778,12 @@ abstract class AppLocalizations {
   /// **'Extracting text from image...'**
   String get extractingText;
 
+  /// No description provided for @analyzingWithAI.
+  ///
+  /// In en, this message translates to:
+  /// **'Analyzing transaction with AI...'**
+  String get analyzingWithAI;
+
   /// No description provided for @extractedText.
   ///
   /// In en, this message translates to:
