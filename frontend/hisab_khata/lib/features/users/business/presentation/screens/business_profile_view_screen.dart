@@ -24,6 +24,8 @@ class BusinessProfileViewScreen extends StatefulWidget {
 }
 
 class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
+  bool _profileReloadRequested = false;
+
   @override
   void initState() {
     super.initState();
@@ -42,6 +44,8 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
 
           if (state is BusinessProfileLoaded ||
               state is BusinessProfileUpdated) {
+            _profileReloadRequested = false;
+
             final profile = state is BusinessProfileLoaded
                 ? state.profile
                 : (state as BusinessProfileUpdated).profile;
@@ -258,9 +262,28 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
             );
           }
 
-          return Center(
-            child: Text(AppLocalizations.of(context)!.unableToLoadProfile),
-          );
+          if (state is BusinessError) {
+            return Center(
+              child: Text(
+                state.message.isNotEmpty
+                    ? state.message
+                    : AppLocalizations.of(context)!.unableToLoadProfile,
+              ),
+            );
+          }
+
+          // Profile screen shares BusinessBloc with other screens.
+          // If state is replaced by another feature state, reload profile.
+          if (!_profileReloadRequested) {
+            _profileReloadRequested = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                context.read<BusinessBloc>().add(const LoadBusinessProfile());
+              }
+            });
+          }
+
+          return const ProfileViewShimmer();
         },
       ),
       bottomNavigationBar: MyBottomNavBar(

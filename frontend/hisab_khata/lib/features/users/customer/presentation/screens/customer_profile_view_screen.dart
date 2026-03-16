@@ -23,6 +23,8 @@ class CustomerProfileViewScreen extends StatefulWidget {
 }
 
 class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
+  bool _profileReloadRequested = false;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +43,8 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
 
           if (state is CustomerProfileLoaded ||
               state is CustomerProfileUpdated) {
+            _profileReloadRequested = false;
+
             final profile = state is CustomerProfileLoaded
                 ? state.profile
                 : (state as CustomerProfileUpdated).profile;
@@ -210,9 +214,28 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
             );
           }
 
-          return Center(
-            child: Text(AppLocalizations.of(context)!.unableToLoadProfile),
-          );
+          if (state is CustomerError) {
+            return Center(
+              child: Text(
+                state.message.isNotEmpty
+                    ? state.message
+                    : AppLocalizations.of(context)!.unableToLoadProfile,
+              ),
+            );
+          }
+
+          // Profile screen shares CustomerBloc with other screens.
+          // If state is replaced by another feature state, reload profile.
+          if (!_profileReloadRequested) {
+            _profileReloadRequested = true;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                context.read<CustomerBloc>().add(const LoadCustomerProfile());
+              }
+            });
+          }
+
+          return const ProfileViewShimmer();
         },
       ),
       bottomNavigationBar: MyBottomNavBar(
