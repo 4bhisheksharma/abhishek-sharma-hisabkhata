@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 
 class BusinessCustomerListItem extends StatelessWidget {
@@ -20,17 +21,22 @@ class BusinessCustomerListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardRadius = Responsive.radius(context, 14);
+
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(cardRadius),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(cardRadius),
         child: Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          margin: EdgeInsets.only(bottom: Responsive.h(context, 8)),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.w(context, 14),
+            vertical: Responsive.h(context, 12),
+          ),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(cardRadius),
             border: Border.all(
               color: AppTheme.lightGrey.withValues(alpha: 0.5),
               width: 1,
@@ -40,7 +46,7 @@ class BusinessCustomerListItem extends StatelessWidget {
             children: [
               // Avatar
               CircleAvatar(
-                radius: 22,
+                radius: Responsive.w(context, 22).clamp(18.0, 25.0),
                 backgroundColor: AppTheme.lightBlue,
                 backgroundImage:
                     profileImageUrl != null &&
@@ -50,14 +56,14 @@ class BusinessCustomerListItem extends StatelessWidget {
                 child:
                     profileImageUrl == null ||
                         ImageUtils.getFullImageUrl(profileImageUrl) == null
-                    ? const Icon(
+                    ? Icon(
                         Icons.person_rounded,
                         color: AppTheme.primaryBlue,
-                        size: 24,
+                        size: Responsive.sp(context, 24).clamp(18.0, 26.0),
                       )
                     : null,
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: Responsive.w(context, 12)),
               // Business Info
               Expanded(
                 child: Column(
@@ -65,17 +71,17 @@ class BusinessCustomerListItem extends StatelessWidget {
                   children: [
                     Text(
                       businessName,
-                      style: const TextStyle(
-                        fontSize: 15,
+                      style: TextStyle(
+                        fontSize: Responsive.sp(context, 15).clamp(13.0, 17.0),
                         fontWeight: FontWeight.w600,
                         color: AppTheme.textPrimary,
                       ),
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: Responsive.h(context, 2)),
                     Text(
                       phoneNumber,
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
                         color: AppTheme.textSecondary,
                       ),
                     ),
@@ -84,18 +90,20 @@ class BusinessCustomerListItem extends StatelessWidget {
               ),
               // Amount
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.w(context, 10),
+                  vertical: Responsive.h(context, 4),
                 ),
                 decoration: BoxDecoration(
                   color: AppTheme.lightBlue,
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 8),
+                  ),
                 ),
                 child: Text(
                   amount,
-                  style: const TextStyle(
-                    fontSize: 14,
+                  style: TextStyle(
+                    fontSize: Responsive.sp(context, 14).clamp(12.0, 16.0),
                     fontWeight: FontWeight.w600,
                     color: AppTheme.primaryBlue,
                   ),

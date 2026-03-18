@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:hisab_khata/core/storage/storage_service.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -75,6 +76,9 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
   @override
   Widget build(BuildContext context) {
+    final logoSize = Responsive.w(context, 130).clamp(96.0, 148.0);
+    final logoRadius = Responsive.radius(context, 28);
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -89,14 +93,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 ScaleTransition(
                   scale: _scaleAnimation,
                   child: Container(
-                    width: 130,
-                    height: 130,
+                    width: logoSize,
+                    height: logoSize,
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(28),
+                      borderRadius: BorderRadius.circular(logoRadius),
                       boxShadow: AppTheme.shadowPrimary,
                     ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(28),
+                      borderRadius: BorderRadius.circular(logoRadius),
                       child: Image.asset(
                         'assets/images/hisab-khata-logo.png',
                         fit: BoxFit.contain,
@@ -111,11 +115,11 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                                   AppTheme.secondaryBlue,
                                 ],
                               ),
-                              borderRadius: BorderRadius.circular(28),
+                              borderRadius: BorderRadius.circular(logoRadius),
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.account_balance_wallet_rounded,
-                              size: 64,
+                              size: Responsive.sp(context, 64).clamp(44.0, 72.0),
                               color: Colors.white,
                             ),
                           );
@@ -124,35 +128,35 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                     ),
                   ),
                 ),
-                const SizedBox(height: 32),
+                SizedBox(height: Responsive.h(context, 32)),
                 // App Name
                 Text(
                   AppLocalizations.of(context)!.appName,
-                  style: const TextStyle(
-                    fontSize: 30,
+                  style: TextStyle(
+                    fontSize: Responsive.sp(context, 30).clamp(24.0, 34.0),
                     fontWeight: FontWeight.w700,
                     color: AppTheme.textPrimary,
                     letterSpacing: 0.5,
                   ),
                 ),
-                const SizedBox(height: 8),
+                SizedBox(height: Responsive.h(context, 8)),
                 // Tagline
                 Text(
                   AppLocalizations.of(context)!.tagline,
-                  style: const TextStyle(
-                    fontSize: 15,
+                  style: TextStyle(
+                    fontSize: Responsive.sp(context, 15).clamp(13.0, 18.0),
                     color: AppTheme.textSecondary,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
-                const SizedBox(height: 48),
+                SizedBox(height: Responsive.h(context, 48)),
 
                 // Loading indicator
                 SizedBox(
-                  width: 28,
-                  height: 28,
+                  width: Responsive.w(context, 28).clamp(22.0, 36.0),
+                  height: Responsive.w(context, 28).clamp(22.0, 36.0),
                   child: CircularProgressIndicator(
-                    strokeWidth: 2.5,
+                    strokeWidth: Responsive.radius(context, 2.5),
                     color: AppTheme.primaryBlue.withValues(alpha: 0.6),
                   ),
                 ),

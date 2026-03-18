@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:confetti/confetti.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -72,6 +73,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final horizontalPadding = Responsive.w(context, 20).clamp(14.0, 24.0);
+    final topPadding = Responsive.h(context, 12).clamp(8.0, 16.0);
+    final avatarRadius = Responsive.w(context, 20).clamp(16.0, 24.0);
+
     return AppBar(
       automaticallyImplyLeading: false,
       toolbarHeight: preferredSize.height,
@@ -86,7 +91,12 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+            padding: EdgeInsets.fromLTRB(
+              horizontalPadding,
+              topPadding,
+              horizontalPadding,
+              Responsive.h(context, 16),
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -105,22 +115,22 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ),
                         child: CircleAvatar(
-                          radius: 20,
+                          radius: avatarRadius,
                           backgroundColor: Colors.white.withValues(alpha: 0.2),
                           backgroundImage: profileImageUrl != null
                               ? NetworkImage(profileImageUrl!)
                               : null,
                           child: profileImageUrl == null
-                              ? const Icon(
+                              ? Icon(
                                   Icons.person_rounded,
-                                  size: 24,
+                                  size: Responsive.sp(context, 24).clamp(18.0, 28.0),
                                   color: Colors.white,
                                 )
                               : null,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
+                    SizedBox(width: Responsive.w(context, 12)),
                     // Name and Greeting
                     Expanded(
                       child: Column(
@@ -129,19 +139,19 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                         children: [
                           Text(
                             'Hi, $userName',
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white,
-                              fontSize: 18,
+                              fontSize: Responsive.sp(context, 18).clamp(14.0, 20.0),
                               fontWeight: FontWeight.w600,
                               height: 1.2,
                             ),
                           ),
-                          const SizedBox(height: 2),
+                          SizedBox(height: Responsive.h(context, 2)),
                           Text(
                             _getGreeting(context),
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.8),
-                              fontSize: 13,
+                              fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
                               fontWeight: FontWeight.w400,
                               height: 1.2,
                             ),
@@ -154,9 +164,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                       GestureDetector(
                         onTap: () => _showLoyaltyPointsDialog(context),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 6,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: Responsive.w(context, 10),
+                            vertical: Responsive.h(context, 6),
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white.withValues(alpha: 0.15),
@@ -168,17 +178,17 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.card_giftcard_rounded,
                                 color: Colors.white,
-                                size: 16,
+                                size: Responsive.sp(context, 16).clamp(12.0, 18.0),
                               ),
-                              const SizedBox(width: 4),
+                              SizedBox(width: Responsive.w(context, 4)),
                               Text(
                                 loyaltyPoints?.toStringAsFixed(1) ?? "0.0",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 13,
+                                  fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -186,13 +196,13 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 8),
+                      SizedBox(width: Responsive.w(context, 8)),
                     ],
                     // Notification Bell
                     GestureDetector(
                       onTap: onNotificationTap,
                       child: Container(
-                        padding: const EdgeInsets.all(8),
+                        padding: EdgeInsets.all(Responsive.w(context, 8)),
                         decoration: BoxDecoration(
                           color: Colors.white.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
@@ -203,10 +213,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                         child: Stack(
                           clipBehavior: Clip.none,
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.notifications_none_rounded,
                               color: Colors.white,
-                              size: 20,
+                              size: Responsive.sp(context, 20).clamp(16.0, 24.0),
                             ),
                             if (hasUnreadNotifications)
                               Positioned(
@@ -231,7 +241,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 14),
+                SizedBox(height: Responsive.h(context, 14)),
                 // Financial Summary Card
                 Container(
                   padding: const EdgeInsets.symmetric(

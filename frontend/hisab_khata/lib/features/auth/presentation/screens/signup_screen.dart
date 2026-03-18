@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -65,6 +66,8 @@ class _SignupScreenState extends State<SignupScreen> {
       listener: (context, state) {
         if (state is RegisterSuccess) {
           MySnackbar.showSuccess(context, state.message);
+          final horizontalPadding = Responsive.w(context, 28).clamp(18.0, 36.0);
+          final cardRadius = Responsive.radius(context, 32);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -95,7 +98,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.all(28.0),
-                    child: Form(
+                          padding: EdgeInsets.all(horizontalPadding),
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,

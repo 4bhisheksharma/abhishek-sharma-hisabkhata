@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_state.dart';
@@ -145,7 +146,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
           children: [
             // Stats Card
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: EdgeInsets.all(Responsive.w(context, 16)),
               child: MyStatCard(
                 title: "Add More Business",
                 firstLabel: AppLocalizations.of(context)!.totalShops,
@@ -161,36 +162,39 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
 
             // Recently Added Business Section
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: Responsive.w(context, 16)),
               child: Text(
                 AppLocalizations.of(context)!.recentlyAddedBusiness,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
-                  fontSize: 18,
+                  fontSize: Responsive.sp(context, 18),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: Responsive.h(context, 12)),
 
             // Business List
             if (recentBusinesses.isEmpty)
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: Responsive.w(context, 16)),
                 child: Center(
                   child: Column(
                     children: [
-                      const SizedBox(height: 20),
+                      SizedBox(height: Responsive.h(context, 20)),
                       Icon(
                         Icons.store_outlined,
-                        size: 48,
+                        size: Responsive.sp(context, 48),
                         color: Colors.grey[400],
                       ),
-                      const SizedBox(height: 8),
+                      SizedBox(height: Responsive.h(context, 8)),
                       Text(
                         AppLocalizations.of(context)!.noBusinessesAddedYet,
-                        style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: Responsive.sp(context, 14),
+                        ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: Responsive.h(context, 20)),
                     ],
                   ),
                 ),
@@ -199,7 +203,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
+                padding: EdgeInsets.symmetric(horizontal: Responsive.w(context, 16)),
                 itemCount: recentBusinesses.length,
                 itemBuilder: (context, index) {
                   final business = recentBusinesses[index];

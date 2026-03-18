@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 
 class MyStatCard extends StatelessWidget {
   final String title;
@@ -23,34 +24,47 @@ class MyStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardHeight = Responsive.h(context, 90).clamp(82.0, 108.0);
+    final iconBox = Responsive.w(context, 46).clamp(38.0, 52.0);
+    final borderRadius = Responsive.radius(context, 16);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 90,
+        height: cardHeight,
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [AppTheme.primaryBlue, AppTheme.secondaryBlue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(borderRadius),
           boxShadow: AppTheme.shadowPrimary,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.w(context, 16),
+            vertical: Responsive.h(context, 12),
+          ),
           child: Row(
             children: [
               // Icon Circle
               Container(
-                width: 46,
-                height: 46,
+                width: iconBox,
+                height: iconBox,
                 decoration: BoxDecoration(
                   color: Colors.white.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 14),
+                  ),
                 ),
-                child: Icon(icon, color: Colors.white, size: 24),
+                child: Icon(
+                  icon,
+                  color: Colors.white,
+                  size: Responsive.sp(context, 24).clamp(18.0, 26.0),
+                ),
               ),
-              const SizedBox(width: 14),
+              SizedBox(width: Responsive.w(context, 14)),
               // Content
               Expanded(
                 child: Column(
@@ -60,14 +74,14 @@ class MyStatCard extends StatelessWidget {
                     // Title
                     Text(
                       title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: Colors.white,
-                        fontSize: 13,
+                        fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
                         fontWeight: FontWeight.w600,
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 8),
+                    SizedBox(height: Responsive.h(context, 8)),
                     // Stats Row
                     Row(
                       children: [
@@ -77,55 +91,55 @@ class MyStatCard extends StatelessWidget {
                             Icon(
                               Icons.store_outlined,
                               color: Colors.white.withValues(alpha: 0.9),
-                              size: 14,
+                              size: Responsive.sp(context, 14).clamp(12.0, 16.0),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: Responsive.w(context, 4)),
                             Text(
                               firstLabel,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: 11,
+                                fontSize: Responsive.sp(context, 11).clamp(9.0, 13.0),
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: Responsive.w(context, 4)),
                             Text(
                               firstValue,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: Responsive.sp(context, 12).clamp(10.0, 14.0),
                                 fontWeight: FontWeight.w700,
                                 height: 1.2,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(width: 16),
+                        SizedBox(width: Responsive.w(context, 16)),
                         // Second Stat
                         Row(
                           children: [
                             Icon(
                               Icons.pending_outlined,
                               color: Colors.white.withValues(alpha: 0.9),
-                              size: 14,
+                              size: Responsive.sp(context, 14).clamp(12.0, 16.0),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: Responsive.w(context, 4)),
                             Text(
                               secondLabel,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: 11,
+                                fontSize: Responsive.sp(context, 11).clamp(9.0, 13.0),
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
                               ),
                             ),
-                            const SizedBox(width: 4),
+                            SizedBox(width: Responsive.w(context, 4)),
                             Text(
                               secondValue,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 12,
+                                fontSize: Responsive.sp(context, 12).clamp(10.0, 14.0),
                                 fontWeight: FontWeight.w700,
                                 height: 1.2,
                               ),

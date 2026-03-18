@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
 import 'package:hisab_khata/core/utils/controllers/auth_controller.dart';
@@ -88,6 +89,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final horizontalPadding = Responsive.w(context, 28).clamp(18.0, 36.0);
+    final cardRadius = Responsive.radius(context, 32);
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is OtpVerificationSuccess) {
@@ -117,49 +121,49 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
               // Bottom Card Section
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
+                      topLeft: Radius.circular(cardRadius),
+                      topRight: Radius.circular(cardRadius),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(28.0),
+                    padding: EdgeInsets.all(horizontalPadding),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const SizedBox(height: 40),
+                        SizedBox(height: Responsive.h(context, 40)),
 
                         // Enter OTP Text
                         Column(
                           children: [
                             Text(
                               AppLocalizations.of(context)!.enterOtp,
-                              style: const TextStyle(
-                                fontSize: 20,
+                              style: TextStyle(
+                                fontSize: Responsive.sp(context, 20),
                                 fontWeight: FontWeight.w600,
                                 color: AppTheme.textPrimary,
                               ),
                             ),
-                            const SizedBox(height: 8),
+                            SizedBox(height: Responsive.h(context, 8)),
                             Text(
                               AppLocalizations.of(context)!.otpSent,
-                              style: const TextStyle(
-                                fontSize: 14,
+                              style: TextStyle(
+                                fontSize: Responsive.sp(context, 14),
                                 color: AppTheme.textSecondary,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: Responsive.h(context, 40)),
 
                         // OTP Input Fields
                         OtpInputFields(
                           controllers: _controller.otpControllers,
                           focusNodes: _controller.focusNodes,
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: Responsive.h(context, 40)),
 
                         // Continue Button
                         BlocBuilder<AuthBloc, AuthState>(
@@ -176,19 +180,21 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                             );
                           },
                         ),
-                        const SizedBox(height: 24),
+                        SizedBox(height: Responsive.h(context, 24)),
 
                         // Resend OTP Button
                         GestureDetector(
                           onTap: _handleResendOtp,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 24,
-                              vertical: 12,
+                            padding: EdgeInsets.symmetric(
+                              horizontal: Responsive.w(context, 24),
+                              vertical: Responsive.h(context, 12),
                             ),
                             decoration: BoxDecoration(
                               color: AppTheme.surfaceGrey,
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(
+                                Responsive.radius(context, 20),
+                              ),
                             ),
                             child: Text(
                               _controller.resendTimer > 0
@@ -196,7 +202,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                   : AppLocalizations.of(context)!.resendOtp,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: Responsive.sp(context, 14),
                                 fontWeight: FontWeight.w500,
                                 color: _controller.resendTimer > 0
                                     ? AppTheme.textSecondary

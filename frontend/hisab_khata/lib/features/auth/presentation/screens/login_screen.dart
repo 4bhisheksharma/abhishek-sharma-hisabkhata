@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/shared/widgets/my_text_field.dart';
 import 'package:hisab_khata/shared/widgets/my_button.dart';
 import 'package:hisab_khata/shared/widgets/my_snackbar.dart';
@@ -42,6 +43,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final horizontalPadding = Responsive.w(context, 28).clamp(18.0, 36.0);
+    final cardRadius = Responsive.radius(context, 32);
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is LoginSuccess) {
@@ -72,21 +76,21 @@ class _LoginScreenState extends State<LoginScreen> {
               // Bottom Card Section
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
+                      topLeft: Radius.circular(cardRadius),
+                      topRight: Radius.circular(cardRadius),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(28.0),
+                    padding: EdgeInsets.all(horizontalPadding),
                     child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SizedBox(height: 20),
+                          SizedBox(height: Responsive.h(context, 20)),
 
                           // Email Field
                           MyTextField(
@@ -105,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               )!.invalidEmailErrorText,
                             ),
                           ),
-                          const SizedBox(height: 20),
+                          SizedBox(height: Responsive.h(context, 20)),
 
                           // Password Field
                           MyTextField(
@@ -120,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               AppLocalizations.of(context)!.passwordMinLength,
                             ),
                           ),
-                          const SizedBox(height: 40),
+                          SizedBox(height: Responsive.h(context, 40)),
 
                           // Login Button
                           BlocBuilder<AuthBloc, AuthState>(
@@ -135,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: Responsive.h(context, 16)),
 
                           // Forgot Password
                           Center(
@@ -145,15 +149,15 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: Text(
                                 AppLocalizations.of(context)!.forgotPassword,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppTheme.textSecondary,
-                                  fontSize: 14,
+                                  fontSize: Responsive.sp(context, 14),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ),
                           ),
-                          const SizedBox(height: 140),
+                          SizedBox(height: Responsive.h(context, 90)),
 
                           // Sign Up Link
                           Center(
@@ -162,9 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: [
                                 Text(
                                   AppLocalizations.of(context)!.dontHaveAccount,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: AppTheme.textSecondary,
-                                    fontSize: 14,
+                                    fontSize: Responsive.sp(context, 14),
                                   ),
                                 ),
                                 TextButton(
@@ -181,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     AppLocalizations.of(context)!.signUp,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
-                                      fontSize: 14,
+                                      fontSize: Responsive.sp(context, 14),
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
