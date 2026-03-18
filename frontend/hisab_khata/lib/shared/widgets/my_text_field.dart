@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 
 class MyTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -46,19 +47,25 @@ class _MyTextFieldState extends State<MyTextField> {
 
   @override
   Widget build(BuildContext context) {
+    final labelSize = Responsive.sp(context, 13).clamp(11.0, 15.0);
+    final fieldSize = Responsive.sp(context, 15).clamp(13.0, 17.0);
+    final hintSize = Responsive.sp(context, 14).clamp(12.0, 16.0);
+    final cornerRadius = Responsive.radius(context, 12);
+    final iconSize = Responsive.sp(context, 20).clamp(16.0, 24.0);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
-            fontSize: 13,
+          style: TextStyle(
+            fontSize: labelSize,
             fontWeight: FontWeight.w600,
             color: AppTheme.textPrimary,
             letterSpacing: 0.2,
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: Responsive.h(context, 8)),
         TextFormField(
           controller: widget.controller,
           obscureText: _obscureText,
@@ -68,14 +75,14 @@ class _MyTextFieldState extends State<MyTextField> {
           maxLines: widget.maxLines,
           maxLength: widget.maxLength,
           onChanged: widget.onChanged,
-          style: const TextStyle(
+          style: TextStyle(
             color: AppTheme.textPrimary,
-            fontSize: 15,
+            fontSize: fieldSize,
             fontWeight: FontWeight.w400,
           ),
           decoration: InputDecoration(
             hintText: widget.hintText ?? widget.label,
-            hintStyle: const TextStyle(color: AppTheme.textHint, fontSize: 14),
+            hintStyle: TextStyle(color: AppTheme.textHint, fontSize: hintSize),
             prefixIcon: widget.prefixIcon,
             suffixIcon: widget.showPasswordToggle
                 ? IconButton(
@@ -84,7 +91,7 @@ class _MyTextFieldState extends State<MyTextField> {
                           ? Icons.visibility_off_outlined
                           : Icons.visibility_outlined,
                       color: AppTheme.grey,
-                      size: 20,
+                      size: iconSize,
                     ),
                     onPressed: () {
                       setState(() {
@@ -96,34 +103,34 @@ class _MyTextFieldState extends State<MyTextField> {
             filled: true,
             fillColor: AppTheme.surfaceGrey,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(cornerRadius),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(cornerRadius),
               borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(cornerRadius),
               borderSide: const BorderSide(
                 color: AppTheme.primaryBlue,
                 width: 1.5,
               ),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(cornerRadius),
               borderSide: const BorderSide(color: AppTheme.errorRed),
             ),
             focusedErrorBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(cornerRadius),
               borderSide: const BorderSide(
                 color: AppTheme.errorRed,
                 width: 1.5,
               ),
             ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: Responsive.w(context, 16),
+              vertical: Responsive.h(context, 16),
             ),
           ),
         ),

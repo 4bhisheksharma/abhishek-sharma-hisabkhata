@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 
 class MyButton extends StatelessWidget {
   final String text;
@@ -26,24 +27,31 @@ class MyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final buttonHeight = Responsive.h(context, height).clamp(44.0, 64.0);
+    final iconSize = Responsive.sp(context, 20).clamp(16.0, 24.0);
+    final textSize = Responsive.sp(context, 16).clamp(13.0, 18.0);
+    final loadingSize = Responsive.w(context, 20).clamp(16.0, 22.0);
+
     return SizedBox(
       width: width,
-      height: height,
+      height: buttonHeight,
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? Theme.of(context).primaryColor,
           foregroundColor: textColor ?? Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(
+              Responsive.radius(context, borderRadius),
+            ),
           ),
           elevation: 0,
           disabledBackgroundColor: Colors.grey[300],
         ),
         child: isLoading
-            ? const SizedBox(
-                height: 20,
-                width: 20,
+            ? SizedBox(
+                height: loadingSize,
+                width: loadingSize,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
                   color: Colors.white,
@@ -54,13 +62,13 @@ class MyButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (icon != null) ...[
-                    Icon(icon, size: 20),
-                    const SizedBox(width: 8),
+                    Icon(icon, size: iconSize),
+                    SizedBox(width: Responsive.w(context, 8)),
                   ],
                   Text(
                     text,
-                    style: const TextStyle(
-                      fontSize: 16,
+                    style: TextStyle(
+                      fontSize: textSize,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

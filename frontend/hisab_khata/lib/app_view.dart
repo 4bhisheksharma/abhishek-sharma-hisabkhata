@@ -35,6 +35,18 @@ class _MyAppViewState extends State<MyAppView> {
         title: 'Hisab Khata',
         theme: AppTheme.lightTheme,
         themeMode: ThemeMode.light,
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+          return MediaQuery(
+            data: mediaQuery.copyWith(
+              textScaler: mediaQuery.textScaler.clamp(
+                minScaleFactor: 0.9,
+                maxScaleFactor: 1.2,
+              ),
+            ),
+            child: child ?? const SizedBox.shrink(),
+          );
+        },
         onGenerateRoute: _appRouter.onGenerateRoute,
         initialRoute: AppRoutes.welcome,
         locale: _locale,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 
 //otp input fields ko lagi widget
 class OtpInputFields extends StatelessWidget {
@@ -13,12 +14,16 @@ class OtpInputFields extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final availableWidth = MediaQuery.of(context).size.width;
+    final fieldSize = ((availableWidth - Responsive.w(context, 96)) / 6)
+        .clamp(40.0, 52.0);
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: List.generate(6, (index) {
         return Container(
-          width: 48,
-          height: 48,
+          width: fieldSize,
+          height: fieldSize,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             color: Colors.white,
@@ -30,8 +35,8 @@ class OtpInputFields extends StatelessWidget {
             textAlign: TextAlign.center,
             keyboardType: TextInputType.number,
             maxLength: 1,
-            style: const TextStyle(
-              fontSize: 20,
+            style: TextStyle(
+              fontSize: Responsive.sp(context, 20).clamp(16.0, 22.0),
               fontWeight: FontWeight.w600,
               color: Colors.black87,
             ),
