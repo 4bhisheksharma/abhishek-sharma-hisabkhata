@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/shared/utils/image_utils.dart';
 
 /// A reusable list item widget for displaying user information
@@ -28,17 +29,19 @@ class UserListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cardRadius = Responsive.radius(context, 14);
+
     return Material(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(cardRadius),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(cardRadius),
         child: Container(
-          margin: const EdgeInsets.only(bottom: 10),
-          padding: const EdgeInsets.all(12),
+          margin: EdgeInsets.only(bottom: Responsive.h(context, 10)),
+          padding: EdgeInsets.all(Responsive.w(context, 12)),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(cardRadius),
             border: Border.all(color: AppTheme.dividerColor),
           ),
           child: Row(
@@ -47,7 +50,7 @@ class UserListItem extends StatelessWidget {
               Stack(
                 children: [
                   CircleAvatar(
-                    radius: 22,
+                    radius: Responsive.w(context, 22).clamp(18.0, 25.0),
                     backgroundColor: AppTheme.lightBlue,
                     backgroundImage:
                         profileImageUrl != null &&
@@ -62,7 +65,7 @@ class UserListItem extends StatelessWidget {
                         ? Icon(
                             Icons.person_rounded,
                             color: AppTheme.primaryBlue,
-                            size: 24,
+                            size: Responsive.sp(context, 24).clamp(18.0, 26.0),
                           )
                         : null,
                   ),
@@ -71,18 +74,23 @@ class UserListItem extends StatelessWidget {
                       right: 0,
                       bottom: 0,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: Responsive.w(context, 6),
+                          vertical: Responsive.h(context, 2),
                         ),
                         decoration: BoxDecoration(
                           color: badgeColor ?? AppTheme.primaryBlue,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(
+                            Responsive.radius(context, 8),
+                          ),
                         ),
                         child: Text(
                           badgeText!,
-                          style: const TextStyle(
-                            fontSize: 10,
+                          style: TextStyle(
+                            fontSize: Responsive.sp(
+                              context,
+                              10,
+                            ).clamp(9.0, 12.0),
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
                           ),
@@ -91,7 +99,7 @@ class UserListItem extends StatelessWidget {
                     ),
                 ],
               ),
-              const SizedBox(width: 12),
+              SizedBox(width: Responsive.w(context, 12)),
               // User Info
               Expanded(
                 child: Column(
@@ -99,19 +107,19 @@ class UserListItem extends StatelessWidget {
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
-                        fontSize: 15,
+                      style: TextStyle(
+                        fontSize: Responsive.sp(context, 15).clamp(13.0, 17.0),
                         fontWeight: FontWeight.w600,
                         color: AppTheme.textPrimary,
                       ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    const SizedBox(height: 2),
+                    SizedBox(height: Responsive.h(context, 2)),
                     Text(
                       subtitle,
-                      style: const TextStyle(
-                        fontSize: 13,
+                      style: TextStyle(
+                        fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
                         color: AppTheme.textSecondary,
                       ),
                       maxLines: 1,

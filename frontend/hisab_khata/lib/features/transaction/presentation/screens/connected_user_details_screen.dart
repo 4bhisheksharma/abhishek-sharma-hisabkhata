@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/bloc/chat_provider.dart';
 import 'package:hisab_khata/features/realtime_chat/presentation/screens/chat_detail_screen.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
@@ -105,7 +106,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       ),
       title: Text(
         title,
-        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          fontSize: Responsive.sp(context, 18),
+        ),
       ),
       centerTitle: true,
       actions: userDetails != null
@@ -134,16 +138,16 @@ class ConnectedUserDetailsPage extends StatelessWidget {
           children: [
             Icon(
               Icons.error_outline_rounded,
-              size: 64,
+              size: Responsive.sp(context, 64),
               color: AppTheme.textHint,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: Responsive.h(context, 16)),
             Text(
               state.message,
               style: const TextStyle(color: AppTheme.textSecondary),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            SizedBox(height: Responsive.h(context, 16)),
             ElevatedButton(
               onPressed: () {
                 context.read<ConnectedUserDetailsBloc>().add(
@@ -187,7 +191,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
             _buildHeaderSection(context, userDetails, isFavoriteToggling),
             // Content section
             Padding(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(Responsive.w(context, 20)),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -197,7 +201,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                     totalPaid: userDetails.totalPaid,
                     isCustomerView: isCustomerView,
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: Responsive.h(context, 24)),
                   // Transactions list
                   TransactionsList(
                     transactions: userDetails.transactions,
@@ -221,12 +225,12 @@ class ConnectedUserDetailsPage extends StatelessWidget {
       width: double.infinity,
       decoration: BoxDecoration(
         color: AppTheme.surfaceGrey,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(Responsive.radius(context, 28)),
+          bottomRight: Radius.circular(Responsive.radius(context, 28)),
         ),
       ),
-      padding: const EdgeInsets.all(24),
+      padding: EdgeInsets.all(Responsive.w(context, 24)),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -238,7 +242,7 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               isCustomerView: isCustomerView,
             ),
           ),
-          const SizedBox(width: 20),
+          SizedBox(width: Responsive.w(context, 20)),
           // Profile picture with favorite badge (right side)
           ProfileCardWithBadge(
             profilePicture: userDetails.profilePicture,
@@ -268,21 +272,21 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     final isLoading = state is ConnectedUserDetailsTransactionCreating;
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(Responsive.w(context, 20)),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+            blurRadius: Responsive.radius(context, 10),
+            offset: Offset(0, -Responsive.h(context, 5)),
           ),
         ],
       ),
       child: SafeArea(
         child: SizedBox(
           width: double.infinity,
-          height: 50,
+          height: Responsive.h(context, 50).clamp(46.0, 60.0),
           child: ElevatedButton(
             onPressed: isLoading
                 ? null
@@ -291,14 +295,16 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(
+                  Responsive.radius(context, 25),
+                ),
               ),
               elevation: 0,
             ),
             child: isLoading
-                ? const SizedBox(
-                    width: 24,
-                    height: 24,
+                ? SizedBox(
+                    width: Responsive.w(context, 24),
+                    height: Responsive.w(context, 24),
                     child: CircularProgressIndicator(
                       strokeWidth: 2,
                       color: Colors.white,
@@ -306,7 +312,10 @@ class ConnectedUserDetailsPage extends StatelessWidget {
                   )
                 : Text(
                     AppLocalizations.of(context)!.payDue,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                      fontSize: Responsive.sp(context, 16),
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
           ),
         ),
@@ -337,21 +346,21 @@ class ConnectedUserDetailsPage extends StatelessWidget {
     if (!hasDue) return const SizedBox.shrink();
 
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(Responsive.w(context, 20)),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
+            blurRadius: Responsive.radius(context, 10),
+            offset: Offset(0, -Responsive.h(context, 5)),
           ),
         ],
       ),
       child: SafeArea(
         child: SizedBox(
           width: double.infinity,
-          height: 50,
+          height: Responsive.h(context, 50).clamp(46.0, 60.0),
           child: ElevatedButton.icon(
             onPressed: isLoading
                 ? null
@@ -370,13 +379,18 @@ class ConnectedUserDetailsPage extends StatelessWidget {
               isLoading
                   ? AppLocalizations.of(context)!.processing
                   : AppLocalizations.of(context)!.clearDueCash,
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 16),
+                fontWeight: FontWeight.w600,
+              ),
             ),
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryBlue,
               foregroundColor: Colors.white,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(25),
+                borderRadius: BorderRadius.circular(
+                  Responsive.radius(context, 25),
+                ),
               ),
               elevation: 0,
             ),

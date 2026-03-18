@@ -123,7 +123,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                           child: profileImageUrl == null
                               ? Icon(
                                   Icons.person_rounded,
-                                  size: Responsive.sp(context, 24).clamp(18.0, 28.0),
+                                  size: Responsive.sp(
+                                    context,
+                                    24,
+                                  ).clamp(18.0, 28.0),
                                   color: Colors.white,
                                 )
                               : null,
@@ -141,7 +144,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             'Hi, $userName',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: Responsive.sp(context, 18).clamp(14.0, 20.0),
+                              fontSize: Responsive.sp(
+                                context,
+                                18,
+                              ).clamp(14.0, 20.0),
                               fontWeight: FontWeight.w600,
                               height: 1.2,
                             ),
@@ -151,7 +157,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             _getGreeting(context),
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.8),
-                              fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
+                              fontSize: Responsive.sp(
+                                context,
+                                13,
+                              ).clamp(11.0, 15.0),
                               fontWeight: FontWeight.w400,
                               height: 1.2,
                             ),
@@ -181,14 +190,20 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                               Icon(
                                 Icons.card_giftcard_rounded,
                                 color: Colors.white,
-                                size: Responsive.sp(context, 16).clamp(12.0, 18.0),
+                                size: Responsive.sp(
+                                  context,
+                                  16,
+                                ).clamp(12.0, 18.0),
                               ),
                               SizedBox(width: Responsive.w(context, 4)),
                               Text(
                                 loyaltyPoints?.toStringAsFixed(1) ?? "0.0",
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: Responsive.sp(context, 13).clamp(11.0, 15.0),
+                                  fontSize: Responsive.sp(
+                                    context,
+                                    13,
+                                  ).clamp(11.0, 15.0),
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -216,7 +231,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                             Icon(
                               Icons.notifications_none_rounded,
                               color: Colors.white,
-                              size: Responsive.sp(context, 20).clamp(16.0, 24.0),
+                              size: Responsive.sp(
+                                context,
+                                20,
+                              ).clamp(16.0, 24.0),
                             ),
                             if (hasUnreadNotifications)
                               Positioned(

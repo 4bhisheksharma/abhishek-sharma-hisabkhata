@@ -162,7 +162,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
 
             // Recently Added Business Section
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: Responsive.w(context, 16)),
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.w(context, 16),
+              ),
               child: Text(
                 AppLocalizations.of(context)!.recentlyAddedBusiness,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -176,7 +178,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
             // Business List
             if (recentBusinesses.isEmpty)
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: Responsive.w(context, 16)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.w(context, 16),
+                ),
                 child: Center(
                   child: Column(
                     children: [
@@ -203,7 +207,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: Responsive.w(context, 16)),
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.w(context, 16),
+                ),
                 itemCount: recentBusinesses.length,
                 itemBuilder: (context, index) {
                   final business = recentBusinesses[index];

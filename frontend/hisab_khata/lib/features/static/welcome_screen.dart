@@ -119,7 +119,10 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                             ),
                             child: Icon(
                               Icons.account_balance_wallet_rounded,
-                              size: Responsive.sp(context, 64).clamp(44.0, 72.0),
+                              size: Responsive.sp(
+                                context,
+                                64,
+                              ).clamp(44.0, 72.0),
                               color: Colors.white,
                             ),
                           );

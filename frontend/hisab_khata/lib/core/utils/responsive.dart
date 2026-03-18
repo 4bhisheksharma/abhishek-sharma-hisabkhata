@@ -7,9 +7,11 @@ class Responsive {
 
   static Size _screenSize(BuildContext context) => MediaQuery.of(context).size;
 
-  static bool isSmallPhone(BuildContext context) => _screenSize(context).width < 360;
+  static bool isSmallPhone(BuildContext context) =>
+      _screenSize(context).width < 360;
 
-  static bool isTablet(BuildContext context) => _screenSize(context).width >= 600;
+  static bool isTablet(BuildContext context) =>
+      _screenSize(context).width >= 600;
 
   static double w(BuildContext context, double value) {
     final width = _screenSize(context).width;

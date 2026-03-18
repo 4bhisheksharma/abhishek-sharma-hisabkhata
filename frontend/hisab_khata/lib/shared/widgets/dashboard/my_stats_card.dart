@@ -91,14 +91,20 @@ class MyStatCard extends StatelessWidget {
                             Icon(
                               Icons.store_outlined,
                               color: Colors.white.withValues(alpha: 0.9),
-                              size: Responsive.sp(context, 14).clamp(12.0, 16.0),
+                              size: Responsive.sp(
+                                context,
+                                14,
+                              ).clamp(12.0, 16.0),
                             ),
                             SizedBox(width: Responsive.w(context, 4)),
                             Text(
                               firstLabel,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: Responsive.sp(context, 11).clamp(9.0, 13.0),
+                                fontSize: Responsive.sp(
+                                  context,
+                                  11,
+                                ).clamp(9.0, 13.0),
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
                               ),
@@ -108,7 +114,10 @@ class MyStatCard extends StatelessWidget {
                               firstValue,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: Responsive.sp(context, 12).clamp(10.0, 14.0),
+                                fontSize: Responsive.sp(
+                                  context,
+                                  12,
+                                ).clamp(10.0, 14.0),
                                 fontWeight: FontWeight.w700,
                                 height: 1.2,
                               ),
@@ -122,14 +131,20 @@ class MyStatCard extends StatelessWidget {
                             Icon(
                               Icons.pending_outlined,
                               color: Colors.white.withValues(alpha: 0.9),
-                              size: Responsive.sp(context, 14).clamp(12.0, 16.0),
+                              size: Responsive.sp(
+                                context,
+                                14,
+                              ).clamp(12.0, 16.0),
                             ),
                             SizedBox(width: Responsive.w(context, 4)),
                             Text(
                               secondLabel,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: Responsive.sp(context, 11).clamp(9.0, 13.0),
+                                fontSize: Responsive.sp(
+                                  context,
+                                  11,
+                                ).clamp(9.0, 13.0),
                                 fontWeight: FontWeight.w500,
                                 height: 1.2,
                               ),
@@ -139,7 +154,10 @@ class MyStatCard extends StatelessWidget {
                               secondValue,
                               style: TextStyle(
                                 color: Colors.white,
-                                fontSize: Responsive.sp(context, 12).clamp(10.0, 14.0),
+                                fontSize: Responsive.sp(
+                                  context,
+                                  12,
+                                ).clamp(10.0, 14.0),
                                 fontWeight: FontWeight.w700,
                                 height: 1.2,
                               ),

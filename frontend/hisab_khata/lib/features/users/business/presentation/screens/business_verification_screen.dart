@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/features/users/business/domain/entities/verification_request.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_bloc.dart';
 import 'package:hisab_khata/features/users/business/presentation/bloc/business_event.dart';
@@ -139,31 +140,31 @@ class _BusinessVerificationScreenState
 
   Widget _buildContent(VerificationStatus status) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(Responsive.w(context, 16)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Status Card
           _buildStatusCard(status),
-          const SizedBox(height: 20),
+          SizedBox(height: Responsive.h(context, 20)),
 
           // Show form if not verified and no pending request
           if (!status.isVerified && !status.hasPendingRequest) ...[
             Text(
               AppLocalizations.of(context)!.submitVerificationRequest,
-              style: const TextStyle(
-                fontSize: 18,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 18),
                 fontWeight: FontWeight.bold,
                 color: AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: Responsive.h(context, 12)),
             _buildSubmissionForm(status),
           ],
 
           // Show latest request details
           if (status.latestRequest != null) ...[
-            const SizedBox(height: 20),
+            SizedBox(height: Responsive.h(context, 20)),
             _buildLatestRequestCard(status.latestRequest!),
           ],
         ],
@@ -196,43 +197,43 @@ class _BusinessVerificationScreenState
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(Responsive.w(context, 20)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Responsive.radius(context, 16)),
         boxShadow: [
           BoxShadow(
             color: color.withValues(alpha: 0.15),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            blurRadius: Responsive.radius(context, 12),
+            offset: Offset(0, Responsive.h(context, 4)),
           ),
         ],
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(Responsive.w(context, 16)),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 40),
+            child: Icon(icon, color: color, size: Responsive.sp(context, 40)),
           ),
-          const SizedBox(height: 12),
+          SizedBox(height: Responsive.h(context, 12)),
           Text(
             title,
             style: TextStyle(
-              fontSize: 20,
+              fontSize: Responsive.sp(context, 20),
               fontWeight: FontWeight.bold,
               color: color,
             ),
           ),
-          const SizedBox(height: 8),
+          SizedBox(height: Responsive.h(context, 8)),
           Text(
             subtitle,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 14,
+            style: TextStyle(
+              fontSize: Responsive.sp(context, 14),
               color: AppTheme.textSecondary,
               height: 1.4,
             ),
@@ -246,15 +247,15 @@ class _BusinessVerificationScreenState
     return Form(
       key: _formKey,
       child: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(Responsive.w(context, 20)),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(Responsive.radius(context, 16)),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 2),
+              blurRadius: Responsive.radius(context, 10),
+              offset: Offset(0, Responsive.h(context, 2)),
             ),
           ],
         ),
@@ -264,13 +265,13 @@ class _BusinessVerificationScreenState
             // Document Type Dropdown
             Text(
               AppLocalizations.of(context)!.documentType,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 14),
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: Responsive.h(context, 8)),
             DropdownButtonFormField<String>(
               value: _selectedDocumentType,
               decoration: InputDecoration(
@@ -278,15 +279,21 @@ class _BusinessVerificationScreenState
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   borderSide: const BorderSide(color: AppTheme.lightBlue),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   borderSide: const BorderSide(color: AppTheme.lightBlue),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   borderSide: const BorderSide(
                     color: AppTheme.primaryBlue,
                     width: 2,
@@ -305,7 +312,7 @@ class _BusinessVerificationScreenState
                 }
               },
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: Responsive.h(context, 20)),
 
             // Document Upload
             Text(

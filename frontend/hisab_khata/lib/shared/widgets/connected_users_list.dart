@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/core/route/app_router.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import 'package:hisab_khata/core/constants/routes.dart';
 import 'package:hisab_khata/features/request/domain/entities/connected_user.dart';
 import 'package:hisab_khata/features/request/presentation/bloc/connection_request_bloc.dart';
@@ -98,43 +99,43 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
 
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: EdgeInsets.all(Responsive.w(context, 40)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(Responsive.w(context, 24)),
               decoration: BoxDecoration(
                 color: AppTheme.primaryBlue.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 emptyIcon,
-                size: 80,
+                size: Responsive.sp(context, 80).clamp(48.0, 84.0),
                 color: AppTheme.primaryBlue.withValues(alpha: 0.5),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: Responsive.h(context, 24)),
             Text(
               emptyMessage,
-              style: const TextStyle(
-                fontSize: 20,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 20),
                 color: AppTheme.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: Responsive.h(context, 12)),
             Text(
               emptySubtitle,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 14),
                 color: AppTheme.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 32),
+            SizedBox(height: Responsive.h(context, 32)),
             ElevatedButton.icon(
               onPressed: () {
                 Navigator.pushNamed(context, AppRoutes.addConnection);
@@ -144,12 +145,14 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 14,
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.w(context, 32),
+                  vertical: Responsive.h(context, 14),
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                 ),
                 elevation: 2,
               ),
@@ -163,42 +166,42 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
   Widget _buildErrorState(String message) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(40.0),
+        padding: EdgeInsets.all(Responsive.w(context, 40)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(24),
+              padding: EdgeInsets.all(Responsive.w(context, 24)),
               decoration: BoxDecoration(
                 color: Colors.red.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.cloud_off_outlined,
-                size: 80,
+                size: Responsive.sp(context, 80).clamp(48.0, 84.0),
                 color: Colors.red[300],
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: Responsive.h(context, 24)),
             Text(
               AppLocalizations.of(context)!.failedToLoadConnections,
               style: TextStyle(
-                fontSize: 18,
+                fontSize: Responsive.sp(context, 18),
                 color: AppTheme.textPrimary,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: Responsive.h(context, 12)),
             Text(
               message,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 14),
                 color: AppTheme.textSecondary,
                 height: 1.5,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: Responsive.h(context, 24)),
             ElevatedButton.icon(
               onPressed: _loadConnectedUsers,
               icon: const Icon(Icons.refresh_rounded),
@@ -206,12 +209,14 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryBlue,
                 foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 32,
-                  vertical: 14,
+                padding: EdgeInsets.symmetric(
+                  horizontal: Responsive.w(context, 32),
+                  vertical: Responsive.h(context, 14),
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                 ),
                 elevation: 2,
               ),
@@ -233,41 +238,48 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
+            padding: EdgeInsets.fromLTRB(
+              Responsive.w(context, 20),
+              Responsive.h(context, 16),
+              Responsive.w(context, 20),
+              Responsive.h(context, 12),
+            ),
             child: Row(
               children: [
                 Icon(
                   widget.filterBusinesses
                       ? Icons.store_outlined
                       : Icons.people_outlined,
-                  size: 20,
+                  size: Responsive.sp(context, 20),
                   color: AppTheme.primaryBlue,
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: Responsive.w(context, 8)),
                 Text(
                   widget.filterBusinesses
                       ? AppLocalizations.of(context)!.connectedBusinesses
                       : AppLocalizations.of(context)!.connectedCustomers,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: Responsive.sp(context, 16),
                     fontWeight: FontWeight.bold,
                     color: AppTheme.textPrimary,
                   ),
                 ),
-                const SizedBox(width: 8),
+                SizedBox(width: Responsive.w(context, 8)),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 4,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Responsive.w(context, 10),
+                    vertical: Responsive.h(context, 4),
                   ),
                   decoration: BoxDecoration(
                     color: AppTheme.primaryBlue.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(
+                      Responsive.radius(context, 12),
+                    ),
                   ),
                   child: Text(
                     '${users.length}',
                     style: TextStyle(
-                      fontSize: 12,
+                      fontSize: Responsive.sp(context, 12),
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primaryBlue,
                     ),
@@ -278,9 +290,15 @@ class _ConnectedUsersListState extends State<ConnectedUsersList> {
           ),
           Expanded(
             child: ListView.separated(
-              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              padding: EdgeInsets.fromLTRB(
+                Responsive.w(context, 16),
+                0,
+                Responsive.w(context, 16),
+                Responsive.h(context, 16),
+              ),
               itemCount: users.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              separatorBuilder: (context, index) =>
+                  SizedBox(height: Responsive.h(context, 12)),
               itemBuilder: (context, index) {
                 final user = users[index];
                 return _buildEnhancedUserCard(user);

@@ -62,12 +62,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final horizontalPadding = Responsive.w(context, 28).clamp(18.0, 36.0);
+    final cardRadius = Responsive.radius(context, 32);
+
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is RegisterSuccess) {
           MySnackbar.showSuccess(context, state.message);
-          final horizontalPadding = Responsive.w(context, 28).clamp(18.0, 36.0);
-          final cardRadius = Responsive.radius(context, 32);
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
@@ -83,29 +84,24 @@ class _SignupScreenState extends State<SignupScreen> {
         body: SafeArea(
           child: Column(
             children: [
-              // Top Section with Create Account Text
               AuthHeader(title: AppLocalizations.of(context)!.createAccount),
-
-              // Bottom Card Section
               Expanded(
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
+                      topLeft: Radius.circular(cardRadius),
+                      topRight: Radius.circular(cardRadius),
                     ),
                   ),
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(28.0),
-                          padding: EdgeInsets.all(horizontalPadding),
+                    padding: EdgeInsets.all(horizontalPadding),
+                    child: Form(
                       key: _formKey,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          const SizedBox(height: 10),
-
-                          // Role Selection Buttons
+                          SizedBox(height: Responsive.h(context, 10)),
                           RoleSelectionButtons(
                             selectedRole: _controller.selectedRole,
                             onRoleChanged: (role) {
@@ -114,9 +110,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               });
                             },
                           ),
-                          const SizedBox(height: 20),
-
-                          // Full Name Field
+                          SizedBox(height: Responsive.h(context, 20)),
                           MyTextField(
                             controller: _controller.nameController,
                             label: AppLocalizations.of(context)!.fullName,
@@ -127,9 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               AppLocalizations.of(context)!.enterName,
                             ),
                           ),
-                          const SizedBox(height: 20),
-
-                          // Business Name Field (only for business role)
+                          SizedBox(height: Responsive.h(context, 20)),
                           if (_controller.selectedRole == 'business') ...[
                             MyTextField(
                               controller: _controller.businessNameController,
@@ -141,10 +133,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                 AppLocalizations.of(context)!.enterBusinessName,
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            SizedBox(height: Responsive.h(context, 20)),
                           ],
-
-                          // Email Field
                           MyTextField(
                             controller: _controller.emailController,
                             label: AppLocalizations.of(context)!.email,
@@ -157,9 +147,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               AppLocalizations.of(context)!.enterValidEmail,
                             ),
                           ),
-                          const SizedBox(height: 20),
-
-                          // Mobile Number Field
+                          SizedBox(height: Responsive.h(context, 20)),
                           MyTextField(
                             controller: _controller.mobileController,
                             label: AppLocalizations.of(context)!.mobileNumber,
@@ -175,9 +163,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               )!.enterValidMobileNumber,
                             ),
                           ),
-                          const SizedBox(height: 20),
-
-                          // Password Field
+                          SizedBox(height: Responsive.h(context, 20)),
                           MyTextField(
                             controller: _controller.passwordController,
                             label: AppLocalizations.of(context)!.password,
@@ -190,9 +176,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               AppLocalizations.of(context)!.passwordMinLength,
                             ),
                           ),
-                          const SizedBox(height: 20),
-
-                          // Confirm Password Field
+                          SizedBox(height: Responsive.h(context, 20)),
                           MyTextField(
                             controller: _controller.confirmPasswordController,
                             label: AppLocalizations.of(
@@ -213,15 +197,13 @@ class _SignupScreenState extends State<SignupScreen> {
                               )!.confirmPasswordNotMatchErrorText,
                             ),
                           ),
-                          const SizedBox(height: 24),
-
-                          // Terms Text
+                          SizedBox(height: Responsive.h(context, 24)),
                           Center(
                             child: RichText(
                               textAlign: TextAlign.center,
                               text: TextSpan(
-                                style: const TextStyle(
-                                  fontSize: 12,
+                                style: TextStyle(
+                                  fontSize: Responsive.sp(context, 12),
                                   color: AppTheme.textSecondary,
                                 ),
                                 children: [
@@ -239,7 +221,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                       color: AppTheme.textPrimary,
                                     ),
                                   ),
-                                  const TextSpan(text: " and "),
+                                  const TextSpan(text: ' and '),
                                   TextSpan(
                                     text: AppLocalizations.of(
                                       context,
@@ -253,9 +235,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 24),
-
-                          // Sign Up Button
+                          SizedBox(height: Responsive.h(context, 24)),
                           BlocBuilder<AuthBloc, AuthState>(
                             builder: (context, state) {
                               return MyButton(
@@ -268,9 +248,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               );
                             },
                           ),
-                          const SizedBox(height: 16),
-
-                          // Login Link
+                          SizedBox(height: Responsive.h(context, 16)),
                           Center(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
@@ -279,9 +257,9 @@ class _SignupScreenState extends State<SignupScreen> {
                                   AppLocalizations.of(
                                     context,
                                   )!.alreadyHaveAccount,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     color: AppTheme.textSecondary,
-                                    fontSize: 14,
+                                    fontSize: Responsive.sp(context, 14),
                                   ),
                                 ),
                                 TextButton(
@@ -290,7 +268,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                   },
                                   style: TextButton.styleFrom(
                                     padding: EdgeInsets.zero,
-                                    minimumSize: Size(0, 0),
+                                    minimumSize: const Size(0, 0),
                                     tapTargetSize:
                                         MaterialTapTargetSize.shrinkWrap,
                                   ),
@@ -298,7 +276,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                     AppLocalizations.of(context)!.login,
                                     style: TextStyle(
                                       color: Theme.of(context).primaryColor,
-                                      fontSize: 14,
+                                      fontSize: Responsive.sp(context, 14),
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),

@@ -15,8 +15,10 @@ class OtpInputFields extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final availableWidth = MediaQuery.of(context).size.width;
-    final fieldSize = ((availableWidth - Responsive.w(context, 96)) / 6)
-        .clamp(40.0, 52.0);
+    final fieldSize = ((availableWidth - Responsive.w(context, 96)) / 6).clamp(
+      40.0,
+      52.0,
+    );
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

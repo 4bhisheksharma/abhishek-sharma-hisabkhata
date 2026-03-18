@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
+import 'package:hisab_khata/core/utils/responsive.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../shared/utils/image_utils.dart';
 import '../../../../shared/widgets/my_snackbar.dart';
@@ -96,16 +97,16 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
   Widget _buildAvatar(String? profilePicture, String name) {
     final imageUrl = ImageUtils.getFullImageUrl(profilePicture);
     return CircleAvatar(
-      radius: 22,
+      radius: Responsive.w(context, 22).clamp(18.0, 25.0),
       backgroundColor: AppTheme.lightBlue,
       backgroundImage: imageUrl != null ? NetworkImage(imageUrl) : null,
       child: imageUrl == null
           ? Text(
               name.isNotEmpty ? name[0].toUpperCase() : '?',
-              style: const TextStyle(
+              style: TextStyle(
                 color: AppTheme.primaryBlue,
                 fontWeight: FontWeight.w600,
-                fontSize: 16,
+                fontSize: Responsive.sp(context, 16),
               ),
             )
           : null,
@@ -138,21 +139,24 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         icon = Icons.help_outline;
     }
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      padding: EdgeInsets.symmetric(
+        horizontal: Responsive.w(context, 8),
+        vertical: Responsive.h(context, 4),
+      ),
       decoration: BoxDecoration(
         color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(Responsive.radius(context, 12)),
         border: Border.all(color: color.withValues(alpha: 0.5)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 14, color: color),
-          const SizedBox(width: 4),
+          Icon(icon, size: Responsive.sp(context, 14), color: color),
+          SizedBox(width: Responsive.w(context, 4)),
           Text(
             label,
             style: TextStyle(
-              fontSize: 11,
+              fontSize: Responsive.sp(context, 11),
               color: color,
               fontWeight: FontWeight.w600,
             ),
@@ -168,22 +172,25 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         Text(
           title,
           style: TextStyle(
-            fontSize: 14,
+            fontSize: Responsive.sp(context, 14),
             fontWeight: FontWeight.w600,
             color: color,
           ),
         ),
-        const SizedBox(width: 8),
+        SizedBox(width: Responsive.w(context, 8)),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+          padding: EdgeInsets.symmetric(
+            horizontal: Responsive.w(context, 8),
+            vertical: Responsive.h(context, 2),
+          ),
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(Responsive.radius(context, 10)),
           ),
           child: Text(
             '$count',
             style: TextStyle(
-              fontSize: 12,
+              fontSize: Responsive.sp(context, 12),
               fontWeight: FontWeight.bold,
               color: color,
             ),
@@ -200,36 +207,36 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
   }) {
     return Center(
       child: Padding(
-        padding: const EdgeInsets.all(32),
+        padding: EdgeInsets.all(Responsive.w(context, 32)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: EdgeInsets.all(Responsive.w(context, 20)),
               decoration: BoxDecoration(
                 color: AppTheme.lightBlue,
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
-                size: 48,
+                size: Responsive.sp(context, 48),
                 color: AppTheme.primaryBlue.withValues(alpha: 0.5),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: Responsive.h(context, 20)),
             Text(
               title,
-              style: const TextStyle(
-                fontSize: 17,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 17),
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: Responsive.h(context, 8)),
             Text(
               subtitle,
-              style: const TextStyle(
-                fontSize: 13,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 13),
                 color: AppTheme.textSecondary,
               ),
               textAlign: TextAlign.center,
@@ -263,7 +270,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
         );
       },
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: EdgeInsets.all(Responsive.w(context, 16)),
         children: [
           if (pending.isNotEmpty) ...[
             _buildSectionHeader(
@@ -271,9 +278,9 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
               pending.length,
               Colors.orange,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: Responsive.h(context, 8)),
             ...pending.map(_buildReceivedCard),
-            const SizedBox(height: 16),
+            SizedBox(height: Responsive.h(context, 16)),
           ],
           if (others.isNotEmpty) ...[
             _buildSectionHeader(
@@ -281,7 +288,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
               others.length,
               Colors.grey,
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: Responsive.h(context, 8)),
             ...others.map(_buildReceivedCard),
           ],
         ],
@@ -291,43 +298,45 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
 
   Widget _buildReceivedCard(ConnectionRequest request) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+      margin: EdgeInsets.only(bottom: Responsive.h(context, 8)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(Responsive.radius(context, 14)),
+      ),
       elevation: 0,
       child: Padding(
-        padding: const EdgeInsets.all(14),
+        padding: EdgeInsets.all(Responsive.w(context, 14)),
         child: Column(
           children: [
             Row(
               children: [
                 _buildAvatar(request.senderProfilePicture, request.senderName),
-                const SizedBox(width: 12),
+                SizedBox(width: Responsive.w(context, 12)),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         request.senderName,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
-                          fontSize: 15,
+                          fontSize: Responsive.sp(context, 15),
                           color: AppTheme.textPrimary,
                         ),
                       ),
-                      const SizedBox(height: 2),
+                      SizedBox(height: Responsive.h(context, 2)),
                       Text(
                         request.senderEmail,
-                        style: const TextStyle(
-                          fontSize: 12,
+                        style: TextStyle(
+                          fontSize: Responsive.sp(context, 12),
                           color: AppTheme.textSecondary,
                         ),
                       ),
                       if (request.senderPhone != null) ...[
-                        const SizedBox(height: 1),
+                        SizedBox(height: Responsive.h(context, 1)),
                         Text(
                           request.senderPhone!,
-                          style: const TextStyle(
-                            fontSize: 12,
+                          style: TextStyle(
+                            fontSize: Responsive.sp(context, 12),
                             color: AppTheme.textHint,
                           ),
                         ),
@@ -339,11 +348,11 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     _buildStatusBadge(request.status),
-                    const SizedBox(height: 4),
+                    SizedBox(height: Responsive.h(context, 4)),
                     Text(
                       _timeAgo(request.createdAt),
-                      style: const TextStyle(
-                        fontSize: 11,
+                      style: TextStyle(
+                        fontSize: Responsive.sp(context, 11),
                         color: AppTheme.textHint,
                       ),
                     ),
@@ -352,7 +361,7 @@ class _ConnectionRequestsScreenState extends State<ConnectionRequestsScreen>
               ],
             ),
             if (request.isPending) ...[
-              const SizedBox(height: 12),
+              SizedBox(height: Responsive.h(context, 12)),
               Row(
                 children: [
                   Expanded(
