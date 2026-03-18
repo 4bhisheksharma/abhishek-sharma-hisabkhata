@@ -34,6 +34,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
     with WidgetsBindingObserver {
   int _currentNavIndex = 0;
   bool _hasLoadedLanguage = false;
+  CustomerDashboardLoaded? _lastDashboardState;
 
   @override
   void initState() {
@@ -264,6 +265,9 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
   Widget build(BuildContext context) {
     return BlocConsumer<CustomerBloc, CustomerState>(
       listener: (context, state) {
+        if (state is CustomerDashboardLoaded) {
+          _lastDashboardState = state;
+        }
         if (state is CustomerError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message), backgroundColor: Colors.red),
@@ -280,12 +284,12 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
         }
       },
       builder: (context, state) {
-        if (state is CustomerLoading) {
-          return const DashboardShimmer();
-        }
+        final dashboardState = state is CustomerDashboardLoaded
+            ? state
+            : _lastDashboardState;
 
-        if (state is CustomerDashboardLoaded) {
-          final d = state.dashboard;
+        if (dashboardState != null) {
+          final d = dashboardState.dashboard;
 
           return BlocBuilder<NotificationBloc, NotificationState>(
             builder: (context, notifState) {
@@ -321,10 +325,16 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen>
                     });
                   }
                 },
-                body: _buildBodyContent(state),
+                body: _buildBodyContent(dashboardState),
               );
             },
           );
+        }
+
+        if (state is CustomerLoading ||
+            state is CustomerProfileLoaded ||
+            state is CustomerProfileUpdated) {
+          return const DashboardShimmer();
         }
 
         return Scaffold(

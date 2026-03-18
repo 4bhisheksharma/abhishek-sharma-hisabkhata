@@ -34,6 +34,7 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
     with WidgetsBindingObserver {
   int _currentNavIndex = 0;
   bool _hasLoadedLanguage = false;
+  BusinessDashboardLoaded? _lastDashboardState;
 
   @override
   void initState() {
@@ -264,6 +265,9 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
   Widget build(BuildContext context) {
     return BlocConsumer<BusinessBloc, BusinessState>(
       listener: (context, state) {
+        if (state is BusinessDashboardLoaded) {
+          _lastDashboardState = state;
+        }
         if (state is BusinessError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message), backgroundColor: Colors.red),
@@ -280,12 +284,12 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
         }
       },
       builder: (context, state) {
-        if (state is BusinessLoading) {
-          return const DashboardShimmer();
-        }
+        final dashboardState = state is BusinessDashboardLoaded
+            ? state
+            : _lastDashboardState;
 
-        if (state is BusinessDashboardLoaded) {
-          final d = state.dashboard;
+        if (dashboardState != null) {
+          final d = dashboardState.dashboard;
 
           return BlocBuilder<NotificationBloc, NotificationState>(
             builder: (context, notifState) {
@@ -320,10 +324,16 @@ class _BusinessHomeScreenState extends State<BusinessHomeScreen>
                     });
                   }
                 },
-                body: _buildBodyContent(state),
+                body: _buildBodyContent(dashboardState),
               );
             },
           );
+        }
+
+        if (state is BusinessLoading ||
+            state is BusinessProfileLoaded ||
+            state is BusinessProfileUpdated) {
+          return const DashboardShimmer();
         }
 
         return Scaffold(
