@@ -26,6 +26,7 @@ class _BusinessVerificationScreenState
   String _selectedDocumentType = 'business_registration';
   File? _selectedDocument;
   bool _isSubmitting = false;
+  VerificationStatus? _lastVerificationStatus;
 
   List<Map<String, String>> _getDocumentTypes(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -128,11 +129,18 @@ class _BusinessVerificationScreenState
           }
 
           if (state is BusinessVerificationStatusLoaded) {
+            _lastVerificationStatus = state.verificationStatus;
             return _buildContent(state.verificationStatus);
           }
 
-          // Default: show submission form
-          return _buildSubmissionForm(null);
+          // Preserve the last known verification status when other business states
+          // (profile/dashboard/etc.) are emitted by the shared bloc.
+          if (_lastVerificationStatus != null) {
+            return _buildContent(_lastVerificationStatus!);
+          }
+
+          // Before first status load, show a loading placeholder instead of form.
+          return const VerificationShimmer();
         },
       ),
     );
@@ -317,22 +325,26 @@ class _BusinessVerificationScreenState
             // Document Upload
             Text(
               AppLocalizations.of(context)!.uploadDocument,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 14),
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: Responsive.h(context, 8)),
             GestureDetector(
               onTap: _pickDocument,
               child: Container(
                 width: double.infinity,
-                height: _selectedDocument != null ? null : 150,
-                padding: const EdgeInsets.all(16),
+                height: _selectedDocument != null
+                    ? null
+                    : Responsive.h(context, 150).clamp(120.0, 180.0),
+                padding: EdgeInsets.all(Responsive.w(context, 16)),
                 decoration: BoxDecoration(
                   color: AppTheme.lightBlue.withValues(alpha: 0.5),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   border: Border.all(
                     color: _selectedDocument != null
                         ? AppTheme.primaryBlue
@@ -347,36 +359,46 @@ class _BusinessVerificationScreenState
                     ? Column(
                         children: [
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(
+                              Responsive.radius(context, 8),
+                            ),
                             child: Image.file(
                               _selectedDocument!,
-                              height: 200,
+                              height: Responsive.h(
+                                context,
+                                200,
+                              ).clamp(140.0, 220.0),
                               width: double.infinity,
                               fit: BoxFit.cover,
                             ),
                           ),
-                          const SizedBox(height: 12),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          SizedBox(height: Responsive.h(context, 12)),
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            spacing: Responsive.w(context, 8),
+                            runSpacing: Responsive.h(context, 6),
                             children: [
                               Icon(
                                 Icons.check_circle,
                                 color: AppTheme.successGreen,
-                                size: 20,
+                                size: Responsive.sp(context, 20),
                               ),
-                              const SizedBox(width: 8),
                               Text(
                                 AppLocalizations.of(context)!.documentSelected,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   color: AppTheme.successGreen,
                                   fontWeight: FontWeight.w600,
+                                  fontSize: Responsive.sp(context, 13),
                                 ),
                               ),
-                              const SizedBox(width: 12),
                               TextButton(
                                 onPressed: _pickDocument,
                                 child: Text(
                                   AppLocalizations.of(context)!.change,
+                                  style: TextStyle(
+                                    fontSize: Responsive.sp(context, 13),
+                                  ),
                                 ),
                               ),
                             ],
@@ -388,19 +410,20 @@ class _BusinessVerificationScreenState
                         children: [
                           Icon(
                             Icons.cloud_upload_outlined,
-                            size: 48,
+                            size: Responsive.sp(context, 48),
                             color: AppTheme.primaryBlue.withValues(alpha: 0.7),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: Responsive.h(context, 8)),
                           Text(
                             AppLocalizations.of(context)!.tapToUploadDocument,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: AppTheme.textSecondary,
-                              fontSize: 14,
+                              fontSize: Responsive.sp(context, 14),
                               fontWeight: FontWeight.w500,
                             ),
+                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: Responsive.h(context, 4)),
                           Text(
                             AppLocalizations.of(
                               context,
@@ -409,47 +432,55 @@ class _BusinessVerificationScreenState
                               color: AppTheme.textSecondary.withValues(
                                 alpha: 0.7,
                               ),
-                              fontSize: 12,
+                              fontSize: Responsive.sp(context, 12),
                             ),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: Responsive.h(context, 20)),
 
             // Note Field
             Text(
               AppLocalizations.of(context)!.additionalNoteOptional,
-              style: const TextStyle(
-                fontSize: 14,
+              style: TextStyle(
+                fontSize: Responsive.sp(context, 14),
                 fontWeight: FontWeight.w600,
                 color: AppTheme.textPrimary,
               ),
             ),
-            const SizedBox(height: 8),
+            SizedBox(height: Responsive.h(context, 8)),
             TextFormField(
               controller: _noteController,
               maxLines: 3,
               decoration: InputDecoration(
                 hintText:
                     'Add any additional information about your business...',
-                prefixIcon: const Padding(
-                  padding: EdgeInsets.only(bottom: 50),
+                hintStyle: TextStyle(fontSize: Responsive.sp(context, 13)),
+                prefixIcon: Padding(
+                  padding: EdgeInsets.only(bottom: Responsive.h(context, 50)),
                   child: Icon(Icons.note_alt_outlined),
                 ),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   borderSide: const BorderSide(color: AppTheme.lightBlue),
                 ),
                 enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   borderSide: const BorderSide(color: AppTheme.lightBlue),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(
+                    Responsive.radius(context, 12),
+                  ),
                   borderSide: const BorderSide(
                     color: AppTheme.primaryBlue,
                     width: 2,
@@ -457,26 +488,28 @@ class _BusinessVerificationScreenState
                 ),
               ),
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: Responsive.h(context, 24)),
 
             // Submit Button
             SizedBox(
               width: double.infinity,
-              height: 52,
+              height: Responsive.h(context, 52).clamp(46.0, 58.0),
               child: ElevatedButton(
                 onPressed: _isSubmitting ? null : _submitRequest,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primaryBlue,
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(
+                      Responsive.radius(context, 12),
+                    ),
                   ),
                   elevation: 2,
                 ),
                 child: _isSubmitting
-                    ? const SizedBox(
-                        height: 24,
-                        width: 24,
+                    ? SizedBox(
+                        height: Responsive.w(context, 24),
+                        width: Responsive.w(context, 24),
                         child: CircularProgressIndicator(
                           color: Colors.white,
                           strokeWidth: 2.5,
@@ -484,10 +517,11 @@ class _BusinessVerificationScreenState
                       )
                     : Text(
                         AppLocalizations.of(context)!.submitVerificationRequest,
-                        style: const TextStyle(
-                          fontSize: 16,
+                        style: TextStyle(
+                          fontSize: Responsive.sp(context, 16),
                           fontWeight: FontWeight.bold,
                         ),
+                        textAlign: TextAlign.center,
                       ),
               ),
             ),
@@ -517,15 +551,15 @@ class _BusinessVerificationScreenState
 
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(Responsive.w(context, 20)),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(Responsive.radius(context, 16)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
+            blurRadius: Responsive.radius(context, 10),
+            offset: Offset(0, Responsive.h(context, 2)),
           ),
         ],
       ),
@@ -534,36 +568,36 @@ class _BusinessVerificationScreenState
         children: [
           Text(
             AppLocalizations.of(context)!.latestRequest,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: Responsive.sp(context, 16),
               fontWeight: FontWeight.bold,
               color: AppTheme.textPrimary,
             ),
           ),
-          const SizedBox(height: 16),
+          SizedBox(height: Responsive.h(context, 16)),
           _buildDetailRow(
             AppLocalizations.of(context)!.status,
             request.status.toUpperCase(),
             icon: statusIcon,
             valueColor: statusColor,
           ),
-          const Divider(height: 24),
+          Divider(height: Responsive.h(context, 24)),
           _buildDetailRow(
             AppLocalizations.of(context)!.documentType,
             _getDocumentTypeLabel(request.documentType),
           ),
-          const Divider(height: 24),
+          Divider(height: Responsive.h(context, 24)),
           _buildDetailRow(
             AppLocalizations.of(context)!.submitted,
             request.createdAt,
           ),
           if (request.note != null && request.note!.isNotEmpty) ...[
-            const Divider(height: 24),
+            Divider(height: Responsive.h(context, 24)),
             _buildDetailRow(AppLocalizations.of(context)!.note, request.note!),
           ],
           if (request.adminRemarks != null &&
               request.adminRemarks!.isNotEmpty) ...[
-            const Divider(height: 24),
+            Divider(height: Responsive.h(context, 24)),
             _buildDetailRow(
               AppLocalizations.of(context)!.adminRemarks,
               request.adminRemarks!,
@@ -571,7 +605,7 @@ class _BusinessVerificationScreenState
             ),
           ],
           if (request.isRejected) ...[
-            const SizedBox(height: 16),
+            SizedBox(height: Responsive.h(context, 16)),
             SizedBox(
               width: double.infinity,
               child: OutlinedButton.icon(
@@ -592,9 +626,13 @@ class _BusinessVerificationScreenState
                   foregroundColor: AppTheme.primaryBlue,
                   side: const BorderSide(color: AppTheme.primaryBlue),
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(
+                      Responsive.radius(context, 12),
+                    ),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: EdgeInsets.symmetric(
+                    vertical: Responsive.h(context, 12),
+                  ),
                 ),
               ),
             ),
@@ -614,28 +652,29 @@ class _BusinessVerificationScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          width: 110,
+          width: Responsive.w(context, 95).clamp(80.0, 120.0),
           child: Text(
             label,
-            style: const TextStyle(
-              fontSize: 13,
+            style: TextStyle(
+              fontSize: Responsive.sp(context, 13),
               color: AppTheme.textSecondary,
               fontWeight: FontWeight.w500,
             ),
           ),
         ),
         if (icon != null) ...[
-          Icon(icon, size: 16, color: valueColor),
-          const SizedBox(width: 4),
+          Icon(icon, size: Responsive.sp(context, 16), color: valueColor),
+          SizedBox(width: Responsive.w(context, 4)),
         ],
         Expanded(
           child: Text(
             value,
             style: TextStyle(
-              fontSize: 13,
+              fontSize: Responsive.sp(context, 13),
               fontWeight: FontWeight.w600,
               color: valueColor ?? AppTheme.textPrimary,
             ),
+            softWrap: true,
           ),
         ),
       ],
