@@ -286,6 +286,27 @@ class BusinessVerificationStatusView(APIView):
                 business=business
             ).order_by('-created_at').first()
 
+            verified_at = None
+            if business.is_verified:
+                latest_approved = BusinessVerificationRequest.objects.filter(
+                    business=business,
+                    status='approved'
+                ).order_by('-reviewed_at', '-updated_at', '-created_at').first()
+
+                verification_dt = None
+                if latest_approved:
+                    verification_dt = (
+                        latest_approved.reviewed_at
+                        or latest_approved.updated_at
+                        or latest_approved.created_at
+                    )
+                else:
+                    # Fallback for businesses marked verified outside request flow.
+                    verification_dt = business.updated_at
+
+                if verification_dt:
+                    verified_at = verification_dt.isoformat()
+
             has_pending = BusinessVerificationRequest.objects.filter(
                 business=business, status='pending'
             ).exists()
@@ -293,6 +314,7 @@ class BusinessVerificationStatusView(APIView):
             data = {
                 'is_verified': business.is_verified,
                 'has_pending_request': has_pending,
+                'verified_at': verified_at,
                 'latest_request': BusinessVerificationRequestSerializer(latest_request).data if latest_request else None
             }
 

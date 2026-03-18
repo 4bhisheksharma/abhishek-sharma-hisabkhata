@@ -203,6 +203,8 @@ class _BusinessVerificationScreenState
       subtitle = AppLocalizations.of(context)!.submitBusinessDocuments;
     }
 
+    final verifiedAt = status.verifiedAt;
+
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(Responsive.w(context, 20)),
@@ -246,9 +248,69 @@ class _BusinessVerificationScreenState
               height: 1.4,
             ),
           ),
+          if (status.isVerified &&
+              verifiedAt != null &&
+              verifiedAt.trim().isNotEmpty) ...[
+            SizedBox(height: Responsive.h(context, 10)),
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: Responsive.w(context, 12),
+                vertical: Responsive.h(context, 6),
+              ),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(Responsive.radius(context, 14)),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.event_available_rounded,
+                    size: Responsive.sp(context, 14),
+                    color: color,
+                  ),
+                  SizedBox(width: Responsive.w(context, 6)),
+                  Flexible(
+                    child: Text(
+                      'Verified on ${_formatDateLabel(verifiedAt)}',
+                      style: TextStyle(
+                        fontSize: Responsive.sp(context, 12),
+                        color: color,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );
+  }
+
+  String _formatDateLabel(String rawDate) {
+    try {
+      final parsed = DateTime.parse(rawDate).toLocal();
+      final monthNames = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      final month = monthNames[parsed.month - 1];
+      return '${parsed.day} $month ${parsed.year}';
+    } catch (_) {
+      return rawDate;
+    }
   }
 
   Widget _buildSubmissionForm(VerificationStatus? status) {

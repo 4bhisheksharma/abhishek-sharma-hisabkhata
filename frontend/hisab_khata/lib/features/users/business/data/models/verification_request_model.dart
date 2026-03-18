@@ -34,6 +34,7 @@ class VerificationStatusModel extends VerificationStatus {
   VerificationStatusModel({
     required super.isVerified,
     required super.hasPendingRequest,
+    super.verifiedAt,
     super.latestRequest,
   });
 
@@ -41,6 +42,7 @@ class VerificationStatusModel extends VerificationStatus {
     return VerificationStatusModel(
       isVerified: json['is_verified'] ?? false,
       hasPendingRequest: json['has_pending_request'] ?? false,
+      verifiedAt: json['verified_at'],
       latestRequest: json['latest_request'] != null
           ? VerificationRequestModel.fromJson(json['latest_request'])
           : null,

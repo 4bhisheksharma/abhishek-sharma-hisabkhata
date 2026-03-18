@@ -130,6 +130,7 @@ class BusinessVerificationStatusSerializer(serializers.Serializer):
     """Serializer for checking verification status"""
     is_verified = serializers.BooleanField()
     has_pending_request = serializers.BooleanField()
+    verified_at = serializers.DateTimeField(allow_null=True)
     latest_request = BusinessVerificationRequestSerializer(allow_null=True)
 
 

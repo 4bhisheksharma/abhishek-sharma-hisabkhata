@@ -31,11 +31,13 @@ class VerificationRequest {
 class VerificationStatus {
   final bool isVerified;
   final bool hasPendingRequest;
+  final String? verifiedAt;
   final VerificationRequest? latestRequest;
 
   const VerificationStatus({
     required this.isVerified,
     required this.hasPendingRequest,
+    this.verifiedAt,
     this.latestRequest,
   });
 }
