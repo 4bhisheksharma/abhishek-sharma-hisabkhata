@@ -259,7 +259,9 @@ class _BusinessVerificationScreenState
               ),
               decoration: BoxDecoration(
                 color: color.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(Responsive.radius(context, 14)),
+                borderRadius: BorderRadius.circular(
+                  Responsive.radius(context, 14),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
