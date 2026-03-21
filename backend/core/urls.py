@@ -78,6 +78,9 @@ urlpatterns = [
         
         # Real-time Chat
         path('chat/', include('realtime_chat.urls')),
+
+        # Hybrid Switch Requests
+        path('hybrid-switch/', include('hybrid_switch.urls')),
     ])),
 ]
 

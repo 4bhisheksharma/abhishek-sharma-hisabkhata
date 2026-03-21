@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'support_ticket.apps.SupportTicketConfig',
     'analytics.apps.AnalyticsConfig',
     'realtime_chat.apps.RealtimeChatConfig',
+    'hybrid_switch.apps.HybridSwitchConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
