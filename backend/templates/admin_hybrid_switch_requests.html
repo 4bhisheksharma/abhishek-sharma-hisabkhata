@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hybrid Switch Requests - Admin Panel</title>
+  {% load static %}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #00d09e;
+      --primary-dark: #00b386;
+      --sidebar-bg: #1a1d29;
+      --sidebar-hover: #2a2d3a;
+      --sidebar-active: rgba(0, 208, 158, 0.12);
+      --bg: #f0f2f5;
+      --card-bg: #ffffff;
+      --text-primary: #1a1d29;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+      --border: #e5e7eb;
+      --danger: #ef4444;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --info: #3b82f6;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text-primary); display: flex; min-height: 100vh; }
+    .main-content { flex: 1; margin-left: 260px; min-height: 100vh; }
+    .page-body { padding: 28px 32px; }
+    .topbar { background: var(--card-bg); padding: 16px 32px; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50; }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 16px;
+    }
+
+    .stat-label { color: var(--text-muted); font-size: 12px; }
+    .stat-value { font-size: 24px; font-weight: 700; margin-top: 6px; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filter-link {
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      background: #fff;
+    }
+
+    .filter-link.active {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(0, 208, 158, 0.08);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+      font-size: 13px;
+    }
+
+    th {
+      font-size: 11px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .badge-pending { background: #fffbeb; color: var(--warning); }
+    .badge-approved { background: #ecfdf5; color: var(--success); }
+    .badge-rejected { background: #fef2f2; color: var(--danger); }
+    .badge-draft { background: #eff6ff; color: var(--info); }
+
+    .review-form {
+      display: grid;
+      gap: 8px;
+      min-width: 260px;
+    }
+
+    .review-form textarea {
+      width: 100%;
+      min-height: 70px;
+      resize: vertical;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+    }
+
+    .btn-row { display: flex; gap: 8px; }
+
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      color: #fff;
+    }
+
+    .btn-approve { background: var(--success); }
+    .btn-reject { background: var(--danger); }
+
+    .meta { color: var(--text-secondary); font-size: 12px; margin-top: 4px; }
+    .empty-state { padding: 28px; text-align: center; color: var(--text-muted); }
+
+    .messages { margin-bottom: 14px; display: grid; gap: 8px; }
+    .message {
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid transparent;
+    }
+
+    .message.success { color: #065f46; background: #ecfdf5; border-color: #a7f3d0; }
+    .message.error { color: #991b1b; background: #fef2f2; border-color: #fecaca; }
+    .message.warning { color: #92400e; background: #fffbeb; border-color: #fde68a; }
+
+    @media (max-width: 768px) {
+      .main-content { margin-left: 0; }
+      .page-body { padding: 14px; }
+      table { display: block; overflow-x: auto; }
+    }
+  </style>
+</head>
+<body>
+  {% with active_page='hybrid_switch' %}
+  {% include 'includes/admin_sidebar.html' %}
+  {% endwith %}
+
+  <div class="main-content">
+    {% with page_title='Hybrid Switch Requests' page_subtitle='Approve or reject user hybrid switch requests with optional feedback' %}
+    {% include 'includes/admin_topbar.html' %}
+    {% endwith %}
+
+    <div class="page-body">
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+        <div class="message {{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-label">Total Requests</div><div class="stat-value">{{ total_count }}</div></div>
+        <div class="stat-card"><div class="stat-label">Pending</div><div class="stat-value">{{ pending_count }}</div></div>
+        <div class="stat-card"><div class="stat-label">Approved</div><div class="stat-value">{{ approved_count }}</div></div>
+        <div class="stat-card"><div class="stat-label">Rejected</div><div class="stat-value">{{ rejected_count }}</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h3>Requests</h3>
+          <div class="filters">
+            <a class="filter-link {% if status_filter == 'all' %}active{% endif %}" href="?status=all">All</a>
+            <a class="filter-link {% if status_filter == 'pending' %}active{% endif %}" href="?status=pending">Pending</a>
+            <a class="filter-link {% if status_filter == 'approved' %}active{% endif %}" href="?status=approved">Approved</a>
+            <a class="filter-link {% if status_filter == 'rejected' %}active{% endif %}" href="?status=rejected">Rejected</a>
+          </div>
+        </div>
+
+        {% if hybrid_requests %}
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>User</th>
+              <th>Type</th>
+              <th>Status</th>
+              <th>Citizenship</th>
+              <th>Review</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in hybrid_requests %}
+            <tr>
+              <td>#{{ item.hybrid_request_id }}</td>
+              <td>
+                <div><strong>{{ item.user.full_name }}</strong></div>
+                <div class="meta">{{ item.user.email }}</div>
+                <div class="meta">Submitted: {{ item.submitted_at|default:item.created_at }}</div>
+              </td>
+              <td>
+                <div>{{ item.account_type|title }}</div>
+                {% if item.account_type == 'business' %}
+                <div class="meta">Business Verified At Request: {{ item.is_business_verified_at_request|yesno:"Yes,No" }}</div>
+                {% endif %}
+              </td>
+              <td><span class="badge badge-{{ item.status }}">{{ item.status }}</span></td>
+              <td>
+                {% if item.citizenship_document %}
+                <a href="{{ item.citizenship_document.url }}" target="_blank">View Document</a>
+                {% else %}
+                <span class="meta">No document</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if item.status == 'pending' %}
+                <form method="post" class="review-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="request_id" value="{{ item.hybrid_request_id }}" />
+                  <textarea name="admin_remarks" placeholder="Optional feedback message"></textarea>
+                  <div class="btn-row">
+                    <button class="btn btn-approve" type="submit" name="decision" value="approved">Accept</button>
+                    <button class="btn btn-reject" type="submit" name="decision" value="rejected">Reject</button>
+                  </div>
+                </form>
+                {% else %}
+                <div class="meta">
+                  Reviewed by: {{ item.reviewed_by.full_name|default:'-' }}<br/>
+                  Reviewed at: {{ item.reviewed_at|default:'-' }}
+                </div>
+                {% if item.admin_remarks %}
+                <div class="meta" style="margin-top:6px;"><strong>Feedback:</strong> {{ item.admin_remarks }}</div>
+                {% endif %}
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">No hybrid switch requests found for this filter.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

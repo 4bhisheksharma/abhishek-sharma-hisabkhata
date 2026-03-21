@@ -28,6 +28,7 @@ from analytics.views import (
     admin_customers_view, admin_role_management_view,
     admin_support_tickets_view, admin_fraud_detection_view,
 )
+from hybrid_switch.views import admin_hybrid_switch_requests_view
 
 urlpatterns = [
     # Custom Admin Dashboard (must be before admin/)
@@ -41,6 +42,7 @@ urlpatterns = [
     path('admin/dashboard/analytics/', admin_analytics_view, name='admin_analytics'),
     path('admin/dashboard/fraud-detection/', admin_fraud_detection_view, name='admin_fraud_detection'),
     path('admin/dashboard/communication/', admin_communication_view, name='admin_communication'),
+    path('admin/dashboard/hybrid-switch/', admin_hybrid_switch_requests_view, name='admin_hybrid_switch_requests'),
     path('admin/dashboard/logout/', admin_logout_view, name='admin_logout'),
     path('admin/', admin.site.urls),
     # All API endpoints under 'api/'

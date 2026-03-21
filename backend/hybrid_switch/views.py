@@ -1,8 +1,11 @@
 from django.utils import timezone
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from django.shortcuts import render, redirect
 
 from .models import HybridSwitchRequest
 from .serializers import (
@@ -10,6 +13,7 @@ from .serializers import (
 	HybridSwitchSubmitSerializer,
 	HybridSwitchUploadSerializer,
 )
+from notification.models import Notification
 
 
 class HybridAccountStatusView(APIView):
@@ -241,3 +245,78 @@ class MyHybridSwitchRequestsView(APIView):
 			context={'request': request},
 		)
 		return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@staff_member_required
+def admin_hybrid_switch_requests_view(request):
+	"""Admin dashboard section for reviewing hybrid switch requests."""
+
+	if request.method == 'POST':
+		request_id = request.POST.get('request_id')
+		decision = request.POST.get('decision')
+		admin_remarks = (request.POST.get('admin_remarks') or '').strip()
+
+		if not request_id or decision not in ['approved', 'rejected']:
+			messages.error(request, 'Invalid review request payload.')
+			return redirect('admin_hybrid_switch_requests')
+
+		hybrid_request = HybridSwitchRequest.objects.filter(
+			hybrid_request_id=request_id
+		).first()
+		if not hybrid_request:
+			messages.error(request, 'Hybrid switch request not found.')
+			return redirect('admin_hybrid_switch_requests')
+
+		if hybrid_request.status != 'pending':
+			messages.warning(
+				request,
+				f'Request #{hybrid_request.hybrid_request_id} is already {hybrid_request.status}.',
+			)
+			return redirect('admin_hybrid_switch_requests')
+
+		hybrid_request.status = decision
+		hybrid_request.admin_remarks = admin_remarks or None
+		hybrid_request.reviewed_by = request.user
+		hybrid_request.reviewed_at = timezone.now()
+		hybrid_request.save(
+			update_fields=[
+				'status',
+				'admin_remarks',
+				'reviewed_by',
+				'reviewed_at',
+				'updated_at',
+			]
+		)
+
+		messages.success(
+			request,
+			f'Request #{hybrid_request.hybrid_request_id} {decision} successfully.',
+		)
+		return redirect('admin_hybrid_switch_requests')
+
+	status_filter = request.GET.get('status', 'pending')
+	allowed_statuses = ['all', 'pending', 'approved', 'rejected']
+	if status_filter not in allowed_statuses:
+		status_filter = 'pending'
+
+	requests_qs = HybridSwitchRequest.objects.select_related(
+		'user',
+		'reviewed_by',
+	)
+	if status_filter != 'all':
+		requests_qs = requests_qs.filter(status=status_filter)
+
+	context = {
+		'hybrid_requests': requests_qs,
+		'status_filter': status_filter,
+		'pending_count': HybridSwitchRequest.objects.filter(status='pending').count(),
+		'approved_count': HybridSwitchRequest.objects.filter(status='approved').count(),
+		'rejected_count': HybridSwitchRequest.objects.filter(status='rejected').count(),
+		'total_count': HybridSwitchRequest.objects.count(),
+		'unread_notifications': Notification.objects.filter(
+			receiver=request.user,
+			is_read=False,
+		).count(),
+		'admin_user': request.user,
+	}
+	return render(request, 'admin_hybrid_switch_requests.html', context)
