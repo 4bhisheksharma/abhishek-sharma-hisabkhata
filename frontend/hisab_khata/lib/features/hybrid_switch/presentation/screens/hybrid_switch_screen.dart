@@ -108,12 +108,24 @@ class _HybridSwitchPageState extends State<HybridSwitchPage> {
             }
 
             final loaded = state as HybridSwitchLoaded;
+            final latestRequest = loaded.latestRequest;
+            final isAlreadyApproved = latestRequest?.isApproved == true;
+            final hasPendingRequest = latestRequest?.isPending == true;
+            final allowRequestAction =
+                loaded.status.canRequest &&
+                !isAlreadyApproved &&
+                !hasPendingRequest;
 
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  if (isAlreadyApproved) ...[
+                    _buildApprovedCard(),
+                    const SizedBox(height: 14),
+                  ],
+
                   HybridSwitchCard(
                     status: loaded.status,
                     latestRequest: loaded.latestRequest,
@@ -121,6 +133,9 @@ class _HybridSwitchPageState extends State<HybridSwitchPage> {
                   const SizedBox(height: 16),
 
                   Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Column(
@@ -155,15 +170,53 @@ class _HybridSwitchPageState extends State<HybridSwitchPage> {
                             ],
                           ),
                           const SizedBox(height: 12),
+                          if (_selectedImage != null)
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.file(
+                                File(_selectedImage!.path),
+                                height: 180,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                                errorBuilder: (_, __, ___) => Container(
+                                  height: 180,
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                  color: Colors.grey.shade100,
+                                  child: const Text('Unable to preview image'),
+                                ),
+                              ),
+                            )
+                          else
+                            Container(
+                              height: 110,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.shade50,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.grey.shade300),
+                              ),
+                              alignment: Alignment.center,
+                              child: const Text(
+                                'No citizenship image selected.',
+                              ),
+                            ),
+                          const SizedBox(height: 8),
                           Text(
                             _selectedImage == null
-                                ? 'No file selected.'
+                                ? 'Please select a citizenship image.'
                                 : 'Selected: ${_selectedImage!.name}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey.shade700,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           ElevatedButton.icon(
                             onPressed:
-                                (_selectedImage == null || loaded.isUploading)
+                                (_selectedImage == null ||
+                                    loaded.isUploading ||
+                                    isAlreadyApproved)
                                 ? null
                                 : () {
                                     context.read<HybridSwitchBloc>().add(
@@ -196,8 +249,10 @@ class _HybridSwitchPageState extends State<HybridSwitchPage> {
 
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed:
-                        (!loaded.status.canRequest || loaded.isSubmitting)
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                    ),
+                    onPressed: (!allowRequestAction || loaded.isSubmitting)
                         ? null
                         : () {
                             context.read<HybridSwitchBloc>().add(
@@ -212,13 +267,61 @@ class _HybridSwitchPageState extends State<HybridSwitchPage> {
                             width: 16,
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
-                        : const Text('Request Switch to Hybrid'),
+                        : Text(
+                            isAlreadyApproved
+                                ? 'Already Approved'
+                                : hasPendingRequest
+                                ? 'Request Pending Review'
+                                : 'Request Switch to Hybrid',
+                          ),
                   ),
                 ],
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _buildApprovedCard() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+        gradient: const LinearGradient(
+          colors: [Color(0xFFE8F5E9), Color(0xFFF1F8E9)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(color: const Color(0xFF81C784)),
+      ),
+      padding: const EdgeInsets.all(14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: const [
+          Icon(Icons.verified, color: Color(0xFF2E7D32), size: 24),
+          SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Hybrid Switch Approved',
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1B5E20),
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  'Your request has already been approved. You cannot submit another request.',
+                  style: TextStyle(color: Color(0xFF33691E), fontSize: 12.5),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
