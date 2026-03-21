@@ -1,9 +1,17 @@
 from django.conf import settings
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class HybridSwitchRequest(models.Model):
 	"""Stores user requests to switch account mode to hybrid."""
+	FINAL_STATUSES = {'rejected'}
+	ALLOWED_STATUS_TRANSITIONS = {
+		'draft': {'draft', 'pending'},
+		'pending': {'pending', 'approved', 'rejected'},
+		'approved': {'approved', 'pending'},
+		'rejected': {'rejected'},
+	}
 
 	ACCOUNT_TYPE_CHOICES = [
 		('business', 'Business'),
@@ -48,6 +56,36 @@ class HybridSwitchRequest(models.Model):
 		indexes = [
 			models.Index(fields=['user', 'status']),
 		]
+
+	def clean(self):
+		super().clean()
+
+		if not self.pk:
+			return
+
+		previous_status = (
+			HybridSwitchRequest.objects.filter(pk=self.pk)
+			.values_list('status', flat=True)
+			.first()
+		)
+
+		if not previous_status or previous_status == self.status:
+			return
+
+		allowed_statuses = self.ALLOWED_STATUS_TRANSITIONS.get(previous_status, {previous_status})
+		if self.status not in allowed_statuses:
+			raise ValidationError(
+				{
+					'status': (
+						f'Invalid status transition from "{previous_status}" to "{self.status}". '
+						'Only approved requests can be moved back to pending; rejected is immutable.'
+					)
+				}
+			)
+
+	def save(self, *args, **kwargs):
+		self.full_clean()
+		return super().save(*args, **kwargs)
 
 	def __str__(self):
 		return f'HybridSwitchRequest#{self.hybrid_request_id} {self.user.email} ({self.status})'

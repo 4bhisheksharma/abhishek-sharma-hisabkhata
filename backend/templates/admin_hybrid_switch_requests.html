@@ -343,6 +343,7 @@
 
     .btn-approve { background: var(--success); }
     .btn-reject { background: var(--danger); }
+    .btn-unapprove { background: var(--warning); color: #111827; }
 
     .meta { color: var(--text-secondary); font-size: 12px; margin-top: 4px; }
     .empty-state { padding: 28px; text-align: center; color: var(--text-muted); }
@@ -451,6 +452,16 @@
                     <button class="btn btn-reject" type="submit" name="decision" value="rejected">Reject</button>
                   </div>
                 </form>
+                {% elif item.status == 'approved' %}
+                <form method="post" class="review-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="request_id" value="{{ item.hybrid_request_id }}" />
+                  <textarea name="admin_remarks" placeholder="Optional reason for unapproving"></textarea>
+                  <div class="btn-row">
+                    <button class="btn btn-unapprove" type="submit" name="decision" value="unapprove">Unapprove</button>
+                  </div>
+                </form>
+                <div class="meta">This moves request back to pending for re-review.</div>
                 {% else %}
                 <div class="meta">
                   Reviewed by: {{ item.reviewed_by.full_name|default:'-' }}<br/>

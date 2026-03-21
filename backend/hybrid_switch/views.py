@@ -1,4 +1,5 @@
 from django.utils import timezone
+from django.db import transaction
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from rest_framework import status
@@ -256,41 +257,58 @@ def admin_hybrid_switch_requests_view(request):
 		decision = request.POST.get('decision')
 		admin_remarks = (request.POST.get('admin_remarks') or '').strip()
 
-		if not request_id or decision not in ['approved', 'rejected']:
+		if not request_id or decision not in ['approved', 'rejected', 'unapprove']:
 			messages.error(request, 'Invalid review request payload.')
 			return redirect('admin_hybrid_switch_requests')
 
-		hybrid_request = HybridSwitchRequest.objects.filter(
-			hybrid_request_id=request_id
-		).first()
-		if not hybrid_request:
-			messages.error(request, 'Hybrid switch request not found.')
-			return redirect('admin_hybrid_switch_requests')
-
-		if hybrid_request.status != 'pending':
-			messages.warning(
-				request,
-				f'Request #{hybrid_request.hybrid_request_id} is already {hybrid_request.status}.',
+		with transaction.atomic():
+			hybrid_request = (
+				HybridSwitchRequest.objects.select_for_update()
+				.filter(hybrid_request_id=request_id)
+				.first()
 			)
-			return redirect('admin_hybrid_switch_requests')
+			if not hybrid_request:
+				messages.error(request, 'Hybrid switch request not found.')
+				return redirect('admin_hybrid_switch_requests')
 
-		hybrid_request.status = decision
-		hybrid_request.admin_remarks = admin_remarks or None
-		hybrid_request.reviewed_by = request.user
-		hybrid_request.reviewed_at = timezone.now()
-		hybrid_request.save(
-			update_fields=[
-				'status',
-				'admin_remarks',
-				'reviewed_by',
-				'reviewed_at',
-				'updated_at',
-			]
-		)
+			if decision in ['approved', 'rejected'] and hybrid_request.status != 'pending':
+				messages.warning(
+					request,
+					f'Request #{hybrid_request.hybrid_request_id} is already {hybrid_request.status}.',
+				)
+				return redirect('admin_hybrid_switch_requests')
+
+			if decision == 'unapprove' and hybrid_request.status != 'approved':
+				messages.warning(
+					request,
+					f'Only approved requests can be unapproved. Current status: {hybrid_request.status}.',
+				)
+				return redirect('admin_hybrid_switch_requests')
+
+			if decision == 'unapprove':
+				hybrid_request.status = 'pending'
+				if admin_remarks:
+					hybrid_request.admin_remarks = admin_remarks
+				hybrid_request.reviewed_by = None
+				hybrid_request.reviewed_at = None
+			else:
+				hybrid_request.status = decision
+				hybrid_request.admin_remarks = admin_remarks or None
+				hybrid_request.reviewed_by = request.user
+				hybrid_request.reviewed_at = timezone.now()
+			hybrid_request.save(
+				update_fields=[
+					'status',
+					'admin_remarks',
+					'reviewed_by',
+					'reviewed_at',
+					'updated_at',
+				]
+			)
 
 		messages.success(
 			request,
-			f'Request #{hybrid_request.hybrid_request_id} {decision} successfully.',
+			f'Request #{hybrid_request.hybrid_request_id} {"moved back to pending" if decision == "unapprove" else decision} successfully.',
 		)
 		return redirect('admin_hybrid_switch_requests')
 

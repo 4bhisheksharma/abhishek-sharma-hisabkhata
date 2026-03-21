@@ -23,3 +23,9 @@ class HybridSwitchRequestAdmin(admin.ModelAdmin):
 	search_fields = ['user__email', 'user__full_name']
 	readonly_fields = ['created_at', 'updated_at', 'submitted_at', 'reviewed_at']
 	ordering = ['-created_at']
+
+	def get_readonly_fields(self, request, obj=None):
+		readonly = list(super().get_readonly_fields(request, obj))
+		if obj and obj.status in HybridSwitchRequest.FINAL_STATUSES:
+			readonly.extend(['status', 'admin_remarks', 'reviewed_by'])
+		return readonly
