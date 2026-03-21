@@ -11,6 +11,7 @@ import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 import 'package:hisab_khata/shared/widgets/language_switcher.dart';
 import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
+import 'package:hisab_khata/features/hybrid_switch/data/datasources/hybrid_switch_remote_datasource.dart';
 import 'package:hisab_khata/features/users/shared/presentation/screens/hybrid_request_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
@@ -25,11 +26,25 @@ class CustomerProfileViewScreen extends StatefulWidget {
 
 class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
   bool _profileReloadRequested = false;
+  bool _isHybridApproved = false;
 
   @override
   void initState() {
     super.initState();
     context.read<CustomerBloc>().add(const LoadCustomerProfile());
+    _loadHybridApprovalStatus();
+  }
+
+  Future<void> _loadHybridApprovalStatus() async {
+    try {
+      final remote = HybridSwitchRemoteDatasourceImpl();
+      final requests = await remote.getMyRequests();
+      final approved = requests.any((request) => request.isApproved);
+      if (!mounted) return;
+      setState(() => _isHybridApproved = approved);
+    } catch (_) {
+      // Keep false silently when status cannot be fetched.
+    }
   }
 
   @override
@@ -331,6 +346,39 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                 letterSpacing: -0.3,
               ),
             ),
+
+            if (_isHybridApproved) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFF3C4).withValues(alpha: 0.95),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.workspace_premium,
+                      color: Color(0xFF8A6D00),
+                      size: 16,
+                    ),
+                    SizedBox(width: 4),
+                    Text(
+                      'Hybrid Verified',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Color(0xFF8A6D00),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             const SizedBox(height: 24),
           ],
