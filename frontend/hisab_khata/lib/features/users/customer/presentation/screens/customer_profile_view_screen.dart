@@ -11,6 +11,7 @@ import 'package:hisab_khata/shared/widgets/my_bottom_nav_bar.dart';
 import 'package:hisab_khata/shared/widgets/language_switcher.dart';
 import 'package:hisab_khata/shared/widgets/dialogs/change_password_dialog.dart';
 import 'package:hisab_khata/l10n/app_localizations.dart';
+import 'package:hisab_khata/features/users/shared/presentation/screens/hybrid_request_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 
@@ -167,7 +168,14 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             iconColor: const Color(0xFF9C27B0),
                             iconBgColor: const Color(0xFFF3E5F5),
                             title: AppLocalizations.of(context)!.switchToHybrid,
-                            onTap: () => debugPrint("Switch to Hybrid tapped"),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const HybridRequestScreen(
+                                  isBusinessAccount: false,
+                                ),
+                              ),
+                            ),
                           ),
                           _divider(),
                           _buildMenuItem(
