@@ -11,13 +11,18 @@ class BusinessDashboardSerializer(serializers.ModelSerializer):
     to_take = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
     total_customers = serializers.IntegerField(read_only=True)
     total_requests = serializers.IntegerField(read_only=True)
+    is_hybrid_active = serializers.SerializerMethodField()
     
     class Meta:
         model = Business
         fields = [
             'business_id', 'business_name', 'profile_picture',
-            'to_give', 'to_take', 'total_customers', 'total_requests'
+            'to_give', 'to_take', 'total_customers', 'total_requests',
+            'is_hybrid_active'
         ]
+
+    def get_is_hybrid_active(self, obj):
+        return hasattr(obj.user, 'business_profile') and hasattr(obj.user, 'customer_profile')
 
 
 class BusinessProfileSerializer(serializers.ModelSerializer):
@@ -32,14 +37,18 @@ class BusinessProfileSerializer(serializers.ModelSerializer):
     latitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
     longitude = serializers.DecimalField(max_digits=10, decimal_places=7, required=False, allow_null=True)
     address = serializers.CharField(required=False, allow_null=True, allow_blank=True)
+    is_hybrid_active = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = Business
         fields = [
             'business_name', 'full_name', 'phone_number', 
             'profile_picture', 'email', 'is_verified', 'preferred_language',
-            'latitude', 'longitude', 'address'
+            'latitude', 'longitude', 'address', 'is_hybrid_active'
         ]
+
+    def get_is_hybrid_active(self, obj):
+        return hasattr(obj.user, 'business_profile') and hasattr(obj.user, 'customer_profile')
     
     def update(self, instance, validated_data):
         """Update business profile - updates both Business and User model fields"""

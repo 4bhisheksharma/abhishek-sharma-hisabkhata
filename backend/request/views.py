@@ -29,6 +29,44 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def _resolve_customer_business_profiles(sender, receiver):
+    """Resolve relationship orientation from a request pair.
+
+    For hybrid users, sender direction is used when both orientations are possible.
+    """
+    sender_has_customer = hasattr(sender, 'customer_profile')
+    sender_has_business = hasattr(sender, 'business_profile')
+    receiver_has_customer = hasattr(receiver, 'customer_profile')
+    receiver_has_business = hasattr(receiver, 'business_profile')
+
+    if sender_has_customer and receiver_has_business:
+        return sender.customer_profile, receiver.business_profile
+
+    if sender_has_business and receiver_has_customer:
+        return receiver.customer_profile, sender.business_profile
+
+    return None, None
+
+
+def _get_relationship_for_users(current_user, other_user):
+    """Find relationship between two users in either valid direction."""
+    candidates = []
+    if hasattr(current_user, 'customer_profile') and hasattr(other_user, 'business_profile'):
+        candidates.append((current_user.customer_profile, other_user.business_profile))
+    if hasattr(current_user, 'business_profile') and hasattr(other_user, 'customer_profile'):
+        candidates.append((other_user.customer_profile, current_user.business_profile))
+
+    for customer_profile, business_profile in candidates:
+        relationship = CustomerBusinessRelationship.objects.filter(
+            customer=customer_profile,
+            business=business_profile,
+        ).first()
+        if relationship:
+            return relationship
+
+    return None
+
+
 class UserSearchPagination(PageNumberPagination):
     """Pagination for user search/list endpoint"""
     page_size = 20
@@ -360,25 +398,10 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             pending_due = 0.00
             current_user = request.user
             
-            # Determine customer and business from the connection
-            if hasattr(current_user, 'customer_profile') and hasattr(other_user, 'business_profile'):
-                # Current user is customer, other is business
-                relationship = CustomerBusinessRelationship.objects.filter(
-                    customer=current_user.customer_profile,
-                    business=other_user.business_profile
-                ).first()
-                if relationship:
-                    relationship_id = relationship.relationship_id
-                    pending_due = float(relationship.pending_due)
-            elif hasattr(current_user, 'business_profile') and hasattr(other_user, 'customer_profile'):
-                # Current user is business, other is customer
-                relationship = CustomerBusinessRelationship.objects.filter(
-                    customer=other_user.customer_profile,
-                    business=current_user.business_profile
-                ).first()
-                if relationship:
-                    relationship_id = relationship.relationship_id
-                    pending_due = float(relationship.pending_due)
+            relationship = _get_relationship_for_users(current_user, other_user)
+            if relationship:
+                relationship_id = relationship.relationship_id
+                pending_due = float(relationship.pending_due)
             
             user_data['relationship_id'] = relationship_id
             user_data['pending_due'] = pending_due
@@ -431,17 +454,7 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
             other_user = connection_request.receiver if connection_request.sender == request.user else connection_request.sender
             
             # Check for pending dues in CustomerBusinessRelationship
-            relationship = None
-            if hasattr(request.user, 'customer_profile') and hasattr(other_user, 'business_profile'):
-                relationship = CustomerBusinessRelationship.objects.filter(
-                    customer=request.user.customer_profile,
-                    business=other_user.business_profile
-                ).first()
-            elif hasattr(request.user, 'business_profile') and hasattr(other_user, 'customer_profile'):
-                relationship = CustomerBusinessRelationship.objects.filter(
-                    customer=other_user.customer_profile,
-                    business=request.user.business_profile
-                ).first()
+            relationship = _get_relationship_for_users(request.user, other_user)
             
             # Check if there are pending dues
             if relationship and relationship.pending_due != 0:
@@ -560,9 +573,17 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         
         # If accepted, create CustomerBusinessRelationship
         if status_text == 'accepted':
-            connection_request.status = status_text
-            connection_request.save()
-            self._create_customer_business_relationship(connection_request)
+            from django.db import transaction
+            try:
+                with transaction.atomic():
+                    self._create_customer_business_relationship(connection_request)
+                    connection_request.status = status_text
+                    connection_request.save()
+            except ValueError as exc:
+                return Response(
+                    {'error': str(exc)},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
         elif status_text == 'rejected':
             # Delete rejected requests immediately to allow re-sending
             connection_request.delete()
@@ -641,9 +662,17 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
                     
                     # If accepted, update and create CustomerBusinessRelationship
                     if new_status == 'accepted':
+                        try:
+                            self._create_customer_business_relationship(connection_request)
+                        except ValueError as exc:
+                            results['failed'].append({
+                                'request_id': request_id,
+                                'error': str(exc),
+                            })
+                            continue
+
                         connection_request.status = new_status
                         connection_request.save()
-                        self._create_customer_business_relationship(connection_request)
                     elif new_status == 'rejected':
                         # Delete rejected requests immediately to allow re-sending
                         connection_request.delete()
@@ -702,28 +731,13 @@ class ConnectionRequestViewSet(viewsets.ModelViewSet):
         sender = connection_request.sender
         receiver = connection_request.receiver
         
-        # Determine who is customer and who is business
-        customer = None
-        business = None
-        
-        # Check if sender has customer profile
-        if hasattr(sender, 'customer_profile'):
-            customer = sender.customer_profile
-        # Check if sender has business profile
-        if hasattr(sender, 'business_profile'):
-            business = sender.business_profile
-            
-        # Check if receiver has customer profile
-        if hasattr(receiver, 'customer_profile'):
-            customer = receiver.customer_profile
-        # Check if receiver has business profile
-        if hasattr(receiver, 'business_profile'):
-            business = receiver.business_profile
-        
-        # Only create relationship if we have both customer and business
-        if customer and business:
-            CustomerBusinessRelationship.objects.get_or_create(
-                customer=customer,
-                business=business,
-                defaults={'pending_due': 0.00}
-            )
+        customer, business = _resolve_customer_business_profiles(sender, receiver)
+
+        if not customer or not business:
+            raise ValueError('Cannot create relationship: one user must act as customer and the other as business.')
+
+        CustomerBusinessRelationship.objects.get_or_create(
+            customer=customer,
+            business=business,
+            defaults={'pending_due': 0.00}
+        )

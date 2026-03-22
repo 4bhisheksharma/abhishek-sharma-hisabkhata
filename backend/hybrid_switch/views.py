@@ -14,7 +14,23 @@ from .serializers import (
 	HybridSwitchSubmitSerializer,
 	HybridSwitchUploadSerializer,
 )
+from business_dashboard.models import Business
+from customer_dashboard.models import Customer
 from notification.models import Notification
+
+
+def _activate_hybrid_mode_for_user(user):
+	"""Ensure approved hybrid users have both business and customer profiles."""
+	if not hasattr(user, 'customer_profile'):
+		Customer.objects.create(user=user)
+
+	if not hasattr(user, 'business_profile'):
+		base_name = (user.full_name or '').strip() or user.email or f'User {user.user_id}'
+		Business.objects.create(
+			user=user,
+			business_name=f"{base_name}'s Business",
+			is_verified=False,
+		)
 
 
 class HybridAccountStatusView(APIView):
@@ -296,6 +312,8 @@ def admin_hybrid_switch_requests_view(request):
 				hybrid_request.admin_remarks = admin_remarks or None
 				hybrid_request.reviewed_by = request.user
 				hybrid_request.reviewed_at = timezone.now()
+				if decision == 'approved':
+					_activate_hybrid_mode_for_user(hybrid_request.user)
 			hybrid_request.save(
 				update_fields=[
 					'status',

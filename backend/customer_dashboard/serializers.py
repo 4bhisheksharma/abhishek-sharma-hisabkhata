@@ -13,13 +13,14 @@ class CustomerDashboardSerializer(serializers.ModelSerializer):
     pending_requests = serializers.IntegerField(read_only=True)
     recent_transactions = serializers.ListField(read_only=True)
     loyalty_points = serializers.IntegerField(read_only=True)
+    is_hybrid_active = serializers.SerializerMethodField()
     
     class Meta:
         model = Customer
         fields = [
             'customer_id', 'full_name', 'profile_picture',
             'to_give', 'to_take', 'total_shops', 'pending_requests',
-            'recent_transactions', 'loyalty_points'
+            'recent_transactions', 'loyalty_points', 'is_hybrid_active'
         ]
     
     def get_profile_picture(self, obj):
@@ -27,6 +28,9 @@ class CustomerDashboardSerializer(serializers.ModelSerializer):
         if obj.user.profile_picture:
             return f"/media/{obj.user.profile_picture}"
         return None
+
+    def get_is_hybrid_active(self, obj):
+        return hasattr(obj.user, 'business_profile') and hasattr(obj.user, 'customer_profile')
 
 
 class CustomerProfileSerializer(serializers.ModelSerializer):
@@ -37,11 +41,13 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
     profile_picture = serializers.ImageField(source='user.profile_picture', required=False, allow_null=True, write_only=True)
     profile_picture_url = serializers.SerializerMethodField(read_only=True)
     preferred_language = serializers.CharField(source='user.preferred_language', required=False)
+    is_hybrid_active = serializers.SerializerMethodField(read_only=True)
     
     class Meta:
         model = Customer
         fields = [
-            'full_name', 'phone_number', 'profile_picture', 'profile_picture_url', 'email', 'preferred_language'
+            'full_name', 'phone_number', 'profile_picture', 'profile_picture_url', 'email', 'preferred_language',
+            'is_hybrid_active'
         ]
     
     def get_profile_picture_url(self, obj):
@@ -49,6 +55,9 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
         if obj.user.profile_picture:
             return f"/media/{obj.user.profile_picture}"
         return None
+
+    def get_is_hybrid_active(self, obj):
+        return hasattr(obj.user, 'business_profile') and hasattr(obj.user, 'customer_profile')
     
     def to_representation(self, instance):
         """Override to return profile_picture_url as profile_picture"""
