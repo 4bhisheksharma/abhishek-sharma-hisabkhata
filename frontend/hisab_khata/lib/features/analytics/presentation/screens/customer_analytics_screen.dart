@@ -9,6 +9,7 @@ import 'package:hisab_khata/features/analytics/presentation/widgets/monthly_tren
 import 'package:hisab_khata/features/analytics/presentation/widgets/monthly_spending_progress_widget.dart';
 import 'package:hisab_khata/features/analytics/presentation/widgets/analytics_stat_card.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
+import 'package:hisab_khata/core/utils/pdf_generator.dart';
 import 'package:hisab_khata/shared/widgets/shimmer/shimmer_widgets.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_activity_section.dart';
 import 'package:hisab_khata/shared/widgets/profile/transaction_calendar_widget.dart';
@@ -41,6 +42,39 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.analytics),
+        actions: [
+          BlocBuilder<AnalyticsBloc, AnalyticsState>(
+            builder: (context, state) {
+              if (state is AnalyticsDataLoaded) {
+                return IconButton(
+                  icon: const Icon(Icons.picture_as_pdf),
+                  tooltip: 'Download PDF Report',
+                  onPressed: () async {
+                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                    
+                    try {
+                      scaffoldMessenger.showSnackBar(
+                        const SnackBar(content: Text('Generating PDF...')),
+                      );
+                      await PdfGenerator.generateAndPreviewAnalyticsPdf(
+                        state,
+                        isBusiness: false,
+                      );
+                    } catch (e) {
+                      scaffoldMessenger.showSnackBar(
+                        SnackBar(content: Text('Failed to generate PDF: $e')),
+                      );
+                    }
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           _loadAnalytics();
