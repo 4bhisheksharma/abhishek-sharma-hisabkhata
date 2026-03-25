@@ -42,39 +42,6 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.analytics),
-        actions: [
-          BlocBuilder<AnalyticsBloc, AnalyticsState>(
-            builder: (context, state) {
-              if (state is AnalyticsDataLoaded) {
-                return IconButton(
-                  icon: const Icon(Icons.picture_as_pdf),
-                  tooltip: 'Download PDF Report',
-                  onPressed: () async {
-                    final scaffoldMessenger = ScaffoldMessenger.of(context);
-                    
-                    try {
-                      scaffoldMessenger.showSnackBar(
-                        const SnackBar(content: Text('Generating PDF...')),
-                      );
-                      await PdfGenerator.generateAndPreviewAnalyticsPdf(
-                        state,
-                        isBusiness: false,
-                      );
-                    } catch (e) {
-                      scaffoldMessenger.showSnackBar(
-                        SnackBar(content: Text('Failed to generate PDF: $e')),
-                      );
-                    }
-                  },
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ],
-      ),
       body: RefreshIndicator(
         onRefresh: () async {
           _loadAnalytics();
@@ -145,11 +112,38 @@ class _CustomerAnalyticsScreenState extends State<CustomerAnalyticsScreen> {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                AppLocalizations.of(context)!.overview,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      AppLocalizations.of(context)!.overview,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.picture_as_pdf),
+                    tooltip: 'Download PDF Report',
+                    onPressed: () async {
+                      final scaffoldMessenger = ScaffoldMessenger.of(context);
+
+                      try {
+                        scaffoldMessenger.showSnackBar(
+                          const SnackBar(content: Text('Generating PDF...')),
+                        );
+                        await PdfGenerator.generateAndPreviewAnalyticsPdf(
+                          state,
+                          isBusiness: false,
+                        );
+                      } catch (e) {
+                        scaffoldMessenger.showSnackBar(
+                          SnackBar(content: Text('Failed to generate PDF: $e')),
+                        );
+                      }
+                    },
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               isSmallScreen

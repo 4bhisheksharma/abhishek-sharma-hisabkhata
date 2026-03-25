@@ -19,8 +19,6 @@ class PdfGenerator {
         margin: const pw.EdgeInsets.all(32),
         build: (pw.Context context) {
           return [
-            _buildHeader(isBusiness),
-            pw.SizedBox(height: 20),
             _buildOverviewCards(data, isBusiness),
             pw.SizedBox(height: 20),
             _buildRevenueSection(data),
@@ -50,24 +48,20 @@ class PdfGenerator {
     await OpenFile.open(file.path);
   }
 
-  static pw.Widget _buildHeader(bool isBusiness) {
+  static pw.Widget _buildOverviewCards(
+    AnalyticsDataLoaded data,
+    bool isBusiness,
+  ) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Text(
-          'Hisab Khata',
+          isBusiness ? 'Business Overview' : 'Customer Overview',
           style: pw.TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: pw.FontWeight.bold,
             color: PdfColors.teal,
           ),
-        ),
-        pw.SizedBox(height: 4),
-        pw.Text(
-          isBusiness
-              ? 'Business Analytics Report'
-              : 'Customer Analytics Report',
-          style: pw.TextStyle(fontSize: 18, color: PdfColors.grey700),
         ),
         pw.SizedBox(height: 4),
         pw.Text(
@@ -75,26 +69,21 @@ class PdfGenerator {
           style: pw.TextStyle(fontSize: 12, color: PdfColors.grey600),
         ),
         pw.Divider(color: PdfColors.grey400),
-      ],
-    );
-  }
-
-  static pw.Widget _buildOverviewCards(
-    AnalyticsDataLoaded data,
-    bool isBusiness,
-  ) {
-    return pw.Row(
-      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-      children: [
-        _buildStatCard(
-          'Total Transactions',
-          '${data.totalTransactions ?? 0}',
-          PdfColors.blue,
-        ),
-        _buildStatCard(
-          isBusiness ? 'Total Revenue' : 'Total Spent',
-          'Rs. ${data.totalAmount?.toStringAsFixed(2) ?? "0.00"}',
-          PdfColors.green,
+        pw.SizedBox(height: 16),
+        pw.Row(
+          mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+          children: [
+            _buildStatCard(
+              'Total Transactions',
+              '${data.totalTransactions ?? 0}',
+              PdfColors.blue,
+            ),
+            _buildStatCard(
+              isBusiness ? 'Total Revenue' : 'Total Spent',
+              'Rs. ${data.totalAmount?.toStringAsFixed(2) ?? "0.00"}',
+              PdfColors.green,
+            ),
+          ],
         ),
       ],
     );
@@ -226,7 +215,7 @@ class PdfGenerator {
               ),
               if (data.isOverBudget == true)
                 pw.Text(
-                  '⚠️ Over Budget!',
+                  'Over Budget!',
                   style: pw.TextStyle(
                     fontSize: 14,
                     color: PdfColors.red,
