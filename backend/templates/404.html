@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Page Not Found | Hisab Khata{% endblock %}
+
+{% block body %}
+<div class="error-bg min-vh-100 d-flex align-items-center py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="error-card text-center p-4 p-md-5">
+          <img src="{% static 'images/hisab-khata-logo.png' %}" alt="Hisab Khata Logo" class="error-logo mb-3" />
+          <h1 class="display-3 fw-bold text-success mb-2">404</h1>
+          <h4 class="fw-semibold mb-2">Oops! Page Not Found</h4>
+          <p class="text-muted mb-4">
+            The page you are looking for does not exist or has been moved.
+          </p>
+          <a href="/" class="btn btn-success btn-lg px-4">
+            <i class="fa-solid fa-house me-2"></i>Back To Landing Page
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .error-bg {
+    background: radial-gradient(circle at 50% 0%, rgba(0, 208, 158, 0.18), transparent 45%),
+      linear-gradient(180deg, #f4fffb 0%, #edfff8 100%);
+  }
+
+  .error-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid rgba(0, 208, 158, 0.24);
+    box-shadow: 0 20px 35px rgba(0, 168, 126, 0.15);
+  }
+
+  .error-logo {
+    width: 86px;
+    height: 86px;
+    object-fit: contain;
+  }
+</style>
+{% endblock %}

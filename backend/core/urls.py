@@ -29,8 +29,10 @@ from analytics.views import (
     admin_support_tickets_view, admin_fraud_detection_view,
 )
 from hybrid_switch.views import admin_hybrid_switch_requests_view
+from core.views import landing_page, custom_404
 
 urlpatterns = [
+    path('', landing_page, name='landing_page'),
     # Custom Admin Dashboard (must be before admin/)
     path('admin/dashboard/', admin_dashboard_view, name='admin_dashboard'),
     path('admin/dashboard/users/', admin_user_management_view, name='admin_user_management'),
@@ -89,3 +91,5 @@ urlpatterns = [
 # Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+handler404 = 'core.views.custom_404'

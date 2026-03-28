@@ -11,12 +11,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ===== SECURITY =====
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this')
-
-# True for local, False in production
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# Allowed domains
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '*').split(',')
+# Allowed hosts
+if DEBUG:
+    # Local development
+    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
+    CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
+else:
+    # Production
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') 
+    CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
 
 # ===== APPS =====  
 
