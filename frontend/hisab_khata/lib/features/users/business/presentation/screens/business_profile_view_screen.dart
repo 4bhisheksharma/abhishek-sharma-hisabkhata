@@ -224,6 +224,25 @@ class _BusinessProfileViewScreenState extends State<BusinessProfileViewScreen> {
                             onTap: () {},
                           ),
                           _divider(),
+                          // if (_isHybridApproved)
+                          //   _buildMenuItem(
+                          //     icon: Icons.person_outline,
+                          //     iconColor: const Color(0xFF1976D2),
+                          //     iconBgColor: const Color(0xFFE3F2FD),
+                          //     title: 'Switch to Customer Mode',
+                          //     onTap: () async {
+                          //       await StorageService.updateUserData(
+                          //         role: 'customer',
+                          //       );
+                          //       if (context.mounted) {
+                          //         Navigator.pushReplacementNamed(
+                          //           context,
+                          //           '/customer_home',
+                          //         );
+                          //       }
+                          //     },
+                          //   )
+                          // else
                           _buildMenuItem(
                             icon: Icons.people_outline,
                             iconColor: const Color(0xFF9C27B0),

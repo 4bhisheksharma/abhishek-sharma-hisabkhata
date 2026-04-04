@@ -21,8 +21,14 @@ from notification.models import Notification
 
 def _activate_hybrid_mode_for_user(user):
 	"""Ensure approved hybrid users have both business and customer profiles."""
+	from hisabauth.models import Role, UserRole
+
 	if not hasattr(user, 'customer_profile'):
 		Customer.objects.create(user=user)
+	
+	# Ensure customer role exists
+	cust_role, _ = Role.objects.get_or_create(name='customer')
+	UserRole.objects.get_or_create(user=user, role=cust_role)
 
 	if not hasattr(user, 'business_profile'):
 		base_name = (user.full_name or '').strip() or user.email or f'User {user.user_id}'
@@ -31,8 +37,10 @@ def _activate_hybrid_mode_for_user(user):
 			business_name=f"{base_name}'s Business",
 			is_verified=False,
 		)
-
-
+	
+	# Ensure business role exists
+	biz_role, _ = Role.objects.get_or_create(name='business')
+	UserRole.objects.get_or_create(user=user, role=biz_role)
 class HybridAccountStatusView(APIView):
 	permission_classes = [IsAuthenticated]
 

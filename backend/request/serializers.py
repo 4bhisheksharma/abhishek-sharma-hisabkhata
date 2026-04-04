@@ -130,6 +130,12 @@ class SendRequestSerializer(serializers.Serializer):
             if receiver.user_id == request.user.user_id:
                 raise serializers.ValidationError("You cannot send a request to yourself")
             
+            # Prevent customer-to-customer connection
+            sender_is_biz = hasattr(request.user, 'business_profile')
+            receiver_is_biz = hasattr(receiver, 'business_profile')
+            if not sender_is_biz and not receiver_is_biz:
+                raise serializers.ValidationError("Cannot send request: both users are only customers. At least one must be a business or hybrid account.")
+            
             # Store the receiver in validated data for the view to use
             data['receiver'] = receiver
             
@@ -213,6 +219,16 @@ class BulkSendRequestSerializer(serializers.Serializer):
         # Remove self from receivers if present
         receivers = [r for r in receivers if r.user_id != request.user.user_id]
         
+        # Remove customer-to-customer connections dynamically if needed or validate
+        sender_is_biz = hasattr(request.user, 'business_profile')
+        valid_receivers = []
+        for r in receivers:
+            r_is_biz = hasattr(r, 'business_profile')
+            if sender_is_biz or r_is_biz:
+                valid_receivers.append(r)
+        
+        receivers = valid_receivers
+
         # Remove duplicates (by user_id)
         seen_ids = set()
         unique_receivers = []

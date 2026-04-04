@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hisab_khata/core/storage/storage_service.dart';
 import 'package:hisab_khata/core/theme/app_theme.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_bloc.dart';
 import 'package:hisab_khata/features/users/customer/presentation/bloc/customer_event.dart';
@@ -178,20 +179,34 @@ class _CustomerProfileViewScreenState extends State<CustomerProfileViewScreen> {
                             onTap: () {},
                           ),
                           _divider(),
-                          _buildMenuItem(
-                            icon: Icons.people_outline,
-                            iconColor: const Color(0xFF9C27B0),
-                            iconBgColor: const Color(0xFFF3E5F5),
-                            title: AppLocalizations.of(context)!.switchToHybrid,
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const HybridRequestScreen(
-                                  isBusinessAccount: false,
+                          if (_isHybridApproved)
+                            _buildMenuItem(
+                              icon: Icons.storefront_outlined,
+                              iconColor: const Color(0xFFE64A19),
+                              iconBgColor: const Color(0xFFFBE9E7),
+                              title: 'Switch to Business Mode', // Hardcoded as fallback if missing in l10n
+                              onTap: () async {
+                                await StorageService.updateUserData(role: 'business');
+                                if (context.mounted) {
+                                  Navigator.pushReplacementNamed(context, '/business_home');
+                                }
+                              },
+                            )
+                          else
+                            _buildMenuItem(
+                              icon: Icons.people_outline,
+                              iconColor: const Color(0xFF9C27B0),
+                              iconBgColor: const Color(0xFFF3E5F5),
+                              title: AppLocalizations.of(context)!.switchToHybrid,
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const HybridRequestScreen(      
+                                    isBusinessAccount: false,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
                           _divider(),
                           _buildMenuItem(
                             icon: Icons.smart_toy_outlined,
