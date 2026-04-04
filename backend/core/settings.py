@@ -22,24 +22,49 @@ def _normalize_host(host_value: str) -> str:
         host_value = host_value.split('://', 1)[1]
     return host_value.split('/', 1)[0].strip()
 
+
+def _normalize_origin(origin_value: str) -> str:
+    origin_value = origin_value.strip().rstrip('/')
+    if not origin_value:
+        return ''
+    if '://' not in origin_value:
+        normalized_host = _normalize_host(origin_value)
+        return f"https://{normalized_host}" if normalized_host else ''
+    scheme, host_part = origin_value.split('://', 1)
+    normalized_host = _normalize_host(host_part)
+    return f"{scheme.lower()}://{normalized_host}" if normalized_host else ''
+
+
+def _parse_csv(value: str):
+    return [item.strip() for item in value.split(',') if item.strip()]
+
+
+default_production_hosts = [
+    'btwitsabhishek.me',
+    'abhishek-sharma-hisabkhata.onrender.com',
+]
+
+env_hosts = [_normalize_host(host) for host in _parse_csv(os.getenv('ALLOWED_HOSTS', ''))]
+
+env_csrf_origins = [
+    normalized
+    for normalized in (_normalize_origin(origin) for origin in _parse_csv(os.getenv('CSRF_TRUSTED_ORIGINS', '')))
+    if normalized
+]
+
+default_production_origins = [f"https://{host}" for host in default_production_hosts]
+local_csrf_origins = ['http://127.0.0.1:8000', 'http://localhost:8000']
+
 # Allowed hosts
 if DEBUG:
     # Local development
     ALLOWED_HOSTS = ['*']
-    CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
+    CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(local_csrf_origins + default_production_origins + env_csrf_origins))
 else:
     # Production
-    default_production_hosts = [
-        'btwitsabhishek.me',
-        'abhishek-sharma-hisabkhata.onrender.com',
-    ]
-    env_hosts = [
-        _normalize_host(host)
-        for host in os.getenv('ALLOWED_HOSTS', '').split(',')
-        if host.strip()
-    ]
     ALLOWED_HOSTS = list(dict.fromkeys(default_production_hosts + env_hosts))
-    CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
+    host_based_origins = [f"https://{host}" for host in ALLOWED_HOSTS]
+    CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(host_based_origins + env_csrf_origins))
 
 # ===== APPS =====  
 
