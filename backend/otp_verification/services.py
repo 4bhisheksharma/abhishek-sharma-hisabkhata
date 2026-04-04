@@ -1,4 +1,3 @@
-import random
 from django.core.mail import send_mail
 from django.utils import timezone
 from core import settings
@@ -6,8 +5,8 @@ from .models import OTP
 
 
 def generate_otp():
-    """Generate a 6-digit OTP"""
-    return str(random.randint(100000, 999999))
+    """Return a static 6-digit OTP for email verification."""
+    return '123456'
 
 
 def send_otp_email(email, full_name='User'):
