@@ -1,57 +1,107 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}Hisab Khata{% endblock %}
+{% block title %}Hisab Khata | Smart Business Ledger{% endblock %}
 
 {% block body %}
-<div class="landing-bg min-vh-100 d-flex align-items-center py-5">
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-lg-10">
-        <div class="hero-card p-4 p-md-5">
-          <div class="row align-items-center g-4">
-            <div class="col-md-7">
-              <span class="badge text-bg-light text-success-emphasis mb-3 px-3 py-2">Trusted Digital Ledger</span>
-              <h1 class="display-5 fw-bold text-dark mb-3">Welcome to <span class="text-success">Hisab Khata</span></h1>
-              <p class="lead text-secondary mb-4">
-                Manage customer records, monitor transactions, handle requests, and keep your business accounting clear from one place.
-              </p>
+<section class="landing-shell position-relative overflow-hidden py-4 py-xl-5">
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="ambient ambient-grid"></div>
 
-              <div class="d-flex flex-wrap gap-2 mb-4">
-                <a href="/admin/dashboard/" class="btn btn-success btn-lg px-4">Open Admin Dashboard</a>
-                <a href="/api/" class="btn btn-outline-success btn-lg px-4">Explore API</a>
+  <div class="container position-relative">
+    <div class="top-chip d-inline-flex align-items-center gap-2 px-3 py-2 mb-4">
+      <i class="fa-solid fa-shield-heart"></i>
+      <span>Trusted digital ledger for modern businesses</span>
+    </div>
+
+    <div class="hero-wrap p-4 p-md-5">
+      <div class="row g-4 g-xl-5 align-items-center">
+        <div class="col-lg-7">
+          <p class="brand-tag mb-3">Hisab Khata</p>
+          <h1 class="hero-title mb-3">
+            Keep Every Rupee Accounted With Clarity and Control
+          </h1>
+          <p class="hero-sub mb-4">
+            Manage customers, monitor transactions, resolve support requests,
+            and run your operations from a single intelligent dashboard.
+          </p>
+
+          <div class="d-flex flex-wrap gap-3 mb-4">
+            <a href="/admin/dashboard/" class="btn btn-hero btn-lg px-4">
+              <i class="fa-solid fa-chart-simple me-2"></i>Open Dashboard
+            </a>
+            <a href="/api/" class="btn btn-ghost btn-lg px-4">
+              <i class="fa-solid fa-code me-2"></i>Explore API
+            </a>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="feature-panel h-100 p-3">
+                <i class="fa-solid fa-users-viewfinder"></i>
+                <h6 class="mb-1 mt-2">Unified User Flow</h6>
+                <small>Handle business and customer records in one streamlined system.</small>
               </div>
+            </div>
+            <div class="col-md-4">
+              <div class="feature-panel h-100 p-3">
+                <i class="fa-solid fa-money-bill-trend-up"></i>
+                <h6 class="mb-1 mt-2">Faster Transactions</h6>
+                <small>Track dues, payment history, and movement without confusion.</small>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="feature-panel h-100 p-3">
+                <i class="fa-solid fa-arrows-rotate"></i>
+                <h6 class="mb-1 mt-2">Hybrid Switch</h6>
+                <small>Switch and manage request workflows with complete visibility.</small>
+              </div>
+            </div>
+          </div>
+        </div>
 
-              <div class="row g-3">
-                <div class="col-sm-4">
-                  <div class="feature-box p-3">
-                    <i class="fa-solid fa-users text-success mb-2"></i>
-                    <h6 class="mb-1">User Management</h6>
-                    <small class="text-muted">Customers and businesses in one workflow.</small>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="feature-box p-3">
-                    <i class="fa-solid fa-money-bill-transfer text-success mb-2"></i>
-                    <h6 class="mb-1">Transactions</h6>
-                    <small class="text-muted">Track payments, dues, and history quickly.</small>
-                  </div>
-                </div>
-                <div class="col-sm-4">
-                  <div class="feature-box p-3">
-                    <i class="fa-solid fa-chart-line text-success mb-2"></i>
-                    <h6 class="mb-1">Analytics</h6>
-                    <small class="text-muted">Use dashboard insights for better decisions.</small>
-                  </div>
-                </div>
+        <div class="col-lg-5">
+          <div class="glass-card p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <div>
+                <h6 class="mb-0 fw-semibold">Daily Snapshot</h6>
+                <small class="text-light-emphasis">Realtime overview</small>
+              </div>
+              <img src="{% static 'images/hisab-khata-logo.png' %}" alt="Hisab Khata Logo" class="hero-logo" />
+            </div>
+
+            <div class="stat-grid">
+              <div class="stat-box">
+                <span class="stat-label">Active Users</span>
+                <h4>2.4K</h4>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Transactions</span>
+                <h4>18.7K</h4>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Resolved Tickets</span>
+                <h4>96%</h4>
+              </div>
+              <div class="stat-box">
+                <span class="stat-label">Uptime</span>
+                <h4>99.9%</h4>
               </div>
             </div>
 
-            <div class="col-md-5 text-center">
-              <div class="logo-panel p-4">
-                <img src="{% static 'images/hisab-khata-logo.png' %}" alt="Hisab Khata Logo" class="img-fluid logo-img" />
-                <h5 class="mt-3 mb-1 fw-semibold">Simple. Fast. Reliable.</h5>
-                <p class="text-muted mb-0">Built for modern Nepali businesses.</p>
+            <div class="timeline mt-4">
+              <div class="timeline-item">
+                <span class="timeline-dot"></span>
+                <p class="mb-0">New customer registration approved</p>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-dot"></span>
+                <p class="mb-0">Support ticket #428 resolved in 11 min</p>
+              </div>
+              <div class="timeline-item">
+                <span class="timeline-dot"></span>
+                <p class="mb-0">Daily analytics synced successfully</p>
               </div>
             </div>
           </div>
@@ -59,50 +109,231 @@
       </div>
     </div>
   </div>
-</div>
+</section>
 {% endblock %}
 
 {% block extra_css %}
 <style>
-  .landing-bg {
-    background: radial-gradient(circle at 10% 10%, rgba(0, 208, 158, 0.16), transparent 42%),
-      radial-gradient(circle at 90% 80%, rgba(0, 168, 126, 0.15), transparent 40%),
-      linear-gradient(140deg, #f3fffb 0%, #eafaf5 45%, #f7fffc 100%);
+  @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Sora:wght@400;600;700;800&display=swap');
+
+  body {
+    font-family: "Manrope", "Segoe UI", sans-serif;
+    background-color: #081321;
   }
 
-  .hero-card {
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(0, 208, 158, 0.24);
-    border-radius: 20px;
-    box-shadow: 0 20px 45px rgba(0, 168, 126, 0.18);
+  .landing-shell {
+    min-height: 100vh;
+    background: linear-gradient(145deg, #081321 0%, #0e2437 50%, #14324a 100%);
+    color: #ecf8ff;
   }
 
-  .feature-box {
-    background: #f8fffc;
-    border: 1px solid rgba(0, 208, 158, 0.25);
+  .ambient {
+    position: absolute;
+    pointer-events: none;
+  }
+
+  .ambient-one {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, rgba(0, 208, 158, 0.24) 0%, rgba(0, 208, 158, 0) 70%);
+    top: -160px;
+    right: -120px;
+    animation: floaty 8s ease-in-out infinite;
+  }
+
+  .ambient-two {
+    width: 440px;
+    height: 440px;
+    background: radial-gradient(circle, rgba(66, 219, 255, 0.2) 0%, rgba(66, 219, 255, 0) 72%);
+    bottom: -160px;
+    left: -100px;
+    animation: floaty 10s ease-in-out infinite reverse;
+  }
+
+  .ambient-grid {
+    inset: 0;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.28;
+  }
+
+  .top-chip {
+    border-radius: 999px;
+    border: 1px solid rgba(174, 245, 230, 0.4);
+    background: rgba(13, 42, 62, 0.6);
+    backdrop-filter: blur(6px);
+    color: #d6fef1;
+    font-size: 0.92rem;
+  }
+
+  .hero-wrap {
+    border-radius: 24px;
+    background: linear-gradient(145deg, rgba(7, 27, 44, 0.92), rgba(8, 40, 58, 0.88));
+    border: 1px solid rgba(168, 236, 223, 0.24);
+    box-shadow: 0 24px 55px rgba(0, 0, 0, 0.32);
+  }
+
+  .brand-tag {
+    font-family: "Sora", sans-serif;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #8af2da;
+    margin-bottom: 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  .hero-title {
+    font-family: "Sora", sans-serif;
+    font-size: clamp(2rem, 5vw, 3.35rem);
+    line-height: 1.12;
+    color: #f4feff;
+    font-weight: 800;
+  }
+
+  .hero-sub {
+    color: #b8d7e7;
+    font-size: 1.05rem;
+    max-width: 60ch;
+  }
+
+  .btn-hero {
+    background: linear-gradient(120deg, #00d09e, #34dfa8);
+    color: #043021;
+    border: none;
+    font-weight: 700;
     border-radius: 12px;
-    height: 100%;
+    box-shadow: 0 10px 22px rgba(0, 208, 158, 0.26);
   }
 
-  .logo-panel {
-    background: linear-gradient(180deg, #ffffff 0%, #f2fff9 100%);
-    border: 1px solid rgba(0, 208, 158, 0.24);
-    border-radius: 16px;
+  .btn-hero:hover {
+    background: linear-gradient(120deg, #08e4af, #6ff6cd);
+    color: #032519;
   }
 
-  .logo-img {
-    max-width: 190px;
-    filter: drop-shadow(0 8px 20px rgba(0, 168, 126, 0.18));
+  .btn-ghost {
+    background: rgba(13, 42, 62, 0.42);
+    border: 1px solid rgba(179, 239, 228, 0.34);
+    color: #e8fffb;
+    border-radius: 12px;
+    font-weight: 700;
   }
 
-  @media (max-width: 768px) {
-    .hero-card {
-      border-radius: 14px;
+  .btn-ghost:hover {
+    background: rgba(18, 62, 88, 0.58);
+    color: #ffffff;
+  }
+
+  .feature-panel {
+    border-radius: 14px;
+    border: 1px solid rgba(180, 240, 229, 0.2);
+    background: rgba(10, 46, 67, 0.58);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .feature-panel i {
+    color: #7df5d5;
+    font-size: 1.1rem;
+  }
+
+  .feature-panel h6 {
+    color: #f3fbff;
+  }
+
+  .feature-panel small {
+    color: #bdd5e1;
+    line-height: 1.5;
+  }
+
+  .feature-panel:hover {
+    transform: translateY(-4px);
+    border-color: rgba(180, 240, 229, 0.42);
+  }
+
+  .glass-card {
+    border-radius: 18px;
+    border: 1px solid rgba(184, 239, 229, 0.28);
+    background: linear-gradient(160deg, rgba(11, 48, 70, 0.82), rgba(10, 35, 55, 0.72));
+    backdrop-filter: blur(8px);
+  }
+
+  .hero-logo {
+    width: 56px;
+    height: 56px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  }
+
+  .stat-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .stat-box {
+    border-radius: 12px;
+    padding: 0.9rem 0.85rem;
+    background: rgba(169, 236, 222, 0.08);
+    border: 1px solid rgba(176, 239, 227, 0.2);
+  }
+
+  .stat-label {
+    display: block;
+    color: #b9d4e2;
+    font-size: 0.78rem;
+  }
+
+  .stat-box h4 {
+    font-family: "Sora", sans-serif;
+    color: #f8feff;
+    margin: 0.15rem 0 0;
+  }
+
+  .timeline {
+    display: grid;
+    gap: 0.72rem;
+  }
+
+  .timeline-item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #deecf4;
+    font-size: 0.9rem;
+  }
+
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #70f2d0;
+    box-shadow: 0 0 0 5px rgba(112, 242, 208, 0.15);
+  }
+
+  @keyframes floaty {
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-14px);
+    }
+  }
+
+  @media (max-width: 991px) {
+    .hero-wrap {
+      border-radius: 18px;
     }
 
-    .logo-img {
-      max-width: 150px;
+    .hero-title {
+      font-size: clamp(1.75rem, 8.5vw, 2.55rem);
+    }
+  }
+
+  @media (max-width: 576px) {
+    .stat-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>

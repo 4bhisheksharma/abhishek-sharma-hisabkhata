@@ -15,7 +15,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from hisabauth.views import RegisterView, LoginView, ChangePasswordView, FCMTokenView, FCMTestView, LogoutView
@@ -29,7 +29,7 @@ from analytics.views import (
     admin_support_tickets_view, admin_fraud_detection_view,
 )
 from hybrid_switch.views import admin_hybrid_switch_requests_view
-from core.views import landing_page, custom_404
+from core.views import landing_page, custom_404, not_found_page
 
 urlpatterns = [
     path('', landing_page, name='landing_page'),
@@ -91,5 +91,9 @@ urlpatterns = [
 # Serve media files during development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns += [
+    re_path(r'^.*$', not_found_page, name='not_found_page'),
+]
 
 handler404 = 'core.views.custom_404'

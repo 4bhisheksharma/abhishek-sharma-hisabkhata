@@ -13,15 +13,33 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this')
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
+
+def _normalize_host(host_value: str) -> str:
+    host_value = host_value.strip()
+    if not host_value:
+        return ''
+    if '://' in host_value:
+        host_value = host_value.split('://', 1)[1]
+    return host_value.split('/', 1)[0].strip()
+
 # Allowed hosts
 if DEBUG:
     # Local development
-    ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '*']
+    ALLOWED_HOSTS = ['*']
     CSRF_TRUSTED_ORIGINS = ['http://127.0.0.1:8000', 'http://localhost:8000']
 else:
     # Production
-    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') 
-    CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS if host]
+    default_production_hosts = [
+        'btwitsabhishek.me',
+        'abhishek-sharma-hisabkhata.onrender.com',
+    ]
+    env_hosts = [
+        _normalize_host(host)
+        for host in os.getenv('ALLOWED_HOSTS', '').split(',')
+        if host.strip()
+    ]
+    ALLOWED_HOSTS = list(dict.fromkeys(default_production_hosts + env_hosts))
+    CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
 
 # ===== APPS =====  
 
@@ -188,12 +206,6 @@ SIMPLE_JWT = {
     'USER_ID_FIELD': 'user_id',
     'USER_ID_CLAIM': 'user_id',
 }
-
-# ===== SECURITY (DEPLOYMENT) =====
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://*.onrender.com",
-]
 
 # ===== DEFAULT =====
 
