@@ -17,6 +17,17 @@ if firebase_admin_credential:
 else:
     FIREBASE_ADMIN_CREDENTIAL = str(BASE_DIR / 'core' / 'firebase-service-account.json')
 
+# Preferred for production platforms (Render, etc.): one-line JSON
+# or base64-encoded JSON service account payload.
+FIREBASE_ADMIN_CREDENTIAL_JSON = os.getenv('FIREBASE_ADMIN_CREDENTIAL_JSON', '').strip()
+
+# Alternative production format: split service account fields.
+FIREBASE_PROJECT_ID = os.getenv('FIREBASE_PROJECT_ID', '').strip()
+FIREBASE_PRIVATE_KEY_ID = os.getenv('FIREBASE_PRIVATE_KEY_ID', '').strip()
+FIREBASE_PRIVATE_KEY = os.getenv('FIREBASE_PRIVATE_KEY', '').strip()
+FIREBASE_CLIENT_EMAIL = os.getenv('FIREBASE_CLIENT_EMAIL', '').strip()
+FIREBASE_CLIENT_ID = os.getenv('FIREBASE_CLIENT_ID', '').strip()
+
 # ===== SECURITY =====
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this')

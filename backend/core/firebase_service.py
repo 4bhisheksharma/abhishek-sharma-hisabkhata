@@ -1,5 +1,6 @@
 import os
 import json
+import base64
 import firebase_admin
 from firebase_admin import credentials, messaging
 from firebase_admin import exceptions as firebase_exceptions
@@ -11,6 +12,62 @@ logger = logging.getLogger(__name__)
 
 # App theme color — keep in sync with the Flutter AppTheme.primaryBlue
 _NOTIFICATION_COLOR = "#00D09E"
+
+
+def _normalize_private_key(private_key):
+    """Convert escaped newlines from env vars into actual newlines."""
+    if not private_key:
+        return private_key
+    return private_key.replace('\\n', '\n')
+
+
+def _build_firebase_certificate_from_env():
+    """Build Firebase certificate from env secrets if available."""
+    raw_json = getattr(settings, 'FIREBASE_ADMIN_CREDENTIAL_JSON', '').strip()
+    if raw_json:
+        try:
+            payload = raw_json
+            if not raw_json.startswith('{'):
+                payload = base64.b64decode(raw_json).decode('utf-8')
+
+            cert_info = json.loads(payload)
+            cert_info['private_key'] = _normalize_private_key(cert_info.get('private_key', ''))
+            return credentials.Certificate(cert_info)
+        except Exception as e:
+            logger.error(f"Invalid FIREBASE_ADMIN_CREDENTIAL_JSON: {str(e)}")
+
+    field_mapping = {
+        'project_id': getattr(settings, 'FIREBASE_PROJECT_ID', '').strip(),
+        'private_key_id': getattr(settings, 'FIREBASE_PRIVATE_KEY_ID', '').strip(),
+        'private_key': getattr(settings, 'FIREBASE_PRIVATE_KEY', '').strip(),
+        'client_email': getattr(settings, 'FIREBASE_CLIENT_EMAIL', '').strip(),
+        'client_id': getattr(settings, 'FIREBASE_CLIENT_ID', '').strip(),
+    }
+
+    provided_fields = [key for key, value in field_mapping.items() if value]
+    if provided_fields:
+        missing_fields = [key for key, value in field_mapping.items() if not value]
+        if missing_fields:
+            logger.error(
+                "Firebase env credential fields are partially configured. "
+                f"Missing fields: {', '.join(missing_fields)}"
+            )
+            return None
+
+        cert_info = {
+            'type': 'service_account',
+            'project_id': field_mapping['project_id'],
+            'private_key_id': field_mapping['private_key_id'],
+            'private_key': _normalize_private_key(field_mapping['private_key']),
+            'client_email': field_mapping['client_email'],
+            'client_id': field_mapping['client_id'],
+            'auth_uri': 'https://accounts.google.com/o/oauth2/auth',
+            'token_uri': 'https://oauth2.googleapis.com/token',
+            'auth_provider_x509_cert_url': 'https://www.googleapis.com/oauth2/v1/certs',
+        }
+        return credentials.Certificate(cert_info)
+
+    return None
 
 
 def _clear_stale_fcm_token(fcm_token):
@@ -39,6 +96,12 @@ class FirebaseService:
         """Initialize Firebase Admin SDK if not already initialized"""
         if not cls._app:
             try:
+                env_credential = _build_firebase_certificate_from_env()
+                if env_credential is not None:
+                    cls._app = firebase_admin.initialize_app(env_credential)
+                    logger.info("Firebase Admin SDK initialized from environment credentials")
+                    return True
+
                 firebase_cred_path = getattr(settings, 'FIREBASE_ADMIN_CREDENTIAL', None)
                 if not firebase_cred_path:
                     firebase_cred_path = os.path.join(settings.BASE_DIR, 'core', 'firebase-service-account.json')
@@ -49,6 +112,7 @@ class FirebaseService:
                     logger.info("Firebase Admin SDK initialized successfully")
                 else:
                     logger.error(f"Firebase credential file not found: {firebase_cred_path}")
+                    logger.error("Set FIREBASE_ADMIN_CREDENTIAL_JSON or Firebase credential env fields in production")
                     return False
             except ValueError:
                 # App already initialized (e.g. in tests or duplicate call)
