@@ -131,24 +131,36 @@ def verify_otp(email, otp_code):
         OTP object if valid, None otherwise
     """
     try:
-        # Get the latest unused OTP for this email
+        otp_code = str(otp_code).strip()
+
+        # Get the latest unused OTP for this email and exact code match.
         otp = OTP.objects.filter(
             email=email,
             code=otp_code,
             is_used=False
         ).order_by('-created_at').first()
-        
-        if not otp:
-            return None
-        
-        if not otp.is_valid():
+
+        if otp:
+            if otp.is_valid():
+                # Mark OTP as used
+                otp.mark_as_used()
+                return otp
+
+            # In development, allow the static OTP fallback even when
+            # the stored OTP record has technically expired.
+            if settings.DEBUG and otp_code == generate_otp():
+                otp.mark_as_used()
+                return otp
+
             otp.increment_attempts()
             return None
-        
-        # Mark OTP as used
-        otp.mark_as_used()
-        
-        return otp
+
+        # Development fallback: allow static OTP when no DB row exists,
+        # but final account creation still depends on PendingRegistration.
+        if settings.DEBUG and otp_code == generate_otp():
+            return OTP(email=email, code=otp_code, is_used=True)
+
+        return None
         
     except Exception as e:
         print(f"Error verifying OTP: {str(e)}")
