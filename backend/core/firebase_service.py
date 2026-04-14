@@ -39,13 +39,16 @@ class FirebaseService:
         """Initialize Firebase Admin SDK if not already initialized"""
         if not cls._app:
             try:
-                firebase_cred_path = settings.FIREBASE_ADMIN_CREDENTIAL
+                firebase_cred_path = getattr(settings, 'FIREBASE_ADMIN_CREDENTIAL', None)
+                if not firebase_cred_path:
+                    firebase_cred_path = os.path.join(settings.BASE_DIR, 'core', 'firebase-service-account.json')
+
                 if firebase_cred_path and os.path.exists(firebase_cred_path):
                     cred = credentials.Certificate(firebase_cred_path)
                     cls._app = firebase_admin.initialize_app(cred)
                     logger.info("Firebase Admin SDK initialized successfully")
                 else:
-                    logger.error("Firebase credential file not found or not specified")
+                    logger.error(f"Firebase credential file not found: {firebase_cred_path}")
                     return False
             except ValueError:
                 # App already initialized (e.g. in tests or duplicate call)

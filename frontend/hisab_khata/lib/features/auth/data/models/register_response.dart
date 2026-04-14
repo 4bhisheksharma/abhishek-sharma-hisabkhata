@@ -13,7 +13,7 @@ class RegisterResponse {
     );
   }
 
-  bool get isSuccess => status == 200;
+  bool get isSuccess => status >= 200 && status < 300;
 }
 
 class RegisterData {

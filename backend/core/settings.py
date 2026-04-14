@@ -8,6 +8,15 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+firebase_admin_credential = os.getenv('FIREBASE_ADMIN_CREDENTIAL', '').strip()
+if firebase_admin_credential:
+    if os.path.isabs(firebase_admin_credential):
+        FIREBASE_ADMIN_CREDENTIAL = firebase_admin_credential
+    else:
+        FIREBASE_ADMIN_CREDENTIAL = str((BASE_DIR / firebase_admin_credential).resolve())
+else:
+    FIREBASE_ADMIN_CREDENTIAL = str(BASE_DIR / 'core' / 'firebase-service-account.json')
+
 # ===== SECURITY =====
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-change-this')

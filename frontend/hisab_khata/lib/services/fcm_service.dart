@@ -20,6 +20,13 @@ class FCMService {
   /// Initialize FCM service.
   /// Call this after login or when restoring an authenticated session.
   static Future<void> initialize({String? authToken}) async {
+    if (_isInitialized) {
+      if (authToken != null) {
+        updateAuthToken(authToken);
+      }
+      return;
+    }
+
     _authToken = authToken;
     _baseUrl = ApiBaseUrl.baseUrl;
 
@@ -45,6 +52,12 @@ class FCMService {
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized ||
           settings.authorizationStatus == AuthorizationStatus.provisional) {
+        await _firebaseMessaging.setForegroundNotificationPresentationOptions(
+          alert: true,
+          badge: true,
+          sound: true,
+        );
+
         // Initialize local notifications
         await _initializeLocalNotifications();
 
@@ -231,12 +244,17 @@ class FCMService {
   /// Display a local notification from a RemoteMessage
   static Future<void> _showLocalNotification(RemoteMessage message) async {
     RemoteNotification? notification = message.notification;
+    final String? dataTitle = message.data['title']?.toString();
+    final String? dataBody =
+        message.data['body']?.toString() ?? message.data['message']?.toString();
+    final String? title = notification?.title ?? dataTitle;
+    final String? body = notification?.body ?? dataBody;
 
-    if (notification != null) {
+    if (title != null || body != null) {
       await _localNotifications.show(
-        notification.hashCode,
-        notification.title,
-        notification.body,
+        message.messageId.hashCode ^ DateTime.now().millisecondsSinceEpoch,
+        title ?? 'Hisab Khata',
+        body ?? '',
         const NotificationDetails(
           android: AndroidNotificationDetails(
             'hisab_khata_notifications',
@@ -257,7 +275,7 @@ class FCMService {
         ),
         payload: _encodePayload(message.data),
       );
-      debugPrint('Local notification shown: ${notification.title}');
+      debugPrint('Local notification shown: $title');
     }
   }
 

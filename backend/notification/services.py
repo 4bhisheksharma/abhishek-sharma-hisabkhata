@@ -18,8 +18,11 @@ def _push(user, title, body, data):
     if not user or not getattr(user, 'fcm_token', None):
         return
     try:
-        FirebaseService.send_push_notification(user.fcm_token, title, body, data)
-        logger.info(f"Push sent to {user.email} [{data.get('type', '')}]")
+        sent = FirebaseService.send_push_notification(user.fcm_token, title, body, data)
+        if sent:
+            logger.info(f"Push sent to {user.email} [{data.get('type', '')}]")
+        else:
+            logger.warning(f"Push not delivered to {user.email} [{data.get('type', '')}]")
     except Exception as e:
         logger.error(f"Push failed for {user.email}: {e}")
 
@@ -30,8 +33,11 @@ def _push_multiple(users, title, body, data):
     if not tokens:
         return
     try:
-        FirebaseService.send_push_notification_to_multiple(tokens, title, body, data)
-        logger.info(f"Multicast push sent to {len(tokens)} user(s) [{data.get('type', '')}]")
+        result = FirebaseService.send_push_notification_to_multiple(tokens, title, body, data)
+        logger.info(
+            f"Multicast push result [{data.get('type', '')}] "
+            f"success={result.get('success_count', 0)} failure={result.get('failure_count', 0)}"
+        )
     except Exception as e:
         logger.error(f"Multicast push failed: {e}")
 
