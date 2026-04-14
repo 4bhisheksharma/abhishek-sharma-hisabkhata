@@ -1,5 +1,6 @@
 import uuid
 import logging
+import os
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -22,6 +23,71 @@ from business_dashboard.models import Business
 from notification.services import notify_payment_received
 
 logger = logging.getLogger(__name__)
+
+
+_ESEWA_PLACEHOLDER_VALUES = {
+    '',
+    'replace_me',
+    'your_test_client_id',
+    'your_test_secret_key',
+    'your_live_client_id',
+    'your_live_secret_key',
+}
+
+
+def _is_test_env():
+    return os.getenv('ESEWA_ENV', 'test').strip().lower() == 'test'
+
+
+def _esewa_client_id():
+    if _is_test_env():
+        # Backward compatibility with existing .env naming.
+        return (
+            os.getenv('ESEWA_TEST_CLIENT_ID', '').strip()
+            or os.getenv('TESTCLIENTID', '').strip()
+        )
+    return os.getenv('ESEWA_LIVE_CLIENT_ID', '').strip()
+
+
+def _esewa_secret_key():
+    if _is_test_env():
+        # Backward compatibility with existing .env naming.
+        return (
+            os.getenv('ESEWA_TEST_SECRET_KEY', '').strip()
+            or os.getenv('TESTSECRETKEY', '').strip()
+        )
+    return os.getenv('ESEWA_LIVE_SECRET_KEY', '').strip()
+
+
+def _esewa_callback_url():
+    callback = os.getenv('ESEWA_CALLBACK_URL', '').strip()
+    if callback:
+        return callback
+    return os.getenv('KHALTI_WEBSITE_URL', '').strip() or 'https://example.com'
+
+
+def _is_placeholder(value):
+    return (value or '').strip().lower() in _ESEWA_PLACEHOLDER_VALUES
+
+
+def _validate_esewa_config():
+    client_id = _esewa_client_id()
+    secret_key = _esewa_secret_key()
+    env_label = 'test' if _is_test_env() else 'live'
+
+    if not client_id:
+        return False, f'eSewa {env_label} client ID is not configured on the server'
+
+    if not secret_key:
+        return False, f'eSewa {env_label} secret key is not configured on the server'
+
+    if _is_placeholder(client_id) or _is_placeholder(secret_key):
+        return (
+            False,
+            f'eSewa {env_label} credentials are using placeholder values. Update backend .env with valid credentials.',
+        )
+
+    return True, ''
 
 
 class BusinessEsewaAccountView(APIView):
@@ -251,6 +317,14 @@ class InitiateEsewaPaymentView(APIView):
                     'data': None
                 }, status=status.HTTP_400_BAD_REQUEST)
 
+            is_config_valid, config_error = _validate_esewa_config()
+            if not is_config_valid:
+                return Response({
+                    'status': 500,
+                    'message': config_error,
+                    'data': None
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             # Generate unique product ID
             product_id = f"HISAB-{relationship.relationship_id}-{uuid.uuid4().hex[:8]}"
 
@@ -271,6 +345,10 @@ class InitiateEsewaPaymentView(APIView):
                     'product_name': f"Payment to {relationship.business.business_name}",
                     'amount': str(data['amount']),
                     'business_esewa_id': esewa_account.esewa_id,
+                    'client_id': _esewa_client_id(),
+                    'secret_key': _esewa_secret_key(),
+                    'environment': 'test' if _is_test_env() else 'prod',
+                    'callback_url': _esewa_callback_url(),
                 }
             }, status=status.HTTP_201_CREATED)
 

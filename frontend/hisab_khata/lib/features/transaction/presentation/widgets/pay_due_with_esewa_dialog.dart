@@ -519,7 +519,13 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
 
   void _launchEsewaSdk(BuildContext context, EsewaPaymentInitiated state) {
     final paymentData = state.paymentData;
-    final esewaService = EsewaPaymentService();
+    final esewaService = EsewaPaymentService(
+      useLiveEnvironment: !paymentData.isTest,
+      liveClientId: paymentData.clientId,
+      liveSecretKey: paymentData.secretKey,
+      testClientId: paymentData.clientId,
+      testSecretKey: paymentData.secretKey,
+    );
 
     esewaService.initiatePayment(
       productId: paymentData.productId,
@@ -562,6 +568,7 @@ class _PayDueWithEsewaDialogState extends State<PayDueWithEsewaDialog> {
         );
         context.read<EsewaPaymentBloc>().add(const ResetEsewaPayment());
       },
+      callbackUrl: paymentData.callbackUrl,
     );
   }
 

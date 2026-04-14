@@ -19,10 +19,16 @@ class EsewaPaymentService {
   final String? liveClientId;
   final String? liveSecretKey;
 
+  /// Optional test credentials from backend (preferred over local dotenv)
+  final String? testClientId;
+  final String? testSecretKey;
+
   EsewaPaymentService({
     this.useLiveEnvironment = false,
     this.liveClientId,
     this.liveSecretKey,
+    this.testClientId,
+    this.testSecretKey,
   });
 
   /// Initiate an eSewa payment via the SDK.
@@ -47,12 +53,14 @@ class EsewaPaymentService {
       final environment = useLiveEnvironment
           ? Environment.live
           : Environment.test;
+      final fallbackTestClientId = testClientId ?? _testClientId;
+      final fallbackTestSecretKey = testSecretKey ?? _testSecretKey;
       final clientId = useLiveEnvironment
-          ? (liveClientId ?? _testClientId)
-          : _testClientId;
+          ? (liveClientId ?? fallbackTestClientId)
+          : fallbackTestClientId;
       final secretKey = useLiveEnvironment
-          ? (liveSecretKey ?? _testSecretKey)
-          : _testSecretKey;
+          ? (liveSecretKey ?? fallbackTestSecretKey)
+          : fallbackTestSecretKey;
 
       EsewaFlutterSdk.initPayment(
         esewaConfig: EsewaConfig(

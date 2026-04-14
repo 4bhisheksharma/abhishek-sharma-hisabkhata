@@ -76,6 +76,10 @@ class EsewaPaymentInitiation extends Equatable {
   final String productName;
   final String amount;
   final String businessEsewaId;
+  final String? clientId;
+  final String? secretKey;
+  final String environment;
+  final String callbackUrl;
 
   const EsewaPaymentInitiation({
     required this.paymentRecordId,
@@ -83,6 +87,10 @@ class EsewaPaymentInitiation extends Equatable {
     required this.productName,
     required this.amount,
     required this.businessEsewaId,
+    this.clientId,
+    this.secretKey,
+    this.environment = 'test',
+    this.callbackUrl = '',
   });
 
   factory EsewaPaymentInitiation.fromJson(Map<String, dynamic> json) {
@@ -92,8 +100,14 @@ class EsewaPaymentInitiation extends Equatable {
       productName: json['product_name'] as String,
       amount: json['amount'] as String,
       businessEsewaId: json['business_esewa_id'] as String,
+      clientId: json['client_id'] as String?,
+      secretKey: json['secret_key'] as String?,
+      environment: (json['environment'] as String?) ?? 'test',
+      callbackUrl: (json['callback_url'] as String?) ?? '',
     );
   }
+
+  bool get isTest => environment.toLowerCase() == 'test';
 
   @override
   List<Object?> get props => [
@@ -102,5 +116,9 @@ class EsewaPaymentInitiation extends Equatable {
     productName,
     amount,
     businessEsewaId,
+    clientId,
+    secretKey,
+    environment,
+    callbackUrl,
   ];
 }
