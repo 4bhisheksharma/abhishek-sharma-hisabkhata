@@ -42,6 +42,7 @@ dependencies:
     path: ./esewa_flutter_sdk
   khalti_checkout_flutter: ^1.0.0-dev.9
   pdf: ^3.11.3
+  
 
   flutter_localizations:
     sdk: flutter
@@ -49,14 +50,17 @@ dependencies:
   open_file: ^3.5.11
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
   flutter_test:
     sdk: flutter
+  
 
   flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
   generate: true
+
 
   assets:
     - assets/images/
@@ -73,3 +77,10 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/hisab-khata-logo.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/images/hisab-khata-logo.png"

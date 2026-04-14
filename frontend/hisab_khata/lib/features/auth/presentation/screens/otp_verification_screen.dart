@@ -154,6 +154,15 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                                 color: AppTheme.textSecondary,
                               ),
                             ),
+                            SizedBox(height: Responsive.h(context, 8)),
+                            Text(
+                              'For now, use static OTP: 123456',
+                              style: TextStyle(
+                                fontSize: Responsive.sp(context, 13),
+                                color: AppTheme.primaryBlue,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ],
                         ),
                         SizedBox(height: Responsive.h(context, 40)),

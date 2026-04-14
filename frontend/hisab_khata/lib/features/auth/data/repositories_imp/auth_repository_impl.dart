@@ -44,10 +44,12 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<LoginResultEntity> login({
     required String email,
     required String password,
+    String? fcmToken,
   }) async {
     final response = await remoteDataSource.login(
       email: email,
       password: password,
+      fcmToken: fcmToken,
     );
 
     if (!response.isSuccess || response.data == null) {

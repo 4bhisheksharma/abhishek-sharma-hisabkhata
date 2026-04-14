@@ -45,9 +45,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Future<void> _onLogin(LoginEvent event, Emitter<AuthState> emit) async {
     emit(const AuthLoading());
     try {
+      final fcmToken = await FCMService.getDeviceToken();
+
       final result = await loginUseCase(
         email: event.email,
         password: event.password,
+        fcmToken: fcmToken,
       );
       emit(LoginSuccess(loginResult: result));
 
@@ -75,7 +78,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(
         RegisterSuccess(
           email: email,
-          message: 'Registration successful. Please check your email for OTP.',
+          message:
+              'Registration successful. Continue with OTP verification (use 123456 if email is delayed).',
         ),
       );
     } catch (e) {

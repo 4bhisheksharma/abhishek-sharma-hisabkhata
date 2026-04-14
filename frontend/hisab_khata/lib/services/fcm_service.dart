@@ -99,6 +99,16 @@ class FCMService {
   /// Whether FCM service has been initialized
   static bool get isInitialized => _isInitialized;
 
+  /// Fetch the current device FCM token without full service initialization.
+  static Future<String?> getDeviceToken() async {
+    try {
+      return await _firebaseMessaging.getToken();
+    } catch (e) {
+      debugPrint('Unable to fetch FCM token for login: $e');
+      return null;
+    }
+  }
+
   /// Initialize local notifications plugin and create Android channel
   static Future<void> _initializeLocalNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =

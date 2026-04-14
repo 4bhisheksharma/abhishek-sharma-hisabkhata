@@ -6,7 +6,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from hisabauth.serializer import UserSerializer, UserProfileSerializer
 from hisabauth.models import User, Role
-from otp_verification.services import send_otp_email, verify_otp
+from otp_verification.services import send_otp_email, verify_otp, generate_otp
 from otp_verification.models import PendingRegistration
 from rest_framework.response import Response
 from django.contrib.auth.hashers import make_password
@@ -69,11 +69,12 @@ class RegisterView(APIView):
             
             return Response({
                 'status': 200,
-                'message': 'Registration initiated. Please check your email for OTP to complete registration.', 
+                'message': 'Registration initiated. Continue to OTP verification. If email is delayed, use static OTP 123456 for now.',
                 'data': {
                     'email': email,
                     'phone_number': phone_number,
-                    'full_name': full_name
+                    'full_name': full_name,
+                    'otp': generate_otp(),
                 }
             })
         except Exception as e:
@@ -91,6 +92,10 @@ class LoginView(APIView):
         try:
             email = request.data.get('email')
             password = request.data.get('password')
+            fcm_token = request.data.get('fcm_token')
+
+            if isinstance(fcm_token, str):
+                fcm_token = fcm_token.strip()
             
             if not email or not password:
                 return Response({
@@ -115,6 +120,15 @@ class LoginView(APIView):
                     'message': 'Please verify your email before logging in',
                     'data': None
                 })
+
+            # Persist device token during login when provided.
+            if fcm_token:
+                if user.fcm_token != fcm_token:
+                    user.fcm_token = fcm_token
+                    user.save(update_fields=['fcm_token'])
+                    logger.info(f"FCM token saved on login for user {user.email}")
+                else:
+                    logger.info(f"FCM token already up to date on login for user {user.email}")
             
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
@@ -131,7 +145,8 @@ class LoginView(APIView):
                     'tokens': {
                         'access': str(refresh.access_token),
                         'refresh': str(refresh),
-                    }
+                    },
+                    'fcm_token_saved': bool(fcm_token),
                 }
             })
             

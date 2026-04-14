@@ -10,6 +10,7 @@ class LoginUseCase {
   Future<LoginResultEntity> call({
     required String email,
     required String password,
+    String? fcmToken,
   }) async {
     // Validate inputs
     if (email.trim().isEmpty) {
@@ -23,6 +24,10 @@ class LoginUseCase {
     }
 
     // Call repository
-    return await repository.login(email: email.trim(), password: password);
+    return await repository.login(
+      email: email.trim(),
+      password: password,
+      fcmToken: fcmToken,
+    );
   }
 }

@@ -20,6 +20,7 @@ abstract class AuthRepository {
   Future<LoginResultEntity> login({
     required String email,
     required String password,
+    String? fcmToken,
   });
 
   /// Verifies OTP code for user

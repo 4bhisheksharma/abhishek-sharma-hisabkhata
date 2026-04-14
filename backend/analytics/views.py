@@ -17,7 +17,8 @@ from business_dashboard.models import Business
 from hisabauth.models import User, Role, UserRole
 from support_ticket.models import SupportTicket
 from request.models import BusinessCustomerRequest
-from notification.models import Notification
+from notification.models import Notification, NotificationType
+from core.firebase_service import FirebaseService
 
 # Create your views here.
 
@@ -1621,21 +1622,44 @@ class AdminSendBroadcastView(APIView):
         else:
             receivers = User.objects.filter(is_active=True).exclude(pk=request.user.pk)
 
-        created = 0
-        for user in receivers:
-            Notification.objects.create(
+        receivers_list = list(receivers)
+        notification_type = (
+            notif_type if notif_type in NotificationType.values else NotificationType.BROADCAST
+        )
+        data = {
+            'type': notification_type,
+            'action': 'view_notifications',
+        }
+
+        notifications = [
+            Notification(
                 sender=request.user,
                 receiver=user,
                 title=title,
                 message=message,
-                type=notif_type,
+                type=notification_type,
+                data=data,
             )
-            created += 1
+            for user in receivers_list
+        ]
+
+        if notifications:
+            Notification.objects.bulk_create(notifications)
+
+        tokens = [u.fcm_token for u in receivers_list if getattr(u, 'fcm_token', None)]
+        if tokens:
+            FirebaseService.send_push_notification_to_multiple(
+                fcm_tokens=tokens,
+                title=title,
+                body=message,
+                data=data,
+            )
 
         return Response({
             'status': 200,
-            'message': f'Broadcast sent to {created} user{"s" if created != 1 else ""}.',
-            'count': created,
+            'message': f'Broadcast sent to {len(notifications)} user{"s" if len(notifications) != 1 else ""}.',
+            'count': len(notifications),
+            'push_sent_to': len(tokens),
         })
 
 

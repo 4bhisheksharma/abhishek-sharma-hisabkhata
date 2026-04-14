@@ -19,6 +19,7 @@ abstract class AuthRemoteDataSource {
   Future<LoginResponse> login({
     required String email,
     required String password,
+    String? fcmToken,
   });
 
   /// Verify OTP
@@ -79,8 +80,13 @@ class AuthRemoteDataSourceImpl extends BaseRemoteDataSource
   Future<LoginResponse> login({
     required String email,
     required String password,
+    String? fcmToken,
   }) async {
-    final body = {'email': email, 'password': password};
+    final body = {
+      'email': email,
+      'password': password,
+      if (fcmToken != null && fcmToken.isNotEmpty) 'fcm_token': fcmToken,
+    };
 
     final response = await post(
       'auth/${ApiEndpoints.login}',

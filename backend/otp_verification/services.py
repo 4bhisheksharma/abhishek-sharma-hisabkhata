@@ -1,5 +1,3 @@
-from django.core.mail import send_mail
-from django.utils import timezone
 from core import settings
 from .models import OTP
 
@@ -18,23 +16,21 @@ def send_otp_email(email, full_name='User'):
         full_name: User's full name for personalization
     
     Returns:
-        OTP object if successful, raises exception otherwise
+        OTP object
     """
-    try:
-        # Generate OTP
-        otp_code = generate_otp()
-        
-        # Create OTP record
-        otp = OTP.objects.create(
-            email=email,
-            code=otp_code
-        )
-        
-        # Prepare email content
-        subject = 'Verify Your Email - Hisab Khata'
-        
-        # Plain text version
-        text_message = f'''Hello {full_name},
+    # Generate and persist OTP first. Even if email delivery fails,
+    # verification can continue with the static OTP in development.
+    otp_code = generate_otp()
+    otp = OTP.objects.create(
+        email=email,
+        code=otp_code
+    )
+
+    # Prepare email content
+    subject = 'Verify Your Email - Hisab Khata'
+
+    # Plain text version
+    text_message = f'''Hello {full_name},
 
 Your verification code is: {otp_code}
 
@@ -43,9 +39,9 @@ This code expires in 10 minutes.
 If you didn't request this, please ignore this email.
 
 - Hisab Khata Team'''
-        
-        # HTML version
-        html_message = f'''
+
+    # HTML version
+    html_message = f'''
 <!DOCTYPE html>
 <html>
 <head>
@@ -100,12 +96,13 @@ If you didn't request this, please ignore this email.
     </table>
 </body>
 </html>
-        '''
-        
-        # Send email with both plain text and HTML
+    '''
+
+    # Try email delivery but do not fail registration if SMTP is unavailable.
+    try:
         email_from = settings.EMAIL_HOST_USER
         from django.core.mail import EmailMultiAlternatives
-        
+
         email_message = EmailMultiAlternatives(
             subject=subject,
             body=text_message,
@@ -114,13 +111,12 @@ If you didn't request this, please ignore this email.
         )
         email_message.attach_alternative(html_message, "text/html")
         email_message.send(fail_silently=False)
-        
         print(f"OTP sent successfully to {email}: {otp_code}")
-        return otp
-        
     except Exception as e:
-        print(f"Error sending OTP email: {str(e)}")
-        raise e
+        print(f"OTP email delivery failed for {email}: {str(e)}")
+        print(f"Using static OTP fallback for {email}: {otp_code}")
+
+    return otp
 
 
 def verify_otp(email, otp_code):
