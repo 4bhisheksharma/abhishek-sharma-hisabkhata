@@ -17,6 +17,9 @@ class FCMService {
   static bool _isInitialized = false;
   static bool _listenersAttached = false;
 
+  // flutter_local_notifications requires an ID within signed 32-bit range.
+  static const int _maxNotificationId = 0x7fffffff;
+
   /// Initialize FCM service.
   /// Call this after login or when restoring an authenticated session.
   static Future<void> initialize({String? authToken}) async {
@@ -251,8 +254,10 @@ class FCMService {
     final String? body = notification?.body ?? dataBody;
 
     if (title != null || body != null) {
+      final int notificationId = _buildNotificationId(message);
+
       await _localNotifications.show(
-        message.messageId.hashCode ^ DateTime.now().millisecondsSinceEpoch,
+        notificationId,
         title ?? 'Hisab Khata',
         body ?? '',
         const NotificationDetails(
@@ -277,6 +282,12 @@ class FCMService {
       );
       debugPrint('Local notification shown: $title');
     }
+  }
+
+  static int _buildNotificationId(RemoteMessage message) {
+    final int messageHash = (message.messageId ?? '').hashCode;
+    final int timePart = DateTime.now().millisecondsSinceEpoch;
+    return (messageHash ^ timePart) & _maxNotificationId;
   }
 
   /// Handle notification tap (when app is opened from background/terminated)
