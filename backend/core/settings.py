@@ -172,6 +172,14 @@ else:
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.mysql',
+        #     'NAME': os.getenv('MYSQL_DB', 'hisabkhata_db'),
+        #     'USER': os.getenv('MYSQL_USER', 'root'),
+        #     'PASSWORD': os.getenv('MYSQL_PASSWORD', 'Root@123'),
+        #     'HOST': os.getenv('MYSQL_HOST', 'localhost'),
+        #     'PORT': os.getenv('MYSQL_PORT', '3308'),
+        # }
     }
 
 # ===== CHANNELS =====

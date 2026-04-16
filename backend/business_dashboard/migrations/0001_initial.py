@@ -14,34 +14,22 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        # Use the existing business table instead of creating a new one
-        migrations.SeparateDatabaseAndState(
-            database_operations=[
-                # Add the status column to the existing table
-                migrations.RunSQL(
-                    sql="ALTER TABLE business ADD COLUMN status VARCHAR(20) DEFAULT 'active' NOT NULL;",
-                    reverse_sql="ALTER TABLE business DROP COLUMN status;",
-                ),
+        migrations.CreateModel(
+            name='Business',
+            fields=[
+                ('business_id', models.AutoField(primary_key=True, serialize=False)),
+                ('business_name', models.CharField(max_length=255)),
+                ('is_verified', models.BooleanField(default=False)),
+                ('is_active', models.BooleanField(default=True)),
+                ('status', models.CharField(choices=[('active', 'Active'), ('inactive', 'Inactive'), ('suspended', 'Suspended')], default='active', max_length=20)),
+                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ('updated_at', models.DateTimeField(auto_now=True)),
+                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='business_profile', to=settings.AUTH_USER_MODEL)),
             ],
-            state_operations=[
-                migrations.CreateModel(
-                    name='Business',
-                    fields=[
-                        ('business_id', models.AutoField(primary_key=True, serialize=False)),
-                        ('business_name', models.CharField(max_length=255)),
-                        ('is_verified', models.BooleanField(default=False)),
-                        ('is_active', models.BooleanField(default=True)),
-                        ('status', models.CharField(choices=[('active', 'Active'), ('inactive', 'Inactive'), ('suspended', 'Suspended')], default='active', max_length=20)),
-                        ('created_at', models.DateTimeField(auto_now_add=True)),
-                        ('updated_at', models.DateTimeField(auto_now=True)),
-                        ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='business_profile', to=settings.AUTH_USER_MODEL)),
-                    ],
-                    options={
-                        'verbose_name': 'Business',
-                        'verbose_name_plural': 'Businesses',
-                        'db_table': 'business',
-                    },
-                ),
-            ],
+            options={
+                'verbose_name': 'Business',
+                'verbose_name_plural': 'Businesses',
+                'db_table': 'business',
+            },
         ),
     ]
