@@ -1,0 +1,1878 @@
+{
+  "info": {
+    "_postman_id": "7d08bf43-0c5c-4c4e-b9d6-406e38ed8532",
+    "name": "FYP",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40565075"
+  },
+  "item": [
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\":\"sharmaabhi10101010+75@gmail.com\",\r\n    \"password\": \"123456789\",\r\n    \"role\": \"business\",\r\n    \"full_name\": \"test user\",\r\n    \"business_name\": \"test dokan\"\r\n}\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}auth/register/",
+              "host": [
+                "{{base}}auth"
+              ],
+              "path": [
+                "register",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "otp-verification",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"sharmaabhi10101010+75@gmail.com\",\r\n    \"otp\": \"000000\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}auth/verify-otp/",
+              "host": [
+                "{{base}}auth"
+              ],
+              "path": [
+                "verify-otp",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//     //for business\r\n//     \"email\":\"sharmaabhi10101010+17@gmail.com\", //shayame dai\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n// {\r\n//     // for business\r\n//     \"email\": \"sharmaabhi10101010+8@gmail.com\", //punit superstar\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n\r\n\r\n\r\n// { //for customer\r\n//     \"email\":\"sharmaabhi10101010+13@gmail.com\", //ramro\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n// {\r\n//     // for customer\r\n//     \"email\": \"sharmaabhi10101010+9@gmail.com\", //Rajesh Hamal\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n// {\r\n//     // for business\r\n//     \"email\": \"sharmaabhi10101010+88@gmail.com\", //ram dai (dai ko dokan)\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n// {\r\n//     // for customer\r\n//     \"email\": \"sharmaabhi10101010+20@gmail.com\", //dolly chaiwala\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n// {\r\n//     // for customer\r\n//     \"email\": \"sharmaabhi10101010+27@gmail.com\", //kp oli\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n\r\n// {\r\n//     \"email\": \"abhi@gmail.com\",\r\n//     \"password\": \"admin\"\r\n// }\r\n\r\n\r\n\r\n\r\n\r\n\r\n{\r\n    // for business\r\n    \"email\": \"sharmaabhi10101010+21@gmail.com\", //salman khan -farm house\r\n    \"password\": \"123456789\"\r\n}\r\n\r\n\r\n// {\r\n//     // for business\r\n//     \"email\": \"sharmaabhi10101010+1@gmail.com\", //sere dai @ thagi dokan\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n\r\n// {\r\n//     // for business\r\n//     \"email\": \"sharmaabhi10101010+11@gmail.com\", //motu patlu - hamro dokan\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n\r\n// {\r\n    \r\n//     \"email\": \"sharmaabhi10101010+75@gmail.com\", //test user\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}auth/login/",
+              "host": [
+                "{{base}}auth"
+              ],
+              "path": [
+                "login",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "resend-otp",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"sharmaabhi10101010+19@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/resend-otp/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "resend-otp",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "change-pass",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//     //for business\r\n//     \"email\":\"sharmaabhi10101010+17@gmail.com\", //shayame dai\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n// {\r\n//     // for business\r\n//     \"email\": \"sharmaabhi10101010+8@gmail.com\", //punit superstar\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n\r\n\r\n\r\n// { //for customer\r\n//     \"email\":\"sharmaabhi10101010+13@gmail.com\", //ramro\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n// {\r\n//     // for customer\r\n//     \"email\": \"sharmaabhi10101010+9@gmail.com\", //Rajesh Hamal\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n// {\r\n//     // for customer\r\n//     \"email\": \"sharmaabhi10101010+20@gmail.com\", //dolly chaiwala\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n\r\n// {\r\n//     // for business\r\n//     \"email\": \"sharmaabhi10101010+21@gmail.com\", //salman khan -farm house\r\n//     \"password\": \"123456789\"\r\n// }\r\n\r\n\r\n{\r\n  \"old_password\": \"789456123\",\r\n  \"new_password\": \"123456789\",\r\n  \"confirm_password\": \"123456789\"\r\n}\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/auth/change-password/",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "auth",
+                "change-password",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "customer-dash",
+      "item": [
+        {
+          "name": "profile",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY3MzQ0MTEzLCJpYXQiOjE3NjY3MzkzMTMsImp0aSI6IjUxZWFmYjA0NDk3YTRiYTU4YjFmNjE0NDA1NDBhYWJkIiwidXNlcl9pZCI6MTd9.OWDykG44E6il12dVLT-0Mzn6DwbSnWsj7NO_oesiwWI",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}customer/profile",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "dashboard-data",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY1NzE0NjMyLCJpYXQiOjE3NjUxMDk4MzIsImp0aSI6IjI5MWZiNzcyZmU2YzQ2MDFiN2I2ZjQ5OTRlOWI0MjlhIiwidXNlcl9pZCI6MTV9.KiaEVVgC5PYfpSd2x3ZZQZqY53GJODOjJeIPOZ2cuQE",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": []
+            },
+            "url": {
+              "raw": "{{base}}customer/dashboard",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "customer-profile-update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{rajesh-customer-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profile_picture",
+                  "type": "file",
+                  "uuid": "be9e06c3-316e-4363-a7ed-736116e8941e",
+                  "src": "postman-cloud:///1f0e3b08-e800-4830-a1dd-681d9afd29a5"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}customer/profile/",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "profile",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-recent-business",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{rajesh-customer-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}customer/recent-businesses/",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "recent-businesses",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "set-limit",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monthly_limit\": 44000.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}customer/monthly-limit/",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "monthly-limit",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-limit",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monthly_limit\": 5000.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}customer/monthly-limit/",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "monthly-limit",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-limit-overview",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{rajesh-customer-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monthly_limit\": 5000.00\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}customer/monthly-spending-overview/",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "monthly-spending-overview",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add-fav-business",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"is_favorite\": true}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}customer/favorite-business/5/",
+              "host": [
+                "{{base}}customer"
+              ],
+              "path": [
+                "favorite-business",
+                "5",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "business-dash",
+      "item": [
+        {
+          "name": "dashboard-data",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sere-dai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{prod_base_url}}business/dashboard",
+              "host": [
+                "{{prod_base_url}}business"
+              ],
+              "path": [
+                "dashboard"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "profile-business",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2MjA1Mjg2LCJpYXQiOjE3NjU2MDA0ODYsImp0aSI6IjgxN2JjNThmZmMyNzQyYjQ4ODM4NTlmMzQ1MjE5MTBjIiwidXNlcl9pZCI6MTd9.wHNXO62wBQt04wboS0uGma731FODQtlS2rW3deLNzIs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base}}business/profile",
+              "host": [
+                "{{base}}business"
+              ],
+              "path": [
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "business-profile-update",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sere-dai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "profile_picture",
+                  "type": "file",
+                  "uuid": "ee1067c8-294d-4fea-bb83-79caf993b0f3",
+                  "src": "postman-cloud:///1f10d40b-5b1c-4330-843f-0a92952e8d15"
+                },
+                {
+                  "key": "phone_number",
+                  "value": "",
+                  "type": "text",
+                  "uuid": "19b99830-620d-402d-9f9a-9fa233d3c981",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}business/profile/",
+              "host": [
+                "{{base}}business"
+              ],
+              "path": [
+                "profile",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-recent-customers",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sere-dai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"customer_email\": \"sharmaabhi10101010+13@gmail.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{prod_base_url}}business/recent-customers/",
+              "host": [
+                "{{prod_base_url}}business"
+              ],
+              "path": [
+                "recent-customers",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Request",
+      "item": [
+        {
+          "name": "send-request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"receiver_email\":\"sharmaabhi10101010+75@gmail.com\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}request/connections/send-request/",
+              "host": [
+                "{{base}}request"
+              ],
+              "path": [
+                "connections",
+                "send-request",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-received-requests",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MDE2ODg3LCJpYXQiOjE3Njc0MTIwODcsImp0aSI6ImY4NGNhNjU1MjJlOTQ2MTQ5OGYxY2ViOWJiMGJiNGNmIiwidXNlcl9pZCI6MTh9.LmGftuDwC3WQ0-kJ8rSJoR2pLVqcSVzM6BjItLmOSKs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"receiver_id\":\"11\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}request/connections/received/",
+              "host": [
+                "{{base}}request"
+              ],
+              "path": [
+                "connections",
+                "received",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-send-requests",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"receiver_id\":\"11\"\r\n}"
+            },
+            "url": {
+              "raw": "{{base}}request/connections/sent/",
+              "host": [
+                "{{base}}request"
+              ],
+              "path": [
+                "connections",
+                "sent",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "accept-or-reject-request",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY4MDE2ODg3LCJpYXQiOjE3Njc0MTIwODcsImp0aSI6ImY4NGNhNjU1MjJlOTQ2MTQ5OGYxY2ViOWJiMGJiNGNmIiwidXNlcl9pZCI6MTh9.LmGftuDwC3WQ0-kJ8rSJoR2pLVqcSVzM6BjItLmOSKs",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"accepted\"\r\n}\r\n\r\n\r\n// {\r\n//   \"status\": \"rejected\"\r\n// }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}request/connections/6/update-status/",
+              "host": [
+                "{{base}}request"
+              ],
+              "path": [
+                "connections",
+                "6",
+                "update-status",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search-users",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzY2ODM4MjI4LCJpYXQiOjE3NjYyMzM0MjgsImp0aSI6ImUwYmViYjRhN2M3YjQzMWM5ZTg2ZjMwNTFmZWQ0ODFjIiwidXNlcl9pZCI6MTF9.wx-p87yhnu-qAIaZrM0R7v5VXHXtTpIiJLvVlC13tas",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}request/connections/search-users/?search=ramro",
+              "host": [
+                "{{base}}request"
+              ],
+              "path": [
+                "connections",
+                "search-users",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "ramro"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-connected-users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{shayam-businsss-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}request/connections/connected/",
+              "host": [
+                "{{base}}request"
+              ],
+              "path": [
+                "connections",
+                "connected",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "notification",
+      "item": [
+        {
+          "name": "push-notification",
+          "item": [
+            {
+              "name": "push-notification",
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "{{motupatlu-business}}",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "POST",
+                "header": [],
+                "url": {
+                  "raw": "{{base}}auth/fcm-token/",
+                  "host": [
+                    "{{base}}auth"
+                  ],
+                  "path": [
+                    "fcm-token",
+                    ""
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "get-notification",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{shayam-businsss-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"receiver_email\":\"sharmaabhi10101010+9@gmail.com\" \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}notifications/",
+              "host": [
+                "{{base}}notifications"
+              ],
+              "path": [
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "transaction",
+      "item": [
+        {
+          "name": "connection-transaction-details",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base}}transaction/connection-details/3/",
+              "host": [
+                "{{base}}transaction"
+              ],
+              "path": [
+                "connection-details",
+                "3",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-fav",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base}}transaction/favorites",
+              "host": [
+                "{{base}}transaction"
+              ],
+              "path": [
+                "favorites"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "add-fav",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"business_id\": 6\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}transaction/favorites/",
+              "host": [
+                "{{base}}transaction"
+              ],
+              "path": [
+                "favorites",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OCR-image",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ocr-ai}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"model\": \"nvidia/nemotron-3-nano-30b-a3b:free\",\r\n  \"temperature\": 0.1,\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"system\",\r\n      \"content\": \"{{ORC-system-prompt}}\"\r\n    },\r\n    {\r\n      \"role\": \"user\",\r\n      \"content\": \"RECEIPT\\nItem       Qty  Price\\nRice        2   250\\nDal         1   120\\nOil         1   180\\n-------------------\\nSubtotal       550\\nDiscount        50\\nGRAND TOTAL    500\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://openrouter.ai/api/v1/chat/completions",
+              "protocol": "https",
+              "host": [
+                "openrouter",
+                "ai"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "chat",
+                "completions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ticket",
+      "item": [
+        {
+          "name": "get-tickets",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "// {\r\n//   \"subject\": \"App Login Issue\",\r\n//   \"description\": \"I cannot login to the app after password change\",\r\n//   \"category\": \"account\",\r\n//   \"priority\": \"high\"\r\n// }\r\n\r\n\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{prod_base_url}}support/tickets/",
+              "host": [
+                "{{prod_base_url}}support"
+              ],
+              "path": [
+                "tickets",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "create-new-ticket",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"subject\": \"App Login Issue\",\r\n  \"description\": \"I cannot login to the app after password change\",\r\n  \"category\": \"account\",\r\n  \"priority\": \"high\"\r\n}\r\n\r\n\r\n\r\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}support/tickets/",
+              "host": [
+                "{{base}}support"
+              ],
+              "path": [
+                "tickets",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "for-admin",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin-dai}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"status\": \"resolved\",\r\n  \"admin_response\": \"solve vayo kp baa\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}support/tickets/3/update_status/",
+              "host": [
+                "{{base}}support"
+              ],
+              "path": [
+                "tickets",
+                "3",
+                "update_status",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "byapar-dAI",
+      "item": [
+        {
+          "name": "chat-bot",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{byapar-dAI 2.0}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"model\": \"openai/gpt-oss-120b:free\",\r\n  \"messages\": [\r\n    {\r\n      \"role\": \"system\",\r\n      \"content\": \"{{system-prompt}}\"\r\n    },\r\n    {\r\n      \"role\": \"user\",\r\n      \"content\": \"k chha dai? ani kasle banako tapailai?\"\r\n    }\r\n  ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://openrouter.ai/api/v1/chat/completions",
+              "protocol": "https",
+              "host": [
+                "openrouter",
+                "ai"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "chat",
+                "completions"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "analytics",
+      "item": [
+        {
+          "name": "topay-vs-paid",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}analytics/paid-vs-to-pay/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "paid-vs-to-pay",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "monthly-transaction-trend",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}analytics/monthly-transaction-trend/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "monthly-transaction-trend",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "fav-customers(for business)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ramdai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}analytics/favorite-customers/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "favorite-customers",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "fav-customers(for customers)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}analytics/favorite-businesses/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "favorite-businesses",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "user's-total-transction",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base}}analytics/total-transactions/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "total-transactions",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "user's-total-amount",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{ramdai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base}}analytics/total-amount/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "total-amount",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "monthly-spend-limit",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{kp-baa-customer}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"monthly_limit\": 44000.00\r\n}"
+            },
+            "url": {
+              "raw": "{{base}}analytics/monthly-spending-limit/",
+              "host": [
+                "{{base}}analytics"
+              ],
+              "path": [
+                "monthly-spending-limit",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "realtime-chat",
+      "item": [
+        {
+          "name": "create-new-message",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"chat_room\": 2,\r\n  \"message_type\": \"image\",// \"text\", \"file\"\r\n  \"content\": \"Aare oh, kp baa! test4\",\r\n  \"file_url\": \"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDUaq1KBkYdlhHxm6nReWCOiMvh20bEmbaGg&s\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}chat/messages/",
+              "host": [
+                "{{base}}chat"
+              ],
+              "path": [
+                "messages",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-chat-rooms",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}chat/chat-rooms/",
+              "host": [
+                "{{base}}chat"
+              ],
+              "path": [
+                "chat-rooms",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-received-messages",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{base}}chat/messages/?chat_room=1&page=1",
+              "host": [
+                "{{base}}chat"
+              ],
+              "path": [
+                "messages",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "chat_room",
+                  "value": "1"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "hybrid-switch",
+      "item": [
+        {
+          "name": "status",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sere-dai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}hybrid-switch/status/",
+              "host": [
+                "{{base}}hybrid-switch"
+              ],
+              "path": [
+                "status",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "doc-upload",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "citizenship_document",
+                  "type": "file",
+                  "uuid": "0d20e524-3dbc-4dd9-87db-cc8c8b668972",
+                  "src": "postman-cloud:///1f10d40b-5b1c-4330-843f-0a92952e8d15"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base}}hybrid-switch/upload-citizenship/",
+              "host": [
+                "{{base}}hybrid-switch"
+              ],
+              "path": [
+                "upload-citizenship",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-my-req",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{sere-dai-business}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base}}hybrid-switch/my-requests/",
+              "host": [
+                "{{base}}hybrid-switch"
+              ],
+              "path": [
+                "my-requests",
+                ""
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "request-post",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{salman-business-token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n\"hybrid_request_id\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base}}hybrid-switch/submit/",
+              "host": [
+                "{{base}}hybrid-switch"
+              ],
+              "path": [
+                "submit",
+                ""
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "brown-rice",
+      "item": [
+        {
+          "name": "New Request",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"phone\" : \"+9779811111111\",\r\n    \"password\" : \"123456789\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{prod_base_url-br}}auth/login/phone",
+              "host": [
+                "{{prod_base_url-br}}auth"
+              ],
+              "path": [
+                "login",
+                "phone"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AI-coursework",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": []
+        },
+        "url": {
+          "raw": "http://127.0.0.1:5000/search?q=avengers movies",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "5000",
+          "path": [
+            "search"
+          ],
+          "query": [
+            {
+              "key": "q",
+              "value": "avengers movies"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
